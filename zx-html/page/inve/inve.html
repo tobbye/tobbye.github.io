@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>投入</title>
+    <link rel="stylesheet" href="../../util/common.css" type="text/css" />
+    <script src="../../util/util.js"> </script>
+    <script src="inve-data.js"> </script>
+    <script src="inve-setting.js"> </script>
+</head>
+
+
+<style type="text/css"> 
+
+    h2 {
+        margin: 0px;
+        font-size: 1.6em;
+    }
+
+    h3 {
+        margin: 0px;
+        font-size: 1.2em;
+    }
+
+    h4 {
+        margin: 0px;
+        margin-bottom: 10px;
+        font-size: 1.2em;
+    }
+
+    .flex {
+        display: flex;
+        margin-top: 5px;
+        justify-content: center;
+        background-color: white;
+    }
+
+    .block {
+        display: block;
+        overflow: auto;
+        margin-bottom: 0px;
+    }
+
+    .line {
+        flex: 25;
+        margin: 3px;
+        padding: 10px 10px;
+        font-size: 3em; 
+        border: solid 0px transparent;
+        /*border-radius: 20px;*/
+    }
+
+    #alert-box {
+        top: 220px;
+        left: 20px;
+        right: 20px;
+        max-height: 1600px;
+    }
+
+    #alert-scroll {
+        width: 100%;
+        overflow: auto;
+        max-height: 1270px;
+    }
+
+    #detail-block {
+        padding: 0px 10px;
+        min-height: 480px;
+        font-size: 1em;
+    }
+
+    #puzzle-block {
+        padding: 0px 10px;
+        min-height: 480px;
+        font-size: 1em;
+    }
+
+    #result-block {
+        margin: 10px;
+        padding: 30px 30px;
+        font-size: 1.5em;
+        background-color: white;
+    }
+
+    .cell-flex {
+        margin: -2px 0px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background-color: white;
+    }
+
+    .cell-text {
+        margin: 6px;
+        padding: 10px 20px;
+        height: 100px;
+        line-height: 100px;
+        font-size: 6em;
+        border: solid 6px red;
+    }
+
+    .line-text {
+        font-size: 3.5em;
+        padding: 10px;
+        margin-bottom: 5px;
+        background-color: white;
+    }
+
+    .alert-line {
+
+    }
+
+    .img {
+        height: 500px;
+    }
+
+    .button {
+        margin-top: 15px;
+        margin-bottom: 10px;
+    }
+
+</style>
+
+<body>
+    <div id="outer-top"></div>
+    <div id="outer-center"></div>
+    <div id="outer-bot">
+        <a class="button-bot-dead" href="../user/user.html">个人</a>
+        <a class="button-bot-dead" href="../nexu/nexu.html">关系</a>
+        <a class="button-bot-dead" href="../home/home.html">主页</a>
+        <a class="button-bot-dead" href="../fund/fund.html">资金</a>
+        <a class="button-bot-live" href="../inve/inve.html">市场</a>
+    </div>
+
+    <div id="alert">
+        <div id="alert-bg"></div>
+        <div id="alert-box">
+            <div id="detail-bg">
+                <div id="alert-title">查看详情</div>
+                <div id="alert-scroll">
+                    <div id="detail-block"> </div>
+                </div>
+                <div class="alert-flex">
+                    <div class="button-green" id="btn-next">NEXT</div>
+                    <div class="button-green" id="btn-doit">DOIT</div>
+                    <div class="button-red" id="btn-quit">取消</div>
+                </div>
+            </div>
+            <div id="puzzle-bg">
+                <div id="alert-title">发现一个红包</div>
+                <div id="puzzle-block"></div>
+                <div class="alert-flex">
+                    <div class="button-green" id="btn-open">打开</div>
+                    <div class="button-red" id="btn-redo">重置</div>
+                    <div class="button-red" id="btn-abon">丢弃</div>
+                </div>
+            </div>
+
+            <div id="result-bg">
+                <div id="alert-title">恭喜您获得了</div>
+                <div id="result-block"></div>
+                <div class="alert-flex">
+                    <div class="button-green" id="btn-more">查看</div>
+                    <div class="button-red" id="btn-close">关闭</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

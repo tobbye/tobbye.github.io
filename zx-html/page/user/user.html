@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+	<title>个人</title>
+	<link rel="stylesheet" href="../../util/common.css" type="text/css" />
+	<script src="../../util/util.js"> </script>
+	<script src="user-data.js"> </script>
+	<script src="user-setting.js"> </script>
+
+</head>
+<style type="text/css"> 
+
+
+
+	h3 {
+		margin: 3px;
+		padding: 0px;
+		font-size: 1.5em;
+	}
+
+	h4 {
+		margin: 3px;
+		padding: 0px;
+		font-size: 1.3em;
+	}
+
+
+	.flex {
+		display: flex;
+		background-color: white;
+	}
+
+	#detail {
+		padding: 28px 0px;
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		background-position: center center;
+		background-size: cover;
+		background-image: url(../../picture/user_bg.png);
+	}
+
+	.head {
+		margin: 10px calc(50% - 150px);
+		width: 300px;
+		height: 300px;
+		border-radius: 150px;
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		background-position: top top;
+		background-size: cover;
+		background-image: url(../../picture/user_head.png);
+	}
+
+	.uid, .area, .age, .auth, .cls {
+		margin: 10px;
+		font-size: 3.3em;
+	}
+
+	.sex, .name {
+		font-size: 4.4em;
+	}
+
+	.ladd {
+		font-size: 5.5em;
+	}
+
+	.tips {
+		margin: 5px 0px;
+		padding: 10px;
+		font-size: 3em;
+		background-color: white;
+	}
+
+	.rank, .value, .allot {
+		flex: 33;
+		margin: 5px 0px;
+		padding: 5px;
+		font-size: 3em;
+		background-color: white;
+	}
+
+	.ach-flex {
+		display: flex;
+	}
+
+	.ach-cell {
+		margin: 3px;
+		padding: 5px 10px;
+		font-size: 3.3em;
+		background-color: white;
+	}
+
+	.ach-left {
+		flex: 75;
+		margin-left: 0px;
+		text-align: left;
+	}
+
+	.ach-right {
+		flex: 25;
+		margin-right: 0px;
+	}
+
+	.rec-title {
+		margin: 10px;
+		font-size: 3.3em;
+		text-align: center;
+	}
+
+	.rec-left {
+		flex: 25;
+		padding-top: 10px;
+	}
+
+	.rec-right {
+		flex: 75;
+		margin-right: 0px;
+		text-align: left;
+	}
+
+	#alert-box {
+        top: 220px;
+        left: 20px;
+        right: 20px;
+        max-height: 1600px;
+    }
+
+    #alert-scroll {
+        width: 100%;
+        overflow: auto;
+        min-height: 1270px;
+        max-height: 1270px;
+    }
+
+    #alert-block {
+
+    }
+
+
+
+</style>
+
+<body>
+	<div id="outer-top"></div>
+	<div id="outer-center"></div>
+	<div id="outer-bot">
+		<a class="button-bot-live" href="../user/user.html">个人</a>
+		<a class="button-bot-dead" href="../nexu/nexu.html">关系</a>
+		<a class="button-bot-dead" href="../home/home.html">主页</a>
+		<a class="button-bot-dead" href="../fund/fund.html">资金</a>
+		<a class="button-bot-dead" href="../inve/inve.html">市场</a>
+	</div>
+
+    <div id="alert">
+        <div id="alert-bg"></div>
+        <div id="alert-box">
+            <div id="alert-block">
+                <div id="alert-title">搜索结果</div>
+                <div id="alert-scroll">
+                </div>
+                <div class="alert-flex">
+                    <div class="button-red" id="btn-close">取消</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

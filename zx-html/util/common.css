@@ -1,0 +1,314 @@
+
+body {
+	font-family: "Times New Roman", Verdana, "Arial Unicode MS";
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+#outer-top {
+	display: flex;
+	width: 100%;
+	overflow: auto;
+	padding-bottom: 10px;
+	transform: skew(0deg);
+}
+
+#outer-bot {
+	display: flex;
+	padding-top: 10px;
+}
+
+#outer-center {
+	overflow: auto;
+	height: calc(100% - 500px);
+}
+
+
+.inner {
+
+}
+
+.content {
+	padding: 5px 15px;
+}
+
+
+.flex {
+	display: flex;
+}
+
+.block {
+	display: block;
+}
+
+
+.title {
+	padding-top: 0px;
+	font-size: 6em;
+}
+
+.vice {
+	font-size: 4em;
+	padding-bottom: 5px;
+}
+
+.hide {
+	font-size: 4em;
+	padding: 1em;
+	background-color: white;
+}
+
+
+
+.cell {
+	flex: 10;
+	margin: 3px;
+	padding: 5px 15px;
+	font-size: 3.5em;
+	background-color: #fff;
+}
+
+.button, .button-red, .button-green {
+	flex: 50;
+	margin: 5px 10px;
+	padding: 15px;
+	color: white;
+	font-size: 5em;
+	border: solid 6px white;
+	border-radius: 20px;
+	background-color: indigo;
+}
+
+.button-red {
+	background-color: red;
+}
+
+.button-green {
+	background-color: green;
+}
+
+.button-min {
+	flex: 33;
+	margin: 10px 10px;
+	padding: 15px;
+	color: white;
+	font-size: 4em;
+	border: solid 6px white;
+	border-radius: 20px;
+	background-color: indigo;
+}
+
+
+.button-top {
+	flex: 10;
+	margin: 0px;
+	padding: 20px;
+	font-size: 4em;
+	color: dodgerblue;
+	background-color: #eee;
+	text-decoration: none;
+}
+
+.button-bot-dead {
+	flex: 10;
+	margin: 0px;
+	padding: 20px;
+	font-size: 4em;
+	color: darkorange;
+	background-color: #eee;
+	text-decoration: none;
+}
+
+.button-bot-live {
+	flex: 10;
+	height: 64px;
+	margin: 0px;
+	padding: 20px;
+	font-size: 4em;
+	color: white;
+	background-color: darkorange;
+	text-decoration: none;
+}
+
+
+.blk-tag {
+  display: none;
+  margin: 0px 5px;
+}
+
+.blk-desc {
+  display: none;
+  text-align: left;
+  padding: 10px;
+  font-size: 3.5em;
+  font-weight: normal;
+  max-height: 9999px;
+}
+
+.blk-button {
+  display: none;
+  margin: 0px 5px;
+  padding-bottom: 10px;
+}
+
+.user-flex {
+	display: flex;
+}
+
+.user-line {
+	margin: 5px 0px;
+	background-color: white;
+}
+
+.user-top {
+	display: flex;
+	padding: 10px;
+	margin-bottom: -20px;
+	font-size: 3.6em;
+}
+
+.user-order {
+	flex: 100;
+	margin: 0px 10px;
+	font-size: 1.4em;
+	text-align: left;
+}
+
+.user-value {
+	text-align: right;
+	padding-top: 10px;
+}
+
+.user-idx {
+	position: absolute;
+	margin: 20px;
+	font-size: 10em;
+}
+
+.user-head {
+	margin: 15px;
+	width: 150px;
+	height: 150px;
+	font-size: 5em;
+	margin-right: 10px;
+}
+
+.user-left {
+	flex: 100;
+	margin: 10px 0px 20px 0px;
+	text-align: left;
+	display: block;
+}
+
+.user-right {
+	margin: 10px 0px 20px 0px;
+	text-align: right;
+	display: block;
+}
+
+.user-name {
+	margin: 5px 10px;
+	text-align: left;
+	font-size: 4.2em;
+}
+
+.user-mark {
+	display: block;
+	margin: 5px 10px;
+	padding: 5px 15px;
+	font-size: 3em;
+	font-weight: normal;
+	border: solid 3px white;
+	border-radius: 10px;
+}
+
+
+.user-tag {
+	flex: 33;
+	margin: 10px 10px;
+	padding: 15px;
+	color: white;
+	font-size: 3.3em;
+	border: solid 6px white;
+	border-radius: 10px;
+	background-color: #6aa;
+}
+
+.user-nexu {
+	display: block;
+	margin: 5px 10px;
+	font-size: 3em;
+	font-weight: normal;
+}
+
+.user-ladd {
+	display: block;
+	margin: 5px 10px;
+	font-size: 5em;
+}
+
+
+
+#alert-bg {
+	display: flex;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	background-color: #222;
+	opacity: 0.90;
+}
+
+.alert-flex {
+	display: flex;
+	margin: 5px 0px;
+	text-align: center;
+}
+
+#alert-box {
+	display: block;
+	position: absolute;
+	border: solid 8px #fff;
+	border-radius: 30px;
+}
+
+#alert-title {
+	margin: 10px 0px;
+	width: 100%;
+	font-size: 5em;
+	/*color: white;*/
+}
+
+#alert-limit {
+	/*width: 100%;*/
+	padding: 10px;
+	font-size: 4em;
+}
+
+#alert-text {
+	margin: 20px 0px 20px 20%;
+	font-size: 6em;
+}
+
+#alert-input {
+	margin: 20px;
+	width: 50%;
+	font-size: 6em;
+	font-weight: bold;
+	font-family: "Times New Roman";
+	border: 8px solid #fff;
+}
+
+.space10 {
+	height: 10px;
+	background-color: white;
+}
+
+.space20 {
+	height: 20px;
+	background-color: white;
+}

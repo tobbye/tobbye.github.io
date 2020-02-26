@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="UTF-8"/>
+ <title>投入</title>
+ <link rel="stylesheet" href="../../util/common.css" type="text/css" />
+ <script src="../../util/util.js"> </script>
+ <script src="recd-data.js"> </script>
+ <script src="recd-setting.js"> </script>
+</head>
+
+
+<style type="text/css"> 
+
+h4 {
+  margin: 0px;
+  font-size: 0.8em;
+}
+
+
+.block {
+  display: block;
+  overflow: auto;
+}
+
+.left, .stamp, .right {
+  flex: 25;
+  margin: 2px;
+  padding: 10px 10px;
+  font-size: 4em;
+  background-color: white;
+}
+
+#alert-box {
+	display: block;
+	position: absolute;
+	top: calc(50% - 800px);
+	left: calc(50% - 450px);
+	right: calc(50% - 450px);
+	padding: 10px;
+  max-height: 1600px;
+	background-color: #ccc;
+	border: solid 8px #fff;
+	border-radius: 30px;
+}
+
+#alert-block {
+  width: 100%;
+  max-height: 1230px;
+  overflow: auto;
+}
+
+#alert-text {
+  margin: 0px;
+  padding: 10px 10px;
+  font-size: 4em;
+  text-align: left;
+}
+
+#button-confirm {
+  margin: 10px 26% 0px 26%;
+  width: 45%;
+}
+
+</style>
+
+<body>
+  <div id="outer-top"></div>
+  <div id="outer-center"></div>
+  <div id="outer-bot">
+    <a class="button-bot-dead" href="../user/user.html">个人</a>
+    <a class="button-bot-dead" href="../nexu/nexu.html">关系</a>
+    <a class="button-bot-dead" href="../home/home.html">主页</a>
+    <a class="button-bot-live" href="../fund/fund.html">资金</a>
+    <a class="button-bot-dead" href="../inve/inve.html">市场</a>
+  </div>
+
+</body>
+</html>
