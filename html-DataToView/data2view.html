@@ -1,0 +1,171 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<script src="data2view.js"> </script>
+	<script src="data/equipData.js"></script>
+	<script src="data/csvData.js"></script>
+	<script src="data/treeData.js"></script>
+	<script src="data/jsonData.js"></script>
+	<script src="data/expData.js"></script>
+	<script type="text/javascript">
+		window.onload = function() {
+			window.onresize();
+			dataListToView(csvList, "csv");
+			dataListToView(jsonList, "json");
+		}
+
+		window.onresize = function() {
+			if (window.innerWidth > window.innerHeight)
+				Elem.get('outer').style.width = '100%';
+			else
+				Elem.get('outer').style.width = '100%';
+		}
+
+		var viewConfig = [
+			{viewType:"data", color:"#846", bgcolor:"#eac", jsonFunc: toText(jsonToView), csvFunc: toText(csvToView)},
+			{viewType:"table", color:"#864", bgcolor:"#eca", jsonFunc: toText(jsonToTable), csvFunc: toText(csvToTable)},
+			{viewType:"line", color:"#468", bgcolor:"#ace", jsonFunc: toText(jsonToLine), csvFunc: toText(csvToLine)},
+			{viewType:"k&v", color:"#648", bgcolor:"#cae", jsonFunc: toText(jsonToValue), csvFunc: toText(csvToValue)},
+			{viewType:"list", color:"#684", bgcolor:"#cea", jsonFunc: toText(jsonToList), csvFunc: toText(csvToList)},
+		];
+
+		var csvList = [
+			{data: null, title: 'CSV DATA'},
+			{data: equip, title: 'EquipData'},
+			{data: date, title: 'DateData'},
+			{data: tree, title: 'TreeData'},
+		];
+
+		var jsonList = [
+			{data: null, title: 'JSON DATA'},
+			{data: macData, title: 'MacData'},
+			{data: expData, title: 'ExpData'},
+		];
+
+		var Elem = {
+			get: function (name) {
+				return document.getElementById(name);
+			},
+			set: function (type, parent, className, idx) {
+				var item = document.createElement(type);
+				if (className)
+					item.className = className;
+				if (parent)
+					parent.appendChild(item);
+				if (idx && className)
+					item.id = className + "_" + idx;
+				return item;
+			},
+			color: function(elem, color, bgcolor) {
+				if (elem) {
+					elem.style.color = color;
+					elem.style.backgroundColor = bgcolor;
+				}
+			},
+			align: function(elem, align, width) {
+			    if (elem) {
+			        elem.style.textAlign = align;
+			        elem.style.width = width + "%";
+			    }
+			},
+			remove: function (elem) {
+			    if(elem)
+			        elem.parentNode.removeChild(elem);
+			    return !!elem;
+			}
+		}
+	</script>
+
+	<style type="text/css"> 
+		body {
+			font-family: "Consolas", "Trebuchet MS", Verdana;
+			margin: 0px;
+			padding: 0px;
+			font-size: 10px;
+			font-weight: bold;
+		}
+
+		canvas {
+			display: block;
+			position: absolute;
+		}
+
+		#outer {
+			width: 100%;
+		}
+
+		.bg {
+			overflow: auto;
+			max-width: 200%;
+		}
+
+		.flex {
+			display: flex;
+			color: red;
+			font-size: 2.5em;
+		}
+
+		.btnData {
+			text-align: left;
+			flex: 100;
+			margin: 2px;
+			padding: 10px;
+		}
+
+		.btnView {
+			text-align: center;
+			flex: 30;
+			margin: 2px;
+			padding: 10px;
+		}
+
+		.view {
+			padding: 10px;
+			font-size: 2em;
+			max-height: auto;
+			max-width: 900%;
+		}
+
+		table {
+			width: 100%;
+			font-size: 2em;
+			font-weight: bold;
+			border-spacing: 0;
+			border-collapse: collapse; 
+			background-color:#fff;
+		}
+
+		tr {
+			height:1.5em;
+		}
+
+		th {
+			text-align: center;
+			color: darkred;
+			padding: 5px;
+			min-width: 50px;
+			border: solid 2px #888;
+			background-color: #eee;
+		}
+
+		td {
+			text-align: center;
+			padding: 5px;
+			border: solid 2px #888;
+		}
+
+		.td-title {
+			text-align: left;
+			color: red;
+			colspan: 3;
+			padding: 10px;
+			border: solid 0px #fff;
+		}
+	</style>
+
+</head>
+<body>
+	<div id="outer">
+	</div>
+</body>
+</html>
