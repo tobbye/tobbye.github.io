@@ -133,12 +133,13 @@ function setFlex(line, data) {
 	var topText = list.text;
 	data = config.unit;
 	data.name = items[x].list[y].lines[z];
-	if (!config.order[z]) 
-		data.order = parseInt(z) + 1 + "th";
-	else
-		data.order = config.order[z];
+	data.order = parseInt(z) + 1 + "th";
+	if (data.order.length == 3)
+		data.order = data.order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
 	// setNotFlex()
-	data.value = topText + ": ￥" + Parse.sub4Num(2e5 + Math.floor(2e4 * (30-z+Math.random())));
+	var seed = items[x].seed * list.seed;
+	var rand = Math.floor((Math.random()+40-z) * 2 * seed);
+	data.value = topText + ": ￥" + Parse.sub4Num(rand);
 	data.nexu = config.state[0].nexu;
 	data.button = config.state[0].button;
 	data.ladd = Math.floor(Math.random() * 20) + 3;

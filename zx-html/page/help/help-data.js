@@ -9,7 +9,7 @@ var config = {
 
 
 var items = [
-{title: '设置', colorIdx: 1,
+{title: '帮助', colorIdx: 1,
 list: [
 {title: 'Style', vice: 'Select the style of color mode',
 lines: ['deep', 'normal', 'bright', 'standard', 'dark']},

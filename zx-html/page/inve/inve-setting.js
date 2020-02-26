@@ -67,7 +67,6 @@ function setNotLine(content, x) {
 }
 
 
-
 function setTempLine(data) {
     var lines = data.lines;
     if (lines.length > 0)
@@ -79,7 +78,7 @@ function setTempLine(data) {
         line.ladd = Math.floor(25 * Math.random()) + 1;
         line.multi = Math.floor(100 * Math.random()) + 1;
         line.index = Math.floor((1547 + Math.random()) * 1e9);
-        line.stamp = Parse.formatTime(line.index).replace(" ", "<br/>");
+        line.stamp = Parse.formatTime(line.index).replace(" ", "<br/><h3>");
         line.inver = list[idx].split('/')[1];
         line.word = line.inver + "/" + list[idx].split('/')[0];
         line.word = line.word.replace(/\n/g, "").replace(/ /g, "/");
@@ -90,7 +89,7 @@ function setTempLine(data) {
     return lines;
 }
 
-//设置抢夺、获取页面 LINE
+
 function setGrabLine(content, data, x, y) {
     var lines = setTempLine(data);
     var list = Elem.set("div", content, "block");
@@ -99,7 +98,6 @@ function setGrabLine(content, data, x, y) {
         if (!line.ladd) continue;
         line = setLineData(line, data.dot, data.isGrab);
         line.row = parseInt(line.ladd / 5 - 0.2);
-        line.color = config.color[line.row]
         var block = Elem.set("div", list, "block", z);
         block.x = x;
         block.y = y;
@@ -113,12 +111,12 @@ function setGrabLine(content, data, x, y) {
         var flex = Elem.set("div", block, "flex");
         //INDEX
         var index = Elem.set("text", flex, "line");
-        index.innerHTML = "编号：" + line.index;
         Elem.flex(index, "left", 30);
-        index.innerHTML += "<br/>" + data.inverStr + line.inver;
+        index.innerHTML = "编号: " + line.index;
+        index.innerHTML += "<br/>" + data.inverStr + line.inver + " (" +  line.ladd + "阶)";
         //STAMP
         var stamp = Elem.set("text", flex, "line");
-        stamp.innerHTML = "时间：" + line.stamp;
+        stamp.innerHTML = "时间: " + line.stamp;
         Elem.flex(stamp, "right", 20);
 
         var flex = Elem.set("div", block, "flex");
@@ -132,7 +130,7 @@ function setGrabLine(content, data, x, y) {
     items[x].list[y].lines = lines;
 }
 
-//设置投入、投放页面 LINE
+
 function setInveLine(content, data, x, y) {
     var lines = data.lines;
     //BLOCK
@@ -144,7 +142,6 @@ function setInveLine(content, data, x, y) {
         lines.push(line);
         if (!line.ladd) continue;
         line.row = Math.floor(line.ladd / 5 - 0.2);
-        line.color = config.color[line.row];
 
         //FLEX
         var flex = Elem.set("div", block, "flex", z);
@@ -173,7 +170,6 @@ function setInveLine(content, data, x, y) {
 }
 
 
-//设置LINE数据
 function setLineData(line, dot, isGrab) {
 
     line.priceAllList = [];    
@@ -258,7 +254,7 @@ function setDetailStyle(flex) {
     }
 }
 
-//详情弹窗
+
 function setDetailAlert(flex) {
     var x = flex.x;
     var y = flex.y;
@@ -274,6 +270,7 @@ function setDetailAlert(flex) {
     var pieceKey = data.isGrab ? "pieceCurList" : "pieceAllList";
     var timesKey = data.isGrab ? "timesCurList" : "timesAllList";
     var block = Elem.get("detail-block");
+    block.style.maxHeight = config.alertHeight + "px";
     block.innerHTML = "";
 
     for (var i = 0; i < line.ladd; i++) {
@@ -288,18 +285,18 @@ function setDetailAlert(flex) {
         piece.innerHTML = data.pieceStr.replace("{0}", Parse.sub4Num(line[pieceKey][idx]));
         price.innerHTML = data.priceStr.replace("{0}", Parse.sub4Num(line[priceKey][idx]));
         times.innerHTML = data.timesStr.replace("{0}", Parse.sub4Num(line[timesKey][idx]));
-
     }
 
+    // block.scrollIntoView(true);
     var box = Elem.get("alert-box");
-    var title = Elem.get("alert-title");
-    box.style.backgroundColor = getColorType(x);
+    var title = Elem.get("detail-title");
+    box.style.backgroundColor = getColorLight(x);
     title.innerHTML = line.inver || ""; 
     title.innerHTML += data.flexStr;
     showAlert(data);
 }
 
-//解密弹窗
+
 function setPuzzleAlert() {
     Style.display("detail-bg", "none");
     Style.display("puzzle-bg", "inline");
@@ -338,8 +335,8 @@ function setPuzzleCell(line, block, mix) {
         var textCell = Elem.set("div", flex, "cell-text");
         textCell.able = true;
         textCell.innerHTML = str[idx];
-        textCell.style.borderColor = config.curColor;
-        textCell.style.backgroundColor = mix ? "white" : getColorType();
+        textCell.style.borderColor = getColorType();
+        textCell.style.backgroundColor = mix ? "white" : getColorLight();
         textCell.onclick = function() {
             if (mix && this.able) {
                 var color = config.curColor;
@@ -371,7 +368,7 @@ function setPuzzleCell(line, block, mix) {
     var space = Elem.set("div", block, "space20");
 }
 
-//结果弹窗
+
 function setResultAlert() {
     Style.display("puzzle-bg", "none");
     Style.display("result-bg", "inline");
@@ -429,24 +426,22 @@ function setAlert() {
 }
 
 
-//显示弹窗
 function showAlert(data) {
     showAlertButton(data);
-    Style.display("alert-bg", "inline");
-    Style.display("alert-box", "inline");
-    Style.display("detail-bg", "inline");
+    Style.display("alert-bg", "block");
+    Style.display("alert-box", "block");
+    Style.display("detail-bg", "block");
     Style.display("puzzle-bg", "none");
     Style.display("result-bg", "none");
 }
 
 
-//隐藏弹窗
 function hideAlert() {
     Style.display("alert-bg", "none");
     Style.display("alert-box", "none");
     Style.display("detail-bg", "none");
     Style.display("puzzle-bg", "none");
-    Style.display("result-bg", "inline");
+    Style.display("result-bg", "block");
 }
 
 

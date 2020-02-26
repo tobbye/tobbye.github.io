@@ -86,8 +86,8 @@
 
 	.ach-cell {
 		margin: 3px;
-		padding: 5px 10px;
-		font-size: 3.3em;
+		padding: 10px;
+		font-size: 3.5em;
 		background-color: white;
 	}
 
@@ -110,7 +110,7 @@
 
 	.rec-left {
 		flex: 25;
-		padding-top: 10px;
+		padding-top: 20px;
 	}
 
 	.rec-right {
@@ -123,20 +123,7 @@
         top: 220px;
         left: 20px;
         right: 20px;
-        max-height: 1600px;
     }
-
-    #alert-scroll {
-        width: 100%;
-        overflow: auto;
-        min-height: 1270px;
-        max-height: 1270px;
-    }
-
-    #alert-block {
-
-    }
-
 
 
 </style>
@@ -155,13 +142,13 @@
     <div id="alert">
         <div id="alert-bg"></div>
         <div id="alert-box">
-            <div id="alert-block">
-                <div id="alert-title">搜索结果</div>
-                <div id="alert-scroll">
-                </div>
-                <div class="alert-flex">
-                    <div class="button-red" id="btn-close">取消</div>
-                </div>
+            <div id="detail-bg">
+            	<div id="detail-title">搜索结果</div>
+            	<div id="detail-block">
+            	</div>
+            </div>
+            <div class="alert-flex">
+                <div class="button-red" id="btn-close">关闭</div>
             </div>
         </div>
     </div>

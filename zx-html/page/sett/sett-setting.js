@@ -83,3 +83,4 @@ function setStyle(content, lines, x, y) {
 		}
 	}
 }
+

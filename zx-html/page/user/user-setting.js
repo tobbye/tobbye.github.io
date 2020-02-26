@@ -134,7 +134,7 @@ function setTags(content, data) {
 		button.innerHTML = data.text;
 		button.btnIdx = y;
 		button.onclick = function() {
-			setSearch(this);
+			setTagSearch(this);
 		}
 
 		//VALUE
@@ -211,16 +211,21 @@ function setAlert() {
     }
 }
 
-function setSearch(button) {
+function setTagSearch(button) {
 	var box = Elem.get("alert-box");
-    var title = Elem.get("alert-title");
-    var scroll = Elem.get("alert-scroll");
-    Elem.color(box, "", getCurColor(1));
-    title.innerHTML = "标签:" + button.innerHTML;
+    var title = Elem.get("detail-title");
+    var block = Elem.get("detail-block");
+    block.innerHTML = "";
+    block.style.maxHeight = config.alertHeight + "px";
+    Elem.color(box, "", getColorLight());
+    title.innerHTML = "标签搜索:" + button.innerHTML;
 	for (let z in config.lines) {
-		var line = Elem.set("div", scroll, "user-line", z);
+		var line = Elem.set("div", block, "user-line", z);
+		line.top = Elem.set("div", line, "user-top");
+		line.order = Elem.set("div", line.top, "user-order");
+		line.value = Elem.set("div", line.top, "user-value");
 		line.flex = Elem.set("div", line, "user-flex");
-		line.head = Elem.set("div", line.flex, "user-head");
+		line.head = Elem.set("img", line.flex, "user-head");
 		line.left = Elem.set("div", line.flex, "user-left");
 		line.name = Elem.set("div", line.left, "user-name");
 		line.mark = Elem.set("div", line.left, "user-flex");
@@ -234,6 +239,9 @@ function setSearch(button) {
 }
 
 function setFlex(data, line) {
+	var order = data.order + "th";
+	if (order.length == 3)
+		data.order = order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
 	if (data.tag) {
 		for (let i in data.tag) {
 			var tag = Elem.set("div", line.tag, "user-tag");
@@ -244,9 +252,13 @@ function setFlex(data, line) {
 		for (let i in data.mark) {
 			var mark = Elem.set("div", line.mark, "user-mark");
 			mark.innerHTML = data.mark[i];
-			mark.style.borderColor = getCurColor(1);
+			mark.style.borderColor = getColorType();
 		}
 	}
+	line.head.style.backgroundColor = getColorLight();
+	// line.head.src = "../../picture/head1.jpg";
+	line.order.innerHTML = data.order;
+	line.value.innerHTML = "权值: " + Parse.sub4Num(data.value);
 	line.name.innerHTML = data.name;
 	line.nexu.innerHTML = data.nexu;
 	line.ladd.innerHTML = data.ladd + "阶";
@@ -254,9 +266,9 @@ function setFlex(data, line) {
 
 //显示弹窗
 function showAlert() {
-    Style.display("alert-bg", "inline");
-    Style.display("alert-box", "inline");
-    Style.display("alert-block", "inline");
+    Style.display("alert-bg", "block");
+    Style.display("alert-box", "block");
+    Style.display("detail-block", "block");
 }
 
 
@@ -264,7 +276,7 @@ function showAlert() {
 function hideAlert() {
     Style.display("alert-bg", "none");
     Style.display("alert-box", "none");
-    Style.display("alert-block", "none");
+    Style.display("detail-block", "none");
 }
 
 

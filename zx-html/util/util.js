@@ -1,7 +1,8 @@
 window.onresize = function() {
     config.windWidth = window.innerWidth;
     config.windHeight = window.innerHeight;
-    config.maxHeight = window.innerHeight - config.innerOffset;
+    config.alertHeight = config.windHeight - config.alertOffset;
+    config.maxHeight = config.windHeight - config.innerOffset;
     config.isWidth = config.windWidth > config.windHeight;
     config.isHeight = config.maxHeight > config.minHeight;
     config.theHeight = Math.max(config.maxHeight, config.minHeight);
@@ -19,8 +20,6 @@ var colors = [
     {deep:"#648", normal:"#86a", light:"#cae", bright:"#80f", dark:"#222", standard:"purple"},
     {deep:"#486", normal:"#6a8", light:"#aec", bright:"#0a8", dark:"#222", standard:"seagreen"},
     {deep:"#684", normal:"#8a6", light:"#cea", bright:"#8a0", dark:"#222", standard:"green"},
-    {deep:"#666", normal:"#444", light:"#ccc", bright:"#ccc", dark:"#222", standard:"black"},
-    {deep:"#888", normal:"#666", light:"#eee", bright:"#eee", dark:"#222", standard:"gray"},
 ];
 
 var Parse = {}; 
@@ -309,25 +308,27 @@ localData.save = function() {
 
 //初始化本地数据
 localData.init = function(state) {
-    var dataIdx = Storage.get("dataIdx").replace("default", "values");
+    var dataIdx = Storage.get("dataIdx") || "values";
+    dataIdx = dataIdx.replace("default", "values");
+
     if (state == "set") {
         values = Storage.get("values");
         Storage.set(dataIdx, values);
-        console.log("—————————— SET " + dataIdx + " succeed! ——————————");
+        console.log(contentText("SET", dataIdx, "succeed!"));
         console.log(values);
-        return;
+        return values;
     }
 
     if (state == "get") {
         if (Storage.get(dataIdx)) {
             values = Storage.get(dataIdx);
             Storage.set("values", values);
-            console.log("—————————— GET " + dataIdx + " succeed! ——————————");
+            console.log(contentText("GET", dataIdx, "succeed!"));
             console.log(values);
         } else {
-            console.log("—————————— GET " + dataIdx + " fail!!! ——————————");
+            console.log(contentText("GET", dataIdx, "fail!!!"));
         }
-        return;
+        return values;
     }
 
     if (state == "clear") {
@@ -337,16 +338,22 @@ localData.init = function(state) {
         values.h = 50000;
         Storage.set(dataIdx, values);
         Storage.set("values", values);
-        console.log("—————————— CLEAR " + dataIdx + " succeed! ——————————");
+        console.log(contentText("CLEAR", dataIdx, "succeed!"));
         console.log(values);
-        return;
+        return values;
     }
 
     if (state == "init") {
-        values = Storage.get("values");
-        console.log("—————————— INIT " + dataIdx + " succeed! ——————————");
+        values = Storage.get("values") || localData.init("clear");
+        console.log(contentText("INIT", dataIdx, "succeed!"));
         console.log(values);
+        return values;
     }
+}
+
+var contentText = function(a, b, c) {
+    var line = " —————————— ";
+    return line + " " + a + " " + b + " " + c + " " + line; 
 }
 
 //显示内页
@@ -367,11 +374,7 @@ var setInner = function(idx) {
             Elem.color(elems[x].btntop, "dodgerblue", "#eee");
         }
     }
-    var colorIdx = items[idx].colorIdx;
-    var color = colors[colorIdx];
-    config.curColor = color[config.colorType];
-    Elem.color(document.body, config.curColor, "#eee");
-    // Elem.color(document.body, color.deep, color.light);
+    Elem.color(document.body, getColorType(), "#eee");
     if (config.isAlert)
         alert(JSON.stringify(items[idx]));
     else
@@ -382,14 +385,19 @@ var getColorType = function(idx) {
     var innerIdx = idx ? idx : values.innerIdx;
     var colorIdx = items[innerIdx].colorIdx;
     var color = colors[colorIdx];
-    return color[config.colorType];
+    var type = config.colorType;
+    return color[type];
 }
 
 var getColorLight = function(idx) {
     var innerIdx = idx ? idx : values.innerIdx;
     var colorIdx = items[innerIdx].colorIdx;
     var color = colors[colorIdx];
-    return color["light"];
+    var type = config.colorType;
+    if (type == "dark")
+        return "#ccc";
+    else
+        return color["light"];
 }
 
 
@@ -398,13 +406,14 @@ var getColorLight = function(idx) {
 var getAgent = function() {
     var val = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
     config.isMobile = val;
-    config.colorType = Storage.get("colorType");
-    config.initType = Storage.get("initType");
-    config.dataIdx = Storage.get("dataIdx");
+    config.colorType = Storage.get("colorType") || "deep";
+    config.initType = Storage.get("initType") || "clear";
+    config.dataIdx = Storage.get("dataIdx") || "defalut";
     config.isAlert = Storage.get("isAlert") == "alert";
     config.outerOffset = 230;
+    config.alertOffset = 680;
     config.curColor = colors[0][config.colorType];
-    // console.log(val ? "Is Mobile Phone" : "Is Computer");
+    console.log(val ? "Is Mobile Phone" : "Is Computer");
     console.log(config);
     window.onresize();
     return val;
@@ -413,9 +422,22 @@ var getAgent = function() {
 //设置浏览器
 var setAgent = function() {
     // window.onresize();
-    if (!config.isMobile) {
+    togContent();
+}
 
+
+
+var setFullScreen = function() {
+    if (config.isMobile) {
+        var body = document.body;
+        if (body.requestFullScreen) body.requestFullScreen(); //W3C
+        if (body.msRequestFullScreen) body.msRequestFullScreen();  //IE11
+        if (body.mozRequestFullScreen) body.mozRequestFullScreen(); //FireFox
+        if (body.webkitRequestFullScreen) body.webkitRequestFullScreen(); //Chrome
     }
+}
+
+var togContent = function() {
     var content = Elem.getClass('content');
     for (let idx in content) {
         var elem = content[idx];
@@ -468,8 +490,6 @@ var setAgent = function() {
                 }
             }
         }
-
-
     }
 }
 
