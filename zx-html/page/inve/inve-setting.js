@@ -142,7 +142,7 @@ function setLineDetail(block, data, x) {
     line.desc = Elem.set("div", line, "blk-desc");
     line.button = Elem.set("div", line, "blk-button");
     line.flex = Elem.set("div", line.body, "user-flex");
-    line.head = Elem.set("div", line.flex, "user-head");
+    line.head = Elem.set("img", line.flex, "user-head");
     line.left = Elem.set("div", line.flex, "user-left");
     line.name = Elem.set("div", line.left, "user-name");
     line.mark = Elem.set("div", line.left, "user-flex");

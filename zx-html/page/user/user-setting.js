@@ -65,7 +65,7 @@ function setTitle(content, data, x) {
 
 function setDetail(content, data) {
 	var block = Elem.set("div", content, "block");
-	var head = Elem.set("div", block, "head");
+	var head = Elem.set("img", block, "head");
 	var name = Elem.set("div", block, "name");
 	var uid = Elem.set("div", block, "uid");
 	var area = Elem.set("span", block, "area");

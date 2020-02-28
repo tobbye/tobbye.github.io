@@ -79,7 +79,7 @@ function setLine(content, lines, x, y) {
 		line.desc = Elem.set("div", line, "blk-desc");
 		line.button = Elem.set("div", line, "blk-button");
 		line.flex = Elem.set("div", line.body, "user-flex");
-		line.head = Elem.set("div", line.flex, "user-head");
+		line.head = Elem.set("img", line.flex, "user-head");
 		line.left = Elem.set("div", line.flex, "user-left");
 		line.name = Elem.set("div", line.left, "user-name");
 		line.mark = Elem.set("div", line.left, "user-flex");
@@ -142,6 +142,7 @@ function setFlex(line) {
 			mark.style.borderColor = getColorType(x);
 		}
 	}
+	// line.head.src = "../../picture/user_head_1.png";
 	Elem.color(line.head, "", getColorLight(x));
 	Elem.color(line.nexu, "white", getColorType(x));
 	Elem.style(line.nexu, "borderColor", getColorType(x));
