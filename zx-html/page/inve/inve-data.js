@@ -66,7 +66,7 @@ lines: []},
 
 { id: 2, title: '获取', colorIdx: 3, group: '赞助商',
 list: [
-{title: '红包池', vice: '抢夺投放的红包来获取收益', 
+{title: '红包池', vice: '抢夺投放的红包来获取收益', puzzleText: '发现一个红包',
 dot: 100, isGrab: 1, instance: "gain_str",
 inverStr: "投放者：", flexStr: "的投放",
 laddStr: "阶梯<br/><h3>{0}阶</h3>",
