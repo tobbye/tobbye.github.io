@@ -8,4 +8,6 @@ var config = {
 };
 
 
-var items = [];
+var items = [
+{title:"主页", colorIdx: 1}
+];

@@ -255,6 +255,15 @@ function setFlex(data, line) {
 			mark.style.borderColor = getColorType();
 		}
 	}
+	if (data.uid.replace('s', '') != data.uid) 
+		data.nexu = "赞助商";
+	else if (data.uid.replace('d', '') != data.uid) 
+		data.nexu = "淘金者";
+	else 
+		data.nexu = "未知用户";
+	
+	Elem.color(line.nexu, "white", getColorType());
+	Elem.style(line.nexu, "borderColor", getColorType());
 	line.head.style.backgroundColor = getColorLight();
 	// line.head.src = "../../picture/head1.jpg";
 	line.order.innerHTML = data.order;

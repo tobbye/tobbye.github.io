@@ -16,7 +16,7 @@ var config = {
 };
 
 var items = [
-{ id: 0, title: '投入', colorIdx: 1,
+{ id: 0, title: '投入', colorIdx: 1, group: '淘金者',
 list: [
 {title: '我的投入', vice: '投入的资金可被淘金者抢夺', 
 dot: 1, isGrab: 1, 
@@ -28,8 +28,8 @@ timesStr: "已传播<br/><h3>{0}次</h3>",
 btnName: ["quit"],
 btnText: ["关闭"],
 lines: [
-{index: "1548342507258", stamp: "2019-01-24</br>23:08:27", ladd: 8, multi: 3, inver: "我", tag: ['众鑫淘金', '海量红包', '等你发掘']},
-{index: "1548342507258", stamp: "2019-01-23</br>12:18:10", ladd: 5, multi: 15, inver: "我", tag: ['众鑫淘金', '海量红包', '等你发掘']},
+{index: "1548342507258", stamp: "2019-01-24 23:08:27", laddCur: 12, ladd: 8, multi: 3, inver: "我", tag: ['众鑫淘金', '海量红包', '等你发掘']},
+{index: "1548342507258", stamp: "2019-01-23 12:18:10", laddCur: 9, ladd: 5, multi: 15, inver: "我", tag: ['众鑫淘金', '海量红包', '等你发掘']},
 ]},
 {title: '选择阶梯', vice: '投入资金后可以抢夺等量的资金', 
 dot: 1, isGrab: 0, 
@@ -44,7 +44,7 @@ lines: []},
 ]},
 
 
-{ id: 1, title: '抢夺', colorIdx: 2,
+{ id: 1, title: '抢夺', colorIdx: 2, group: '淘金者',
 list: [
 {title: '资金池', vice: '抢夺资金以提高可获收益上限', 
 dot: 1, isGrab: 1, instance: "vip_str",
@@ -59,7 +59,7 @@ lines: []},
 ]},
 
 
-{ id: 3, title: '获取', colorIdx: 3,
+{ id: 2, title: '获取', colorIdx: 3, group: '赞助商',
 list: [
 {title: '红包池', vice: '抢夺投放的红包来获取收益', 
 dot: 100, isGrab: 1, instance: "car_str",

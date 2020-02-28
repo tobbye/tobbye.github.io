@@ -2,6 +2,7 @@ window.onload = function() {
 	getAgent();
 	setElems();
 	setAgent();
+	setInner();
 }
 
 var config = {
@@ -13,10 +14,10 @@ var items = [
 {title: '设置', colorIdx: 1,
 list: [
 {title: 'Style', vice: 'Select the style of color mode', default: 0, key: 'colorType',
-lines: ['deep', 'normal', 'bright', 'dark']},
+lines: ['Black', 'Dark', 'Normal', 'Bright']},
 
 {title: 'Data', vice: 'Select a data to init', default: 0, key: 'dataIdx',
-lines: ['default', 'data1', 'data2', 'data3']},
+lines: ['Default', 'Data1', 'Data2', 'Data3']},
 
 {title: 'Init', vice: 'Get, set or clear the data', default: 0, key: 'initType',
 lines: ['Get', 'Set', 'Clear']},

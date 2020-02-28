@@ -75,10 +75,11 @@ function setTempLine(data) {
     var list = Parse.mix(str.split(','));
     for (let idx in list) {
         var line = {};
-        line.ladd = Math.floor(25 * Math.random()) + 1;
+        line.laddCur = Math.floor(25 * Math.random()) + 1;
+        line.ladd = Math.floor(line.laddCur * Math.random()) + 1;
         line.multi = Math.floor(100 * Math.random()) + 1;
         line.index = Math.floor((1547 + Math.random()) * 1e9);
-        line.stamp = Parse.formatTime(line.index).replace(" ", "<br/><h3>");
+        line.stamp = Parse.formatTime(line.index);
         line.inver = list[idx].split('/')[1];
         line.word = line.inver + "/" + list[idx].split('/')[0];
         line.word = line.word.replace(/\n/g, "").replace(/ /g, "/");
@@ -112,12 +113,15 @@ function setGrabLine(content, data, x, y) {
         //INDEX
         var index = Elem.set("text", flex, "line");
         Elem.flex(index, "left", 30);
+        Elem.style(flex, "marginBottom", '0px');
         index.innerHTML = "编号: " + line.index;
-        index.innerHTML += "<br/>" + data.inverStr + line.inver + " (" +  line.ladd + "阶)";
+        index.innerHTML += "<br/>" + data.inverStr;
         //STAMP
         var stamp = Elem.set("text", flex, "line");
         stamp.innerHTML = "时间: " + line.stamp;
         Elem.flex(stamp, "right", 20);
+
+        setLineDetail(block, line, x);
 
         var flex = Elem.set("div", block, "flex");
         flex.style.marginBottom = "10px";
@@ -128,6 +132,40 @@ function setGrabLine(content, data, x, y) {
         ladd.style.flex = 17;
     }
     items[x].list[y].lines = lines;
+}
+
+function setLineDetail(block, data, x) {
+    var line = Elem.set("div", block, "user-block");
+    line.block = {};
+    line.body = Elem.set("div", line, "blk-body");
+    line.tag = Elem.set("div", line, "blk-tag");
+    line.desc = Elem.set("div", line, "blk-desc");
+    line.button = Elem.set("div", line, "blk-button");
+    line.flex = Elem.set("div", line.body, "user-flex");
+    line.head = Elem.set("div", line.flex, "user-head");
+    line.left = Elem.set("div", line.flex, "user-left");
+    line.name = Elem.set("div", line.left, "user-name");
+    line.mark = Elem.set("div", line.left, "user-flex");
+    line.right = Elem.set("div", line.flex, "user-right");
+    line.ladd = Elem.set("div", line.right, "user-ladd");
+    line.nexu = Elem.set("div", line.right, "user-nexu");
+
+    data.mark = ['身份标签1', '身份标签2'];
+    if (data.mark) {
+        for (let i in data.mark) {
+            var mark = Elem.set("div", line.mark, "user-mark");
+            mark.innerHTML = data.mark[i];
+            mark.style.borderColor = getColorType(x);
+        }
+    }
+    Elem.color(line.head, "", getColorLight(x));
+    Elem.color(line.nexu, "white", getColorType(x));
+    Elem.style(line.nexu, "borderColor", getColorType(x));
+
+    data.nexu = items[x].group;
+    line.name.innerHTML = data.inver;
+    line.ladd.innerHTML = data.ladd + "阶";
+    line.nexu.innerHTML = data.nexu;
 }
 
 

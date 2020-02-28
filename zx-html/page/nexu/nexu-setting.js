@@ -87,7 +87,6 @@ function setLine(content, lines, x, y) {
 		line.ladd = Elem.set("div", line.right, "user-ladd");
 		line.nexu = Elem.set("div", line.right, "user-nexu");
 
-
 		line.x = x;
 		line.y = y;
 		line.z = z;
@@ -127,10 +126,9 @@ function setFlex(line) {
 	var x = line.x;
 	var y = line.y;
 	var z = line.z;
-	data = items[x].list[y].lines[z];
+	var list = items[x].list[y];
+	data = line.data;
 	data.button = items[x].button;
-	data.nexu = items[x].nexu;
-	line.head.style.backgroundColor = getColorLight(x);
 	if (data.tag) {
 		for (let i in data.tag) {
 			var tag = Elem.set("div", line.tag, "user-tag");
@@ -144,9 +142,19 @@ function setFlex(line) {
 			mark.style.borderColor = getColorType(x);
 		}
 	}
+	Elem.color(line.head, "", getColorLight(x));
+	Elem.color(line.nexu, "white", getColorType(x));
+	Elem.style(line.nexu, "borderColor", getColorType(x));
+	if (data.uid.replace('s', '') != data.uid) 
+		data.nexu = "赞助商";
+	else if (data.uid.replace('d', '') != data.uid) 
+		data.nexu = "淘金者";
+	else 
+		data.nexu = "未知用户";
+
 	line.name.innerHTML = data.name;
-	line.nexu.innerHTML = data.nexu;
 	line.ladd.innerHTML = data.ladd + "阶";
+	line.nexu.innerHTML = data.nexu;
 	line.desc.innerHTML = data.name + "的描述<br/>THE DESCRIBE OF " + data.name;
 	line.desc.innerHTML += "<br/>" + data.name + "的描述<br/>THE DESCRIBE OF " + data.name;
 	line.desc.innerHTML += "<br/>" + data.name + "的描述<br/>THE DESCRIBE OF " + data.name;

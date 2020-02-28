@@ -29,6 +29,10 @@ function setContent(inner, x) {
 		if (y == 0) {
 			setStyle(content, data.lines, x, y);
 		}
+		if (y == 1) {
+			var box = Elem.set("div", content, "text");
+			box.id = "data-box";
+		}
 	}
 }
 
@@ -51,19 +55,26 @@ function setLine(content, data, x, y) {
 	for (let z in data.lines) {
 		var btn = Elem.set("div", flex, "button-top");
 		btn.innerHTML = data.lines[z];
+		btn.y = y;
+		btn.z = z;
+		Elem.color(btn, "dodgerblue", "#fff");
 		btn.onclick = function() {
-			var value = this.innerHTML.toLowerCase();
-			Storage.set(data.key, value);
+			var btnText = this.innerHTML.toLowerCase();
+			Storage.set(data.key, btnText);
 			var nodes = this.parentNode.childNodes;
 			for (let idx in nodes) {
 				if (this.innerHTML == nodes[idx].innerHTML)  {
 		            Elem.color(nodes[idx], "white", "dodgerblue");
 		        } else {
-		            Elem.color(nodes[idx], "dodgerblue", "#eee");
+		            Elem.color(nodes[idx], "dodgerblue", "#fff");
 		        }				
 			}
-			if (y == 2)
-				localData.init(value);
+			btnText = btnText.replace("default", "values");
+			var value = Storage.get(btnText);
+			if (this.y == 2)
+				value = localData.init(btnText);
+			if (Elem.get('data-box'))
+				Elem.get('data-box').innerHTML = JSON.stringify(value).replace(/,/g,", ");
 		}
 		if (data.default == z) 
 			btn.onclick();
@@ -78,7 +89,8 @@ function setStyle(content, lines, x, y) {
 			if (z == 0)
 				line = Elem.set("div", content, "flex");
 			var cell = Elem.set("div", line, "cell");
-			cell.innerHTML = colors[x][lines[z]];
+			var key = lines[z].toLowerCase();
+			cell.innerHTML = colors[x][key].toUpperCase();
 			Elem.color(cell, "white", cell.innerHTML);
 		}
 	}

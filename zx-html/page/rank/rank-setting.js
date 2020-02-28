@@ -140,8 +140,7 @@ function setFlex(line, data) {
 	var seed = items[x].seed * list.seed;
 	var rand = Math.floor((Math.random()+40-z) * 2 * seed);
 	data.value = topText + ": ￥" + Parse.sub4Num(rand);
-	data.nexu = config.state[0].nexu;
-	data.button = config.state[0].button;
+	data.button = config.buttonIdx;
 	data.ladd = Math.floor(Math.random() * 20) + 3;
 	//data.desc = data.name + "的描述";
 	line.head.style.backgroundColor = getColorLight(x);
@@ -159,11 +158,13 @@ function setFlex(line, data) {
 			mark.style.borderColor = getColorType(x);
 		}
 	}
+	Elem.color(line.nexu, "white", getColorType(x));
+	Elem.style(line.nexu, "borderColor", getColorType(x));
 	line.name.innerHTML = data.name;
 	line.order.innerHTML = data.order;
 	line.value.innerHTML = data.value;
-	line.nexu.innerHTML = data.nexu;
 	line.ladd.innerHTML = data.ladd + "阶";
+	line.nexu.innerHTML = list.nexu;
 	line.desc.innerHTML = data.desc;
 
 	for (let k in data.button) {

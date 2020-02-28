@@ -13,14 +13,18 @@ window.onresize = function() {
 var elems = [{},{},{},{},{},{},{},{},{}];
 var values = {};
 var colors = [
-    {deep:"#fff", normal:"#222", light:"#fff", bright:"#fff", dark:"#222", standard:"white"},
-    {deep:"#846", normal:"#a68", light:"#eac", bright:"#f08", dark:"#222", standard:"red"},
-    {deep:"#864", normal:"#a86", light:"#eca", bright:"#f80", dark:"#222", standard:"orange"},
-    {deep:"#468", normal:"#68a", light:"#ace", bright:"#08f", dark:"#222", standard:"blue"},
-    {deep:"#648", normal:"#86a", light:"#cae", bright:"#80f", dark:"#222", standard:"purple"},
-    {deep:"#486", normal:"#6a8", light:"#aec", bright:"#0a8", dark:"#222", standard:"seagreen"},
-    {deep:"#684", normal:"#8a6", light:"#cea", bright:"#8a0", dark:"#222", standard:"green"},
+    {normal:"#fff", dark:"#222", light:"#fff", bright:"#fff", black:"#222", standard:"white"},
+    {normal:"#C48", dark:"#a68", light:"#eac", bright:"#e28", black:"#222", standard:"red"},
+    {normal:"#c84", dark:"#a86", light:"#eca", bright:"#e82", black:"#222", standard:"orange"},
+    {normal:"#48c", dark:"#68a", light:"#ace", bright:"#28e", black:"#222", standard:"blue"},
+    {normal:"#84c", dark:"#86a", light:"#cae", bright:"#82e", black:"#222", standard:"purple"},
+    {normal:"#4c8", dark:"#6a8", light:"#aec", bright:"#2e8", black:"#222", standard:"seagreen"},
+    {normal:"#8c4", dark:"#8a6", light:"#cea", bright:"#8e2", black:"#222", standard:"green"},
 ];
+// 0 1 2 3 4 5 
+// 0 9 8 7 6 5
+// 0 1 2 3 4 5 6 7 8
+// 0 f e d c b a 9 8
 
 var Parse = {}; 
 
@@ -394,7 +398,7 @@ var getColorLight = function(idx) {
     var colorIdx = items[innerIdx].colorIdx;
     var color = colors[colorIdx];
     var type = config.colorType;
-    if (type == "dark")
+    if (type == "black")
         return "#ccc";
     else
         return color["light"];
@@ -406,7 +410,7 @@ var getColorLight = function(idx) {
 var getAgent = function() {
     var val = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
     config.isMobile = val;
-    config.colorType = Storage.get("colorType") || "deep";
+    config.colorType = Storage.get("colorType") || "black";
     config.initType = Storage.get("initType") || "clear";
     config.dataIdx = Storage.get("dataIdx") || "defalut";
     config.isAlert = Storage.get("isAlert") == "alert";
@@ -441,11 +445,11 @@ var togContent = function() {
     var content = Elem.getClass('content');
     for (let idx in content) {
         var elem = content[idx];
-        if (elem.className != 'content')  return;
+        if (elem.className != 'content')  continue;
         //console.log(elem.id);
-        if (elem.children.length < 3)  return;
+        if (elem.children.length < 3)  continue;
         var block = elem.children[2];
-        if (block.className != 'block')  return;
+        if (block.className != 'block')  continue;
         var hide = Elem.set('div', elem, 'hide');
         hide.innerHTML = "内容已隐藏，点击展开...";
         Elem.toggle(hide, 'block');
