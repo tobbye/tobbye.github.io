@@ -8,7 +8,25 @@ function setElems() {
 
 
 function setOuterTop() {
-	return;
+	for (var i = 0;i<100;i++) {
+	rollLadd = 1;
+	var allCount = Math.pow(2, 10);
+    var rollCount = Math.floor(Math.random() * allCount);
+    getRoll(allCount, rollCount);
+    console.log("allCount:" + allCount + ' rollCount:' + rollCount + " rollLadd:" + rollLadd);
+	}
+}
+
+var rollLadd;
+
+function getRoll(all, roll) {
+	all = all / 2;
+    if (roll > all) {
+        rollLadd += 1;
+         getRoll(all, roll - all);
+    } else{
+        return rollLadd;
+    }
 }
 
 function setOuterCenter() {

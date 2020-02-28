@@ -241,18 +241,17 @@ marquee {
 
 .user-tag {
 	flex: 33;
-	margin: 10px 10px;
+	margin: 10px 15px;
 	padding: 10px;
 	color: white;
 	font-size: 3.3em;
 	font-weight: normal;
-	border: solid 5px white;
 	border-radius: 10px;
 	background-color: #6aa;
 }
 
 #alert-bg {
-	display: flex;
+	display: none;
 	position: absolute;
 	top: 0px;
 	left: 0px;

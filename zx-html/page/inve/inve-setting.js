@@ -75,14 +75,13 @@ function setTempLine(data) {
     var list = Parse.mix(str.split(','));
     for (let idx in list) {
         var line = {};
-        line.laddCur = Math.floor(25 * Math.random()) + 1;
-        line.ladd = Math.floor(line.laddCur * Math.random()) + 1;
+        line.ladder = Math.floor(20 * Math.random() * Math.random()) + 6;
+        line.ladd = line.ladder - Math.floor(5 * Math.random());
         line.multi = Math.floor(100 * Math.random()) + 1;
         line.index = Math.floor((1547 + Math.random()) * 1e9);
-        line.stamp = Parse.formatTime(line.index);
-        line.inver = list[idx].split('/')[1];
-        line.word = line.inver + "/" + list[idx].split('/')[0];
-        line.word = line.word.replace(/\n/g, "").replace(/ /g, "/");
+        line.stamp = Parse.formatTime(line.index).replace(' ', '<h3>');
+        line.inver = list[idx].split('/')[0];
+        line.word = list[idx].replace(/\n/g, "").replace(/ /g, "/");
         line.wordOrg = line.word;
         line.wordTgt = line.word.replace(/\//g, "");
         lines[idx] = line;
@@ -132,40 +131,6 @@ function setGrabLine(content, data, x, y) {
         ladd.style.flex = 17;
     }
     items[x].list[y].lines = lines;
-}
-
-function setLineDetail(block, data, x) {
-    var line = Elem.set("div", block, "user-block");
-    line.block = {};
-    line.body = Elem.set("div", line, "blk-body");
-    line.tag = Elem.set("div", line, "blk-tag");
-    line.desc = Elem.set("div", line, "blk-desc");
-    line.button = Elem.set("div", line, "blk-button");
-    line.flex = Elem.set("div", line.body, "user-flex");
-    line.head = Elem.set("img", line.flex, "user-head");
-    line.left = Elem.set("div", line.flex, "user-left");
-    line.name = Elem.set("div", line.left, "user-name");
-    line.mark = Elem.set("div", line.left, "user-flex");
-    line.right = Elem.set("div", line.flex, "user-right");
-    line.ladd = Elem.set("div", line.right, "user-ladd");
-    line.nexu = Elem.set("div", line.right, "user-nexu");
-
-    data.mark = ['身份标签1', '身份标签2'];
-    if (data.mark) {
-        for (let i in data.mark) {
-            var mark = Elem.set("div", line.mark, "user-mark");
-            mark.innerHTML = data.mark[i];
-            mark.style.borderColor = getColorType(x);
-        }
-    }
-    Elem.color(line.head, "", getColorLight(x));
-    Elem.color(line.nexu, "white", getColorType(x));
-    Elem.style(line.nexu, "borderColor", getColorType(x));
-
-    data.nexu = items[x].group;
-    line.name.innerHTML = data.inver;
-    line.ladd.innerHTML = data.ladd + "阶";
-    line.nexu.innerHTML = data.nexu;
 }
 
 
@@ -278,6 +243,41 @@ function setLineText(flex, text) {
 }
 
 
+function setLineDetail(block, data, x) {
+    var line = Elem.set("div", block, "user-block");
+    line.block = {};
+    line.body = Elem.set("div", line, "blk-body");
+    line.tag = Elem.set("div", line, "blk-tag");
+    line.desc = Elem.set("div", line, "blk-desc");
+    line.button = Elem.set("div", line, "blk-button");
+    line.flex = Elem.set("div", line.body, "user-flex");
+    line.head = Elem.set("img", line.flex, "user-head");
+    line.left = Elem.set("div", line.flex, "user-left");
+    line.name = Elem.set("div", line.left, "user-name");
+    line.mark = Elem.set("div", line.left, "user-flex");
+    line.right = Elem.set("div", line.flex, "user-right");
+    line.ladd = Elem.set("div", line.right, "user-ladd");
+    line.nexu = Elem.set("div", line.right, "user-nexu");
+
+    data.mark = ['身份标签1', '身份标签2'];
+    if (data.mark) {
+        for (let i in data.mark) {
+            var mark = Elem.set("div", line.mark, "user-mark");
+            mark.innerHTML = data.mark[i];
+            mark.style.borderColor = getColorType(x);
+        }
+    }
+    Elem.color(line.head, "", getColorLight(x));
+    Elem.color(line.nexu, "white", getColorType(x));
+    Elem.style(line.nexu, "borderColor", getColorType(x));
+
+    data.nexu = items[x].group;
+    line.name.innerHTML = data.inver;
+    line.ladd.innerHTML = (data.ladder || data.ladd) + "阶";
+    line.nexu.innerHTML = data.nexu;
+}
+
+
 function setDetailStyle(flex) { 
     var x = flex.x;
     var old = elems[x].flex;
@@ -298,9 +298,10 @@ function setDetailAlert(flex) {
     var y = flex.y;
     var z = flex.z;
     var data = items[x].list[y];
-    var line = data.lines[z];
+    var line = flex.line;
     config.line = line;
     config.wordCur = "";
+    config.puzzleText = data.puzzleText;
     var ladd = line.ladd - 1;
     //alert(JSON.stringify(line));
     var color = items[x].color;
@@ -344,7 +345,9 @@ function setPuzzleAlert() {
     var block = Elem.get("puzzle-block");
     block.innerHTML = "";
     config.wordCur = "";
-
+    var title = Elem.get("puzzle-title");
+    title.innerHTML = config.puzzleText;
+    
     var line = config.line;
     line.mix = Parse.mix(line.word, 1);
     var cellText = Elem.set("div", block, "line-text");
@@ -362,7 +365,6 @@ function setPuzzleAlert() {
 function setPuzzleCell(line, block, mix) {
     var str = mix ? line.mix : line.word;
     var space = Elem.set("div", block, "space20");
-
     var flex = Elem.set("div", block, "cell-flex");
     for(let idx in line.word) {
         if (line.word[idx] == "/") 
@@ -414,18 +416,30 @@ function setResultAlert() {
     var block = Elem.get("result-block");
     block.innerHTML = "";
     var line = config.line;
-    var rand = Math.floor(Math.random() * line.ladd) + 1;
-    rand = line.ladd;
-    // var color = config.color[parseInt(rand / 5 - 0.2)];
+    rollLadd = 1;
+    var allCount = Math.pow(2, line.ladd);
+    var rollCount = Math.floor(Math.random() * allCount);
+    getRoll(allCount, rollCount);
+    console.log(allCount + 'rollCount:' + rollCount);
 
     var ladd = Elem.set("div", block, "line");
-    ladd.innerHTML = rand + "阶红包";
+    ladd.innerHTML = rollLadd + "阶红包";
     var pic = Elem.set("img", block, "img");
-    pic.src = config.laddSrc + rand + ".png";
+    pic.src = config.laddSrc + rollLadd + ".png";
     var price = Elem.set("div", block, "line");
-    price.innerHTML = "<h2>￥" +  Parse.addSplit(line.priceAllList[rand - 1]);
+    price.innerHTML = "<h2>￥" +  Parse.addSplit(line.priceAllList[rollLadd - 1]);
 }
 
+var rollLadd;
+function getRoll(all, roll) {
+    all = all / 2;
+    if (roll > all) {
+        rollLadd += 1;
+        getRoll(all, roll - all);
+    } else{
+        return rollLadd;
+    }
+}
 
 function setButton(inner, x) {
     var data = items[x].button;

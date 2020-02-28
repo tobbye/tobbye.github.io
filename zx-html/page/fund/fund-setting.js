@@ -170,7 +170,7 @@ function setButton(content, x, y) {
 				var limit = Elem.get("alert-limit");
 				var input = Elem.get("alert-input");
 				Style.color("alert-box", "", getColorLight());
-				Style.color("alert-input", data.bgcolor, "#eee");
+				Style.color("alert-input", getColorType(), "#eee");
 				input.min = 0;
 				input.max = values[data.limit];
 				input.dataready = data;
