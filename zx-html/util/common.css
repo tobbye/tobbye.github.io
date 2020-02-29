@@ -101,7 +101,7 @@ marquee {
 }
 
 .button-min {
-	flex: 33;
+	flex: 10;
 	margin: 10px 10px;
 	padding: 15px;
 	color: white;
@@ -242,16 +242,19 @@ marquee {
 .user-tag {
 	flex: 33;
 	margin: 10px 15px;
-	padding: 10px;
+	padding: 15px;
 	color: white;
 	font-size: 3.3em;
-	font-weight: normal;
 	border-radius: 10px;
 	background-color: #6aa;
 }
 
-#alert-bg {
+#alert {
 	display: none;
+}
+
+#alert-bg {
+	display: block;
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -260,6 +263,14 @@ marquee {
 	background-color: #222;
 	opacity: 0.90;
 }
+
+#alert-box {
+	display: block;
+	position: absolute;
+	border: solid 8px #fff;
+	border-radius: 30px;
+}
+
 
 .alert-flex {
 	display: flex;
@@ -273,11 +284,17 @@ marquee {
 	font-size: 5em;
 }
 
-#alert-box {
-	display: block;
-	position: absolute;
-	border: solid 8px #fff;
-	border-radius: 30px;
+.alert-left {
+	margin: 10px 20px;
+	font-size: 3.3em;
+	text-align: left;
+}
+
+.alert-right {
+	margin: 10px 20px;
+	font-size: 3.3em;
+	text-align: right;
+	color: red;
 }
 
 #alert-block,
@@ -305,15 +322,8 @@ marquee {
 	font-size: 4em;
 }
 
-#alert-text {
-	margin: 20px 0px 20px 20%;
-	font-size: 6em;
-}
 
 #alert-input {
-	margin: 20px;
-	width: 50%;
-	font-size: 6em;
 	font-weight: bold;
 	font-family: "Times New Roman";
 	border: 8px solid #fff;

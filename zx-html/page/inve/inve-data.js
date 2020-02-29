@@ -1,13 +1,16 @@
 window.onload = function() {
 	getAgent();
-	if (Storage.get("isTrain") == "train") {
-		items = items_monster;
-		instance = instance_monster;
-	}
-
+	setDevil();
 	setElems();
 	setAgent();
 	setInner();
+}
+
+var setDevil = function() {
+	if (Storage.get("isDevil") == "devil") {
+		items = items_devil;
+		instance = instance_devil;
+	}
 }
 
 var config = {
@@ -23,9 +26,10 @@ var config = {
 var items = [
 { id: 0, title: '投入', colorIdx: 1, group: '淘金者',
 list: [
-{title: '我的投入', vice: '投入的资金可被淘金者抢夺', puzzleText: "发现一个红包",
+{title: '我的投入', vice: '投入的资金可被淘金者抢夺', 
 dot: 1, isGrab: 1, 
-inverStr: "投入者：", flexStr: "的投入",
+puzzleText: "发现一个红包", cellText: "口令", cellTips:"输入正确口令打开红包",
+inverStr: "投入者：", flexStr: "{0}的投入",
 laddStr: "阶梯<br/><h3>{0}阶</h3>",
 pieceStr: "剩余份数<br/><h3>{0}份</h3>",
 priceStr: "单个金额<br/><h3>{0}元</h3>",
@@ -51,9 +55,10 @@ lines: []},
 
 { id: 1, title: '抢夺', colorIdx: 2, group: '淘金者',
 list: [
-{title: '资金池', vice: '抢夺资金以提高可获收益上限', puzzleText: "发现一个红包",
+{title: '资金池', vice: '抢夺资金以提高可获收益上限',
 dot: 1, isGrab: 1, instance: "grab_str",
-inverStr: "投入者：", flexStr: "的投入",
+puzzleText: "发现一个红包", cellText: "口令", cellTips:"输入正确口令打开红包",
+inverStr: "投入者：", flexStr: "{0}的投入",
 laddStr: "阶梯<br/><h3>{0}阶</h3>",
 pieceStr: "剩余份数<br/><h3>{0}份</h3>",
 priceStr: "单个金额<br/><h3>{0}元</h3>",
@@ -68,7 +73,8 @@ lines: []},
 list: [
 {title: '红包池', vice: '抢夺投放的红包来获取收益', 
 dot: 100, isGrab: 1, instance: "gain_str",
-inverStr: "投放者：", flexStr: "的投放",
+puzzleText: "发现一个红包", cellText: "口令", cellTips:"输入正确口令打开红包",
+inverStr: "投放者：", flexStr: "{0}的投放",
 laddStr: "阶梯<br/><h3>{0}阶</h3>",
 pieceStr: "剩余份数<br/><h3>{0}份</h3>",
 priceStr: "单个金额<br/><h3>{0}元</h3>",
@@ -151,12 +157,12 @@ var instance = {
 };
 
 
-var items_monster = [
+var items_devil = [
 { id: 0, title: '修炼', colorIdx: 1, group: '凡人',
 list: [
 {title: '修炼中', vice: '请勿打扰！谢谢！', 
 dot: 1, isGrab: 1, 
-inverStr: '投入者: ', flexStr: '的投入',
+inverStr: '修炼者: ', flexStr: '{0}正在修炼',
 laddStr: '阶梯<br/><h3>{0}阶</h3>',
 pieceStr: '剩余份数<br/><h3>{0}份</h3>',
 priceStr: '单个金额<br/><h3>{0}元</h3>',
@@ -169,7 +175,7 @@ lines: [
 ]},
 {title: '修炼道场', vice: '绝世神功，在此练成！', 
 dot: 1, isGrab: 0, 
-inverStr: '投入者: ', flexStr: '投入预览',
+inverStr: '修炼者: ', flexStr: '武功秘籍',
 laddStr: '阶梯<br/><h3>{0}阶</h3>',
 pieceStr: '投入份数<br/><h3>{0}份</h3>',
 priceStr: '单个金额<br/><h3>{0}元</h3>',
@@ -180,37 +186,39 @@ lines: []},
 ]},
 
 
-{ id: 1, title: '斩妖', colorIdx: 2, group: '妖怪',
+{ id: 1, title: '斩妖', colorIdx: 2, group: '妖女',
 list: [
-{title: '锁妖塔', vice: '我杀！故我在！！！', puzzleText: "阿弥陀佛 善哉善哉",
+{title: '锁妖塔', vice: '我杀！故我在！！！',
 dot: 1, isGrab: 1, instance: 'grab_str',
-inverStr: '投入者: ', flexStr: '的投入',
+puzzleText: "放下屠刀 立地成佛", cellText: "咒语", cellTips:"正确吟诵咒语击杀妖魔",
+inverStr: '领主: ', flexStr: '{0}的栖息地',
 laddStr: '阶梯<br/><h3>{0}阶</h3>',
 pieceStr: '剩余份数<br/><h3>{0}份</h3>',
 priceStr: '单个金额<br/><h3>{0}元</h3>',
 timesStr: '已传播<br/><h3>{0}次</h3>',
 btnName: ['next', 'quit', 'redo', 'abon', 'open', 'more', 'close'],
-btnText: ['妖怪哪里逃', '立即撤退', '天地大回旋', '饶你不死', '观世音菩萨保佑', '深藏功与名', '我已成魔'],
+btnText: ['斩草除根', '我佛慈悲', '翻天覆地', '慈悲为怀', '观世音菩萨保佑', '深藏功与名', '灵魂超度'],
 lines: []}, 
 ]},
 
 
 { id: 3, title: '除魔', colorIdx: 3, group: '魔鬼',
 list: [
-{title: '走火入魔', vice: '破山贼易，破心魔难！', puzzleText: "放下屠刀 立地成佛",
+{title: '魔界', vice: '破山贼易，破心魔难！',
 dot: 100, isGrab: 1, instance: 'gain_str',
-inverStr: '投放者: ', flexStr: '的投放',
+puzzleText: "放下屠刀 立地成佛", cellText: "咒语", cellTips:"正确吟诵咒语击杀妖魔",
+inverStr: '领主: ', flexStr: '{0}的栖息地',
 laddStr: '阶梯<br/><h3>{0}阶</h3>',
 pieceStr: '剩余份数<br/><h3>{0}份</h3>',
 priceStr: '单个金额<br/><h3>{0}元</h3>',
 timesStr: '已传播<br/><h3>{0}次</h3>',
 btnName: ['next', 'quit', 'redo', 'abon', 'open', 'more', 'close'],
-btnText: ['妖怪哪里逃', '饶你一命', '天地大回旋', '饶你不死', '观世音菩萨保佑', '深藏功与名', '我已成魔'],
+btnText: ['斩草除根', '我佛慈悲', '翻天覆地', '慈悲为怀', '观世音菩萨保佑', '深藏功与名', '灵魂超度'],
 lines: []},
 ]}
 ];
 
-var instance_monster = {
+var instance_devil = {
 	grab_str : `
 奴奵婒/姃姣嫌媾/娳娏嬆嫬婖,
 妁奻婐/姹姘嫄嫁/娒娚嬄嫽娹,

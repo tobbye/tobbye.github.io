@@ -12,12 +12,12 @@ var config = {
     { idx:0, color: 'indigo', act: 'NA', nexu: '查看主页', org: [], tgt: []},
     { idx:1, color: 'green', act: 'NA', nexu: '发消息', org: [], tgt: [] },
     { idx:2, color: 'green', act: 'NA', nexu: '添加喜欢', org: [], tgt: [] },
-    { idx:3, color: 'green', act: '来自', nexu: '解除屏蔽', org: [4], tgt: [6] },
-    { idx:4, color: 'green', act: '来自', nexu: '解除拉黑', org: [5], tgt: [6] },
-    { idx:5, color: 'green', act: '已', nexu: '添加关注', org: [1, 3, 4, 5], tgt: [0, 2, 2, 2] },
-    { idx:6, color: 'red', act: '已', nexu: '屏蔽', org: [3, 4, 5], tgt: [4, 4, 4] },
-    { idx:7, color: 'red', act: '已', nexu: '拉黑', org: [3, 4, 5], tgt: [7, 7, 7]  },
-    { idx:8, color: 'red', act: '来自', nexu: '取消关注', org: [0, 2], tgt: [5, 5]  },
+    { idx:3, color: 'green', act: '已', nexu: '添加关注', org: [1, 3, 4, 5], tgt: [0, 2, 2, 2] },
+    { idx:4, color: 'red', act: '来自', nexu: '取消关注', org: [0, 2], tgt: [5, 5]  },
+    { idx:5, color: 'green', act: '来自', nexu: '解除屏蔽', org: [4], tgt: [6] },
+    { idx:6, color: 'green', act: '来自', nexu: '解除拉黑', org: [5], tgt: [6] },
+    { idx:7, color: 'red', act: '已', nexu: '屏蔽', org: [3, 4, 5], tgt: [4, 4, 4] },
+    { idx:8, color: 'red', act: '已', nexu: '拉黑', org: [3, 4, 5], tgt: [7, 7, 7]  },
     ],
 };
 
@@ -40,7 +40,7 @@ lines: [
 ]},
 
 
-{ idx: '二', title: '关注', colorIdx: 2, btype: 'primary', button: [1, 8, 0],
+{ idx: '二', title: '关注', colorIdx: 2, btype: 'primary', button: [1, 4, 0],
 list: [
 {title: '赞助商', vice: '我关注的赞助商',
 lines: [
@@ -68,7 +68,7 @@ lines: [
 ]},
 
 
-{ idx: '三', title: '粉丝', colorIdx: 3, btype: 'default', button: [1, 5, 0], 
+{ idx: '三', title: '粉丝', colorIdx: 3, btype: 'default', button: [1, 3, 0], 
 list: [
 {title: '淘金者', vice:'关注我的淘金者', 
 lines: [

@@ -413,7 +413,7 @@ var getAgent = function() {
     config.colorType = Storage.get("colorType") || "black";
     config.initType = Storage.get("initType") || "clear";
     config.dataIdx = Storage.get("dataIdx") || "defalut";
-    config.isTrain = Storage.get("isTrain") == "train";
+    config.isTrain = Storage.get("isDevil") == "devil";
     config.isAlert = Storage.get("isAlert") == "alert";
     config.outerOffset = 230;
     config.alertOffset = 680;

@@ -93,13 +93,13 @@ function setLine(content, lines, x, y) {
 		line.show = false;
 		line.data = data;
 		line.onclick = function() {
-			if (values.line == this) 
-				values.line = null;
+			if (config.line == this) 
+				config.line = null;
 			else
 				console.log(this.data);
-			showLine(values.line, false);
+			showLine(config.line, false);
 			showLine(this, !this.show);
-			values.line = this;
+			config.line = this;
 		}
 		setFlex(line);
 	}
@@ -179,11 +179,11 @@ function setFlex(line) {
 
 function setNexu(button) {
 	var btnData = button.data;
-	var line = values.line;
+	var line = config.line;
 	var idx = line.idx;
 	var org = line.x;
-	if (btnData.org.length == 0)
-		alert(JSON.stringify(line));
+	if (btnData.idx == 1)
+		setChat(btnData);
 
 	for(let i in btnData.org) {
 		if (org == btnData.org[i]) {
@@ -197,13 +197,22 @@ function setNexu(button) {
 			block.appendChild(line.block);
 			Elem.remove(line.float);
 			setFlex(line);
-			line.nexu.innerHTML = btnData.act + btnData.nexu;
 			return;
 		}
 	}
 }
 
-function setButton(data) {
-
+function setChat(data) {
+	Style.display("alert", "block");
+	Style.color("alert-box", "", getColorLight());
+	var title = Elem.get("detail-title");
+	var block = Elem.get("detail-block");
+	title.innerHTML = config.line.data.name;
+	var left = Elem.set("div", block, "alert-left");
+	left.innerHTML = "你好，我通过了你的朋友验证。";
+	var right = Elem.set("div", block, "alert-right");
+	right.innerHTML = "美女约吗？？？";
+	left = Elem.set("div", block, "alert-left");
+	left.innerHTML = "叔叔我们不约。";
 }
 

@@ -74,7 +74,7 @@ function setLine(content, data, x, y) {
 			if (this.y == 2)
 				value = localData.init(btnText);
 			if (Elem.get('data-box'))
-				Elem.get('data-box').innerHTML = JSON.stringify(value).replace(/,/g,", ");
+				Elem.get('data-box').innerHTML = JSON.stringify(value);
 		}
 		if (data.default == z) 
 			btn.onclick();

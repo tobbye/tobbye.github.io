@@ -224,14 +224,12 @@ function onInput() {
 
 //显示弹窗
 function showAlert() {
-	Style.display("alert-bg", "inline");
-	Style.display("alert-box", "inline");
+	Style.display("alert", "block");
 }
 
 //隐藏弹窗
 function hideAlert() {
-	Style.display("alert-bg", "none");
-	Style.display("alert-box", "none");
+	Style.display("alert", "none");
 }
 
 

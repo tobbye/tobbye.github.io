@@ -72,15 +72,15 @@ function setTempLine(data) {
     if (lines.length > 0)
         return lines;
     var str = instance[data.instance];
-    var list = Parse.mix(str.split(','));
+    var list = Parse.mix(str.split(","));
     for (let idx in list) {
         var line = {};
         line.ladder = Math.floor(20 * Math.random() * Math.random()) + 6;
         line.ladd = line.ladder - Math.floor(5 * Math.random());
         line.multi = Math.floor(100 * Math.random()) + 1;
         line.index = Math.floor((1547 + Math.random()) * 1e9);
-        line.stamp = Parse.formatTime(line.index).replace(' ', '<h3>');
-        line.inver = list[idx].split('/')[0];
+        line.stamp = Parse.formatTime(line.index).replace(" ", "<h3>");
+        line.inver = list[idx].split("/")[0];
         line.word = list[idx].replace(/\n/g, "").replace(/ /g, "/");
         line.wordOrg = line.word;
         line.wordTgt = line.word.replace(/\//g, "");
@@ -112,7 +112,7 @@ function setGrabLine(content, data, x, y) {
         //INDEX
         var index = Elem.set("text", flex, "line");
         Elem.flex(index, "left", 30);
-        Elem.style(flex, "marginBottom", '0px');
+        Elem.style(flex, "marginBottom", "0px");
         index.innerHTML = "编号: " + line.index;
         index.innerHTML += "<br/>" + data.inverStr;
         //STAMP
@@ -195,11 +195,11 @@ function setLineData(line, dot, isGrab) {
     line.pieceStr = "总份数<br/><h3>" +  Parse.sub4Num(line.pieceAll) + "份</h3>";
     line.priceStr = "总金额<br/><h3>" +  Parse.sub4Num(line.priceAll) + "元</h3>";
     line.timesStr = "可传播<br/><h3>" +  Parse.sub4Num(line.timesAll) + "次</h3>";
-    line.pieceEach = (line.priceAll / line.pieceAll).toFixed(2) + '元/份';
+    line.pieceEach = (line.priceAll / line.pieceAll).toFixed(2) + "元/份";
     if (dot == 1) {
-        line.timesEach = (line.priceAll / line.timesAll).toFixed(2) + '元/次';
+        line.timesEach = (line.priceAll / line.timesAll).toFixed(2) + "元/次";
     } else {
-        line.timesEach = (line.priceAll / line.timesAll * 1000).toFixed(2) + '元/千次';
+        line.timesEach = (line.priceAll / line.timesAll * 1000).toFixed(2) + "元/千次";
     }
     if (!isGrab) 
         return line;
@@ -222,7 +222,7 @@ function setLineData(line, dot, isGrab) {
         line.priceCur += line.priceCurList[z] * line.pieceCurList[z];
         line.timesCur += line.timesCurList[z];
     }
-    line.pieceEach = (line.priceCur / line.pieceCur).toFixed(2) + '元/份';
+    line.pieceEach = (line.priceCur / line.pieceCur).toFixed(2) + "元/份";
     line.laddStr = line.laddStr.replace("h3", "h4");
     line.pieceStr = line.pieceStr.replace("h3", "h4");
     line.priceStr = line.priceStr.replace("h3", "h4");
@@ -231,7 +231,7 @@ function setLineData(line, dot, isGrab) {
     line.pieceStr += "剩余份数<br/><h3>" +  Parse.sub4Num(line.pieceCur) + "份";
     line.priceStr += "剩余金额<br/><h3>" +  Parse.sub4Num(line.priceCur) + "元";
     line.timesStr += "已传播<br/><h3>" +  Parse.sub4Num(line.timesCur) + "次";
-    line.pieceEach = (line.priceCur / line.pieceCur).toFixed(2) + '元/份';
+    line.pieceEach = (line.priceCur / line.pieceCur).toFixed(2) + "元/份";
     return line;
 }
 
@@ -259,7 +259,7 @@ function setLineDetail(block, data, x) {
     line.ladd = Elem.set("div", line.right, "user-ladd");
     line.nexu = Elem.set("div", line.right, "user-nexu");
 
-    data.mark = ['身份标签1', '身份标签2'];
+    data.mark = ["身份标签1", "身份标签2"];
     if (data.mark) {
         for (let i in data.mark) {
             var mark = Elem.set("div", line.mark, "user-mark");
@@ -302,6 +302,8 @@ function setDetailAlert(flex) {
     config.line = line;
     config.wordCur = "";
     config.puzzleText = data.puzzleText;
+    config.cellText = data.cellText;
+    config.cellTips = data.cellTips;
     var ladd = line.ladd - 1;
     //alert(JSON.stringify(line));
     var color = items[x].color;
@@ -330,17 +332,16 @@ function setDetailAlert(flex) {
     var box = Elem.get("alert-box");
     var title = Elem.get("detail-title");
     box.style.backgroundColor = getColorLight(x);
-    title.innerHTML = line.inver || ""; 
-    title.innerHTML += data.flexStr;
+    title.innerHTML = data.flexStr.replace("{0}",line.inver);
     showAlert(data);
 }
 
 
 function setPuzzleAlert() {
     Style.display("detail-bg", "none");
-    Style.display("puzzle-bg", "inline");
+    Style.display("puzzle-bg", "block");
     Style.display("btn-open", "none");
-    Style.display("btn-redo", "inline");
+    Style.display("btn-redo", "block");
     Style.color("btn-redo", "white", "red");
     var block = Elem.get("puzzle-block");
     block.innerHTML = "";
@@ -351,12 +352,12 @@ function setPuzzleAlert() {
     var line = config.line;
     line.mix = Parse.mix(line.word, 1);
     var cellText = Elem.set("div", block, "line-text");
-    cellText.innerHTML = "口令";
+    cellText.innerHTML = config.cellText;
     setPuzzleCell(line, block, 0);
 
     var cellTips = Elem.set("div", block, "line-text");
     cellTips.style.marginTop = "5px";
-    cellTips.innerHTML = "输入正确口令打开红包";
+    cellTips.innerHTML = config.cellTips;
     setPuzzleCell(line, block, 1);
 }
 
@@ -411,7 +412,7 @@ function setPuzzleCell(line, block, mix) {
 
 function setResultAlert() {
     Style.display("puzzle-bg", "none");
-    Style.display("result-bg", "inline");
+    Style.display("result-bg", "block");
     var bg = Elem.get("result-bg");
     var block = Elem.get("result-block");
     block.innerHTML = "";
@@ -420,7 +421,6 @@ function setResultAlert() {
     var allCount = Math.pow(2, line.ladd);
     var rollCount = Math.floor(Math.random() * allCount);
     getRoll(allCount, rollCount);
-    console.log(allCount + 'rollCount:' + rollCount);
 
     var ladd = Elem.set("div", block, "line");
     ladd.innerHTML = rollLadd + "阶红包";
@@ -480,8 +480,7 @@ function setAlert() {
 
 function showAlert(data) {
     showAlertButton(data);
-    Style.display("alert-bg", "block");
-    Style.display("alert-box", "block");
+    Style.display("alert", "block");
     Style.display("detail-bg", "block");
     Style.display("puzzle-bg", "none");
     Style.display("result-bg", "none");
@@ -489,11 +488,7 @@ function showAlert(data) {
 
 
 function hideAlert() {
-    Style.display("alert-bg", "none");
-    Style.display("alert-box", "none");
-    Style.display("detail-bg", "none");
-    Style.display("puzzle-bg", "none");
-    Style.display("result-bg", "block");
+    Style.display("alert", "none");
 }
 
 
