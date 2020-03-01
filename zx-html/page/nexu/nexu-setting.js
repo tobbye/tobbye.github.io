@@ -254,7 +254,7 @@ function setChatText(block, cls, value) {
 
 function onFocus() {
 	var box = Elem.get("alert-box");
-	box.style.bottom = "720px";
+	//box.style.bottom = "720px";
 	var block = Elem.get("detail-block");
 	var maxHeight = config.windHeight - 1203;
 	block.style.maxHeight = maxHeight + "px";
