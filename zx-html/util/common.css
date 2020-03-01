@@ -3,9 +3,9 @@ body {
 	font-family: "Times New Roman", Verdana, "Arial Unicode MS";
 	margin: 0px;
 	padding: 0px;
-	text-align: center;
 	font-size: 12px;
 	font-weight: bold;
+	text-align: center;
 }
 
 marquee {
@@ -284,19 +284,6 @@ marquee {
 	font-size: 5em;
 }
 
-.alert-left {
-	margin: 10px 20px;
-	font-size: 3.3em;
-	text-align: left;
-}
-
-.alert-right {
-	margin: 10px 20px;
-	font-size: 3.3em;
-	text-align: right;
-	color: red;
-}
-
 #alert-block,
 #detail-block {
     overflow: auto;
@@ -316,17 +303,38 @@ marquee {
 	/*color: white;*/
 }
 
-#alert-limit {
-	/*width: 100%;*/
-	padding: 10px;
-	font-size: 4em;
+.chat-left {
+	display: flex;
+	margin: 30px 20px;
+	margin-right: 100px;
 }
 
 
-#alert-input {
-	font-weight: bold;
-	font-family: "Times New Roman";
-	border: 8px solid #fff;
+.chat-right {
+	display: flex;
+	margin: 30px 20px;
+	margin-left: 100px;
+	justify-content: flex-end;
+}
+
+.text-left {
+	color: white;
+	padding: 20px;
+	font-size: 3.5em;
+	font-weight: normal;
+	text-align: left;
+	border-radius: 20px;
+	background-color: dodgerblue;
+}
+
+.text-right {
+	color: white;
+	padding: 20px;
+	font-size: 3.5em;
+	font-weight: normal;
+	text-align: left;
+	border-radius: 20px;
+	background-color: darkorange;
 }
 
 .space10 {

@@ -2,6 +2,7 @@
 function setElems() {
 	setOuterTop();
 	setOuterCenter();
+	setChat();
 }
 
 
@@ -183,7 +184,7 @@ function setNexu(button) {
 	var idx = line.idx;
 	var org = line.x;
 	if (btnData.idx == 1)
-		setChat(btnData);
+		showChat(btnData);
 
 	for(let i in btnData.org) {
 		if (org == btnData.org[i]) {
@@ -202,17 +203,66 @@ function setNexu(button) {
 	}
 }
 
-function setChat(data) {
+
+function showChat(data) {
 	Style.display("alert", "block");
-	Style.color("alert-box", "", getColorLight());
-	var title = Elem.get("detail-title");
+	var box = Elem.get("alert-box");
 	var block = Elem.get("detail-block");
+	var title = Elem.get("detail-title");
+	var input = Elem.get("alert-textarea");
+	var maxHeight = config.windHeight - 703;
+	box.style.bottom = "220px";
+	box.style.backgroundColor = getColorLight();
+	block.style.maxHeight = maxHeight + "px";
+	block.lastChild.scrollIntoView();
+	input.style.color = getColorLight();
 	title.innerHTML = config.line.data.name;
-	var left = Elem.set("div", block, "alert-left");
-	left.innerHTML = "你好，我通过了你的朋友验证。";
-	var right = Elem.set("div", block, "alert-right");
-	right.innerHTML = "美女约吗？？？";
-	left = Elem.set("div", block, "alert-left");
-	left.innerHTML = "叔叔我们不约。";
+}
+
+
+function setChat() {
+
+	var block = Elem.get("detail-block");
+	for (let i in config.chat) {
+		var data = config.chat[i];
+		var cls = data.isMine ? "right" : "left";
+		setChatText(block, cls, data.text);
+	}
+	var send = Elem.get("btn-send");
+	send.block = block;
+	send.onclick = function() {
+		var input = Elem.get("alert-textarea");
+		setChatText(this.block, "right", input.value);
+		input.style.color = getColorLight();
+		input.value = "输入 / 或 close 关闭聊天";
+	}
+}
+
+
+function setChatText(block, cls, value) {
+	if (value == "") return;
+	if (value == "/" || value == "close") {
+		Style.display("alert", "none");
+		return;
+	}
+	var flex = Elem.set("div", block, "chat-" + cls);
+	var text = Elem.set("div", flex, "text-" + cls);
+	text.innerHTML = value.replace(/\n/g, "<br/>");
+	text.scrollIntoView();
+}
+
+
+function onFocus() {
+	var box = Elem.get("alert-box");
+	box.style.bottom = "720px";
+	var block = Elem.get("detail-block");
+	var maxHeight = config.windHeight - 1203;
+	block.style.maxHeight = maxHeight + "px";
+	block.lastChild.scrollIntoView();
+	var input = Elem.get("alert-textarea");
+	input.style.color = getColorType();
+	input.value = "";
+
+	// Style.height("detail-block", "550px");
 }
 

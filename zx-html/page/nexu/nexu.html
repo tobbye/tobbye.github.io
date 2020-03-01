@@ -24,7 +24,10 @@
   }
 
   .button-min {
-    font-size: 4em;
+    margin: 20px 10px;
+    padding: 10px;
+    font-size: 3.5em;
+    height: 60px;
     background-color: green;
   }
 
@@ -32,12 +35,17 @@
     top: 220px;
     left: 20px;
     right: 20px;
+    bottom: 220px;
   }
-
-  #alert-input {
-    margin: 20px;
+ 
+  #alert-textarea {
+    margin: 10px;
     flex: 50;
-    font-size: 4em;
+    height: auto;
+    font-size: 3.3em;
+    font-weight: normal;
+    font-family: "Times New Roman";
+    border: 8px solid #fff;
   }
 
   #detail-block {
@@ -65,7 +73,8 @@
       <div id="detail-block">
       </div>
         <div class="alert-flex">
-          <input id="alert-input" type="number" oninput="onInput()" name="input"/>
+          <div class="button-min" id="btn-vocie">语音</div>
+          <textarea id="alert-textarea" onfocus="onFocus()">输入 / 或 close 关闭聊天</textarea>
           <div class="button-min" id="btn-send">发送</div>
         </div>
     </div>
