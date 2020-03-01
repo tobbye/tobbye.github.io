@@ -241,7 +241,11 @@ marquee {
 
 .user-tag {
 	flex: 33;
+<<<<<<< HEAD
 	margin: 10px 15px;
+=======
+	margin: 10px 10px;
+>>>>>>> 43dabdb9bcbd0f47b7fd80800a71f1d296dd429b
 	padding: 15px;
 	color: white;
 	font-size: 3.3em;

@@ -71,7 +71,7 @@ lines: []},
 
 { id: 2, title: '获取', colorIdx: 3, group: '赞助商',
 list: [
-{title: '红包池', vice: '抢夺投放的红包来获取收益', 
+{title: '红包池', vice: '抢夺投放的红包来获取收益', puzzleText: '发现一个红包',
 dot: 100, isGrab: 1, instance: "gain_str",
 puzzleText: "发现一个红包", cellText: "口令", cellTips:"输入正确口令打开红包",
 inverStr: "投放者：", flexStr: "{0}的投放",
