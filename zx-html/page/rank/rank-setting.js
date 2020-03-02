@@ -1,6 +1,7 @@
 function setElems() {
 	setOuterTop();
 	setOuterCenter();
+	setChat();
 }
 
 
@@ -96,13 +97,13 @@ function setLine(content, lines, x, y) {
 		line.show = false;
 		line.data = setFlex(line, data);
 		line.onclick = function() {
-			if (values.line == this) 
-				values.line = null;
+			if (config.line == this) 
+				config.line = null;
 			else
 				console.log(this.data);
-			showLine(values.line, false);
+			showLine(config.line, false);
 			showLine(this, !this.show);
-			values.line = this;
+			config.line = this;
 		}
 	}
 }
@@ -183,13 +184,14 @@ function setFlex(line, data) {
 }
 
 
+
 function setNexu(button) {
 	var btnData = button.data;
-	var line = values.line;
+	var line = config.line;
 	var idx = line.idx;
 	var org = line.x;
-	if (btnData.org.length == 0)
-		alert(JSON.stringify(line));
+	if (btnData.idx == 1)
+		showChat();
 
 	for(let i in btnData.org) {
 		if (org == btnData.org[i]) {
@@ -203,12 +205,72 @@ function setNexu(button) {
 			block.appendChild(line.block);
 			Elem.remove(line.float);
 			setFlex(line);
-			line.nexu.innerHTML = btnData.act + btnData.nexu;
 			return;
 		}
 	}
 }
 
-function setButton(data) {
 
+function showChat() {
+	Style.display("alert", "block");
+	var box = Elem.get("alert-box");
+	var block = Elem.get("detail-block");
+	var title = Elem.get("detail-title");
+	var input = Elem.get("alert-textarea");
+	box.style.backgroundColor = getColorLight();
+	box.style.maxHeight = (config.windHeight - 440) + "px";
+	block.style.maxHeight = (config.windHeight - 703) + "px";
+	if (block.lastChild)
+		block.lastChild.scrollIntoView();
+	input.style.color = getColorLight();
+	title.innerHTML = config.line.data.name;
 }
+
+
+function setChat() {
+
+	var block = Elem.get("detail-block");
+	for (let i in config.chat) {
+		var data = config.chat[i];
+		var cls = data.isMine ? "right" : "left";
+		setChatText(block, cls, data.text);
+	}
+	var send = Elem.get("btn-send");
+	send.block = block;
+	send.onclick = function() {
+		var input = Elem.get("alert-textarea");
+		setChatText(this.block, "right", input.value);
+		input.style.color = getColorLight();
+		input.value = "输入 / 或 close 关闭聊天";
+	}
+}
+
+
+function setChatText(block, cls, value) {
+	if (value == "") return;
+	if (value == "/" || value == "close") {
+		Style.display("alert", "none");
+		return;
+	}
+	var flex = Elem.set("div", block, "chat-" + cls);
+	var text = Elem.set("div", flex, "text-" + cls);
+	text.innerHTML = value.replace(/\n/g, "<br/>");
+	text.scrollIntoView();
+}
+
+
+function onFocus() {
+	var box = Elem.get("alert-box");
+	var block = Elem.get("detail-block");
+	box.style.maxHeight = (config.windHeight - 940) + "px";
+	block.style.maxHeight = (config.windHeight - 1203) + "px";
+	if (block.lastChild)
+		block.lastChild.scrollIntoView();
+	var input = Elem.get("alert-textarea");
+	input.style.color = getColorType();
+	input.value = "";
+
+	// Style.height("detail-block", "550px");
+}
+
+

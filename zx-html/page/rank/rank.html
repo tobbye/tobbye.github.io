@@ -22,6 +22,34 @@ h4 {
   font-size: 0.8em;
 }
 
+ .button-min {
+    margin: 20px 10px;
+    padding: 10px;
+    font-size: 3.5em;
+    height: 60px;
+    background-color: green;
+  }
+
+  #alert-box {
+    top: 220px;
+    left: 20px;
+    right: 20px;
+  }
+    
+  #alert-textarea {
+    margin: 10px;
+    flex: 50;
+    height: auto;
+    font-size: 3.3em;
+    font-weight: normal;
+    font-family: "Times New Roman";
+    border: 8px solid #fff;
+  }
+
+  #detail-block {
+    margin: 10px;
+    background-color: white;
+  }
 
 </style>
 
@@ -36,7 +64,21 @@ h4 {
     <a class="button-bot-dead" href="../inve/inve.html">市场</a>
 	</div>
 
-
+<div id="alert">
+  <div id="alert-bg"></div>
+  <div id="alert-box">
+    <div id="detail-bg">
+      <div id="detail-title">查看详情</div>
+      <div id="detail-block">
+      </div>
+        <div class="alert-flex">
+          <div class="button-min" id="btn-vocie">语音</div>
+          <textarea id="alert-textarea" onfocus="onFocus()">输入 / 或 close 关闭聊天</textarea>
+          <div class="button-min" id="btn-send">发送</div>
+        </div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

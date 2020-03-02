@@ -184,7 +184,7 @@ function setNexu(button) {
 	var idx = line.idx;
 	var org = line.x;
 	if (btnData.idx == 1)
-		showChat(btnData);
+		showChat();
 
 	for(let i in btnData.org) {
 		if (org == btnData.org[i]) {
@@ -204,16 +204,15 @@ function setNexu(button) {
 }
 
 
-function showChat(data) {
+function showChat() {
 	Style.display("alert", "block");
 	var box = Elem.get("alert-box");
 	var block = Elem.get("detail-block");
 	var title = Elem.get("detail-title");
 	var input = Elem.get("alert-textarea");
-	var maxHeight = config.windHeight - 703;
-	box.style.bottom = "220px";
 	box.style.backgroundColor = getColorLight();
-	block.style.maxHeight = maxHeight + "px";
+	box.style.maxHeight = (config.windHeight - 440) + "px";
+	block.style.maxHeight = (config.windHeight - 703) + "px";
 	block.lastChild.scrollIntoView();
 	input.style.color = getColorLight();
 	title.innerHTML = config.line.data.name;
@@ -254,10 +253,9 @@ function setChatText(block, cls, value) {
 
 function onFocus() {
 	var box = Elem.get("alert-box");
-	//box.style.bottom = "720px";
 	var block = Elem.get("detail-block");
-	var maxHeight = config.windHeight - 1203;
-	block.style.maxHeight = maxHeight + "px";
+	box.style.maxHeight = (config.windHeight - 940) + "px";
+	block.style.maxHeight = (config.windHeight - 1203) + "px";
 	block.lastChild.scrollIntoView();
 	var input = Elem.get("alert-textarea");
 	input.style.color = getColorType();
