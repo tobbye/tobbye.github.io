@@ -275,16 +275,14 @@ function setFlex(data, line) {
 
 //显示弹窗
 function showAlert() {
-    Style.display("alert-bg", "block");
-    Style.display("alert-box", "block");
+    Style.display("alert", "block");
     Style.display("detail-block", "block");
 }
 
 
 //隐藏弹窗
 function hideAlert() {
-    Style.display("alert-bg", "none");
-    Style.display("alert-box", "none");
+    Style.display("alert", "none");
     Style.display("detail-block", "none");
 }
 

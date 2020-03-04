@@ -1,6 +1,6 @@
 
 body {
-	font-family: "Times New Roman", Verdana, "Arial Unicode MS";
+	font-family: Arial, "Times New Roman";
 	margin: 0px;
 	padding: 0px;
 	font-size: 12px;
@@ -8,9 +8,9 @@ body {
 	text-align: center;
 }
 
-marquee {
-
-}
+/*h1, h2, h3, h4, h5 {
+	font-weight: normal;
+}*/
 
 #outer-top {
 	display: flex;
@@ -278,10 +278,17 @@ marquee {
 	text-align: center;
 }
 
-.alert-title {
+.alert-title,
+#alert-title {
 	margin: 10px 0px;
 	width: 100%;
 	font-size: 5em;
+}
+
+.alert-text,
+#alert-text {
+	margin: 20px 0px 20px 20%;
+	font-size: 6em;
 }
 
 #alert-block,
@@ -293,7 +300,7 @@ marquee {
     font-size: 1em;
 }
 
-#alert-title,
+
 #detail-title, 
 #puzzle-title, 
 #result-title {
@@ -307,6 +314,7 @@ marquee {
 	display: flex;
 	margin: 30px 20px;
 	margin-right: 100px;
+	text-align: left;
 }
 
 
@@ -315,6 +323,7 @@ marquee {
 	margin: 30px 20px;
 	margin-left: 100px;
 	justify-content: flex-end;
+	text-align: left;
 }
 
 .text-left {
@@ -322,7 +331,6 @@ marquee {
 	padding: 20px;
 	font-size: 3.5em;
 	font-weight: normal;
-	text-align: left;
 	border-radius: 20px;
 	background-color: dodgerblue;
 }
@@ -332,7 +340,6 @@ marquee {
 	padding: 20px;
 	font-size: 3.5em;
 	font-weight: normal;
-	text-align: left;
 	border-radius: 20px;
 	background-color: darkorange;
 }
