@@ -32,41 +32,42 @@ function setContent(inner, x) {
     for (let y in list) {
         var content = Elem.set("div", inner, "content", x+y);
         var data = list[y];
-        if (data.title)
-            setTitle(content, data, x);
-        if (!data.lines)
-            setNotLine(content, x);
-        if (data.lines) {
-            setLine(content, data.lines, x, y);
-        }
+        setTitle(content, data, x);
+        setLine(content, data.lines, x, y);
     }
 }
 
 
 function setTitle(content, data, x) {
     //TITLE
-    var title = Elem.set("div", content, "title");
-    title.innerHTML = data.title;
-    title.x = x;
+    if (data.title) {
+        var title = Elem.set("div", content, "title");
+        title.innerHTML = data.title;
+        title.x = x;
+    }
+
     //VICE
-    var vice = Elem.set("div", content, "vice");
-    vice.innerHTML = data.vice;
-    vice.x = x;
+    if (data.vice) {
+        var vice = Elem.set("div", content, "vice");
+        vice.innerHTML = data.vice;
+        vice.x = x;
+    }
 }
 
 
 function setLine(content, lines, x, y) {
+    if (!lines) return;
     var list = items[x].list[y];
-    var block = Elem.set("div", content, "block", x);
+    var block = Elem.set("table", content, "block", x);
     for (let z in lines) {
         var data = lines[z];
         data.color = items[x].color;
 
         //BLOCK
-        var flex = Elem.set("div", block, "flex", z);	
-        var left = Elem.set("text", flex, "left");
-        var stamp = Elem.set("text", flex, "stamp");
-        var right = Elem.set("text", flex, "right");
+        var flex = Elem.set("tr", block, "flex", z);	
+        var left = Elem.set("td", flex, "left");
+        var stamp = Elem.set("td", flex, "stamp");
+        var right = Elem.set("td", flex, "right");
 
         if (z == 0) {
             left.innerHTML = data.left;
@@ -84,8 +85,45 @@ function setLine(content, lines, x, y) {
 
 
 
-function setButton(inner, x) {
+function getjson() {
+    var sort = config.sort;
+    var json = Storage.get("recd-json") || [];
+    for (let x in json) {
 
+        for (let y in sort) {
+            if (json[x].type == sort[y].type) {
+                pushdata(json[x], sort, y);
+                continue;
+            }
+        }
+    }
+}
+
+function pushdata(json, sort, y) {
+    var data = {
+        stamp: "<h4>" + json.date.split('年')[1] + "</h4>" + json.time,
+        left: json.value * sort[y].left,
+        right: json.value * sort[y].right
+    };
+    var idx = sort[y].idx;
+    var list = items[idx].list[0];
+    if (items[idx].list.length == 1)
+        sort[y].list = list;
+    if (!sort[y].day || sort[y].day == json.date.split('月')[1]) {
+        sort[y].list.vice = json.date;
+        sort[y].list.lines.push(data);
+    } else {
+        var newlist = {
+            vice: json.date,
+            left: list.left,
+            right:list.right,
+            lines:[list.lines[0]]
+        }
+        items[idx].list.push(newlist);
+        sort[y].list = newlist;
+        sort[y].list.lines.push(data);
+    }
+    sort[y].day = json.date.split('月')[1];
 }
 
 

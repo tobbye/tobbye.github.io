@@ -27,7 +27,6 @@ body {
 
 #outer-center {
 	overflow: auto;
-	height: calc(100% - 500px);
 }
 
 

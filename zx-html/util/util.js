@@ -118,8 +118,16 @@ Parse.mix = function(str) {
         return arr.join('');
 }
 
+Parse.getStamp = function(stamp) {
+    if (stamp) 
+        return stamp;
+    else
+        return new Date().getTime();
+}
+
 
 Parse.formatTime = function(stamp) {
+    stamp = Parse.getStamp(stamp);
     var time = new Date(stamp);
     var str = time.getFullYear() + "-";
     str += Parse.fillZero(time.getMonth()+1, 2) + "-";
@@ -128,6 +136,19 @@ Parse.formatTime = function(stamp) {
     str += Parse.fillZero(time.getMinutes(), 2) + ":";
     str += Parse.fillZero(time.getSeconds(), 2);
     return str;
+}
+
+Parse.getDate = function(stamp) {
+    stamp = Parse.getStamp(stamp);
+    var date = new Date(stamp).toLocaleDateString();
+    return date.replace("/", "年").replace("/", "月") + "日";
+}
+
+
+Parse.getTime = function(stamp) {
+    stamp = Parse.getStamp(stamp);
+    var time = new Date(stamp);
+    return time.getHours() + "时" + time.getMinutes() + "分";
 }
 
 
@@ -235,7 +256,7 @@ Elem.autosize = function(elem, offset) {
     var windHeight = window.innerHeight;
     if (!elem) elem = Elem.get("outer-center");
     elem.style.height = windHeight - offset + "px";
-    elem.style.minHeight = windHeight - offset + "px";
+    elem.style.maxHeight = windHeight - offset + "px";
     //alert(windHeight);
 }
 
@@ -292,7 +313,7 @@ Storage.set = function (name, val) {
 }
 
 Storage.add = function (name, addVal) { 
-    let oldVal = Storage.get(name);
+    let oldVal = Storage.get(name) || [];
     let newVal = oldVal.concat(addVal);
     Storage.set(name, newVal);
 }
@@ -405,7 +426,6 @@ var getColorLight = function(idx) {
 }
 
 
-
 //获取浏览器是否是移动端
 var getAgent = function() {
     var val = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
@@ -418,7 +438,6 @@ var getAgent = function() {
     config.outerOffset = 230;
     config.alertOffset = 680;
     config.curColor = colors[0][config.colorType];
-    console.log(val ? "Is Mobile Phone" : "Is Computer");
     console.log(config);
     window.onresize();
     return val;
@@ -428,8 +447,10 @@ var getAgent = function() {
 var setAgent = function() {
     // window.onresize();
     togContent();
-}
+    if (!config.isMobile) {
 
+    }
+}
 
 
 var setFullScreen = function() {

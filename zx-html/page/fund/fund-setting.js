@@ -201,18 +201,52 @@ function tapAlertBox(id) {
 	Elem.get(id).onclick = function() {
 		hideAlert();
 		var input = Elem.get("alert-input");
+		if (input.value == 0) 
+			return;
 		if (id == "button-confirm") {
 			input.data = input.dataready;
 			if (input.data.idx == 301 && values.M == values.N) {
 				values.M = 0;
 				values.N = 0;
 			}
-		refresh();
-	} else {
-		input.value = 0;
-	}
-};
+			savejson(input);
+			refresh();
+		} else {
+			input.value = 0;
+		}
+	};
 }
+
+function savejson(input) {
+	var date = new Date();
+	var json = {
+		date: Parse.getDate(date),
+		time: Parse.getTime(date),
+		type: input.data.idx,
+		value: input.value
+	}
+	Storage.add("recd-json", json);
+}
+
+
+//刷新页面
+function refresh() {
+	var input = Elem.get("alert-input");
+	var limit = Elem.get("alert-limit");
+	var list = input.data.tran.split('|');
+
+	for (let i in list) {
+		var line = list[i].split('*');
+		var val = parseInt(input.value) * parseFloat(line[1]);
+		if (line[2])
+			val *= values[line[2]];
+		values[line[0]] += val;
+		values[line[0]] = Math.round(values[line[0]]);
+	}
+	// values.R = Math.floor(values.Q / 100);
+	localData.save();
+}
+
 
 //输入事件
 function onInput() {
@@ -230,28 +264,6 @@ function showAlert() {
 //隐藏弹窗
 function hideAlert() {
 	Style.display("alert", "none");
-}
-
-
-//刷新页面
-function refresh() {
-	var input = Elem.get("alert-input");
-	var limit = Elem.get("alert-limit");
-	var list = input.data.tran.split('|');
-
-
-	for (let i in list) {
-		var line = list[i].split('*');
-		for (let j in line) {
-			var val = parseInt(input.value) * parseFloat(line[1]);
-			if (line[2])
-				val *= values[line[2]];
-		}
-		values[line[0]] += val;
-		values[line[0]] = Math.round(values[line[0]]);
-	}
-	// values.R = Math.floor(values.Q / 100);
-	localData.save();
 }
 
 
