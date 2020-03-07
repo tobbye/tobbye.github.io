@@ -1,84 +1,102 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
- <meta charset="UTF-8"/>
- <title>关系</title>
- <link rel="stylesheet" href="../../util/common.css" type="text/css" />
- <script src="../../util/util.js"> </script>
- <script src="nexu-data.js"> </script>
- <script src="nexu-setting.js"> </script>
+    <meta charset="UTF-8"/>
+    <title>关系</title>
+    <link rel="stylesheet" href="../../util/common.css" type="text/css" />
+    <script src="../../util/util.js"> </script>
+    <script src="nexu-data.js"> </script>
+    <script src="nexu-setting.js"> </script>
 </head>
 
 <body>
- <style type="text/css"> 
+    <style type="text/css"> 
 
-   h3 {
-    margin: 15px;
-    font-size: 1.3em;
-    text-align: center;
-  }
+        h3 {
+            margin: 15px;
+            font-size: 1.3em;
+            text-align: center;
+        }
 
-  h4 {
-    margin: 0px;
-    font-size: 0.8em;
-  }
+        h4 {
+            margin: 0px;
+            font-size: 0.8em;
+        }
 
-  .button-min {
-    margin: 20px 10px;
-    padding: 10px;
-    font-size: 3.5em;
-    height: 60px;
-    background-color: green;
-  }
+        .button-min {
+            margin: 20px 10px;
+            padding: 10px;
+            font-size: 3.5em;
+            height: 60px;
+            background-color: green;
+        }
 
-  #alert-box {
-    top: 220px;
-    left: 20px;
-    right: 20px;
-  }
- 
-  #alert-textarea {
-    margin: 10px;
-    flex: 50;
-    height: auto;
-    font-size: 3.3em;
-    font-weight: normal;
-    font-family: "Times New Roman";
-    border: 8px solid #fff;
-  }
+        #alert-box {
+            top: 220px;
+            left: 20px;
+            right: 20px;
+        }
 
-  #detail-block {
-    margin: 10px;
-    background-color: white;
-  }
+        #alert-textarea {
+            margin: 10px;
+            flex: 50;
+            height: auto;
+            font-size: 3.3em;
+            font-weight: normal;
+            font-family: "Times New Roman";
+            border: 8px solid #fff;
+        }
+
+        #chat-block {
+            margin: 10px;
+            background-color: white;
+        }
 
 
-</style>
+    </style>
 
-<div id="outer-top"></div>
-<div id="outer-center"></div>
-<div id="outer-bot">
-  <a class="button-bot-dead" href="../user/user.html">个人</a>
-  <a class="button-bot-live" href="../nexu/nexu.html">关系</a>
-  <a class="button-bot-dead" href="../home/home.html">主页</a>
-  <a class="button-bot-dead" href="../fund/fund.html">资金</a>
-  <a class="button-bot-dead" href="../inve/inve.html">市场</a>
-</div>
-<div id="alert">
-  <div id="alert-bg"></div>
-  <div id="alert-box">
-    <div id="detail-bg">
-      <div id="detail-title">查看详情</div>
-      <div id="detail-block">
-      </div>
-        <div class="alert-flex">
-          <div class="button-min" id="btn-vocie">语音</div>
-          <textarea id="alert-textarea" onfocus="onFocus()">输入 / 或 close 关闭聊天</textarea>
-          <div class="button-min" id="btn-send">发送</div>
+    <div id="outer-top"></div>
+    <div id="outer-center"></div>
+    <div id="outer-bot">
+        <a class="button-bot-dead" href="../user/user.html">个人</a>
+        <a class="button-bot-live" href="../nexu/nexu.html">关系</a>
+        <a class="button-bot-dead" href="../home/home.html">主页</a>
+        <a class="button-bot-dead" href="../fund/fund.html">资金</a>
+        <a class="button-bot-dead" href="../inve/inve.html">市场</a>
+    </div>
+    <div id="alert">
+        <div id="alert-bg"></div>
+        <div id="alert-box">
+            <div id="chat-bg">
+                <div id="chat-title">查看详情</div>
+                <div id="chat-block"></div>
+                <div class="alert-flex">
+                    <div class="button-min" id="btn-vocie">语音</div>
+                    <textarea id="alert-textarea" onfocus="onFocus()">输入内容</textarea>
+                    <div class="button-min" id="btn-send">发送</div>
+                </div>
+            </div>
+
+            <div id="detail-bg">
+                <div id="detail-title">搜索结果</div>
+                <div id="detail-block"></div>
+                <div class="alert-flex">
+                    <div class="button-red" id="btn-close">关闭</div>
+                </div>
+            </div>
+
+            <div id="puzzle-bg">
+                <div id="puzzle-title">个人资料</div>
+                <div id="puzzle-block"></div>
+                <div class="alert-flex">
+                    <div class="button-red" id="btn-close">关闭</div>
+                </div>
+            </div>
+            
+            <div id="result-bg">
+            </div>
         </div>
     </div>
-  </div>
-</div>
 
 </body>
 </html>

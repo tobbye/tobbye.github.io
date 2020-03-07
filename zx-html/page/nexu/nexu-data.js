@@ -52,9 +52,9 @@ var config = {
 
 
 var items = [
-{ idx: '一', title: '消息', colorIdx: 1, btype: 'warn', button: [1, 0], 
+{title: '消息', colorIdx: 1,
 list: [
-{title: '', vice:'',
+{title: '', vice:'', btype: 'warn', button: [1, 0], 
 lines: [
 {uid: 'd310003', name: '青青', ladd: 13, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['阶层展示1', '阶层展示2']},
 {uid: 'd310002', name: '倩倩', ladd: 7, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['称号标签1', '称号标签2']},
@@ -70,9 +70,9 @@ lines: [
 ]},
 
 
-{ idx: '二', title: '关注', colorIdx: 2, btype: 'primary', button: [1, 4, 0],
+{title: '关注', colorIdx: 2,
 list: [
-{title: '赞助商', vice: '我关注的赞助商',
+{title: '赞助商', vice: '我关注的赞助商', btype: 'primary', button: [1, 4, 0],
 lines: [
 {uid: 's110004', name: '萌萌职业技术学院', ladd: 20, tag: ['挖掘机', '技术', '哪家强'], mark: ['技术培训', '技术学院']},
 {uid: 's110005', name: '萌萌部落格', ladd: 17, tag: ['孤独症患者', '抑郁症患者', '强迫症患者'], mark: ['二次元', '中二病']},
@@ -85,7 +85,7 @@ lines: [
 {uid: 's210009', name: '萌萌汽修', ladd: 16, tag: ['流动补胎', '保养', '洗车'], mark: ['金牌修理师', '金牌技师']},
 ]},
 
-{title: '淘金者', vice:'我关注的淘金者',
+{title: '淘金者', vice:'我关注的淘金者', btype: 'primary', button: [1, 4, 0],
 lines: [
 {uid: 'd120001', name: '二狗子本人', ladd: 7, tag: ['你好', '我叫', '二狗子'], mark: ['ERGOUZI', '二狗家族']},
 {uid: 'd120005', name: '二狗子的老婆', ladd: 6, tag: ['年龄25', '体重150', '身高150'], mark: ['ERGOUZI', '二狗家族']},
@@ -98,9 +98,9 @@ lines: [
 ]},
 
 
-{ idx: '三', title: '粉丝', colorIdx: 3, btype: 'default', button: [1, 3, 0], 
+{title: '粉丝', colorIdx: 3,
 list: [
-{title: '淘金者', vice:'关注我的淘金者', 
+{title: '淘金者', vice:'关注我的淘金者', btype: 'default', button: [1, 3, 0], 
 lines: [
 {uid: 'd110001', name: '李刚猛', ladd: 18, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['身份标签1', '身份标签2']},
 {uid: 'd110002', name: '王坚强', ladd: 20, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['排名标签1', '排名标签2']},

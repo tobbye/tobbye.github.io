@@ -31,13 +31,12 @@
 		background-color: white;
 	}
 
-	#detail {
+	#bg {
 		padding: 28px 0px;
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
 		background-position: center center;
 		background-size: cover;
-		background-image: url(../../picture/user_bg.png);
 	}
 
 	.head {
@@ -144,11 +143,21 @@
         <div id="alert-box">
             <div id="detail-bg">
             	<div id="detail-title">搜索结果</div>
-            	<div id="detail-block">
+            	<div id="detail-block"></div>
+	            <div class="alert-flex">
+	                <div class="button-red" id="btn-close">关闭</div>
+	            </div>
+            </div>
+
+            <div id="puzzle-bg">
+            	<div id="puzzle-title">个人资料</div>
+            	<div id="puzzle-block"></div>
+            	<div class="alert-flex">
+                	<div class="button-red" id="btn-close">关闭</div>
             	</div>
             </div>
-            <div class="alert-flex">
-                <div class="button-red" id="btn-close">关闭</div>
+            
+            <div id="result-bg">
             </div>
         </div>
     </div>

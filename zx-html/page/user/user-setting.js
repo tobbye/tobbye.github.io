@@ -75,7 +75,7 @@ function setDetail(content, data) {
 	var ladd = Elem.set("span", block, "ladd");
 	var cls = Elem.set("span", block, "cls");
 
-	block.id = "detail";
+	block.id = "bg";
 	name.innerHTML = data.name;
 	uid.innerHTML = "ID: " + data.uid;
 	area.innerHTML = data.area + " | ";
@@ -276,15 +276,17 @@ function setFlex(data, line) {
 //显示弹窗
 function showAlert() {
     Style.display("alert", "block");
-    Style.display("detail-block", "block");
+    Style.display("detail-bg", "block");
+    Style.display("puzzle-bg", "none");
+    Style.display("result-bg", "none");
 }
 
 
 //隐藏弹窗
 function hideAlert() {
     Style.display("alert", "none");
-    Style.display("detail-block", "none");
 }
+
 
 
 

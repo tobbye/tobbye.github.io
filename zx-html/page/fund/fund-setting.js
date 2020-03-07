@@ -6,92 +6,66 @@ function setElems() {
 
 
 function setOuterTop() {
-	var outerCenter = Elem.get("outer-center");
-	var outerTop = Elem.get("outer-top");
-	for (let x in items) {
-		var btn = Elem.set("div", outerTop, "button-top");
-		btn.innerHTML = items[x].title.replace('我的', '');
-		btn.idx = x;
+    var outerTop = Elem.get("outer-top");
+    for (let x in items) {
+        var btn = Elem.set("div", outerTop, "button-top");
+        btn.innerHTML = items[x].title;
+        btn.idx = x;
         elems[x].btntop = btn;
-		btn.onclick = function() {
-			values.innerIdx = this.idx;
-			setInner();
-		}
-	}
+        btn.onclick = function() {
+            values.innerIdx = this.idx;
+            setInner();
+        }
+    }
 }
 
 function setOuterCenter() {
-	var outerCenter = Elem.get("outer-center");
-	for (let x in items) {
-		var inner = Elem.set("div", outerCenter, "inner", x);
-		var title = Elem.set("div", inner, "content", "title");
-		var line = Elem.set("div", inner, "content", "line");
-		var block = Elem.set("div", inner, "content", "block");
-		var button = Elem.set("div", inner, "content", "button");
-		var color = items[x].color;
-		elems[x].inner = inner;
-		setTitle(title, x);
-		setLine(line, x);
-		setBlock(block, x);
-		setButton(button, x);
-		Elem.display(line, "none");
-		Elem.height(line, config.theHeight);
-		Elem.height(block, config.theHeight);
-	}
+    var outerCenter = Elem.get("outer-center");
+    for (let x in items) {
+        var inner = Elem.set("div", outerCenter, "inner", x);
+        elems[x].inner = inner;
+        setContent(inner, x);
+    }
 }
 
-//切换视图 Line和Block
-function togItem(item) {
-	var key, view;
-	var data = item.data;
-	if (data.idx % 100 == 4) {
-		Storage.set("recd-innerIdx", values.innerIdx);
-		window.location.href = "../recd/recd.html";
-		return;
-	}
-	if (data.idx % 100 == 3) {
-		key = ["firstChild", "lastChild"];
-		view = ["none", "block"];
-	}
 
-	if (data.idx % 100 == 5) {
-		key = ["lastChild", "firstChild"];
-		view = ["block", "none"]; 
-	}
-	var inners = Elem.getClass("inner");
-	for (let i in inners) {
-		var childs = inners[i].childNodes;
-		if (!childs) continue;
-		Elem.display(childs[1], view[0]);
-		Elem.display(childs[2], view[1]);
-		var parent = childs[3].lastChild.lastChild;
-		Elem.color(parent[key[0]], "white", "red");   
-		Elem.color(parent[key[1]], "white", "green"); 
-	}
+function setContent(inner, x) {
+    var list = items[x].list;
+    for (let y in list) {
+        var content = Elem.set("div", inner, "content", y);
+        var data = list[y];
+		setTitle(content, data);
+		setLine(content, data);
+		setBlock(content, data);
+		setButton(content, data);
+		// Elem.height(line, config.theHeight);
+		// Elem.height(block, config.theHeight);
+    }
 }
 
-function setTitle(content, x) {
-	var data = items[x];
 
-	//TITLE
-	var title = Elem.set("div", content, "title");
-	title.innerHTML = data.title;
-	elems[x].title = title;
-	//VICE
-	var vice = Elem.set("div", content, "vice");
-	var va = values[data.vice.split('/')[0].split('.')[0]];
-	var vb = values[data.vice.split('/')[1].split('.')[0]];
-	var vc = Math.abs(va / vb).toFixed(4);
-	vice.innerHTML = data.vice + vc;
-	// console.log(data.vice + vc);
+function setTitle(content, data) {
+	if (data.title) {
+		var title = Elem.set("div", content, "title");
+		title.innerHTML = data.title;
+	}
+	if (data.vice) {
+		var vice = Elem.set("div", content, "vice");
+		var va = values[data.vice.split('/')[0].split('.')[0]];
+		var vb = values[data.vice.split('/')[1].split('.')[0]];
+		var vc = Math.abs(va / vb).toFixed(4);
+		vice.innerHTML = data.vice + vc;
+		// console.log(data.vice + vc);
+	}
 }
 
 
 //设置Line视图
-function setLine(content, x) {
-	var trs = items[x].lines;
-	var table = Elem.set("table", content, "table", x);
-	Elem.height(table, config.theHeight - 30);
+function setLine(content, data) {
+	var trs = data.lines;
+	var table = Elem.set("table", content, "table-line");
+	Elem.height(table, config.theHeight);
+	Elem.display(table, "none");
 	for (let y in trs) {
 		var tr = Elem.set("tr", table, "tr", y);
 		var tds = trs[y];
@@ -120,10 +94,10 @@ function setLine(content, x) {
 
 
 //设置Block视图
-function setBlock(content, x) {
-	var table = Elem.set("table", content, "table", x);
-	Elem.height(table, config.theHeight - 30);
-	var trs = items[x].blocks;
+function setBlock(content, data) {
+	var trs = data.blocks;
+	var table = Elem.set("table", content, "table-block");
+	Elem.height(table, config.theHeight);
 	for (let y in trs) {
 		var tr = Elem.set("tr", table, "tr", y);
 		var tds = trs[y];
@@ -146,9 +120,43 @@ function setBlock(content, x) {
 }
 
 
-function setButton(content, x, y) {
-	var block = Elem.set("div", content, "block", x);
-	var list = items[x].buttons;
+//切换视图 Line和Block
+function togItem(item) {
+	var color, view;
+	var data = item.data;
+	if (data.idx % 100 == 4) {
+		Storage.set("recd-innerIdx", values.innerIdx);
+		window.location.href = "../recd/recd.html";
+		return;
+	}
+	if (data.idx % 100 == 3) {
+		color = ["red", "green"];
+		view = ["none", "table"];
+	}
+	if (data.idx % 100 == 5) {
+		color = ["green", "red"];
+		view = ["table", "none"];
+	}
+	var lines = Elem.getClass("table-line");
+	var blocks = Elem.getClass("table-block");
+	var buttons = Elem.getClass("button-min");
+	for (let x in lines)
+		Elem.display(lines[x], view[0]);
+	for (let y in blocks)
+		Elem.display(blocks[y], view[1]);
+	for (let z in buttons) {
+		if (buttons[z].parentNode.firstChild == buttons[z])
+			Elem.color(buttons[z], "white", color[0]);
+		if (buttons[z].parentNode.lastChild == buttons[z])
+			Elem.color(buttons[z], "white", color[1]);
+	}
+
+}
+
+
+function setButton(content, data) {
+	var list = data.buttons;
+	var block = Elem.set("div", content, "block");
 	for (let y in list) {
 		var flex = Elem.set("div", block, "flex");
 		for(let z in list[y]) {

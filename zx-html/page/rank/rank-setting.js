@@ -12,8 +12,6 @@ function setOuterTop() {
 		btn.innerHTML = items[x].title;
 		btn.idx = x;
 		elems[x].btntop = btn;
-		if (config.isMobile)
-			btn.style.minWidth = config.minWidth;
 		btn.onclick = function() {
 			values.innerIdx = this.idx;
 			setInner();
@@ -36,43 +34,40 @@ function setContent(inner, x) {
 	for (let y in list) {
 		var content = Elem.set("div", inner, "content", x+y);
 		var data = list[y];
-		if (data.title)
-			setTitle(content, data, x);
-		//var data = config;
-		if (!data.lines)
-			setNotLine(content, x);
-		data.lines = Parse.mix(industry.split(','));
-		if (data.lines) {
-			setLine(content, data.lines, x, y);
-		}
+		setTitle(content, data);
+		setNotLine(content, data);
+		setLine(content, data, x, y);
 	}
 }
 
-function setTitle(content, data, x) {
-	//TITLE
-	var title = Elem.set("div", content, "title");
-	title.innerHTML = data.title;
-	title.x = x;
-	//VICE
-	var vice = Elem.set("div", content, "vice");
-	vice.innerHTML = data.vice;
-	vice.x = x;
+function setTitle(content, data) {
+	if (data.title) {
+		var title = Elem.set("div", content, "title");
+		title.innerHTML = data.title;
+	}
+	if (data.title) {
+		var vice = Elem.set("div", content, "vice");
+		vice.innerHTML = data.vice;
+	}
 }
 
 
-function setNotLine(content, x) {
+function setNotLine(content, data) {
+	if (data.lines) 
+		return;
+    var block = Elem.set("div", content, "block");
+    block.style.fontSize = "5em";
+    block.style.padding = "4em";
+    block.innerHTML = "此处为空";
+}
+
+
+function setLine(content, data, x, y) {
+	var lines = Parse.mix(industry.split(','));
 	var block = Elem.set("div", content, "block");
-	block.style.minHeight = "500px";
-	Elem.color(block, "transparent", "white");
-}
-
-
-function setLine(content, lines, x, y) {
-	var list = Elem.set("div", content, "block");
 	for (let z in lines) {
 		if (z > 19) return;
-		var data = lines[z];
-		var line = Elem.set("div", list, "user-line", z);
+		var line = Elem.set("div", block, "user-line", z);
 		line.block = {};
 		line.body = Elem.set("div", line, "blk-body");
 		line.tag = Elem.set("div", line, "blk-tag");
@@ -90,12 +85,9 @@ function setLine(content, lines, x, y) {
 		line.ladd = Elem.set("div", line.right, "user-ladd");
 		line.nexu = Elem.set("div", line.right, "user-nexu");
 
-
-		line.x = x;
-		line.y = y;
-		line.z = z;
 		line.show = false;
-		line.data = setFlex(line, data);
+		line.data = setTempData(line, lines[z], x, y, z)
+		setFlex(line, x);
 		line.onclick = function() {
 			if (config.line == this) 
 				config.line = null;
@@ -109,43 +101,27 @@ function setLine(content, lines, x, y) {
 }
 
 
-function showLine(line, display) {
-	if (line) {
-		line.show = display;
-		if (display) {
-			line.style.margin = "20px 0px";
-			Elem.display(line.tag, "flex");
-			Elem.display(line.desc, "block");
-			Elem.display(line.button, "flex");
-		} else {
-			line.style.margin = "5px 0px";
-			Elem.display(line.tag, "none");
-			Elem.display(line.desc, "none");
-			Elem.display(line.button, "none");
-		}
-	}
-}
-
-function setFlex(line, data) {
-	var x = line.x;
-	var y = line.y;
-	var z = line.z;
+function setTempData(line, name, x, y, z) {
 	var list = items[x].list[y];
-	var topText = list.text;
-	data = config.unit;
-	data.name = items[x].list[y].lines[z];
+	var data = config.unit;
+	data.name = name;
+	data.nexu = list.nexu;
 	data.order = parseInt(z) + 1 + "th";
 	if (data.order.length == 3)
 		data.order = data.order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
 	// setNotFlex()
 	var seed = items[x].seed * list.seed;
 	var rand = Math.floor((Math.random()+40-z) * 2 * seed);
-	data.value = topText + ": ￥" + Parse.sub4Num(rand);
+	data.value = list.text + ": ￥" + Parse.sub4Num(rand);
 	data.button = config.buttonIdx;
 	data.ladd = Math.floor(Math.random() * 20) + 3;
 	//data.desc = data.name + "的描述";
-	line.head.style.backgroundColor = getColorLight(x);
+	return data;
+}
 
+function setFlex(line, x) {
+	var data = line.data;
+	line.head.style.backgroundColor = getColorLight(x);
 	if (data.tag) {
 		for (let i in data.tag) {
 			var tag = Elem.set("div", line.tag, "user-tag");
@@ -165,7 +141,7 @@ function setFlex(line, data) {
 	line.order.innerHTML = data.order;
 	line.value.innerHTML = data.value;
 	line.ladd.innerHTML = data.ladd + "阶";
-	line.nexu.innerHTML = list.nexu;
+	line.nexu.innerHTML = data.nexu;
 	line.desc.innerHTML = data.desc;
 
 	for (let k in data.button) {
@@ -209,6 +185,25 @@ function setNexu(button) {
 		}
 	}
 }
+
+
+function showLine(line, display) {
+	if (line) {
+		line.show = display;
+		if (display) {
+			line.style.margin = "20px 0px";
+			Elem.display(line.tag, "flex");
+			Elem.display(line.desc, "block");
+			Elem.display(line.button, "flex");
+		} else {
+			line.style.margin = "5px 0px";
+			Elem.display(line.tag, "none");
+			Elem.display(line.desc, "none");
+			Elem.display(line.button, "none");
+		}
+	}
+}
+
 
 
 function showChat() {

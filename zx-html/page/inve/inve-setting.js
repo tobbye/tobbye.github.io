@@ -32,33 +32,31 @@ function setOuterCenter() {
 function setContent(inner, x) {
     var list = items[x].list;
     for (let y in list) {
-        var content = Elem.set("div", inner, "content", x+y);
+        var content = Elem.set("div", inner, "content", y);
         var data = list[y];
-        if (data.title)
-            setTitle(content, data, x);
-        if (!data.lines)
-            setNotLine(content, x);
-        if (data.lines) {
-            if (data.isGrab)
-                setGrabLine(content, data, x, y);
-            else
-                setInveLine(content, data, x, y);
-        }
+        setTitle(content, data);
+        setNotLine(content, data);
+        if (data.isGrab)
+            setGrabLine(content, data, x);
+        else
+            setInveLine(content, data, x);
     }
 }
 
-function setTitle(content, data, x) {
-    //TITLE
-    var title = Elem.set("div", content, "title");
-    title.innerHTML = data.title;
-    title.x = x;
-    //VICE
-    var vice = Elem.set("div", content, "vice");
-    vice.innerHTML = data.vice;
-    vice.x = x;
+function setTitle(content, data) {
+    if (data.title) {
+        var title = Elem.set("div", content, "title");
+        title.innerHTML = data.title;
+    }
+    if (data.vice) {
+        var vice = Elem.set("div", content, "vice");
+        vice.innerHTML = data.vice;
+    }
 }
 
-function setNotLine(content, x) {
+function setNotLine(content, data) {
+    if (data.lines) 
+        return;
     var block = Elem.set("div", content, "block");
     block.style.fontSize = "5em";
     block.style.padding = "4em";
@@ -90,7 +88,9 @@ function setTempLine(data) {
 }
 
 
-function setGrabLine(content, data, x, y) {
+function setGrabLine(content, data, x) {
+    if (!data.lines)
+        return;
     var lines = setTempLine(data);
     var list = Elem.set("div", content, "block");
     for (let z in lines) {
@@ -99,9 +99,7 @@ function setGrabLine(content, data, x, y) {
         line = setLineData(line, data.dot, data.isGrab);
         line.row = parseInt(line.ladd / 5 - 0.2);
         var block = Elem.set("div", list, "block", z);
-        block.x = x;
-        block.y = y;
-        block.z = z;
+        block.data = data;
         block.line = line;
         block.onclick = function() {
             console.log(this.line);
@@ -109,13 +107,13 @@ function setGrabLine(content, data, x, y) {
             setDetailAlert(this);
         }
         var flex = Elem.set("div", block, "flex");
-        //INDEX
+
         var index = Elem.set("text", flex, "line");
         Elem.flex(index, "left", 30);
         Elem.style(flex, "marginBottom", "0px");
         index.innerHTML = "编号: " + line.index;
         index.innerHTML += "<br/>" + data.inverStr;
-        //STAMP
+
         var stamp = Elem.set("text", flex, "line");
         stamp.innerHTML = "时间: " + line.stamp;
         Elem.flex(stamp, "right", 20);
@@ -130,15 +128,15 @@ function setGrabLine(content, data, x, y) {
         var times = setLineText(flex, line.timesStr);
         ladd.style.flex = 17;
     }
-    items[x].list[y].lines = lines;
+    data.lines = lines;
 }
 
 
-function setInveLine(content, data, x, y) {
+function setInveLine(content, data, x) {
+    if (!data.lines)
+        return;
     var lines = data.lines;
-    //BLOCK
     var block = Elem.set("div", content, "block");
-
     for (var z = 0; z < config.laddCount; z++) {
         var line = {ladd: z+1, multi: 1}; 
         line = setLineData(line, data.dot, data.isGrab);
@@ -146,12 +144,9 @@ function setInveLine(content, data, x, y) {
         if (!line.ladd) continue;
         line.row = Math.floor(line.ladd / 5 - 0.2);
 
-        //FLEX
         var flex = Elem.set("div", block, "flex", z);
         //Elem.color(flex, line.color.deep, "white");
-        flex.x = x;
-        flex.y = y;
-        flex.z = z;
+        flex.data = data;
         flex.line = line;
         flex.onclick = function() {
             console.log(this.line);
@@ -168,7 +163,7 @@ function setInveLine(content, data, x, y) {
             setDetailStyle(flex);
         }
     }
-    items[x].list[y].lines = lines;
+    data.lines = lines;
     // console.log(lines);
 }
 
@@ -222,7 +217,6 @@ function setLineData(line, dot, isGrab) {
         line.priceCur += line.priceCurList[z] * line.pieceCurList[z];
         line.timesCur += line.timesCurList[z];
     }
-    line.pieceEach = (line.priceCur / line.pieceCur).toFixed(2) + "元/份";
     line.laddStr = line.laddStr.replace("h3", "h4");
     line.pieceStr = line.pieceStr.replace("h3", "h4");
     line.priceStr = line.priceStr.replace("h3", "h4");
@@ -271,7 +265,7 @@ function setLineDetail(block, data, x) {
     Elem.color(line.nexu, "white", getColorType(x));
     Elem.style(line.nexu, "borderColor", getColorType(x));
 
-    data.nexu = items[x].group;
+    data.nexu = block.data.group;
     line.name.innerHTML = data.inver;
     line.ladd.innerHTML = (data.ladder || data.ladd) + "阶";
     line.nexu.innerHTML = data.nexu;
@@ -279,8 +273,7 @@ function setLineDetail(block, data, x) {
 
 
 function setDetailStyle(flex) { 
-    var x = flex.x;
-    var old = elems[x].flex;
+    var old = config.flex;
     if (old) {
         old.style.border = "solid 0px transparent";
         old.style.marginBottom = "5px";
@@ -288,16 +281,13 @@ function setDetailStyle(flex) {
     if (flex) {
         flex.style.border =  "solid 12px red";
         flex.style.marginBottom =  "10px";
-        elems[x].flex = flex; 
+        config.flex = flex; 
     }
 }
 
 
 function setDetailAlert(flex) {
-    var x = flex.x;
-    var y = flex.y;
-    var z = flex.z;
-    var data = items[x].list[y];
+    var data = flex.data;
     var line = flex.line;
     config.line = line;
     config.wordCur = "";
@@ -306,7 +296,6 @@ function setDetailAlert(flex) {
     config.cellTips = data.cellTips;
     var ladd = line.ladd - 1;
     //alert(JSON.stringify(line));
-    var color = items[x].color;
     var priceKey = "priceAllList";
     var pieceKey = data.isGrab ? "pieceCurList" : "pieceAllList";
     var timesKey = data.isGrab ? "timesCurList" : "timesAllList";
@@ -328,11 +317,11 @@ function setDetailAlert(flex) {
         times.innerHTML = data.timesStr.replace("{0}", Parse.sub4Num(line[timesKey][idx]));
     }
 
-    // block.scrollIntoView(true);
     var box = Elem.get("alert-box");
     var title = Elem.get("detail-title");
-    box.style.backgroundColor = getColorLight(x);
+    box.style.backgroundColor = getColorLight();
     title.innerHTML = data.flexStr.replace("{0}",line.inver);
+    block.firstChild.scrollIntoView(true);
     showAlert(data);
 }
 

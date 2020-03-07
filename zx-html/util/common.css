@@ -290,6 +290,7 @@ body {
 	font-size: 6em;
 }
 
+#chat-block,
 #alert-block,
 #detail-block {
     overflow: auto;
@@ -300,6 +301,7 @@ body {
 }
 
 
+#chat-title, 
 #detail-title, 
 #puzzle-title, 
 #result-title {

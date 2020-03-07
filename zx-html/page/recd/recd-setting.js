@@ -88,15 +88,16 @@ function setLine(content, lines, x, y) {
 function getjson() {
     var sort = config.sort;
     var json = Storage.get("recd-json") || [];
+    json = json.reverse();
     for (let x in json) {
-
         for (let y in sort) {
             if (json[x].type == sort[y].type) {
                 pushdata(json[x], sort, y);
-                continue;
+                break;
             }
         }
     }
+    console.log(items);
 }
 
 function pushdata(json, sort, y) {
@@ -108,10 +109,10 @@ function pushdata(json, sort, y) {
     var idx = sort[y].idx;
     var list = items[idx].list[0];
     if (items[idx].list.length == 1)
-        sort[y].list = list;
-    if (!sort[y].day || sort[y].day == json.date.split('月')[1]) {
-        sort[y].list.vice = json.date;
-        sort[y].list.lines.push(data);
+        sort[idx].list = list;
+    if (!sort[idx].day || sort[idx].day == json.date) {
+        sort[idx].list.vice = json.date;
+        sort[idx].list.lines.push(data);
     } else {
         var newlist = {
             vice: json.date,
@@ -120,10 +121,10 @@ function pushdata(json, sort, y) {
             lines:[list.lines[0]]
         }
         items[idx].list.push(newlist);
-        sort[y].list = newlist;
-        sort[y].list.lines.push(data);
+        sort[idx].list = newlist;
+        sort[idx].list.lines.push(data);
     }
-    sort[y].day = json.date.split('月')[1];
+    sort[idx].day = json.date;
 }
 
 

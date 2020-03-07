@@ -7,7 +7,7 @@ window.onload = function() {
 }
 
 var setDevil = function() {
-	if (Storage.get("isDevil") == "devil") {
+	if (config.isDevil) {
 		items = items_devil;
 		instance = instance_devil;
 	}
@@ -24,10 +24,10 @@ var config = {
 };
 
 var items = [
-{ id: 0, title: '投入', colorIdx: 1, group: '淘金者',
+{ id: 0, title: '投入', colorIdx: 1,
 list: [
 {title: '我的投入', vice: '投入的资金可被淘金者抢夺', 
-dot: 1, isGrab: 1, 
+dot: 1, isGrab: 1, group: '淘金者',
 puzzleText: "发现一个红包", cellText: "口令", cellTips:"输入正确口令打开红包",
 inverStr: "投入者：", flexStr: "{0}的投入",
 laddStr: "阶梯<br/><h3>{0}阶</h3>",
@@ -53,10 +53,10 @@ lines: []},
 ]},
 
 
-{ id: 1, title: '抢夺', colorIdx: 2, group: '淘金者',
+{ id: 1, title: '抢夺', colorIdx: 2, 
 list: [
 {title: '资金池', vice: '抢夺资金以提高可获收益上限',
-dot: 1, isGrab: 1, instance: "grab_str",
+dot: 1, isGrab: 1, group: '淘金者', instance: "grab_str",
 puzzleText: "发现一个红包", cellText: "口令", cellTips:"输入正确口令打开红包",
 inverStr: "投入者：", flexStr: "{0}的投入",
 laddStr: "阶梯<br/><h3>{0}阶</h3>",
@@ -69,10 +69,10 @@ lines: []},
 ]},
 
 
-{ id: 2, title: '获取', colorIdx: 3, group: '赞助商',
+{ id: 2, title: '获取', colorIdx: 3, 
 list: [
 {title: '红包池', vice: '抢夺投放的红包来获取收益', puzzleText: '发现一个红包',
-dot: 100, isGrab: 1, instance: "gain_str",
+dot: 100, isGrab: 1, group: '赞助商', instance: "gain_str",
 puzzleText: "发现一个红包", cellText: "口令", cellTips:"输入正确口令打开红包",
 inverStr: "投放者：", flexStr: "{0}的投放",
 laddStr: "阶梯<br/><h3>{0}阶</h3>",

@@ -2,7 +2,7 @@
 function setElems() {
 	setOuterTop();
 	setOuterCenter();
-	setChat();
+	setAlert();
 }
 
 
@@ -37,42 +37,40 @@ function setContent(inner, x) {
 	for (let y in list) {
 		var content = Elem.set("div", inner, "content", x+y);
 		var data = list[y];
-		if (data.title)
-			setTitle(content, data, x);
-		if (data.lines.length > 0) {
-			setLine(content, data.lines, x, y);
-		} else {
-			setNotLine(content, x);
-		}
+		setTitle(content, data);
+		setNotLine(content, data);
+		setLine(content, data, x, y);
 	}
 }
 
-function setTitle(content, data, x) {
-    //TITLE
-    var title = Elem.set("div", content, "title");
-    title.innerHTML = data.title;
-    title.x = x;
-    //VICE
-    var vice = Elem.set("div", content, "vice");
-    vice.innerHTML = data.vice;
-    vice.x = x;
+function setTitle(content, data) {
+	if (data.title) {
+		var title = Elem.set("div", content, "title");
+		title.innerHTML = data.title;
+	}
+	if (data.vice) {
+		var vice = Elem.set("div", content, "vice");
+		vice.innerHTML = data.vice;
+	}
 }
 
 
-function setNotLine(content, x) {
+function setNotLine(content, data) {
+	if (data.lines) 
+		return;
     var block = Elem.set("div", content, "block");
     block.style.fontSize = "5em";
     block.style.padding = "4em";
     block.innerHTML = "此处为空";
-    Elem.color(block, "#666", "#eee");
 }
 
 
-function setLine(content, lines, x, y) {
-
+function setLine(content, data, x, y) {
+	if (!data.lines) 
+		return;
+	var lines = data.lines;
 	var list = Elem.set("div", content, "block");
 	for (let z in lines) {
-		var data = lines[z];
 		var line = Elem.set("div", list, "user-line", z);
 		line.block = {};
 		line.body = Elem.set("div", line, "blk-body");
@@ -92,7 +90,7 @@ function setLine(content, lines, x, y) {
 		line.y = y;
 		line.z = z;
 		line.show = false;
-		line.data = data;
+		line.data = lines[z];
 		line.onclick = function() {
 			if (config.line == this) 
 				config.line = null;
@@ -127,9 +125,8 @@ function setFlex(line) {
 	var x = line.x;
 	var y = line.y;
 	var z = line.z;
-	var list = items[x].list[y];
-	data = line.data;
-	data.button = items[x].button;
+	var data = line.data;
+	data.button = items[x].list[y].button;
 	if (data.tag) {
 		for (let i in data.tag) {
 			var tag = Elem.set("div", line.tag, "user-tag");
@@ -203,25 +200,17 @@ function setNexu(button) {
 	}
 }
 
-
-function showChat() {
-	Style.display("alert", "block");
-	var box = Elem.get("alert-box");
-	var block = Elem.get("detail-block");
-	var title = Elem.get("detail-title");
-	var input = Elem.get("alert-textarea");
-	box.style.backgroundColor = getColorLight();
-	box.style.maxHeight = (config.windHeight - 440) + "px";
-	block.style.maxHeight = (config.windHeight - 703) + "px";
-	block.lastChild.scrollIntoView();
-	input.style.color = getColorLight();
-	title.innerHTML = config.line.data.name;
+function setAlert() {
+	setChat();
+	hideAlert();
 }
+
+
 
 
 function setChat() {
 
-	var block = Elem.get("detail-block");
+	var block = Elem.get("chat-block");
 	for (let i in config.chat) {
 		var data = config.chat[i];
 		var cls = data.isMine ? "right" : "left";
@@ -233,14 +222,13 @@ function setChat() {
 		var input = Elem.get("alert-textarea");
 		setChatText(this.block, "right", input.value);
 		input.style.color = getColorLight();
-		input.value = "输入 / 或 close 关闭聊天";
+		input.value = "输入内容";
 	}
 }
 
 
 function setChatText(block, cls, value) {
-	if (value == "") return;
-	if (value == "/" || value == "close") {
+	if (value == "" || value == "输入内容") {
 		Style.display("alert", "none");
 		return;
 	}
@@ -248,6 +236,23 @@ function setChatText(block, cls, value) {
 	var text = Elem.set("div", flex, "text-" + cls);
 	text.innerHTML = value.replace(/\n/g, "<br/>");
 	text.scrollIntoView();
+}
+
+
+
+function showChat() {
+	Style.display("alert", "block");
+    Style.display("chat-bg", "block");
+	var box = Elem.get("alert-box");
+	var block = Elem.get("chat-block");
+	var title = Elem.get("chat-title");
+	var input = Elem.get("alert-textarea");
+	box.style.backgroundColor = getColorLight();
+	box.style.maxHeight = (config.windHeight - 440) + "px";
+	block.style.maxHeight = (config.windHeight - 703) + "px";
+	block.lastChild.scrollIntoView();
+	input.style.color = getColorLight();
+	title.innerHTML = config.line.data.name;
 }
 
 
@@ -264,3 +269,12 @@ function onFocus() {
 	// Style.height("detail-block", "550px");
 }
 
+
+//隐藏弹窗
+function hideAlert() {
+    Style.display("alert", "none");
+    Style.display("chat-bg", "none");
+    Style.display("detail-bg", "none");
+    Style.display("puzzle-bg", "none");
+    Style.display("result-bg", "none");
+}
