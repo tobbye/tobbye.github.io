@@ -14,8 +14,7 @@ function setOuterTop() {
         btn.idx = x;
         elems[x].btntop = btn;
         btn.onclick = function() {
-            values.innerIdx = this.idx;
-            setInner();
+            setInner(this.idx);
         }
     }
 }
@@ -92,35 +91,31 @@ function setGrabLine(content, data, x) {
     if (!data.lines)
         return;
     var lines = setTempLine(data);
-    var list = Elem.set("div", content, "block");
+    var block = Elem.set("div", content, "block");
     for (let z in lines) {
         var line = lines[z];
         if (!line.ladd) continue;
         line = setLineData(line, data.dot, data.isGrab);
         line.row = parseInt(line.ladd / 5 - 0.2);
-        var block = Elem.set("div", list, "block", z);
-        block.data = data;
-        block.line = line;
-        block.onclick = function() {
+        var body = Elem.set("div", block, "user-block");
+        body.data = data;
+        body.line = line;
+        body.onclick = function() {
             console.log(this.line);
             setDetailStyle(this);
             setDetailAlert(this);
         }
-        var flex = Elem.set("div", block, "flex");
-
-        var index = Elem.set("text", flex, "line");
-        Elem.flex(index, "left", 30);
-        Elem.style(flex, "marginBottom", "0px");
+        var flex = Elem.set("div", body, "user-flex");
+        var index = Elem.set("div", flex, "user-index");
+        var stamp = Elem.set("div", flex, "user-stamp");
         index.innerHTML = "编号: " + line.index;
         index.innerHTML += "<br/>" + data.inverStr;
-
-        var stamp = Elem.set("text", flex, "line");
         stamp.innerHTML = "时间: " + line.stamp;
-        Elem.flex(stamp, "right", 20);
 
-        setLineDetail(block, line, x);
+        setLineFlex(body, line, x);
 
-        var flex = Elem.set("div", block, "flex");
+        var flex = Elem.set("div", body, "user-flex");
+        flex.style.marginTop = "0px";
         flex.style.marginBottom = "10px";
         var ladd = setLineText(flex, line.laddStr);
         var piece = setLineText(flex, line.pieceStr);
@@ -144,7 +139,7 @@ function setInveLine(content, data, x) {
         if (!line.ladd) continue;
         line.row = Math.floor(line.ladd / 5 - 0.2);
 
-        var flex = Elem.set("div", block, "flex", z);
+        var flex = Elem.set("div", block, "user-flex", z);
         //Elem.color(flex, line.color.deep, "white");
         flex.data = data;
         flex.line = line;
@@ -237,38 +232,31 @@ function setLineText(flex, text) {
 }
 
 
-function setLineDetail(block, data, x) {
-    var line = Elem.set("div", block, "user-block");
-    line.block = {};
-    line.body = Elem.set("div", line, "blk-body");
-    line.tag = Elem.set("div", line, "blk-tag");
-    line.desc = Elem.set("div", line, "blk-desc");
-    line.button = Elem.set("div", line, "blk-button");
-    line.flex = Elem.set("div", line.body, "user-flex");
-    line.head = Elem.set("img", line.flex, "user-head");
-    line.left = Elem.set("div", line.flex, "user-left");
-    line.name = Elem.set("div", line.left, "user-name");
-    line.mark = Elem.set("div", line.left, "user-flex");
-    line.right = Elem.set("div", line.flex, "user-right");
-    line.ladd = Elem.set("div", line.right, "user-ladd");
-    line.nexu = Elem.set("div", line.right, "user-nexu");
+function setLineFlex(body, line, x) {
+    var flex = Elem.set("div", body, "user-flex");
+    var head = Elem.set("img", flex, "user-head");
+    var left = Elem.set("div", flex, "user-left");
+    var right = Elem.set("div", flex, "user-right");
+    var name = Elem.set("div", left, "user-name");
+    var marks = Elem.set("div", left, "user-flex");
+    var ladd = Elem.set("div", right, "user-ladd");
+    var group = Elem.set("div", right, "user-group");
 
-    data.mark = ["身份标签1", "身份标签2"];
-    if (data.mark) {
-        for (let i in data.mark) {
-            var mark = Elem.set("div", line.mark, "user-mark");
-            mark.innerHTML = data.mark[i];
+    line.mark = ["身份标签1", "身份标签2"];
+    if (line.mark) {
+        for (let i in line.mark) {
+            var mark = Elem.set("div", marks, "user-mark");
+            mark.innerHTML = line.mark[i];
             mark.style.borderColor = getColorType(x);
         }
     }
-    Elem.color(line.head, "", getColorLight(x));
-    Elem.color(line.nexu, "white", getColorType(x));
-    Elem.style(line.nexu, "borderColor", getColorType(x));
+    Elem.color(head, "", getColorLight(x));
+    Elem.color(group, "white", getColorType(x));
+    Elem.style(group, "borderColor", getColorType(x));
 
-    data.nexu = block.data.group;
-    line.name.innerHTML = data.inver;
-    line.ladd.innerHTML = (data.ladder || data.ladd) + "阶";
-    line.nexu.innerHTML = data.nexu;
+    name.innerHTML = line.inver;
+    ladd.innerHTML = line.ladder  + "阶";
+    group.innerHTML = body.data.group;
 }
 
 
@@ -286,9 +274,9 @@ function setDetailStyle(flex) {
 }
 
 
-function setDetailAlert(flex) {
-    var data = flex.data;
-    var line = flex.line;
+function setDetailAlert(body) {
+    var data = body.data;
+    var line = body.line;
     config.line = line;
     config.wordCur = "";
     config.puzzleText = data.puzzleText;
@@ -305,7 +293,7 @@ function setDetailAlert(flex) {
 
     for (var i = 0; i < line.ladd; i++) {
         var idx = line.ladd - i - 1;
-        var flex = Elem.set("div", block, "flex", idx);
+        var flex = Elem.set("div", block, "user-flex", idx);
         var ladd = Elem.set("text", flex, "line");
         var piece = Elem.set("text", flex, "line");
         var price = Elem.set("text", flex, "line");

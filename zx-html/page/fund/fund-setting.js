@@ -13,8 +13,7 @@ function setOuterTop() {
         btn.idx = x;
         elems[x].btntop = btn;
         btn.onclick = function() {
-            values.innerIdx = this.idx;
-            setInner();
+            setInner(this.idx);
         }
     }
 }

@@ -383,11 +383,15 @@ var contentText = function(a, b, c) {
 
 //显示内页
 var setInner = function(idx) {
-    if (idx == null)
-       idx = values.innerIdx || 0; 
-    else
-       idx = Storage.get(config.name + "-innerIdx") || 0;
-    values.innerIdx = idx;
+    idx = idx || 0;
+    if (config.innerIdx == idx) {
+        togContent();
+        return;
+    } else {
+        config.innerIdx = idx;
+        config.isHide = 1;
+        togContent(1);
+    }
     for (let x in elems) {
         if (!elems[x]) return;
         var btn = elems[x].btntop;
@@ -399,7 +403,7 @@ var setInner = function(idx) {
             Elem.color(elems[x].btntop, "dodgerblue", "#eee");
         }
     }
-    Elem.color(document.body, getColorType(), "#eee");
+    Elem.color(document.body, getColorType(idx), "#eee");
     if (config.isAlert)
         alert(JSON.stringify(items[idx]));
     else
@@ -407,7 +411,7 @@ var setInner = function(idx) {
 }
 
 var getColorType = function(idx) {
-    var innerIdx = idx ? idx : values.innerIdx;
+    var innerIdx = idx || config.innerIdx;
     var colorIdx = items[innerIdx].colorIdx;
     var color = colors[colorIdx];
     var type = config.colorType;
@@ -415,7 +419,7 @@ var getColorType = function(idx) {
 }
 
 var getColorLight = function(idx) {
-    var innerIdx = idx ? idx : values.innerIdx;
+    var innerIdx = idx || config.innerIdx;
     var colorIdx = items[innerIdx].colorIdx;
     var color = colors[colorIdx];
     var type = config.colorType;
@@ -429,6 +433,7 @@ var getColorLight = function(idx) {
 //获取浏览器是否是移动端
 var getAgent = function() {
     var val = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
+    config.isHide = false;
     config.isMobile = val;
     config.colorType = Storage.get("colorType") || "black";
     config.initType = Storage.get("initType") || "clear";
@@ -437,7 +442,6 @@ var getAgent = function() {
     config.isAlert = Storage.get("isAlert") == "alert";
     config.outerOffset = 230;
     config.alertOffset = 680;
-    config.curColor = colors[0][config.colorType];
     console.log(config);
     window.onresize();
     return val;
@@ -463,60 +467,40 @@ var setFullScreen = function() {
     }
 }
 
-var togContent = function() {
+var togContent = function(tog) {
     var content = Elem.getClass('content');
     for (let idx in content) {
         var elem = content[idx];
-        if (elem.className != 'content')  continue;
-        //console.log(elem.id);
-        if (elem.children.length < 3)  continue;
-        var block = elem.children[2];
-        if (block.className != 'block')  continue;
-        var hide = Elem.set('div', elem, 'hide');
-        hide.innerHTML = "内容已隐藏，点击展开...";
-        Elem.toggle(hide, 'block');
-
-
-        hide.block = block;
-        hide.onclick = function() {
-           if (this.block.style.display == 'none') {
-                this.block.style.display = 'block';
-                this.style.display = 'none';
-            } else {
-                this.block.style.display = 'none';
-                this.style.display = 'block';
-            }
-        }
-
+        var hide;
+        if (!elem.children) 
+            continue;
+        if (elem.children.length < 3)  
+            continue;
         var title = elem.children[0];
-        title.block = block;
-        title.hide = hide;
-        if (title.className == 'title') {
-            title.onclick = function() {
-               if (this.block.style.display == 'none') {
-                    this.block.style.display = 'block';
-                    this.hide.style.display = 'none';
-                } else {
-                    this.block.style.display = 'none';
-                    this.hide.style.display = 'block';
-                }
+        if (title.className != 'title')  
+            continue;
+        var block = elem.children[2];
+        if (block.className != 'block')  
+            continue;
+        if (elem.children.length == 4)  
+            hide = elem.children[3];
+        if (elem.children.length == 3) {
+            hide = Elem.set('div', elem, 'hide');
+            hide.innerHTML = "内容已隐藏，点击展开...";
+            hide.onclick = function() {
+                togContent(1);
             }
-        }
-        var vice = elem.children[1];
-        vice.block = block;
-        vice.hide = hide;
-        if (vice.className == 'vice') {
-            vice.onclick = function() {
-                if (this.block.style.display == 'none') {
-                    this.block.style.display = 'block';
-                    this.hide.style.display = 'none';
-                } else {
-                    this.block.style.display = 'none';
-                    this.hide.style.display = 'block';
-                }
-            }
+        } 
+
+        if (config.isHide || tog) {
+            block.style.display = 'block';
+            hide.style.display = 'none';
+        } else {
+            block.style.display = 'none';
+            hide.style.display = 'block';
         }
     }
+    config.isHide = !config.isHide;
 }
 
 

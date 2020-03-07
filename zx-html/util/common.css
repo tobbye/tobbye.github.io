@@ -8,9 +8,20 @@ body {
 	text-align: center;
 }
 
-/*h1, h2, h3, h4, h5 {
-	font-weight: normal;
-}*/
+h2 {
+    margin: 0px;
+    font-size: 1.6em;
+}
+
+h3 {
+    margin: 0px;
+    font-size: 1.2em;
+}
+
+h4 {
+    margin: 0px;
+    font-size: 0.8em;
+}
 
 #outer-top {
 	display: flex;
@@ -76,7 +87,7 @@ body {
 	flex: 10;
 	margin: 3px;
 	padding: 5px 15px;
-	font-size: 3.5em;
+	font-size: 3em;
 	background-color: #fff;
 }
 
@@ -85,7 +96,7 @@ body {
 	margin: 5px 10px;
 	padding: 15px;
 	color: white;
-	font-size: 5em;
+	font-size: 4.6em;
 	border: solid 6px white;
 	border-radius: 20px;
 	background-color: blue;
@@ -142,30 +153,37 @@ body {
 	text-decoration: none;
 }
 
-
-.blk-tag {
-  display: none;
-  margin: 0px 5px;
+.user-body {
+	margin: 5px 0px;
+	background-color: white;
 }
 
-.blk-desc {
-  display: none;
-  text-align: left;
-  padding: 10px;
-  font-size: 3.5em;
-  font-weight: normal;
-  max-height: 9999px;
-}
-
-.blk-button {
-  display: none;
-  margin: 0px 5px;
-  padding-bottom: 10px;
-}
 
 .user-flex {
-	display: flex;
+    display: flex;
+    margin-top: 5px;
+    background-color: white;
 }
+
+.user-tags {
+	display: flex;
+ 	margin: 0px 5px;
+}
+
+.user-desc {
+	text-align: left;
+	padding: 10px;
+	font-size: 3.5em;
+	font-weight: normal;
+	max-height: 9999px;
+}
+
+.user-buttons {
+	display: flex;
+	margin: 0px 5px;
+	padding-bottom: 10px;
+}
+
 
 .user-line {
 	margin: 5px 0px;
@@ -175,20 +193,22 @@ body {
 .user-top {
 	display: flex;
 	padding: 10px;
+	margin-top: 5px;
 	margin-bottom: -20px;
-	font-size: 3.6em;
+	background-color: white;
 }
 
 .user-order {
 	flex: 100;
 	margin: 0px 10px;
-	font-size: 1.4em;
+	font-size: 5em;
 	text-align: left;
 }
 
 .user-value {
-	text-align: right;
 	padding-top: 10px;
+	font-size: 3.5em;
+	text-align: right;
 }
 
 .user-idx {
@@ -227,7 +247,7 @@ body {
 }
 
 .user-mark,
-.user-nexu {
+.user-group {
 	display: block;
 	margin: 5px 10px;
 	padding: 5px 15px;
@@ -271,7 +291,8 @@ body {
 }
 
 
-.alert-flex {
+.alert-flex,
+#detail-button {
 	display: flex;
 	margin: 5px 0px;
 	text-align: center;

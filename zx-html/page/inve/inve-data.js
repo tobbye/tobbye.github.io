@@ -158,10 +158,10 @@ var instance = {
 
 
 var items_devil = [
-{ id: 0, title: '修炼', colorIdx: 1, group: '凡人',
+{ id: 0, title: '修炼', colorIdx: 1,
 list: [
 {title: '修炼中', vice: '请勿打扰！谢谢！', 
-dot: 1, isGrab: 1, 
+dot: 1, isGrab: 1, group: '凡人',
 inverStr: '修炼者: ', flexStr: '{0}正在修炼',
 laddStr: '阶梯<br/><h3>{0}阶</h3>',
 pieceStr: '剩余份数<br/><h3>{0}份</h3>',
@@ -186,10 +186,10 @@ lines: []},
 ]},
 
 
-{ id: 1, title: '斩妖', colorIdx: 2, group: '妖女',
+{ id: 1, title: '斩妖', colorIdx: 2, 
 list: [
 {title: '锁妖塔', vice: '我杀！故我在！！！',
-dot: 1, isGrab: 1, instance: 'grab_str',
+dot: 1, isGrab: 1, group: '妖女', instance: 'grab_str',
 puzzleText: "放下屠刀 立地成佛", cellText: "咒语", cellTips:"正确吟诵咒语击杀妖魔",
 inverStr: '领主: ', flexStr: '{0}的栖息地',
 laddStr: '阶梯<br/><h3>{0}阶</h3>',
@@ -202,10 +202,10 @@ lines: []},
 ]},
 
 
-{ id: 3, title: '除魔', colorIdx: 3, group: '魔鬼',
+{ id: 3, title: '除魔', colorIdx: 3, 
 list: [
 {title: '魔界', vice: '破山贼易，破心魔难！',
-dot: 100, isGrab: 1, instance: 'gain_str',
+dot: 100, isGrab: 1, group: '魔鬼', instance: 'gain_str',
 puzzleText: "阿弥陀佛 善哉善哉", cellText: "咒语", cellTips:"正确吟诵咒语击杀妖魔",
 inverStr: '领主: ', flexStr: '{0}的栖息地',
 laddStr: '阶梯<br/><h3>{0}阶</h3>',

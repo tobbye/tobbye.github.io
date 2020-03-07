@@ -1,4 +1,3 @@
-
 function setElems() {
 	setOuterTop();
 	setOuterCenter();
@@ -9,15 +8,12 @@ function setElems() {
 function setOuterTop() {
 	var outerTop = Elem.get("outer-top");
 	for (let x in items) {
-		var btn = Elem.set("text", outerTop, "button-top");
+		var btn = Elem.set("div", outerTop, "button-top");
 		btn.innerHTML = items[x].title;
 		btn.idx = x;
 		elems[x].btntop = btn;
-		if (config.isMobile)
-			btn.style.minWidth = config.minWidth;
 		btn.onclick = function() {
-			values.innerIdx = this.idx;
-			setInner();
+			setInner(this.idx);
 		}
 	}
 }
@@ -69,135 +65,103 @@ function setLine(content, data, x, y) {
 	if (!data.lines) 
 		return;
 	var lines = data.lines;
-	var list = Elem.set("div", content, "block");
+	var block = Elem.set("div", content, "block");
 	for (let z in lines) {
-		var line = Elem.set("div", list, "user-line", z);
-		line.block = {};
-		line.body = Elem.set("div", line, "blk-body");
-		line.tag = Elem.set("div", line, "blk-tag");
-		line.desc = Elem.set("div", line, "blk-desc");
-		line.button = Elem.set("div", line, "blk-button");
-		line.flex = Elem.set("div", line.body, "user-flex");
-		line.head = Elem.set("img", line.flex, "user-head");
-		line.left = Elem.set("div", line.flex, "user-left");
-		line.name = Elem.set("div", line.left, "user-name");
-		line.mark = Elem.set("div", line.left, "user-flex");
-		line.right = Elem.set("div", line.flex, "user-right");
-		line.ladd = Elem.set("div", line.right, "user-ladd");
-		line.nexu = Elem.set("div", line.right, "user-nexu");
-
-		line.x = x;
-		line.y = y;
-		line.z = z;
-		line.show = false;
-		line.data = lines[z];
-		line.onclick = function() {
-			if (config.line == this) 
-				config.line = null;
-			else
-				console.log(this.data);
-			showLine(config.line, false);
-			showLine(this, !this.show);
-			config.line = this;
-		}
-		setFlex(line);
-	}
-}
-
-function showLine(line, display) {
-	if (line) {
-		line.show = display;
-		if (display) {
-			line.style.margin = "20px 0px";
-			Elem.display(line.tag, "flex");
-			Elem.display(line.desc, "block");
-			Elem.display(line.button, "flex");
-		} else {
-			line.style.margin = "5px 0px";
-			Elem.display(line.tag, "none");
-			Elem.display(line.desc, "none");
-			Elem.display(line.button, "none");
+		var line = lines[z];
+		var body = Elem.set("div", block, "user-block");
+		var flex = setLineFlex(body, line, x);
+		flex.data = data;
+		flex.line = line;
+		flex.x = x;
+		flex.onclick = function() {
+			config.line = this.line;
+			console.log(this);
+			setDetailAlert(this);
 		}
 	}
 }
 
-function setFlex(line) {
-	var x = line.x;
-	var y = line.y;
-	var z = line.z;
-	var data = line.data;
-	data.button = items[x].list[y].button;
-	if (data.tag) {
-		for (let i in data.tag) {
-			var tag = Elem.set("div", line.tag, "user-tag");
-			tag.innerHTML = data.tag[i];
-		}
-	}
-	if (data.mark) {
-		for (let i in data.mark) {
-			var mark = Elem.set("div", line.mark, "user-mark");
-			mark.innerHTML = data.mark[i];
+function setLineFlex(body, line, x) {
+	var flex = Elem.set("div", body, "user-flex");
+	var head = Elem.set("img", flex, "user-head");
+	var left = Elem.set("div", flex, "user-left");
+	var right = Elem.set("div", flex, "user-right");
+	var name = Elem.set("div", left, "user-name");
+	var marks = Elem.set("div", left, "user-flex");
+	var ladd = Elem.set("div", right, "user-ladd");
+	var group = Elem.set("div", right, "user-group");
+	if (line.mark) {
+		for (let i in line.mark) {
+			var mark = Elem.set("div", marks, "user-mark");
+			mark.innerHTML = line.mark[i];
 			mark.style.borderColor = getColorType(x);
 		}
 	}
-	// line.head.src = "../../picture/user_head_1.png";
-	Elem.color(line.head, "", getColorLight(x));
-	Elem.color(line.nexu, "white", getColorType(x));
-	Elem.style(line.nexu, "borderColor", getColorType(x));
-	if (data.uid.replace('s', '') != data.uid) 
-		data.nexu = "赞助商";
-	else if (data.uid.replace('d', '') != data.uid) 
-		data.nexu = "淘金者";
+	Elem.color(head, "", getColorLight(x));
+	Elem.color(group, "white", getColorType(x));
+	Elem.style(group, "borderColor", getColorType(x));
+	if (line.uid.replace('s', '') != line.uid) 
+		line.group = "赞助商";
+	else if (line.uid.replace('d', '') != line.uid) 
+		line.group = "淘金者";
 	else 
-		data.nexu = "未知用户";
+		line.group = "未知用户";
 
-	line.name.innerHTML = data.name;
-	line.ladd.innerHTML = data.ladd + "阶";
-	line.nexu.innerHTML = data.nexu;
-	line.desc.innerHTML = data.name + "的描述<br/>THE DESCRIBE OF " + data.name;
-	line.desc.innerHTML += "<br/>" + data.name + "的描述<br/>THE DESCRIBE OF " + data.name;
-	line.desc.innerHTML += "<br/>" + data.name + "的描述<br/>THE DESCRIBE OF " + data.name;
-	if (data.uid == "100001")
-		line.desc.innerHTML = config.desc;
-
-	
-	for (let k in data.button) {
-		var key = data.button[k];
-		var value = config.button[key];
-		//BUTTON
-		var button = Elem.set("div", line.button, "button");
-		Elem.color(button, "white", value.color);
-		button.innerHTML = value.nexu;
-		button.data = value;
-		button.onclick = function () {
-			setNexu(this);
-		}
-	}	
+	name.innerHTML = line.name;
+	ladd.innerHTML = line.ladd + "阶";
+	group.innerHTML = line.group;
+	return flex;
 }
 
-function setNexu(button) {
-	var btnData = button.data;
-	var line = config.line;
-	var idx = line.idx;
-	var org = line.x;
-	if (btnData.idx == 1)
-		showChat();
 
-	for(let i in btnData.org) {
-		if (org == btnData.org[i]) {
-			var tgt = btnData.tgt[i];
-			line.org = tgt;
-			items[tgt].lines.push(line.data);
-			//items[org].lines.splice(idx, 1);
-			line.idx = items[tgt].lines.length - 1;
-			var inner = Elem.getClass("inner")[tgt];
-			var block = inner.childNodes[1];
-			block.appendChild(line.block);
-			Elem.remove(line.float);
-			setFlex(line);
-			return;
+function setDetailAlert(flex) {
+	Style.display("alert", "block");
+	Style.display("detail-bg", "block");
+	var block = Elem.get("detail-block");
+	block.innerHTML = "";
+	var x = flex.x;
+	var data = flex.data;
+	var line = flex.line;
+	var body = Elem.set("div", block, "user-body");
+	var top = setLineFlex(body, line, x);
+	var tags = Elem.set("div", body, "user-tags");
+	var desc = Elem.set("div", body, "user-desc");
+
+	if (line.tag) {
+		for (let i in line.tag) {
+			var tag = Elem.set("div",tags, "user-tag");
+			tag.innerHTML = line.tag[i];
 		}
 	}
+
+	desc.innerHTML = line.name + "的描述<br/>THE DESCRIBE OF " + line.name;
+	desc.innerHTML += "<br/>" + line.name + "的描述<br/>THE DESCRIBE OF " + line.name;
+	desc.innerHTML += "<br/>" + line.name + "的描述<br/>THE DESCRIBE OF " + line.name;
+
+	
+	var button = Elem.get("detail-button");
+	button.innerHTML = "";
+	for (let k in data.buttonIdx) {
+		var _idx = data.buttonIdx[k];
+		var _data = config.buttons[_idx];
+		//BUTTON
+		var btn = Elem.set("div", button, "button");
+		Elem.color(btn, "white", _data.bgcolor);
+		btn.innerHTML = _data.text;
+		btn.data = _data;
+		btn.onclick = function () {
+			setNexu(this);
+		}
+	}
+	Style.color("alert-box", "", getColorLight(x));
+}
+
+
+function setNexu(btn) {
+	var data = btn.data;
+	if (data.idx == 0)
+		showChat();
+
 }
 
 function setAlert() {
@@ -230,6 +194,7 @@ function setChat() {
 function setChatText(block, cls, value) {
 	if (value == "" || value == "输入内容") {
 		Style.display("alert", "none");
+    	Style.display("chat-bg", "none");
 		return;
 	}
 	var flex = Elem.set("div", block, "chat-" + cls);
@@ -243,6 +208,7 @@ function setChatText(block, cls, value) {
 function showChat() {
 	Style.display("alert", "block");
     Style.display("chat-bg", "block");
+    Style.display("detail-bg", "none");
 	var box = Elem.get("alert-box");
 	var block = Elem.get("chat-block");
 	var title = Elem.get("chat-title");
@@ -252,7 +218,7 @@ function showChat() {
 	block.style.maxHeight = (config.windHeight - 703) + "px";
 	block.lastChild.scrollIntoView();
 	input.style.color = getColorLight();
-	title.innerHTML = config.line.data.name;
+	title.innerHTML = config.line.name;
 }
 
 

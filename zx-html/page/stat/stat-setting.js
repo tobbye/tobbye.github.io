@@ -12,8 +12,7 @@ function setOuterTop() {
 		btn.idx = x;
         elems[x].btntop = btn;
 		btn.onclick = function() {
-			values.innerIdx = this.idx;
-			setInner();
+			setInner(this.idx);
 		}
 	}
 }
@@ -77,9 +76,9 @@ function setCell(flex, data, k, a, b) {
 	var value = Math.floor(a + b* (Math.random() * 0.33 + 0.33) * data.seed * 5);
 	Elem.flex(cell, config[k].align, config[k].flex);
 	if (data[k]) 
-		cell.innerHTML = data[k];
+		cell.innerHTML = data[k].replace("年", "年<h3>");
 	else 
-		cell.innerHTML = "￥" + Parse.sub4Num(value);
+		cell.innerHTML = "<h3>￥" + Parse.sub4Num(value);
 	data[k] = value;
 	return cell;
 }
