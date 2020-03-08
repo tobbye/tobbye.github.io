@@ -91,36 +91,48 @@ h4 {
 	background-color: #fff;
 }
 
-.button, .button-red, .button-green {
-	flex: 50;
+
+
+.button, 
+.button-red, 
+.button-green,
+.button-min,
+.button-micro {
+	flex: 10;
 	margin: 5px 10px;
 	padding: 15px;
 	color: white;
-	font-size: 4.6em;
-	border: solid 6px white;
-	border-radius: 20px;
-	background-color: blue;
-}
-
-.button-red {
-	background-color: red;
-}
-
-.button-green {
-	background-color: green;
-}
-
-.button-min {
-	flex: 10;
-	margin: 10px 10px;
-	padding: 15px;
-	color: white;
-	font-size: 4em;
 	border: solid 6px white;
 	border-radius: 20px;
 	background-color: indigo;
 }
 
+.button {
+	font-size: 4.5em;
+}
+
+.button-red {
+	font-size: 4.5em;
+	background-color: red;
+}
+
+.button-green {
+	font-size: 4.5em;
+	background-color: green;
+}
+
+.button-min {
+	font-size: 4em;
+}
+
+
+.button-micro {
+    margin: 20px 10px;
+    padding: 10px;
+    font-size: 3.5em;
+    height: 60px;
+    background-color: green;
+}
 
 .button-top {
 	flex: 10;
@@ -153,43 +165,6 @@ h4 {
 	text-decoration: none;
 }
 
-.user-body {
-	margin: 5px 0px;
-	background-color: white;
-}
-
-
-.user-flex {
-    display: flex;
-    margin-top: 5px;
-    background-color: white;
-}
-
-.user-tags {
-	display: flex;
- 	margin: 0px 5px;
-}
-
-.user-desc {
-	text-align: left;
-	padding: 10px;
-	font-size: 3.5em;
-	font-weight: normal;
-	max-height: 9999px;
-}
-
-.user-buttons {
-	display: flex;
-	margin: 0px 5px;
-	padding-bottom: 10px;
-}
-
-
-.user-line {
-	margin: 5px 0px;
-	background-color: white;
-}
-
 .user-top {
 	display: flex;
 	padding: 10px;
@@ -209,6 +184,19 @@ h4 {
 	padding-top: 10px;
 	font-size: 3.5em;
 	text-align: right;
+}
+
+.user-body, 
+.user-line {
+	margin-top: 5px;
+	background-color: white;
+}
+
+
+.user-flex {
+    display: flex;
+    margin-top: 5px;
+    background-color: white;
 }
 
 .user-idx {
@@ -258,6 +246,21 @@ h4 {
 }
 
 
+.user-tags,
+.user-buttons {
+	display: flex;
+ 	margin: 0px 5px;
+}
+
+.user-desc {
+	text-align: left;
+	padding: 10px;
+	font-size: 3.5em;
+	font-weight: normal;
+	max-height: 5000px;
+	background-color: white;
+}
+
 .user-tag {
 	flex: 33;
 	margin: 10px 15px;
@@ -292,16 +295,14 @@ h4 {
 
 
 .alert-flex,
-#detail-button {
+.alert-button {
 	display: flex;
 	margin: 5px 0px;
-	text-align: center;
 }
 
 .alert-title,
 #alert-title {
 	margin: 10px 0px;
-	width: 100%;
 	font-size: 5em;
 }
 
@@ -311,26 +312,16 @@ h4 {
 	font-size: 6em;
 }
 
-#chat-block,
-#alert-block,
-#detail-block {
+.alert-block {
     overflow: auto;
-    padding: 0px 10px;
-    min-height: 550px;
+    padding: 5px 10px;
+    min-height: 645px;
     max-height: 1234px;
     font-size: 1em;
 }
 
 
-#chat-title, 
-#detail-title, 
-#puzzle-title, 
-#result-title {
-	margin: 10px 0px;
-	width: 100%;
-	font-size: 5em;
-	/*color: white;*/
-}
+
 
 .chat-left {
 	display: flex;

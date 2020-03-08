@@ -11,7 +11,7 @@ function setOuterTop() {
 function setOuterCenter() {
 	var outerCenter = Elem.get("outer-center");
 	for (let x in items) {
-		var inner = Elem.set("div", outerCenter, "inner", x);
+		var inner = Elem.creat("div", outerCenter, "inner", x);
 		setContent(inner, x);
 	}
 }
@@ -19,7 +19,7 @@ function setOuterCenter() {
 function setContent(inner, x) {
 	var list = items[x].list;
 	for (let y in list) {
-		var content = Elem.set("div", inner, "content", y);
+		var content = Elem.creat("div", inner, "content", y);
 		var data = list[y];
 		if (data.title)
 			setTitle(content, data, x);
@@ -30,7 +30,7 @@ function setContent(inner, x) {
 			setStyle(content, data.lines, x, y);
 		}
 		if (y == 1) {
-			var box = Elem.set("div", content, "text");
+			var box = Elem.creat("div", content, "text");
 			box.id = "data-box";
 		}
 	}
@@ -38,11 +38,11 @@ function setContent(inner, x) {
 
 function setTitle(content, data, x) {
     //TITLE
-    var title = Elem.set("div", content, "title");
+    var title = Elem.creat("div", content, "title");
     title.innerHTML = data.title;
     title.x = x;
     //VICE
-    var vice = Elem.set("div", content, "vice");
+    var vice = Elem.creat("div", content, "vice");
     vice.innerHTML = data.vice;
     vice.x = x;
 }
@@ -51,9 +51,9 @@ function setTitle(content, data, x) {
 
 function setLine(content, data, x, y) {
 
-	var flex = Elem.set("div", content, "alert-flex");
+	var flex = Elem.creat("div", content, "alert-flex");
 	for (let z in data.lines) {
-		var btn = Elem.set("div", flex, "button-top");
+		var btn = Elem.creat("div", flex, "button-top");
 		btn.innerHTML = data.lines[z];
 		btn.y = y;
 		btn.z = z;
@@ -87,8 +87,8 @@ function setStyle(content, lines, x, y) {
 		for (let z in lines) {
 			if (x == 0) continue;
 			if (z == 0)
-				line = Elem.set("div", content, "flex");
-			var cell = Elem.set("div", line, "cell");
+				line = Elem.creat("div", content, "flex");
+			var cell = Elem.creat("div", line, "cell");
 			var key = lines[z].toLowerCase();
 			cell.innerHTML = colors[x][key].toUpperCase();
 			Elem.color(cell, "white", cell.innerHTML);

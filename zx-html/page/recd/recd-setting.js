@@ -7,7 +7,7 @@ function setElems() {
 function setOuterTop() {
     var outerTop = Elem.get("outer-top");
     for (let x in items) {
-        var btn = Elem.set("div", outerTop, "button-top");
+        var btn = Elem.creat("div", outerTop, "button-top");
         btn.innerHTML = items[x].title;
         btn.idx = x;
         elems[x].btntop = btn;
@@ -20,7 +20,7 @@ function setOuterTop() {
 function setOuterCenter() {
     var outerCenter = Elem.get("outer-center");
     for (let x in items) {
-        var inner = Elem.set("div", outerCenter, "inner", x);
+        var inner = Elem.creat("div", outerCenter, "inner", x);
         elems[x].inner = inner;
         setContent(inner, x);
     }
@@ -29,7 +29,7 @@ function setOuterCenter() {
 function setContent(inner, x) {
     var list = items[x].list;
     for (let y in list) {
-        var content = Elem.set("div", inner, "content", x+y);
+        var content = Elem.creat("div", inner, "content", x+y);
         var data = list[y];
         setTitle(content, data, x);
         setLine(content, data.lines, x, y);
@@ -40,14 +40,14 @@ function setContent(inner, x) {
 function setTitle(content, data, x) {
     //TITLE
     if (data.title) {
-        var title = Elem.set("div", content, "title");
+        var title = Elem.creat("div", content, "title");
         title.innerHTML = data.title;
         title.x = x;
     }
 
     //VICE
     if (data.vice) {
-        var vice = Elem.set("div", content, "vice");
+        var vice = Elem.creat("div", content, "vice");
         vice.innerHTML = data.vice;
         vice.x = x;
     }
@@ -57,16 +57,16 @@ function setTitle(content, data, x) {
 function setLine(content, lines, x, y) {
     if (!lines) return;
     var list = items[x].list[y];
-    var block = Elem.set("table", content, "block", x);
+    var block = Elem.creat("table", content, "block", x);
     for (let z in lines) {
         var data = lines[z];
         data.color = items[x].color;
 
         //BLOCK
-        var flex = Elem.set("tr", block, "flex", z);	
-        var left = Elem.set("td", flex, "left");
-        var stamp = Elem.set("td", flex, "stamp");
-        var right = Elem.set("td", flex, "right");
+        var flex = Elem.creat("tr", block, "flex", z);	
+        var left = Elem.creat("td", flex, "left");
+        var stamp = Elem.creat("td", flex, "stamp");
+        var right = Elem.creat("td", flex, "right");
 
         if (z == 0) {
             left.innerHTML = data.left;

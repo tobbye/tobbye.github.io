@@ -9,7 +9,7 @@ function setElems() {
 function setOuterTop() {
     var outerTop = Elem.get("outer-top");
     for (let x in items) {
-        var btn = Elem.set("div", outerTop, "button-top");
+        var btn = Elem.creat("div", outerTop, "button-top");
         btn.innerHTML = items[x].title;
         btn.idx = x;
         elems[x].btntop = btn;
@@ -22,7 +22,7 @@ function setOuterTop() {
 function setOuterCenter() {
     var outerCenter = Elem.get("outer-center");
     for (let x in items) {
-        var inner = Elem.set("div", outerCenter, "inner", x);
+        var inner = Elem.creat("div", outerCenter, "inner", x);
         elems[x].inner = inner;
         setContent(inner, x);
     }
@@ -31,24 +31,24 @@ function setOuterCenter() {
 function setContent(inner, x) {
     var list = items[x].list;
     for (let y in list) {
-        var content = Elem.set("div", inner, "content", y);
+        var content = Elem.creat("div", inner, "content", y);
         var data = list[y];
         setTitle(content, data);
         setNotLine(content, data);
         if (data.isGrab)
-            setGrabLine(content, data, x);
+            creatGrabBody(content, data, x);
         else
-            setInveLine(content, data, x);
+            creatInveBody(content, data, x);
     }
 }
 
 function setTitle(content, data) {
     if (data.title) {
-        var title = Elem.set("div", content, "title");
+        var title = Elem.creat("div", content, "title");
         title.innerHTML = data.title;
     }
     if (data.vice) {
-        var vice = Elem.set("div", content, "vice");
+        var vice = Elem.creat("div", content, "vice");
         vice.innerHTML = data.vice;
     }
 }
@@ -56,7 +56,7 @@ function setTitle(content, data) {
 function setNotLine(content, data) {
     if (data.lines) 
         return;
-    var block = Elem.set("div", content, "block");
+    var block = Elem.creat("div", content, "block");
     block.style.fontSize = "5em";
     block.style.padding = "4em";
     block.innerHTML = "此处为空";
@@ -64,11 +64,11 @@ function setNotLine(content, data) {
 }
 
 
-function setTempLine(data) {
+function initTempLine(data) {
     var lines = data.lines;
     if (lines.length > 0)
         return lines;
-    var str = instance[data.instance];
+    var str = instance[data.instance].replace(/\n/g, "");
     var list = Parse.mix(str.split(","));
     for (let idx in list) {
         var line = {};
@@ -78,7 +78,7 @@ function setTempLine(data) {
         line.index = Math.floor((1547 + Math.random()) * 1e9);
         line.stamp = Parse.formatTime(line.index).replace(" ", "<h3>");
         line.inver = list[idx].split("/")[0];
-        line.word = list[idx].replace(/\n/g, "").replace(/ /g, "/");
+        line.word = list[idx].replace(/ /g, "/");
         line.wordOrg = line.word;
         line.wordTgt = line.word.replace(/\//g, "");
         lines[idx] = line;
@@ -87,75 +87,74 @@ function setTempLine(data) {
 }
 
 
-function setGrabLine(content, data, x) {
+function creatGrabBody(content, data, x) {
     if (!data.lines)
         return;
-    var lines = setTempLine(data);
-    var block = Elem.set("div", content, "block");
+    var lines = initTempLine(data);
+    var block = Elem.creat("div", content, "block");
     for (let z in lines) {
         var line = lines[z];
         if (!line.ladd) continue;
-        line = setLineData(line, data.dot, data.isGrab);
+        line = initLineData(line, data.dot, data.isGrab);
         line.row = parseInt(line.ladd / 5 - 0.2);
-        var body = Elem.set("div", block, "user-block");
+        var body = Elem.creat("div", block, "user-block");
         body.data = data;
         body.line = line;
         body.onclick = function() {
             console.log(this.line);
-            setDetailStyle(this);
-            setDetailAlert(this);
+            selectLine(this);
+            alertDetail(this);
         }
-        var flex = Elem.set("div", body, "user-flex");
-        var index = Elem.set("div", flex, "user-index");
-        var stamp = Elem.set("div", flex, "user-stamp");
+        var flex = Elem.creat("div", body, "user-flex");
+        var index = Elem.creat("div", flex, "user-index");
+        var stamp = Elem.creat("div", flex, "user-stamp");
         index.innerHTML = "编号: " + line.index;
         index.innerHTML += "<br/>" + data.inverStr;
         stamp.innerHTML = "时间: " + line.stamp;
 
-        setLineFlex(body, line, x);
+        creatLineFlex(body, line, x);
 
-        var flex = Elem.set("div", body, "user-flex");
+        var flex = Elem.creat("div", body, "user-flex");
         flex.style.marginTop = "0px";
         flex.style.marginBottom = "10px";
-        var ladd = setLineText(flex, line.laddStr);
-        var piece = setLineText(flex, line.pieceStr);
-        var price = setLineText(flex, line.priceStr);
-        var times = setLineText(flex, line.timesStr);
+        var ladd = creatLineText(flex, line.laddStr);
+        var piece = creatLineText(flex, line.pieceStr);
+        var price = creatLineText(flex, line.priceStr);
+        var times = creatLineText(flex, line.timesStr);
         ladd.style.flex = 17;
     }
     data.lines = lines;
 }
 
 
-function setInveLine(content, data, x) {
+function creatInveBody(content, data, x) {
     if (!data.lines)
         return;
     var lines = data.lines;
-    var block = Elem.set("div", content, "block");
+    var block = Elem.creat("div", content, "block");
     for (var z = 0; z < config.laddCount; z++) {
         var line = {ladd: z+1, multi: 1}; 
-        line = setLineData(line, data.dot, data.isGrab);
+        line = initLineData(line, data.dot, data.isGrab);
         lines.push(line);
         if (!line.ladd) continue;
         line.row = Math.floor(line.ladd / 5 - 0.2);
 
-        var flex = Elem.set("div", block, "user-flex", z);
-        //Elem.color(flex, line.color.deep, "white");
-        flex.data = data;
-        flex.line = line;
-        flex.onclick = function() {
+        var body = Elem.creat("div", block, "user-flex", z);
+        //Elem.color(body, line.color.deep, "white");
+        body.data = data;
+        body.line = line;
+        body.onclick = function() {
             console.log(this.line);
-            setDetailStyle(this);
-            setDetailAlert(this);
+            selectLine(this);
+            alertDetail(this);
         }
-        var ladd = setLineText(flex, line.laddStr);
-        var piece = setLineText(flex, line.pieceStr);
-        var price = setLineText(flex, line.priceStr);
-        var times = setLineText(flex, line.timesStr);
+        var ladd = creatLineText(body, line.laddStr);
+        var piece = creatLineText(body, line.pieceStr);
+        var price = creatLineText(body, line.priceStr);
+        var times = creatLineText(body, line.timesStr);
         ladd.style.flex = 17;
         if (z == 0) {
-            elems[x].flex = flex;
-            setDetailStyle(flex);
+            selectLine(body);
         }
     }
     data.lines = lines;
@@ -163,7 +162,7 @@ function setInveLine(content, data, x) {
 }
 
 
-function setLineData(line, dot, isGrab) {
+function initLineData(line, dot, isGrab) {
 
     line.priceAllList = [];    
     line.pieceAllList = [];
@@ -225,27 +224,27 @@ function setLineData(line, dot, isGrab) {
 }
 
 
-function setLineText(flex, text) {
-    var line = Elem.set("text", flex, "line");
+function creatLineText(flex, text) {
+    var line = Elem.creat("text", flex, "line");
     line.innerHTML = text;
     return line;
 }
 
 
-function setLineFlex(body, line, x) {
-    var flex = Elem.set("div", body, "user-flex");
-    var head = Elem.set("img", flex, "user-head");
-    var left = Elem.set("div", flex, "user-left");
-    var right = Elem.set("div", flex, "user-right");
-    var name = Elem.set("div", left, "user-name");
-    var marks = Elem.set("div", left, "user-flex");
-    var ladd = Elem.set("div", right, "user-ladd");
-    var group = Elem.set("div", right, "user-group");
+function creatLineFlex(body, line, x) {
+    var flex = Elem.creat("div", body, "user-flex");
+    var head = Elem.creat("img", flex, "user-head");
+    var left = Elem.creat("div", flex, "user-left");
+    var right = Elem.creat("div", flex, "user-right");
+    var name = Elem.creat("div", left, "user-name");
+    var marks = Elem.creat("div", left, "user-flex");
+    var ladd = Elem.creat("div", right, "user-ladd");
+    var group = Elem.creat("div", right, "user-group");
 
     line.mark = ["身份标签1", "身份标签2"];
     if (line.mark) {
         for (let i in line.mark) {
-            var mark = Elem.set("div", marks, "user-mark");
+            var mark = Elem.creat("div", marks, "user-mark");
             mark.innerHTML = line.mark[i];
             mark.style.borderColor = getColorType(x);
         }
@@ -260,7 +259,7 @@ function setLineFlex(body, line, x) {
 }
 
 
-function setDetailStyle(flex) { 
+function selectLine(flex) { 
     var old = config.flex;
     if (old) {
         old.style.border = "solid 0px transparent";
@@ -274,7 +273,7 @@ function setDetailStyle(flex) {
 }
 
 
-function setDetailAlert(body) {
+function alertDetail(body) {
     var data = body.data;
     var line = body.line;
     config.line = line;
@@ -293,11 +292,11 @@ function setDetailAlert(body) {
 
     for (var i = 0; i < line.ladd; i++) {
         var idx = line.ladd - i - 1;
-        var flex = Elem.set("div", block, "user-flex", idx);
-        var ladd = Elem.set("text", flex, "line");
-        var piece = Elem.set("text", flex, "line");
-        var price = Elem.set("text", flex, "line");
-        var times = Elem.set("text", flex, "line");
+        var flex = Elem.creat("div", block, "user-flex", idx);
+        var ladd = Elem.creat("text", flex, "line");
+        var piece = Elem.creat("text", flex, "line");
+        var price = Elem.creat("text", flex, "line");
+        var times = Elem.creat("text", flex, "line");
         ladd.style.flex = "15";
         ladd.innerHTML = data.laddStr.replace("{0}", (line.ladd - i));
         piece.innerHTML = data.pieceStr.replace("{0}", Parse.sub4Num(line[pieceKey][idx]));
@@ -309,17 +308,19 @@ function setDetailAlert(body) {
     var title = Elem.get("detail-title");
     box.style.backgroundColor = getColorLight();
     title.innerHTML = data.flexStr.replace("{0}",line.inver);
-    block.firstChild.scrollIntoView(true);
-    showAlert(data);
+    if(block.firstChild)
+        block.firstChild.scrollIntoView();
+    showAlert("detail-bg");
+    showAlertButton(data);
 }
 
 
-function setPuzzleAlert() {
+function alertPuzzle() {
     Style.display("detail-bg", "none");
     Style.display("puzzle-bg", "block");
     Style.display("btn-open", "none");
     Style.display("btn-redo", "block");
-    Style.color("btn-redo", "white", "red");
+    Style.color("btn-redo", "", "red");
     var block = Elem.get("puzzle-block");
     block.innerHTML = "";
     config.wordCur = "";
@@ -328,29 +329,29 @@ function setPuzzleAlert() {
     
     var line = config.line;
     line.mix = Parse.mix(line.word, 1);
-    var cellText = Elem.set("div", block, "line-text");
+    var cellText = Elem.creat("div", block, "cell-tips");
     cellText.innerHTML = config.cellText;
-    setPuzzleCell(line, block, 0);
+    creatPuzzle(line, block, 0);
 
-    var cellTips = Elem.set("div", block, "line-text");
+    var cellTips = Elem.creat("div", block, "cell-tips");
     cellTips.style.marginTop = "5px";
     cellTips.innerHTML = config.cellTips;
-    setPuzzleCell(line, block, 1);
+    creatPuzzle(line, block, 1);
 }
 
 
 //解密字块
-function setPuzzleCell(line, block, mix) {
+function creatPuzzle(line, block, mix) {
     var str = mix ? line.mix : line.word;
-    var space = Elem.set("div", block, "space20");
-    var flex = Elem.set("div", block, "cell-flex");
+    var space = Elem.creat("div", block, "space20");
+    var flex = Elem.creat("div", block, "cell-flex");
     for(let idx in line.word) {
         if (line.word[idx] == "/") 
-            flex = Elem.set("div", block, "cell-flex");
+            flex = Elem.creat("div", block, "cell-flex");
 
         if (str[idx] == "/") 
             continue;
-        var textCell = Elem.set("div", flex, "cell-text");
+        var textCell = Elem.creat("div", flex, "cell-text");
         textCell.able = true;
         textCell.innerHTML = str[idx];
         textCell.style.borderColor = getColorType();
@@ -383,11 +384,11 @@ function setPuzzleCell(line, block, mix) {
             }
         }
     }
-    var space = Elem.set("div", block, "space20");
+    var space = Elem.creat("div", block, "space20");
 }
 
 
-function setResultAlert() {
+function alertResult() {
     Style.display("puzzle-bg", "none");
     Style.display("result-bg", "block");
     var bg = Elem.get("result-bg");
@@ -399,11 +400,11 @@ function setResultAlert() {
     var rollCount = Math.floor(Math.random() * allCount);
     getRoll(allCount, rollCount);
 
-    var ladd = Elem.set("div", block, "line");
+    var ladd = Elem.creat("div", block, "line");
     ladd.innerHTML = rollLadd + "阶红包";
-    var pic = Elem.set("img", block, "img");
+    var pic = Elem.creat("img", block, "img");
     pic.src = config.laddSrc + rollLadd + ".png";
-    var price = Elem.set("div", block, "line");
+    var price = Elem.creat("div", block, "line");
     price.innerHTML = "<h2>￥" +  Parse.addSplit(line.priceAllList[rollLadd - 1]);
 }
 
@@ -421,7 +422,7 @@ function getRoll(all, roll) {
 function setButton(inner, x) {
     var data = items[x].button;
     if (!data) return;
-    var button = Elem.set("div", inner, "button");
+    var button = Elem.creat("div", inner, "button");
     Elem.color(button, "white", data.color);
     button.innerHTML = data.text;
     button.data = data;
@@ -432,7 +433,7 @@ function setButton(inner, x) {
 function setAlert() {
     hideAlert();
     Elem.get("btn-next").onclick = function() {
-        setPuzzleAlert();
+        alertPuzzle();
     }
     Elem.get("btn-doit").onclick = function() {
         hideAlert();
@@ -444,28 +445,14 @@ function setAlert() {
         hideAlert();
     }
     Elem.get("btn-redo").onclick = function() {
-        setPuzzleAlert();
+        alertPuzzle();
     }
     Elem.get("btn-abon").onclick = function() {
         hideAlert();
     }
     Elem.get("btn-open").onclick = function() {
-        setResultAlert();
+        alertResult();
     }
-}
-
-
-function showAlert(data) {
-    showAlertButton(data);
-    Style.display("alert", "block");
-    Style.display("detail-bg", "block");
-    Style.display("puzzle-bg", "none");
-    Style.display("result-bg", "none");
-}
-
-
-function hideAlert() {
-    Style.display("alert", "none");
 }
 
 

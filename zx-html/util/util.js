@@ -156,7 +156,7 @@ Parse.getTime = function(stamp) {
 var  Elem = {};
 
 //创建一个元素
-Elem.set = function(type, parent, className, id) {
+Elem.creat = function(type, parent, className, id) {
 	var elem = document.createElement(type);
 	if (parent)
 		parent.appendChild(elem);
@@ -190,16 +190,7 @@ Elem.empty = function (elem) {
         elem.removeChild(elem.firstChild);
 }
 
-//设置父元素
-Elem.setParent = function (elem) {
-    while(document.body.hasChildNodes()) {
-        var firstChild = document.body.firstChild;
-        if (elem != firstChild)
-          elem.appendChild(firstChild);
-      else 
-          return;
-  }
-}
+
 
 //设置元素样式
 Elem.style = function(elem, key, value) {
@@ -261,19 +252,11 @@ Elem.autosize = function(elem, offset) {
 }
 
 //克隆元素
-Elem.clone = function(elem) {
-    let clone = {};
-    for (let idx in elem) {
-        console.log(Object.prototype.toString.call(elem[idx]));
-        if ( elem[idx] instanceof Array ) {
-            clone[idx]=new Array();
-            for (let i = 0; i < elem[idx].length; i++) {
-                clone[idx].push(this.clone(elem[idx][i]));
-            }
-        } else {
-            clone[idx] = elem[idx];
-        }
-    }   
+Elem.clone = function(elem, parent){
+    var copy = Object.assign({}, elem);
+    console.log(copy);
+    parent.appendChild(copy);
+    return copy;
 }
 
 
@@ -441,7 +424,7 @@ var getAgent = function() {
     config.isDevil = Storage.get("isDevil") == "devil";
     config.isAlert = Storage.get("isAlert") == "alert";
     config.outerOffset = 230;
-    config.alertOffset = 680;
+    config.alertOffset = 716;
     console.log(config);
     window.onresize();
     return val;
@@ -455,7 +438,6 @@ var setAgent = function() {
 
     }
 }
-
 
 var setFullScreen = function() {
     if (config.isMobile) {
@@ -485,7 +467,7 @@ var togContent = function(tog) {
         if (elem.children.length == 4)  
             hide = elem.children[3];
         if (elem.children.length == 3) {
-            hide = Elem.set('div', elem, 'hide');
+            hide = Elem.creat('div', elem, 'hide');
             hide.innerHTML = "内容已隐藏，点击展开...";
             hide.onclick = function() {
                 togContent(1);
@@ -503,4 +485,21 @@ var togContent = function(tog) {
     config.isHide = !config.isHide;
 }
 
+
+//显示弹窗
+var showAlert = function(name) {
+    Style.display("alert", "block");
+    if (name)
+        Style.display(name, "block");
+}
+
+
+//隐藏弹窗
+var hideAlert = function() {
+    Style.display("alert", "none");
+    Style.display("chat-bg", "none");
+    Style.display("detail-bg", "none");
+    Style.display("puzzle-bg", "none");
+    Style.display("result-bg", "none");
+}
 

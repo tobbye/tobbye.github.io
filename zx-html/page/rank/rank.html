@@ -17,18 +17,6 @@
         text-align: center;
     }
 
-    h4 {
-        margin: 0px;
-        font-size: 0.8em;
-    }
-
-    .button-min {
-        margin: 20px 10px;
-        padding: 10px;
-        font-size: 3.5em;
-        height: 60px;
-        background-color: green;
-    }
 
     #alert-box {
         top: 220px;
@@ -45,12 +33,6 @@
         font-family: "Times New Roman";
         border: 8px solid #fff;
     }
-
-    #detail-block {
-        margin: 10px;
-        background-color: white;
-    }
-
 
     #chat-block {
         margin: 10px;
@@ -72,22 +54,22 @@
     </div>
 
     <div id="alert">
-        <div id="alert-bg"></div>
+        <div id="alert-bg" onclick="hideAlert()"></div>
         <div id="alert-box">
             <div id="chat-bg">
-                <div id="chat-title">查看详情</div>
-                <div id="chat-block"></div>
-                <div class="alert-flex">
-                    <div class="button-min" id="btn-vocie">语音</div>
+                <div class="alert-title" id="chat-title">查看详情</div>
+                <div class="alert-block" id="chat-block"></div>
+                <div class="alert-button">
+                    <div class="button-micro" id="btn-vocie">语音</div>
                     <textarea id="alert-textarea" onfocus="onFocus()">输入内容</textarea>
-                    <div class="button-min" id="btn-send">发送</div>
+                    <div class="button-micro" id="btn-send">发送</div>
                 </div>
             </div>
 
             <div id="detail-bg">
-                <div id="detail-title">个人资料</div>
-                <div id="detail-block"></div>
-                <div id="detail-button"></div>
+                <div class="alert-title" id="detail-title">个人资料</div>
+                <div class="alert-block" id="detail-block"></div>
+                <div class="alert-button" id="detail-button"></div>
             </div>
         </div>
     </div>

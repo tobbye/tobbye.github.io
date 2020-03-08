@@ -8,7 +8,7 @@ function setElems() {
 function setOuterTop() {
 	var outerTop = Elem.get("outer-top");
 	for (let x in items) {
-		var btn = Elem.set("div", outerTop, "button-top");
+		var btn = Elem.creat("div", outerTop, "button-top");
 		btn.innerHTML = items[x].title;
 		btn.idx = x;
 		elems[x].btntop = btn;
@@ -21,7 +21,7 @@ function setOuterTop() {
 function setOuterCenter() {
 	var outerCenter = Elem.get("outer-center");
 	for (let x in items) {
-		var inner = Elem.set("div", outerCenter, "inner", x);
+		var inner = Elem.creat("div", outerCenter, "inner", x);
 		elems[x].inner = inner;
 		setContent(inner, x);
 	}
@@ -31,7 +31,7 @@ function setOuterCenter() {
 function setContent(inner, x) {
 	var list = items[x].list;
 	for (let y in list) {
-		var content = Elem.set("div", inner, "content", x+y);
+		var content = Elem.creat("div", inner, "content", x+y);
 		var data = list[y];
 		setTitle(content, data);
 		setNotLine(content, data);
@@ -41,11 +41,11 @@ function setContent(inner, x) {
 
 function setTitle(content, data) {
 	if (data.title) {
-		var title = Elem.set("div", content, "title");
+		var title = Elem.creat("div", content, "title");
 		title.innerHTML = data.title;
 	}
 	if (data.vice) {
-		var vice = Elem.set("div", content, "vice");
+		var vice = Elem.creat("div", content, "vice");
 		vice.innerHTML = data.vice;
 	}
 }
@@ -54,7 +54,7 @@ function setTitle(content, data) {
 function setNotLine(content, data) {
 	if (data.lines) 
 		return;
-    var block = Elem.set("div", content, "block");
+    var block = Elem.creat("div", content, "block");
     block.style.fontSize = "5em";
     block.style.padding = "4em";
     block.innerHTML = "此处为空";
@@ -62,41 +62,40 @@ function setNotLine(content, data) {
 
 
 function setLine(content, data, x, y) {
-	var lines = Parse.mix(industry.split(','));
-	var block = Elem.set("div", content, "block");
-	for (let z in lines) {
-		if (z > 19) return;
-		var line = setTempData(lines[z], x, y, z);
-		var body = Elem.set("div", block, "user-block");
-		var top = Elem.set("div", body, "user-top");
-		var order = Elem.set("div", top, "user-order");
-		var value = Elem.set("div", top, "user-value");
-		order.innerHTML = line.order;
-		value.innerHTML = line.value;
+	data.lines = initTempLine(data, x, y);
+	var block = Elem.creat("div", content, "block");
+	for (let z in data.lines) {
+		var line = data.lines[z];
+		var body = Elem.creat("div", block, "user-block");
+
+		body.flex = creatLineFlex(body, line, x);
 		body.line = line;
 		body.data = data;
 		body.x = x;
 		body.onclick = function() {
 			config.line = this.line;
-			console.log(this);
-			setDetailAlert(this);
+			console.log(this.line);
+			alertDetail(this);
 		}
-		var flex = setLineFlex(body, line, x);
 	}
 }
 
-function setLineFlex(body, line, x) {
-	var flex = Elem.set("div", body, "user-flex");
-	var head = Elem.set("img", flex, "user-head");
-	var left = Elem.set("div", flex, "user-left");
-	var right = Elem.set("div", flex, "user-right");
-	var name = Elem.set("div", left, "user-name");
-	var marks = Elem.set("div", left, "user-flex");
-	var ladd = Elem.set("div", right, "user-ladd");
-	var group = Elem.set("div", right, "user-group");
+function creatLineFlex(body, line, x) {
+	var top = Elem.creat("div", body, "user-top");
+	var order = Elem.creat("div", top, "user-order");
+	var value = Elem.creat("div", top, "user-value");
+
+	var flex = Elem.creat("div", body, "user-flex");
+	var head = Elem.creat("img", flex, "user-head");
+	var left = Elem.creat("div", flex, "user-left");
+	var right = Elem.creat("div", flex, "user-right");
+	var name = Elem.creat("div", left, "user-name");
+	var marks = Elem.creat("div", left, "user-flex");
+	var ladd = Elem.creat("div", right, "user-ladd");
+	var group = Elem.creat("div", right, "user-group");
 	if (line.mark) {
 		for (let i in line.mark) {
-			var mark = Elem.set("div", marks, "user-mark");
+			var mark = Elem.creat("div", marks, "user-mark");
 			mark.innerHTML = line.mark[i];
 			mark.style.borderColor = getColorType(x);
 		}
@@ -104,7 +103,8 @@ function setLineFlex(body, line, x) {
 	Elem.color(head, "", getColorLight(x));
 	Elem.color(group, "white", getColorType(x));
 	Elem.style(group, "borderColor", getColorType(x));
-
+	order.innerHTML = line.order;
+	value.innerHTML = line.value;
 	name.innerHTML = line.name;
 	ladd.innerHTML = line.ladd + "阶";
 	group.innerHTML = line.group;
@@ -112,22 +112,22 @@ function setLineFlex(body, line, x) {
 }
 
 
-function setDetailAlert(flex) {
+function alertDetail(body) {
 	Style.display("alert", "block");
 	Style.display("detail-bg", "block");
 	var block = Elem.get("detail-block");
 	block.innerHTML = "";
-	var x = flex.x;
-	var data = flex.data;
-	var line = flex.line;
-	var body = Elem.set("div", block, "user-body");
-	var top = setLineFlex(body, line, x);
-	var tags = Elem.set("div", body, "user-tags");
-	var desc = Elem.set("div", body, "user-desc");
+	var x = body.x;
+	var line = body.line;
+	var data = body.data;
+	var body = Elem.creat("div", block, "user-body");
+	var flex = creatLineFlex(body, line, x);
+	var tags = Elem.creat("div", body, "user-tags");
+	var desc = Elem.creat("div", body, "user-desc");
 
 	if (line.tag) {
 		for (let i in line.tag) {
-			var tag = Elem.set("div",tags, "user-tag");
+			var tag = Elem.creat("div",tags, "user-tag");
 			tag.innerHTML = line.tag[i];
 		}
 	}
@@ -140,7 +140,7 @@ function setDetailAlert(flex) {
 		var _idx = data.buttonIdx[k];
 		var _data = config.buttons[_idx];
 		//BUTTON
-		var btn = Elem.set("div", button, "button");
+		var btn = Elem.creat("div", button, "button");
 		Elem.color(btn, "white", _data.bgcolor);
 		btn.innerHTML = _data.text;
 		btn.data = _data;
@@ -152,21 +152,31 @@ function setDetailAlert(flex) {
 }
 
 
-function setTempData(name, x, y, z) {
-	var list = items[x].list[y];
-	var data = config.unit;
-	data.name = name;
-	data.group = list.group;
-	data.order = parseInt(z) + 1 + "th";
-	if (data.order.length == 3)
-		data.order = data.order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
-	// setNotFlex()
-	var seed = items[x].seed * list.seed;
-	var rand = Math.floor((Math.random()+40-z) * 2 * seed);
-	data.value = list.text + ": ￥" + Parse.sub4Num(rand);
-	data.ladd = Math.floor(Math.random() * 20) + 3;
-	//data.desc = data.name + "的描述";
-	return data;
+function initTempLine(data, x, y) {
+	var lines = [];
+	var temps = Parse.mix(industry.split(','));
+	for (let z in temps) {
+		if (z > 19) break;
+		var line = {};
+		line.uid = config.unit.uid;
+		line.tag = config.unit.tag;
+		line.mark = config.unit.mark;
+		line.desc = config.unit.desc;
+
+		line.name = temps[z];
+		line.group = data.group;
+		line.order = parseInt(z) + 1 + "th";
+		if (line.order.length == 3)
+			line.order = line.order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
+		// setNotFlex()
+		var seed = items[x].seed * data.seed;
+		var rand = Math.floor((Math.random()+40-z) * 2 * seed);
+		line.value = data.text + ": ￥" + Parse.sub4Num(rand);
+		line.ladd = Math.floor(Math.random() * 20) + 3;
+		//line.desc = line.name + "的描述";
+		lines.push(line);
+	}
+	return lines;
 }
 
 function setNexu(btn) {
@@ -190,27 +200,27 @@ function setChat() {
 	for (let i in config.chat) {
 		var data = config.chat[i];
 		var cls = data.isMine ? "right" : "left";
-		setChatText(block, cls, data.text);
+		creatChatText(block, cls, data.text);
 	}
 	var send = Elem.get("btn-send");
 	send.block = block;
 	send.onclick = function() {
 		var input = Elem.get("alert-textarea");
-		setChatText(this.block, "right", input.value);
+		creatChatText(this.block, "right", input.value);
 		input.style.color = getColorLight();
 		input.value = "输入内容";
 	}
 }
 
 
-function setChatText(block, cls, value) {
+function creatChatText(block, cls, value) {
 	if (value == "" || value == "输入内容") {
 		Style.display("alert", "none");
     	Style.display("chat-bg", "none");
 		return;
 	}
-	var flex = Elem.set("div", block, "chat-" + cls);
-	var text = Elem.set("div", flex, "text-" + cls);
+	var flex = Elem.creat("div", block, "chat-" + cls);
+	var text = Elem.creat("div", flex, "text-" + cls);
 	text.innerHTML = value.replace(/\n/g, "<br/>");
 	text.scrollIntoView();
 }
@@ -245,14 +255,4 @@ function onFocus() {
 	input.value = "";
 
 	// Style.height("detail-block", "550px");
-}
-
-
-//隐藏弹窗
-function hideAlert() {
-    Style.display("alert", "none");
-    Style.display("chat-bg", "none");
-    Style.display("detail-bg", "none");
-    Style.display("puzzle-bg", "none");
-    Style.display("result-bg", "none");
 }

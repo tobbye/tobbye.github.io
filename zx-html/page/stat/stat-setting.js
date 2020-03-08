@@ -7,7 +7,7 @@ function setElems() {
 function setOuterTop() {
 	var outerTop = Elem.get("outer-top");
 	for (let x in items) {
-		var btn = Elem.set("div", outerTop, "button-top");
+		var btn = Elem.creat("div", outerTop, "button-top");
 		btn.innerHTML = items[x].title;
 		btn.idx = x;
         elems[x].btntop = btn;
@@ -20,7 +20,7 @@ function setOuterTop() {
 function setOuterCenter() {
     var outerCenter = Elem.get("outer-center");
     for (let x in items) {
-        var inner = Elem.set("div", outerCenter, "inner", x);
+        var inner = Elem.creat("div", outerCenter, "inner", x);
         elems[x].inner = inner;
         setContent(inner, x);
     }
@@ -29,7 +29,7 @@ function setOuterCenter() {
 function setContent(inner, x) {
     var list = items[x].list;
     for (let y in list) {
-        var content = Elem.set("div", inner, "content", x+y);
+        var content = Elem.creat("div", inner, "content", x+y);
         var data = list[y];
         if (data.title)
             setTitle(content, data, x);
@@ -44,11 +44,11 @@ function setContent(inner, x) {
 
 function setTitle(content, data, x) {
     //TITLE
-    var title = Elem.set("div", content, "title");
+    var title = Elem.creat("div", content, "title");
     title.innerHTML = data.title;
     title.x = x;
     //VICE
-    var vice = Elem.set("div", content, "vice");
+    var vice = Elem.creat("div", content, "vice");
     vice.innerHTML = data.vice;
     vice.x = x;
 }
@@ -56,14 +56,14 @@ function setTitle(content, data, x) {
 
 function setLine(content, lines, x, y) {
 
-	var block = Elem.set("div", content, "block", x);
+	var block = Elem.creat("div", content, "block", x);
 	for (let z in lines) {
 		var data = lines[z];
 		data.seed = items[x].seed;
 		// data.color = items[x].color;
 
 		//BLOCK
-		var flex = Elem.set("div", block, "flex", z);
+		var flex = Elem.creat("div", block, "flex", z);
 		var date = setCell(flex, data, "date", 0, 0);
 		var inve = setCell(flex, data, "inve", 1e3, 1e4);
 		var grab = setCell(flex, data, "grab", 1e3, 1e4);
@@ -72,7 +72,7 @@ function setLine(content, lines, x, y) {
 }
 
 function setCell(flex, data, k, a, b) {
-	var cell = Elem.set("div", flex, "cell", k);
+	var cell = Elem.creat("div", flex, "cell", k);
 	var value = Math.floor(a + b* (Math.random() * 0.33 + 0.33) * data.seed * 5);
 	Elem.flex(cell, config[k].align, config[k].flex);
 	if (data[k]) 

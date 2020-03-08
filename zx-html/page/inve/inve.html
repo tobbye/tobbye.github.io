@@ -63,15 +63,9 @@
     }
 
 
-    #puzzle-block {
-        padding: 0px 10px;
-        min-height: 480px;
-        font-size: 1em;
-    }
-
     #result-block {
         margin: 10px;
-        padding: 30px 30px;
+        padding: 30px 0px;
         font-size: 1.5em;
         background-color: white;
     }
@@ -93,26 +87,17 @@
         border: solid 6px red;
     }
 
-    .line-text {
+    .cell-tips {
         font-size: 3.5em;
         padding: 10px;
         margin-bottom: 5px;
         background-color: white;
     }
 
-    .alert-line {
-
-    }
-
     .img {
         height: 500px;
     }
-
-    .button {
-        margin-top: 15px;
-        margin-bottom: 10px;
-    }
-
+    
 </style>
 
 <body>
@@ -127,22 +112,21 @@
     </div>
 
     <div id="alert">
-        <div id="alert-bg"></div>
+        <div id="alert-bg" onclick="hideAlert()"></div>
         <div id="alert-box">
             <div id="detail-bg">
-                <div id="detail-title">查看详情</div>
-                <div id="detail-block">
-                </div>
-                <div class="alert-flex">
-                    <div class="button-green" id="btn-next">NEXT</div>
-                    <div class="button-green" id="btn-doit">DOIT</div>
-                    <div class="button-red" id="btn-quit">终止交易</div>
+                <div class="alert-title" id="detail-title">查看详情</div>
+                <div class="alert-block" id="detail-block"></div>
+                <div class="alert-button" id="detail-button">
+                    <div class="button-green" id="btn-next">下一个</div>
+                    <div class="button-green" id="btn-doit">确认</div>
+                    <div class="button-red" id="btn-quit">关闭</div>
                 </div>
             </div>
             <div id="puzzle-bg">
-                <div id="puzzle-title">发现一个红包</div>
-                <div id="puzzle-block"></div>
-                <div class="alert-flex">
+                <div class="alert-title" id="puzzle-title">发现一个红包</div>
+                <div class="alert-block" id="puzzle-block"></div>
+                <div class="alert-button" id="puzzle-button">
                     <div class="button-green" id="btn-open">打开</div>
                     <div class="button-red" id="btn-redo">重置</div>
                     <div class="button-red" id="btn-abon">丢弃</div>
@@ -150,9 +134,9 @@
             </div>
 
             <div id="result-bg">
-                <div id="result-title">恭喜您获得了</div>
-                <div id="result-block"></div>
-                <div class="alert-flex">
+                <div class="alert-title" id="result-title">恭喜您获得了</div>
+                <div class="alert-block" id="result-block"></div>
+                <div class="alert-button" id="result-button">
                     <div class="button-green" id="btn-more">查看</div>
                     <div class="button-red" id="btn-close">关闭</div>
                 </div>

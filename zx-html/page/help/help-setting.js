@@ -32,7 +32,7 @@ function getRoll(all, roll) {
 function setOuterCenter() {
 	var outerCenter = Elem.get('outer-center');
 	for (let x in items) {
-		var inner = Elem.set('div', outerCenter, 'inner', x);
+		var inner = Elem.creat('div', outerCenter, 'inner', x);
 		setContent(inner, x);
 	}
 }
@@ -40,7 +40,7 @@ function setOuterCenter() {
 function setContent(inner, x) {
 	var list = items[x].list;
 	for (let y in list) {
-		var content = Elem.set('div', inner, 'content', x+y);
+		var content = Elem.creat('div', inner, 'content', x+y);
 		var data = list[y];
 		if (data.title)
 			setTitle(content, data, x);
@@ -51,19 +51,19 @@ function setContent(inner, x) {
 
 function setTitle(content, data, x) {
     //TITLE
-    var title = Elem.set('div', content, 'title');
+    var title = Elem.creat('div', content, 'title');
     title.innerHTML = data.title;
     title.x = x;
     //VICE
-    var vice = Elem.set('div', content, 'vice');
+    var vice = Elem.creat('div', content, 'vice');
     vice.innerHTML = data.vice;
     vice.x = x;
 }
 
 function setText(content, data, x, y) {
 
-	var block = Elem.set('div', content, 'block');
-	var text = Elem.set('div', block, 'text');
+	var block = Elem.creat('div', content, 'block');
+	var text = Elem.creat('div', block, 'text');
 	text.innerHTML = data.text;
 
 }

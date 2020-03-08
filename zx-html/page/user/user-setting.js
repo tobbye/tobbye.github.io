@@ -8,7 +8,7 @@ function setElems() {
 function setOuterTop() {
 	var outerTop = Elem.get("outer-top");
 	for (let x in items) {
-		var btn = Elem.set("div", outerTop, "button-top");
+		var btn = Elem.creat("div", outerTop, "button-top");
 		btn.innerHTML = items[x].title;
 		btn.idx = x;
 		elems[x].btntop = btn;
@@ -21,7 +21,7 @@ function setOuterTop() {
 function setOuterCenter() {
 	var outerCenter = Elem.get("outer-center");
 	for (let x in items) {
-		var inner = Elem.set("div", outerCenter, "inner", x);
+		var inner = Elem.creat("div", outerCenter, "inner", x);
 		elems[x].inner = inner;
 		setContent(inner, x);
 	}
@@ -30,7 +30,7 @@ function setOuterCenter() {
 function setContent(inner, x) {
 	var list = items[x].list;
 	for (let y in list) {
-		var content = Elem.set("div", inner, "content", x+y);
+		var content = Elem.creat("div", inner, "content", x+y);
 		var data = list[y];
 		if (data.title)
 			setTitle(content, data, x);
@@ -53,26 +53,26 @@ function setContent(inner, x) {
 
 function setTitle(content, data, x) {
     //TITLE
-    var title = Elem.set("div", content, "title");
+    var title = Elem.creat("div", content, "title");
     title.innerHTML = data.title;
     title.x = x;
     //VICE
-    var vice = Elem.set("div", content, "vice");
+    var vice = Elem.creat("div", content, "vice");
     vice.innerHTML = data.vice;
     vice.x = x;
 }
 
 function setDetail(content, data) {
-	var block = Elem.set("div", content, "block");
-	var head = Elem.set("img", block, "head");
-	var name = Elem.set("div", block, "name");
-	var uid = Elem.set("div", block, "uid");
-	var area = Elem.set("span", block, "area");
-	var sex = Elem.set("span", block, "sex");
-	var age = Elem.set("span", block, "age");
-	var auth = Elem.set("span", block, "auth");
-	var ladd = Elem.set("span", block, "ladd");
-	var cls = Elem.set("span", block, "cls");
+	var block = Elem.creat("div", content, "block");
+	var head = Elem.creat("img", block, "head");
+	var name = Elem.creat("div", block, "name");
+	var uid = Elem.creat("div", block, "uid");
+	var area = Elem.creat("span", block, "area");
+	var sex = Elem.creat("span", block, "sex");
+	var age = Elem.creat("span", block, "age");
+	var auth = Elem.creat("span", block, "auth");
+	var ladd = Elem.creat("span", block, "ladd");
+	var cls = Elem.creat("span", block, "cls");
 
 	block.id = "bg";
 	name.innerHTML = data.name;
@@ -88,24 +88,24 @@ function setDetail(content, data) {
 
 function setRank(content, data) {
 
-	var block = Elem.set("div", content, "block");
+	var block = Elem.creat("div", content, "block");
 	//TIPS
-	var tips = Elem.set("div", block, "tips");
+	var tips = Elem.creat("div", block, "tips");
 	tips.innerHTML = data.tipsRank;
-	var flex = Elem.set("div", block, "flex");
+	var flex = Elem.creat("div", block, "flex");
 	//RANK-ALL
-	var all = Elem.set("div", flex, "rank");
-	var city = Elem.set("div", flex, "rank");
-	var area = Elem.set("div", flex, "rank");
+	var all = Elem.creat("div", flex, "rank");
+	var city = Elem.creat("div", flex, "rank");
+	var area = Elem.creat("div", flex, "rank");
 	all.innerHTML = "全国排名<br/><h3> " + data.rankAll;
 	city.innerHTML = "全市排名<br/><h3> " + data.rankCity;
 	area.innerHTML = "全区排名<br/><h3> " + data.rankArea;
 
 
-	var flex = Elem.set("div", block, "flex");
-	var all = Elem.set("div", flex, "value");
-	var used = Elem.set("div", flex, "value");
-	var surplus = Elem.set("div", flex, "value");
+	var flex = Elem.creat("div", block, "flex");
+	var all = Elem.creat("div", flex, "value");
+	var used = Elem.creat("div", flex, "value");
+	var surplus = Elem.creat("div", flex, "value");
 	all.innerHTML = "总权值<br/><h3>" + data.valueAll;
 	used.innerHTML = "已分配<br/><h3>" + data.valueUsed;
 	surplus.innerHTML = "未分配<br/><h3>" + data.valueSurplus;
@@ -116,20 +116,20 @@ function setTags(content, data) {
 	var tags = data.tags;
 	if (!tags) return;
 	//TIPS
-	var block = Elem.set("div", content, "block");
-	var tips = Elem.set("div", block, "tips");
+	var block = Elem.creat("div", content, "block");
+	var tips = Elem.creat("div", block, "tips");
 	tips.innerHTML = data.tipsTag;
 
-	var flex1 = Elem.set("div", block, "flex", 1);
-	var flex2 = Elem.set("div", block, "flex", 2);
-	var flex3 = Elem.set("div", block, "flex", 3);
-	var flex4 = Elem.set("div", block, "flex", 4);
-	var flex5 = Elem.set("div", block, "flex", 5);
+	var flex1 = Elem.creat("div", block, "flex", 1);
+	var flex2 = Elem.creat("div", block, "flex", 2);
+	var flex3 = Elem.creat("div", block, "flex", 3);
+	var flex4 = Elem.creat("div", block, "flex", 4);
+	var flex5 = Elem.creat("div", block, "flex", 5);
 
 	for(let y in tags) {
 		var data = tags[y];
 		//BUTTON
-		var button = Elem.set("div", flex1, "user-tag");
+		var button = Elem.creat("div", flex1, "user-tag");
 		button.innerHTML = data.text;
 		button.btnIdx = y;
 		button.onclick = function() {
@@ -137,22 +137,22 @@ function setTags(content, data) {
 		}
 
 		//VALUE
-		var value = Elem.set("div", flex2, "value");
+		var value = Elem.creat("div", flex2, "value");
 		value.innerHTML = "分配权值<br/><h3>" + data.value;
 
 		//ALLOT
-		var allot = Elem.set("div", flex3, "allot");
+		var allot = Elem.creat("div", flex3, "allot");
 		allot.innerHTML = "分配策略<br/><h3>" + data.limit + "<br/>+" + data.allot * 100 + "%";
 
 		//EDIT
-		var edit = Elem.set("div", flex4, "button-min");
+		var edit = Elem.creat("div", flex4, "button-min");
 		edit.innerHTML = "编辑标签";
 		Elem.color(edit, "white", "green");
 		// Elem.style(edit, "fontSize", "3.3em");
 	}
 
 	//EDIT_DETAIL
-	var edit = Elem.set("div", flex5, "button");
+	var edit = Elem.creat("div", flex5, "button");
 	edit.innerHTML = "编辑资料";
 	edit.style.marginTop = "0px";
 	edit.style.marginBottom = "15px";
@@ -163,14 +163,14 @@ function setTags(content, data) {
 
 function setAchieLine(content, lines, x, y) {
     var list = items[x].list[y];
-    var block = Elem.set("div", content, "block", x);
+    var block = Elem.creat("div", content, "block", x);
     for (let z in lines) {
         var data = lines[z];
 
         //BLOCK
-        var flex = Elem.set("div", block, "ach-flex", z);	
-        var left = Elem.set("div", flex, "ach-cell ach-left");
-        var right = Elem.set("div", flex, "ach-cell  ach-right");
+        var flex = Elem.creat("div", block, "ach-flex", z);	
+        var left = Elem.creat("div", flex, "ach-cell ach-left");
+        var right = Elem.creat("div", flex, "ach-cell  ach-right");
 
         data.name = "<h4>" + data.name + "</h4>";
         data.prect = "<h4>" + data.prect + "</h4>";
@@ -181,20 +181,20 @@ function setAchieLine(content, lines, x, y) {
 
 function setRecentLine(content, lines, x, y) {
 	var list = items[x].list[y];
-    var block = Elem.set("div", content, "block", x);
+    var block = Elem.creat("div", content, "block", x);
     for (let z in lines) {
         var data = lines[z];
         var title = {};
         if (z == 0)
-       		title = Elem.set("div", block, "rec-title", z);	
+       		title = Elem.creat("div", block, "rec-title", z);	
         else if(lines[z].date != lines[z-1].date) {
-       		title = Elem.set("div", block, "rec-title", z);	
+       		title = Elem.creat("div", block, "rec-title", z);	
         }
         title.innerHTML = data.date;
         //BLOCK
-        var flex = Elem.set("div", block, "ach-flex", z);	
-        var left = Elem.set("div", flex, "ach-cell rec-left");
-        var right = Elem.set("div", flex, "ach-cell rec-right");
+        var flex = Elem.creat("div", block, "ach-flex", z);	
+        var left = Elem.creat("div", flex, "ach-cell rec-left");
+        var right = Elem.creat("div", flex, "ach-cell rec-right");
         data.time =  data.time.replace("日", "日<h4>");
         data.unit = "<h4>" + data.unit + "</h4>";
         left.innerHTML = data.time;
@@ -219,18 +219,18 @@ function setTagSearch(button) {
     Elem.color(box, "", getColorLight());
     title.innerHTML = "标签搜索:" + button.innerHTML;
 	for (let z in config.lines) {
-		var line = Elem.set("div", block, "user-line", z);
-		line.top = Elem.set("div", line, "user-top");
-		line.order = Elem.set("div", line.top, "user-order");
-		line.value = Elem.set("div", line.top, "user-value");
-		line.flex = Elem.set("div", line, "user-flex");
-		line.head = Elem.set("img", line.flex, "user-head");
-		line.left = Elem.set("div", line.flex, "user-left");
-		line.name = Elem.set("div", line.left, "user-name");
-		line.mark = Elem.set("div", line.left, "user-flex");
-		line.right = Elem.set("div", line.flex, "user-right");
-		line.ladd = Elem.set("div", line.right, "user-ladd");
-		line.nexu = Elem.set("div", line.right, "user-nexu");
+		var line = Elem.creat("div", block, "user-line", z);
+		line.top = Elem.creat("div", line, "user-top");
+		line.order = Elem.creat("div", line.top, "user-order");
+		line.value = Elem.creat("div", line.top, "user-value");
+		line.flex = Elem.creat("div", line, "user-flex");
+		line.head = Elem.creat("img", line.flex, "user-head");
+		line.left = Elem.creat("div", line.flex, "user-left");
+		line.name = Elem.creat("div", line.left, "user-name");
+		line.mark = Elem.creat("div", line.left, "user-flex");
+		line.right = Elem.creat("div", line.flex, "user-right");
+		line.ladd = Elem.creat("div", line.right, "user-ladd");
+		line.group = Elem.creat("div", line.right, "user-group");
 		var data = config.lines[z];
 		setFlex(data, line);
 	}
@@ -243,32 +243,27 @@ function setFlex(data, line) {
 		data.order = order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
 	if (data.tag) {
 		for (let i in data.tag) {
-			var tag = Elem.set("div", line.tag, "user-tag");
+			var tag = Elem.creat("div", line.tag, "user-tag");
 			tag.innerHTML = data.tag[i];
 		}
 	}
 	if (data.mark) {
 		for (let i in data.mark) {
-			var mark = Elem.set("div", line.mark, "user-mark");
+			var mark = Elem.creat("div", line.mark, "user-mark");
 			mark.innerHTML = data.mark[i];
 			mark.style.borderColor = getColorType();
 		}
 	}
-	if (data.uid.replace('s', '') != data.uid) 
-		data.nexu = "赞助商";
-	else if (data.uid.replace('d', '') != data.uid) 
-		data.nexu = "淘金者";
-	else 
-		data.nexu = "未知用户";
+	data.group = data.uid[0].replace("s","赞助商").replace("d","淘金者");
 	
-	Elem.color(line.nexu, "white", getColorType());
-	Elem.style(line.nexu, "borderColor", getColorType());
+	Elem.color(line.group, "white", getColorType());
+	Elem.style(line.group, "borderColor", getColorType());
 	line.head.style.backgroundColor = getColorLight();
 	// line.head.src = "../../picture/head1.jpg";
 	line.order.innerHTML = data.order;
 	line.value.innerHTML = "权值: " + Parse.sub4Num(data.value);
 	line.name.innerHTML = data.name;
-	line.nexu.innerHTML = data.nexu;
+	line.group.innerHTML = data.group;
 	line.ladd.innerHTML = data.ladd + "阶";
 }
 
