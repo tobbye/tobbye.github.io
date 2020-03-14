@@ -6,6 +6,7 @@ body {
 	font-size: 12px;
 	font-weight: bold;
 	text-align: center;
+	background-image: linear-gradient(#eee,#ddd);
 }
 
 h2 {
@@ -77,9 +78,9 @@ h4 {
 
 .text {
 	display: block;
-	padding: 10px;
-	font-size: 3.5em;
 	overflow: auto;
+	padding: 10px;
+	font-size: 2em;
 	background-color: #fff;
 }
 

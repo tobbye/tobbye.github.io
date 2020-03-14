@@ -20,6 +20,7 @@ function setOuterTop() {
 
 function setOuterCenter() {
     var outerCenter = Elem.get("outer-center");
+    outerCenter.innerHTML = "";
     for (let x in items) {
         var inner = Elem.creat("div", outerCenter, "inner", x);
         elems[x].inner = inner;
@@ -240,7 +241,7 @@ function refresh() {
 	var input = Elem.get("alert-input");
 	var limit = Elem.get("alert-limit");
 	var list = input.data.tran.split('|');
-
+	var str = "";
 	for (let i in list) {
 		var line = list[i].split('*');
 		var val = parseInt(input.value) * parseFloat(line[1]);
@@ -248,9 +249,14 @@ function refresh() {
 			val *= values[line[2]];
 		values[line[0]] += val;
 		values[line[0]] = Math.round(values[line[0]]);
+		str += line[0] + " += " + val + " | ";
 	}
 	// values.R = Math.floor(values.Q / 100);
+	console.log(str);
+	input.value = 0;
 	localData.save();
+	setOuterCenter();
+	setInner();
 }
 
 

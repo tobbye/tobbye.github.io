@@ -90,7 +90,7 @@ function setStyle(content, lines, x, y) {
 				line = Elem.creat("div", content, "flex");
 			var cell = Elem.creat("div", line, "cell");
 			var key = lines[z].toLowerCase();
-			cell.innerHTML = colors[x][key].toUpperCase();
+			cell.innerHTML = colors[x][key];
 			Elem.color(cell, "white", cell.innerHTML);
 		}
 	}
