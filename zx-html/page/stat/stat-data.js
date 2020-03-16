@@ -82,7 +82,6 @@ lines: [
 
 
 {title:"年计", colorIdx: 4, seed: 365,
-color: {deep:"#648", normal:"#86a", light:"#cae"},
 list: [
 {title:"今年统计", vice:"2019年",
 lines: [

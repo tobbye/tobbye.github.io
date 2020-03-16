@@ -158,7 +158,7 @@ function creatInveBody(content, data, x) {
         }
     }
     data.lines = lines;
-    // console.log(lines);
+    // console.log(JSON.stringify(lines));
 }
 
 

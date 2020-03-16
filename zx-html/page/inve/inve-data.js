@@ -174,7 +174,7 @@ lines: [
 {index: '1548342507258', stamp: '2019-01-23</br><h3>12:18:10',ladder: 9,  ladd: 5, multi: 15, inver: '我', tag: ['众鑫淘金', '海量红包', '等你发掘']},
 ]},
 {title: '修炼道场', vice: '绝世神功，在此练成！', 
-dot: 1, isGrab: 0, 
+dot: 1, isGrab: 0, group: '凡人',
 inverStr: '修炼者: ', flexStr: '武功秘籍',
 laddStr: '阶梯<br/><h3>{0}阶</h3>',
 pieceStr: '投入份数<br/><h3>{0}份</h3>',

@@ -14,12 +14,12 @@ var elems = [{},{},{},{},{},{},{},{},{}];
 var values = {};
 var colors = [
     {normal:"#eee", dark:"#eee", light:"#eee", bright:"#eee", black:"#333", standard:"white"},
-    {normal:"#C48", dark:"#957", light:"#ecd", bright:"#e28", black:"#333", standard:"red"},
-    {normal:"#c84", dark:"#975", light:"#edc", bright:"#e82", black:"#333", standard:"orange"},
-    {normal:"#48c", dark:"#579", light:"#cde", bright:"#28e", black:"#333", standard:"blue"},
-    {normal:"#84c", dark:"#759", light:"#dce", bright:"#82e", black:"#333", standard:"purple"},
-    {normal:"#4c8", dark:"#597", light:"#ced", bright:"#2e8", black:"#333", standard:"seagreen"},
-    {normal:"#8c4", dark:"#795", light:"#dec", bright:"#8e2", black:"#333", standard:"green"},
+    {normal:"#C48", dark:"#957", light:"#eac", bright:"#e28", black:"#333", standard:"red"},
+    {normal:"#c84", dark:"#975", light:"#eca", bright:"#e82", black:"#333", standard:"orange"},
+    {normal:"#48c", dark:"#579", light:"#ace", bright:"#28e", black:"#333", standard:"blue"},
+    {normal:"#84c", dark:"#759", light:"#cae", bright:"#82e", black:"#333", standard:"purple"},
+    {normal:"#4c8", dark:"#597", light:"#aec", bright:"#2e8", black:"#333", standard:"seagreen"},
+    {normal:"#8c4", dark:"#795", light:"#cea", bright:"#8e2", black:"#333", standard:"green"},
 ];
 // 0 1 2 3 4 5 
 // 0 9 8 7 6 5
