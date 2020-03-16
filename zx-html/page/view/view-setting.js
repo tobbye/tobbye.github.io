@@ -13,22 +13,22 @@ function initData() {
 
 	var csvList = [
 		{data: null, title: 'CSV DATA'},
-		{data: equip, title: 'EquipData'},
-		{data: inve, title: 'InveData'},
+		{data: equip, title: 'EquipData', width: 80},
+		{data: inve, title: 'InveData', width: 80},
 	];
 
 	var jsonList = [
 		{data: null, title: 'JSON DATA'},
 		// {data: viewConfig, title: 'ViewFunction'},
-		{data: fundValue, title: 'FundValue'},
-		{data: logoText, title: 'LogoText'},
-		{data: logoImage, title: 'LogoImage'},
-		{data: inveLadd, title: 'InveLadd'},
-		{data: inveItem, title: 'InveItem'},
-		{data: rankItem, title: 'RankItem'},
-		{data: nexuItem, title: 'NexuItem'},
-		{data: statItem, title: 'StatItem'},
-		{data: userItem, title: 'UserItem'},
+		{data: fundValue, title: 'FundValue', width: 100},
+		{data: logoText, title: 'LogoText', width: 100},
+		{data: logoImage, title: 'LogoImage', width: 200},
+		{data: inveLadd, title: 'InveLadd', width: 100},
+		{data: inveItem, title: 'InveItem', width: 200},
+		{data: rankItem, title: 'RankItem', width: 100},
+		{data: nexuItem, title: 'NexuItem', width: 100},
+		{data: statItem, title: 'StatItem', width: 100},
+		{data: userItem, title: 'UserItem', width: 200},
 	];
 	dataListToView(csvList, "csv", viewConfig);
 	dataListToView(jsonList, "json", viewConfig);
@@ -38,6 +38,7 @@ function initData() {
 function dataListToView(dataList, dataType, viewConfig) {
 	for(let i in dataList) {
 		var title = dataList[i].title;
+		var width = dataList[i].width;
 		var outer = Elem.get('outer');
 		var inner = Elem.set('div', outer, 'inner', title);
 		var line = Elem.set('div', inner, 'flex', title);
@@ -55,7 +56,8 @@ function dataListToView(dataList, dataType, viewConfig) {
 				break;
 			btn.x = i;
 			btn.title = title;
-			btn.data = dataList[i];
+			btn.width = width;
+			btn.data = dataList[i].data;
 			btn.color = viewConfig[j].color;
 			btn.bgcolor = viewConfig[j].bgcolor;
 			Elem.color(btn, btn.color, btn.bgcolor);
@@ -80,6 +82,8 @@ function dataListToView(dataList, dataType, viewConfig) {
 					csvToView(this.data, this.title, this.viewType);
 				if (dataType == "json")
 					jsonToView(this.data, this.title, this.viewType);
+				var view = Elem.get('view_' + this.title);
+				// view.style.width = this.width + "%";
 			}
 		}
 	}
@@ -315,13 +319,11 @@ function toText(text) {
 }
 
 function toMatch(str, title) {
-	if (title == "ViewFunction")
-		return str;
-	str = str.replace(/'/g, '').replace(/"/g, '').replace(/},/g, '}');
-	str = str.replace(/\[{/g, '<table><tr><td><h3>').replace(/}]/g, ']');
+	str = str.replace(/\[{/g, '<table><tr><td><h3>').replace(/}]/g, ']').replace(/},/g, '}');
 	str = str.replace(/\[/g, '<table><tr><td>').replace(/]/g, '</td></tr></table>');
 	str = str.replace(/{/g, '<tr><td><h3>').replace(/}/g, '</td></tr>');
-	str = str.replace(/,/g, '</td><td><h3>').replace(/:/g, '</h3>');
+	str = str.replace(/,/g, '</td><td><h3>').replace(/,/g, '</td><td>');
+	str = str.replace(/":/g, '</h3>').replace(/"/g, '');
 	return str;
 }
 
