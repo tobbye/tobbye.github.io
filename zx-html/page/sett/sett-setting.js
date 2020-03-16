@@ -75,6 +75,8 @@ function setLine(content, data, x, y) {
 				value = localData.init(btnText);
 			if (Elem.get('data-box'))
 				Elem.get('data-box').innerHTML = JSON.stringify(value);
+			if (this.y == 5)
+				window.location.href = "../view/view.html";
 		}
 		if (data.default == z) 
 			btn.onclick();

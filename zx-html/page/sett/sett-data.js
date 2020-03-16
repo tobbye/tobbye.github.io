@@ -22,10 +22,14 @@ lines: ['Default', 'Data1', 'Data2', 'Data3']},
 {title: 'Init', vice: 'Get, set or clear the data', default: 0, key: 'initType',
 lines: ['Get', 'Set', 'Clear']},
 
+{title: 'Alert', vice: 'Is alert message or not?', default: 0, key: 'isAlert',
+lines: ['Not Alert', 'Alert']},
+
 {title: 'Devil', vice: 'Is use devil mode text?', default: 0, key: 'isDevil',
 lines: ['Not Devil', 'Devil']},
 
-{title: 'Alert', vice: 'Is alert message or not?', default: 0, key: 'isAlert',
-lines: ['Not Alert', 'Alert']},
+{title: 'View', vice: 'Data to table, line, kv, list view', default: 1, key: 'viewType',
+lines: ['Date to View']},
 ]},
+
 ];
