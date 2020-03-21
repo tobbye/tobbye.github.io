@@ -1,12 +1,20 @@
 
 body {
-	font-family: Arial, "Times New Roman";
+	font-family: Arial, Segoe UI, Helvetica,sans-serif;
 	margin: 0px;
 	padding: 0px;
 	font-size: 12px;
 	font-weight: bold;
 	text-align: center;
 	background-image: linear-gradient(#eee,#ddd);
+}
+
+a {
+	text-decoration: none
+}
+
+a:hover {
+	text-decoration: underline
 }
 
 h2 {
@@ -95,8 +103,6 @@ h4 {
 
 
 .button, 
-.button-red, 
-.button-green,
 .button-min,
 .button-micro {
 	flex: 10;
@@ -112,18 +118,33 @@ h4 {
 	font-size: 4.5em;
 }
 
+.button-min {
+	font-size: 4em;
+}
+
+
 .button-red {
-	font-size: 4.5em;
 	background-color: red;
 }
 
+.button-red:hover {
+	background-color: darkred;
+}
+
 .button-green {
-	font-size: 4.5em;
 	background-color: green;
 }
 
-.button-min {
-	font-size: 4em;
+.button-green:hover {
+	background-color: darkgreen;
+}
+
+.button-indigo {
+	background-color: indigo;
+}
+
+.button-indigo:hover {
+	background-color: indigo;
 }
 
 
@@ -147,12 +168,12 @@ h4 {
 
 .button-bot-dead {
 	flex: 10;
+	height: 64px;
 	margin: 0px;
 	padding: 20px;
 	font-size: 4em;
 	color: darkorange;
 	background-color: #eee;
-	text-decoration: none;
 }
 
 .button-bot-live {
@@ -163,7 +184,6 @@ h4 {
 	font-size: 4em;
 	color: white;
 	background-color: darkorange;
-	text-decoration: none;
 }
 
 .user-top {
@@ -279,10 +299,10 @@ h4 {
 #alert-bg {
 	display: block;
 	position: absolute;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	bottom: 0px;
+	top: -0px;
+	left: -0px;
+	right: -0px;
+	bottom: -0px;
 	background-color: #222;
 	opacity: 0.90;
 }

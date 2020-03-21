@@ -298,16 +298,16 @@ function alertDetail(body) {
         var price = Elem.creat("text", flex, "line");
         var times = Elem.creat("text", flex, "line");
         ladd.style.flex = "15";
-        ladd.innerHTML = data.laddStr.replace("{0}", (line.ladd - i));
-        piece.innerHTML = data.pieceStr.replace("{0}", Parse.sub4Num(line[pieceKey][idx]));
-        price.innerHTML = data.priceStr.replace("{0}", Parse.sub4Num(line[priceKey][idx]));
-        times.innerHTML = data.timesStr.replace("{0}", Parse.sub4Num(line[timesKey][idx]));
+        ladd.innerHTML = data.laddStr.replace("#0", (line.ladd - i));
+        piece.innerHTML = data.pieceStr.replace("#0", Parse.sub4Num(line[pieceKey][idx]));
+        price.innerHTML = data.priceStr.replace("#0", Parse.sub4Num(line[priceKey][idx]));
+        times.innerHTML = data.timesStr.replace("#0", Parse.sub4Num(line[timesKey][idx]));
     }
 
     var box = Elem.get("alert-box");
     var title = Elem.get("detail-title");
     box.style.backgroundColor = getColorLight();
-    title.innerHTML = data.flexStr.replace("{0}",line.inver);
+    title.innerHTML = data.flexStr.replace("#0",line.inver);
     if(block.firstChild)
         block.firstChild.scrollIntoView();
     showAlert("detail-bg");

@@ -4,7 +4,7 @@ window.onload = function() {
 
 
 var config = {
-	page: "name",
+	name: "home",
 };
 
 

@@ -141,7 +141,7 @@ function alertDetail(flex) {
 		var _data = config.buttons[_idx];
 		//BUTTON
 		var btn = Elem.creat("div", button, "button");
-		Elem.color(btn, "", _data.bgcolor);
+		btn.className += " button-" + _data.bgcolor;
 		btn.innerHTML = _data.text;
 		btn.data = _data;
 		btn.onclick = function () {

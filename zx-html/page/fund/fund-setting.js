@@ -137,18 +137,16 @@ function togItem(item) {
 	}
 	var lines = Elem.getClass("table-line");
 	var blocks = Elem.getClass("table-block");
-	var buttons = Elem.getClass("button-min");
 	for (let x in lines)
 		Elem.display(lines[x], view[0]);
 	for (let y in blocks)
 		Elem.display(blocks[y], view[1]);
+	var buttons = Elem.getClass("button-min");
 	for (let z in buttons) {
-		if (buttons[z].innerHTML == "方格视图")
-			Elem.color(buttons[z], "", color[0]);
-		if (buttons[z].innerHTML == "列表视图")
-			Elem.color(buttons[z], "", color[1]);
+		buttons[z].className = buttons[z].className.replace("green", "#g");
+		buttons[z].className = buttons[z].className.replace("red", "green");
+		buttons[z].className = buttons[z].className.replace("#g", "red");
 	}
-
 }
 
 
@@ -159,12 +157,15 @@ function setButton(content, data) {
 		var flex = Elem.creat("div", block, "flex");
 		for(let z in list[y]) {
 			var data = list[y][z];
-			var button = Elem.creat("div", flex, "button", data.idx);
+			var button = Elem.creat("div", flex, "button-" + data.bgcolor);
 			button.data = data;
+			button.bgcolor = data.bgcolor;
 			button.innerHTML = data.text;
 			if (!data.limit)
-				button.className = "button-min"; 
-			Elem.color(button, "", data.bgcolor);
+				button.className = "button-min " + button.className;
+			else
+				button.className = "button " + button.className;
+			// Elem.color(button, "", data.bgcolor);
 			button.onclick = function() {
 				if (!this.data.limit) {
 					togItem(this);

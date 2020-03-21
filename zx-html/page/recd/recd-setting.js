@@ -73,9 +73,9 @@ function setLine(content, lines, x, y) {
             stamp.innerHTML = data.stamp;
             right.innerHTML = data.right;
         } else {
-            left.innerHTML = data.left ? list.left.replace("{0}", Parse.sub4Num(data.left)) : "";
+            left.innerHTML = data.left ? list.left.replace("#0", Parse.sub4Num(data.left)) : "";
             stamp.innerHTML = data.stamp;
-            right.innerHTML = data.right ?  list.right.replace("{0}", Parse.sub4Num(data.right)) : "";
+            right.innerHTML = data.right ?  list.right.replace("#0", Parse.sub4Num(data.right)) : "";
         }
     }
 }
@@ -114,6 +114,7 @@ function pushdata(json, sort, y) {
         sort[idx].list.lines.push(data);
     } else {
         var newlist = {
+            title:'',
             vice: json.date,
             left: list.left,
             right:list.right,

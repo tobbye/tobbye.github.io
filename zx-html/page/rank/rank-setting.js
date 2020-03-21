@@ -141,7 +141,7 @@ function alertDetail(body) {
 		var _data = config.buttons[_idx];
 		//BUTTON
 		var btn = Elem.creat("div", button, "button");
-		Elem.color(btn, "white", _data.bgcolor);
+		btn.className += " button-" +  _data.bgcolor;
 		btn.innerHTML = _data.text;
 		btn.data = _data;
 		btn.onclick = function () {
@@ -156,7 +156,7 @@ function initTempLine(data, x, y) {
 	var lines = [];
 	var temps = Parse.mix(industry.split(','));
 	for (let z in temps) {
-		if (z > 19) break;
+		if (z >= config.rankCount) break;
 		var line = {};
 		line.uid = config.unit.uid;
 		line.tag = config.unit.tag;

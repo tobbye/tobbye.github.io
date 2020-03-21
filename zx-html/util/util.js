@@ -190,6 +190,17 @@ Elem.empty = function (elem) {
         elem.removeChild(elem.firstChild);
 }
 
+Elem.removeClass = function(elem,text){
+    var str =  elem.className,
+        index = str.indexOf(text);
+    if(index > -1) {
+        elem.className = str.replace(text,"");
+    }
+}
+
+Elem.addClass = function(elem,text){
+    elem.className += text;
+}
 
 
 //设置元素样式
@@ -365,8 +376,8 @@ var contentText = function(a, b, c) {
 }
 
 //显示内页
-var setInner = function(idx) {
-    idx = idx || config.innerIdx || 0;
+var setInner = function(innerIdx) {
+    var idx = innerIdx || config.innerIdx || 0;
     if (config.innerIdx == idx) {
         togContent();
     } else {
@@ -386,8 +397,8 @@ var setInner = function(idx) {
         }
     }
     Elem.color(document.body, getColorType(idx), "");
-    if (config.isAlert)
-        alert(JSON.stringify(items[idx]));
+    if (config.isAlert && innerIdx != null)
+        jsonToTable(items[idx]);
     else
         console.log(items[idx]);
 }
@@ -501,4 +512,20 @@ var hideAlert = function() {
     Style.display("puzzle-bg", "none");
     Style.display("result-bg", "none");
 }
+
+
+function jsonToTable(data) {
+    if (config.isMobile) {
+        alert(JSON.stringify(data));
+        return;
+    }
+    var page = '../#/#.html';
+    Storage.set('json-page', page.replace(/#/g,config.name));
+    Storage.set('json-data', JSON.stringify(data));
+    window.location.href = "../view/view.html";
+}
+
+
+
+
 

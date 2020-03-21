@@ -1,8 +1,6 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<script src="csv-data.js"> </script>
-	<script src="json-data.js"> </script>
 	<script src="view-setting.js"> </script>
 	<style type="text/css"> 
 		body {
@@ -10,36 +8,9 @@
 			margin: 0px;
 			padding: 0px;
 			font-weight: bold;
-		}
-
-		.bg {
-			overflow: auto;
- 
-		}
-
-		.flex {
-			display: flex;
-			color: red;
-			font-size: 1.3em;
-		}
-
-		.btnData {
-			text-align: left;
-			flex: 100;
-			margin: 1px;
-			padding: 8px;
-		}
-
-		.btnView {
 			text-align: center;
-			flex: 30;
-			margin: 1px;
-			padding: 8px;
 		}
 
-		.view {
-			padding: 10px;
-		}
 
 		table {
 			margin: 5px;
@@ -81,18 +52,42 @@
 			font-size: 1em;
 		}
 
-		.td-title {
-			text-align: left;
-			color: red;
-			colspan: 3;
-			padding: 10px;
-			border: solid 0px #fff;
+
+		#outer {
+			height: 100%;
+			overflow: auto;
+
 		}
+
+		.flex {
+			display: flex;
+			color: red;
+			font-size: 1.3em;
+		}
+
+		.view {
+			padding: 10px;
+		}
+
+
+		.button {
+			margin: auto;
+			padding: 15px;
+			height: 30px;
+			color: white;
+			font-size: 1.5em;
+			border: solid 6px white;
+			border-radius: 20px;
+			background-color: dodgerblue;
+		}
+
 	</style>
 
 </head>
 <body>
 	<div id="outer">
+	<div id="view"></div>
 	</div>
+	<div class="button" onclick='back()'>确定</div>
 </body>
 </html>

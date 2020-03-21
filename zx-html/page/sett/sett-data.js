@@ -27,9 +27,6 @@ lines: ['Not Alert', 'Alert']},
 
 {title: 'Devil', vice: 'Is use devil mode text?', default: 0, key: 'isDevil',
 lines: ['Not Devil', 'Devil']},
-
-{title: 'View', vice: 'Data to table, line, kv, list view', default: 1, key: 'viewType',
-lines: ['Date to View']},
 ]},
 
 ];
