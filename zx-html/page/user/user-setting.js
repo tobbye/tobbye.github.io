@@ -11,7 +11,6 @@ function setOuterTop() {
 		var btn = Elem.creat("div", outerTop, "button-top");
 		btn.innerHTML = items[x].title;
 		btn.idx = x;
-		elems[x].btntop = btn;
 		btn.onclick = function() {
 			setInner(this.idx);
 		}
@@ -22,7 +21,6 @@ function setOuterCenter() {
 	var outerCenter = Elem.get("outer-center");
 	for (let x in items) {
 		var inner = Elem.creat("div", outerCenter, "inner", x);
-		elems[x].inner = inner;
 		setContent(inner, x);
 	}
 }
@@ -146,18 +144,20 @@ function setTags(content, data) {
 
 		//EDIT
 		var edit = Elem.creat("div", flex4, "button-min");
+		edit.setAttribute("btype", "permit");
 		edit.innerHTML = "编辑标签";
-		Elem.color(edit, "white", "green");
-		// Elem.style(edit, "fontSize", "3.3em");
 	}
 
 	//EDIT_DETAIL
 	var edit = Elem.creat("div", flex5, "button");
+	edit.setAttribute("btype", "permit");
 	edit.innerHTML = "编辑资料";
-	edit.style.marginTop = "0px";
-	edit.style.marginBottom = "15px";
-	flex4.style.marginTop = "5px";
-	Elem.color(edit, "white", "green");
+	// edit.style.margin = "5px 0px";
+	// edit.style.marginBottom = "15px";
+	// flex4.style.margin = "5px 0px";
+	flex4.style.padding = "5px";
+	flex5.style.padding = "10px 5px";
+	flex5.style.marginTop = "5px";
 }
 
 

@@ -11,7 +11,6 @@ function setOuterTop() {
 		var btn = Elem.creat("div", outerTop, "button-top");
 		btn.innerHTML = items[x].title;
 		btn.idx = x;
-		elems[x].btntop = btn;
 		btn.onclick = function() {
 			setInner(this.idx);
 		}
@@ -22,7 +21,6 @@ function setOuterCenter() {
 	var outerCenter = Elem.get("outer-center");
 	for (let x in items) {
 		var inner = Elem.creat("div", outerCenter, "inner", x);
-		elems[x].inner = inner;
 		setContent(inner, x);
 	}
 }
@@ -141,7 +139,7 @@ function alertDetail(flex) {
 		var _data = config.buttons[_idx];
 		//BUTTON
 		var btn = Elem.creat("div", button, "button");
-		btn.className += " button-" + _data.bgcolor;
+		btn.setAttribute("btype", _data.btype);
 		btn.innerHTML = _data.text;
 		btn.data = _data;
 		btn.onclick = function () {

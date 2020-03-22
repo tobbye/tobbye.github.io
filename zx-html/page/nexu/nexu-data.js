@@ -8,10 +8,10 @@ window.onload = function() {
 var config = {
     name: "nexu",
     buttons:[
-        { idx:0, text: '发消息', bgcolor: 'green'},
-        { idx:1, text: '添加关注', bgcolor: 'green'},
-        { idx:2, text: '取消关注', bgcolor: 'red'},
-        { idx:3, text: '查看主页', bgcolor: 'indigo'},
+        { idx:0, text: '发消息', btype: 'permit'},
+        { idx:1, text: '添加关注', btype: 'permit'},
+        { idx:2, text: '取消关注', btype: 'danger'},
+        { idx:3, text: '查看主页', btype: 'defult'},
     ],
     chat: [
     {text:"大佬您好，我这有个价值20亿的项目，前无古人后无来者！", time:"11：25", isMine:0},

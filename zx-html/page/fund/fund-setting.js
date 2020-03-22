@@ -11,7 +11,6 @@ function setOuterTop() {
         var btn = Elem.creat("div", outerTop, "button-top");
         btn.innerHTML = items[x].title;
         btn.idx = x;
-        elems[x].btntop = btn;
         btn.onclick = function() {
             setInner(this.idx);
         }
@@ -23,7 +22,6 @@ function setOuterCenter() {
     outerCenter.innerHTML = "";
     for (let x in items) {
         var inner = Elem.creat("div", outerCenter, "inner", x);
-        elems[x].inner = inner;
         setContent(inner, x);
     }
 }
@@ -96,6 +94,7 @@ function setBlock(content, data) {
 	var trs = data.blocks;
 	var table = Elem.creat("table", content, "table-block");
 	Elem.height(table, config.theHeight);
+	Elem.display(table, "table");
 	for (let y in trs) {
 		var tr = Elem.creat("tr", table, "tr", y);
 		var tds = trs[y];
@@ -127,25 +126,21 @@ function togItem(item) {
 		window.location.href = "../recd/recd.html";
 		return;
 	}
-	if (data.idx % 100 == 3) {
-		color = ["red", "green"];
+	if (data.idx % 100 == 3)
 		view = ["none", "table"];
-	}
-	if (data.idx % 100 == 5) {
-		color = ["green", "red"];
+	if (data.idx % 100 == 5)
 		view = ["table", "none"];
-	}
+	if (item.getAttribute("btype") == "danger")
+		return;
 	var lines = Elem.getClass("table-line");
 	var blocks = Elem.getClass("table-block");
+	var buttons = Elem.getClass("button-min");
 	for (let x in lines)
 		Elem.display(lines[x], view[0]);
 	for (let y in blocks)
 		Elem.display(blocks[y], view[1]);
-	var buttons = Elem.getClass("button-min");
 	for (let z in buttons) {
-		buttons[z].className = buttons[z].className.replace("green", "#g");
-		buttons[z].className = buttons[z].className.replace("red", "green");
-		buttons[z].className = buttons[z].className.replace("#g", "red");
+		Elem.togType(buttons[z]);
 	}
 }
 
@@ -157,15 +152,12 @@ function setButton(content, data) {
 		var flex = Elem.creat("div", block, "flex");
 		for(let z in list[y]) {
 			var data = list[y][z];
-			var button = Elem.creat("div", flex, "button-" + data.bgcolor);
+			var button = Elem.creat("div", flex, "button");
 			button.data = data;
-			button.bgcolor = data.bgcolor;
 			button.innerHTML = data.text;
+			button.setAttribute("btype", data.btype);
 			if (!data.limit)
-				button.className = "button-min " + button.className;
-			else
-				button.className = "button " + button.className;
-			// Elem.color(button, "", data.bgcolor);
+				button.className = "button-min";
 			button.onclick = function() {
 				if (!this.data.limit) {
 					togItem(this);

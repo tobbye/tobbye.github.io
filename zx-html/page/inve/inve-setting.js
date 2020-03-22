@@ -12,7 +12,6 @@ function setOuterTop() {
         var btn = Elem.creat("div", outerTop, "button-top");
         btn.innerHTML = items[x].title;
         btn.idx = x;
-        elems[x].btntop = btn;
         btn.onclick = function() {
             setInner(this.idx);
         }
@@ -23,7 +22,6 @@ function setOuterCenter() {
     var outerCenter = Elem.get("outer-center");
     for (let x in items) {
         var inner = Elem.creat("div", outerCenter, "inner", x);
-        elems[x].inner = inner;
         setContent(inner, x);
     }
 }
@@ -266,7 +264,7 @@ function selectLine(flex) {
         old.style.marginBottom = "5px";
     }
     if (flex) {
-        flex.style.border =  "solid 12px red";
+        flex.style.border =  "solid 12px dodgerblue";
         flex.style.marginBottom =  "10px";
         config.flex = flex; 
     }
@@ -320,7 +318,7 @@ function alertPuzzle() {
     Style.display("puzzle-bg", "block");
     Style.display("btn-open", "none");
     Style.display("btn-redo", "block");
-    Style.color("btn-redo", "", "red");
+    Elem.togType(Elem.get("btn-redo"), "danger");
     var block = Elem.get("puzzle-block");
     block.innerHTML = "";
     config.wordCur = "";
@@ -364,14 +362,15 @@ function creatPuzzle(line, block, mix) {
                 wordCur += this.innerHTML;
                 config.wordCur = wordCur;
                 console.log("tgt:" + wordTgt + " cur:" + wordCur);
+                var redo = Elem.get("btn-redo");
                 if (wordTgt.replace(wordCur, "") == wordTgt || wordTgt[0] != wordCur[0]) {
-                    Elem.color(this, "white", "red");
-                    Elem.style(this, "borderColor", "red");
-                    Style.color("btn-redo", "white", "green");
+                    Elem.color(this, "white", "darkred");
+                    Elem.style(this, "borderColor", "darkred");
+                    Elem.togType(redo, "permit");
                 } else {
-                    Elem.color(this, "white", "green");
-                    Elem.style(this, "borderColor", "green");
-                    Style.color("btn-redo", "white", "red");
+                    Elem.color(this, "white", "darkgreen");
+                    Elem.style(this, "borderColor", "darkgreen");
+                    Elem.togType(redo, "danger");
                 }
                 if (wordTgt == wordCur) {
                     Style.display("btn-open", "inline");
@@ -461,7 +460,7 @@ function showAlertButton(data) {
         var name = config.btnName[idx];
         var btn = Elem.get("btn-" + name);
         if (!btn) continue;
-        btn.style.display = "none";
+        Elem.display(btn, "none");
     }
     for (let idx in data.btnName) {
         var name = data.btnName[idx];
@@ -469,7 +468,7 @@ function showAlertButton(data) {
         var btn = Elem.get("btn-" + name);
         if (!btn) continue;
         btn.innerHTML = text;
-        btn.style.display = "inline";
+        Elem.display(btn, "block");
     }
 }
 

@@ -104,32 +104,32 @@
     <div id="outer-top"></div>
     <div id="outer-center"></div>
     <div id="outer-bot">
-        <a class="button-bot-dead" href="../user/user.html">个人</a>
-        <a class="button-bot-dead" href="../nexu/nexu.html">关系</a>
-        <a class="button-bot-dead" href="../home/home.html">主页</a>
-        <a class="button-bot-dead" href="../fund/fund.html">资金</a>
-        <a class="button-bot-live" href="../inve/inve.html">市场</a>
+        <a class="button-bot" btype="dead" href="../user/user.html">个人</a>
+        <a class="button-bot" btype="dead" href="../nexu/nexu.html">关系</a>
+        <a class="button-bot" btype="dead" href="../home/home.html">主页</a>
+        <a class="button-bot" btype="dead" href="../fund/fund.html">资金</a>
+        <a class="button-bot" btype="live" href="../inve/inve.html">市场</a>
     </div>
 
-    <div id="alert">
+    <div id="alert" display="none">
         <div id="alert-bg" onclick="hideAlert()"></div>
         <div id="alert-box">
             <div id="detail-bg">
                 <div class="alert-title" id="detail-title">查看详情</div>
                 <div class="alert-block" id="detail-block"></div>
                 <div class="alert-button" id="detail-button">
-                    <div class="button button-green" id="btn-next">下一个</div>
-                    <div class="button button-green" id="btn-doit">确认</div>
-                    <div class="button button-red" id="btn-quit">关闭</div>
+                    <div class="button" btype="permit" id="btn-next">下一个</div>
+                    <div class="button" btype="permit" id="btn-doit">确认</div>
+                    <div class="button" btype="danger" id="btn-quit">关闭</div>
                 </div>
             </div>
             <div id="puzzle-bg">
                 <div class="alert-title" id="puzzle-title">发现一个红包</div>
                 <div class="alert-block" id="puzzle-block"></div>
                 <div class="alert-button" id="puzzle-button">
-                    <div class="button button-green" id="btn-open">打开</div>
-                    <div class="button button-red" id="btn-redo">重置</div>
-                    <div class="button button-red" id="btn-abon">丢弃</div>
+                    <div class="button" btype="permit" id="btn-open">打开</div>
+                    <div class="button" btype="danger" id="btn-redo">重置</div>
+                    <div class="button" btype="danger" id="btn-abon">丢弃</div>
                 </div>
             </div>
 
@@ -137,8 +137,8 @@
                 <div class="alert-title" id="result-title">恭喜您获得了</div>
                 <div class="alert-block" id="result-block"></div>
                 <div class="alert-button" id="result-button">
-                    <div class="button button-green" id="btn-more">查看</div>
-                    <div class="button button-red" id="btn-close">关闭</div>
+                    <div class="button" btype="permit" id="btn-more">查看</div>
+                    <div class="button" btype="danger" id="btn-close">关闭</div>
                 </div>
             </div>
         </div>

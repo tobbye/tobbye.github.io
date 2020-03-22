@@ -1,6 +1,7 @@
 window.onresize = function() {
     config.windWidth = window.innerWidth;
     config.windHeight = window.innerHeight;
+    config.windHeight *= config.isMobile ? 1:2.5;
     config.alertHeight = config.windHeight - config.alertOffset;
     config.maxHeight = config.windHeight - config.innerOffset;
     config.isWidth = config.windWidth > config.windHeight;
@@ -118,6 +119,12 @@ Parse.mix = function(str) {
         return arr.join('');
 }
 
+
+Parse.swape = function(str, a, b) {
+    return str.replace(a, "#00").replace(b, a).replace("#00", b);
+}
+
+
 Parse.getStamp = function(stamp) {
     if (stamp) 
         return stamp;
@@ -203,13 +210,6 @@ Elem.addClass = function(elem,text){
 }
 
 
-//设置元素样式
-Elem.style = function(elem, key, value) {
-    if (!(elem && elem.style)) return;
-    if (value) 
-        elem.style[key] = value;
-}
-
 //设置元素对齐方式
 Elem.align = function(elem, align) {
     Elem.style(elem, "textAlign", align);
@@ -241,21 +241,44 @@ Elem.height = function(elem, height) {
 
 //设置元素显示
 Elem.display = function(elem, display) {
-    Elem.style(elem, "display", display);
+    console.log(elem);
+    Elem.attr(elem, "display", display);
 }
 
 //切换元素显示
 Elem.toggle = function(elem, display) {
-    if (!(elem && elem.style)) return;
-    if (elem.style.display == "none") 
-        elem.style.display = display;
-    else
-        elem.style.display = "none";
+    if (!elem || !elem.style) return;
+    var attr = elem.getAttribute("display") || "block";
+    display = display || Parse.swape(attr, "attr", "none");
+    Elem.attr(elem, "display", display);
+}
+
+Elem.togType = function(elem, btype) {
+    if (!elem || !elem.style) return;
+    var attr = elem.getAttribute("btype") || "default";
+    btype = btype || Parse.swape(attr, "permit", "danger");
+    elem.setAttribute("btype", btype);
+}
+
+
+//设置元素样式
+Elem.style = function(elem, key, value) {
+    if (!elem || !elem.style) return;
+    if (key && value) {
+        elem.style[key] = value;
+    }
+}
+
+Elem.attr = function(elem, key, value) {
+    if (!elem || !elem.style) return;
+    if (key && value) {
+        elem.setAttribute(key, value);
+    }
 }
 
 //设置元素高度自适应
 Elem.autosize = function(elem, offset) {
-    var windHeight = window.innerHeight;
+    var windHeight = config.windHeight;
     if (!elem) elem = Elem.get("outer-center");
     elem.style.height = windHeight - offset + "px";
     elem.style.maxHeight = windHeight - offset + "px";
@@ -385,15 +408,19 @@ var setInner = function(innerIdx) {
         config.isHide = 1;
         togContent(1);
     }
-    for (let x in elems) {
-        if (!elems[x]) return;
-        var btn = elems[x].btntop;
-        if (idx == x)  {
-            Elem.display(elems[x].inner, "block");
-            Elem.color(elems[x].btntop, "white", "dodgerblue");
+    var outerTop = Elem.get("outer-top").children;
+    var outerCenter = Elem.get("outer-center").children;
+    for (var i = 0; i < outerTop.length; i++) {
+        var childTop = outerTop[i];
+        var childCenter = outerCenter[i];
+        if (childTop.className != "button-top")
+            break;
+        if (i == idx) {
+            childTop.setAttribute("btype", "live");
+            childCenter.setAttribute("display", "block");
         } else {
-            Elem.display(elems[x].inner, "none");
-            Elem.color(elems[x].btntop, "dodgerblue", "#eee");
+            childTop.setAttribute("btype", "dead");
+            childCenter.setAttribute("display", "none");
         }
     }
     Elem.color(document.body, getColorType(idx), "");
@@ -442,10 +469,10 @@ var getAgent = function() {
 
 //设置浏览器
 var setAgent = function() {
-    // window.onresize();
     togContent();
     if (!config.isMobile) {
-
+        var body = document.body;
+        body.style.zoom = "0.4";
     }
 }
 

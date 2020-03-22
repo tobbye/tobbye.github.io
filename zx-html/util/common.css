@@ -50,8 +50,14 @@ h4 {
 }
 
 
-.inner {
-
+div, table [display="block"] {
+	display: block;
+} [display="inline"] {
+	display: inline;
+} [display="flex"] {
+	display: flex;
+} [display="none"] {
+	display: none;
 }
 
 .content {
@@ -88,7 +94,7 @@ h4 {
 	display: block;
 	overflow: auto;
 	padding: 10px;
-	font-size: 2em;
+	font-size: 4em;
 	background-color: #fff;
 }
 
@@ -122,32 +128,6 @@ h4 {
 	font-size: 4em;
 }
 
-
-.button-red {
-	background-color: red;
-}
-
-.button-red:hover {
-	background-color: darkred;
-}
-
-.button-green {
-	background-color: green;
-}
-
-.button-green:hover {
-	background-color: darkgreen;
-}
-
-.button-indigo {
-	background-color: indigo;
-}
-
-.button-indigo:hover {
-	background-color: indigo;
-}
-
-
 .button-micro {
     margin: 20px 10px;
     padding: 10px;
@@ -156,35 +136,45 @@ h4 {
     background-color: green;
 }
 
+
+	
+[btype=danger] {background-image: linear-gradient(to top,#eca,#eac); color: #804; border-color: #804;}
+[btype=permit] {background-image: linear-gradient(to top,#cea,#aec); color: #084; border-color: #084;}
+[btype=defult] {background-image: linear-gradient(to top,#cae,#ace); color: #048; border-color: #048;}
+[btype=danger]:hover {color: #840; border-color: #840;}
+[btype=permit]:hover {color: #480; border-color: #480;}
+[btype=defult]:hover {color: #408; border-color: #408;}
+
 .button-top {
 	flex: 10;
 	margin: 0px;
 	padding: 20px;
+	height: 64px;
+	line-height: 64px;
 	font-size: 4em;
+}.button-top[btype=dead] {
 	color: dodgerblue;
 	background-color: #eee;
-	text-decoration: none;
+}.button-top[btype=live] {
+	color: white;
+	background-color: dodgerblue;
 }
 
-.button-bot-dead {
+.button-bot {
 	flex: 10;
-	height: 64px;
 	margin: 0px;
 	padding: 20px;
+	height: 64px;
+	line-height: 64px;
 	font-size: 4em;
+}.button-bot[btype=dead] {
 	color: darkorange;
 	background-color: #eee;
-}
-
-.button-bot-live {
-	flex: 10;
-	height: 64px;
-	margin: 0px;
-	padding: 20px;
-	font-size: 4em;
+}.button-bot[btype=live] {
 	color: white;
 	background-color: darkorange;
 }
+
 
 .user-top {
 	display: flex;
@@ -293,7 +283,7 @@ h4 {
 }
 
 #alert {
-	display: none;
+
 }
 
 #alert-bg {
@@ -323,8 +313,10 @@ h4 {
 
 .alert-title,
 #alert-title {
-	margin: 10px 0px;
+	margin: 10px 40px;
 	font-size: 5em;
+	height: 80px;
+	overflow: hidden;
 }
 
 .alert-text,
@@ -340,8 +332,6 @@ h4 {
     max-height: 1234px;
     font-size: 1em;
 }
-
-
 
 
 .chat-left {
