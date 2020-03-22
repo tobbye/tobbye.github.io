@@ -241,7 +241,6 @@ Elem.height = function(elem, height) {
 
 //设置元素显示
 Elem.display = function(elem, display) {
-    console.log(elem);
     Elem.attr(elem, "display", display);
 }
 

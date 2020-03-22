@@ -54,6 +54,8 @@ div, table [display="block"] {
 	display: block;
 } [display="inline"] {
 	display: inline;
+} [display="table"] {
+	display: table;
 } [display="flex"] {
 	display: flex;
 } [display="none"] {
@@ -328,7 +330,7 @@ div, table [display="block"] {
 .alert-block {
     overflow: auto;
     padding: 5px 10px;
-    min-height: 645px;
+    min-height: 500px;
     max-height: 1234px;
     font-size: 1em;
 }
@@ -339,6 +341,7 @@ div, table [display="block"] {
 	margin: 30px 20px;
 	margin-right: 100px;
 	text-align: left;
+	word-break: normal;
 }
 
 
@@ -348,6 +351,7 @@ div, table [display="block"] {
 	margin-left: 100px;
 	justify-content: flex-end;
 	text-align: left;
+	word-break: normal;
 }
 
 .text-left {

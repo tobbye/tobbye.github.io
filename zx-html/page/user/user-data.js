@@ -43,13 +43,16 @@ valueUsed: 251700,
 valueSurplus: 5250,
 tipsRank: "按照总权值和所在区域进行排名",
 tipsTag: "点击标签搜索赞助商和淘金者<br/>搜索结果按照标签分配的权值排序",
-color: {deep:"#846", normal:"#a68", light:"#eac"},
-editDetail: {text: "编辑资料", bgcolor:"green"},
-editTags: {text: "编辑标签", bgcolor:"green"},
+valueStr: "分配权值<h2>#1</h2>",
+allotStr: "分配策略<h2>#2%</h2>",
+editDetail: {
+	text: "编辑资料", btype:"permit"},
+editTags: {
+	text: "编辑标签", btype:"permit"},
 tags: [
-{text: "投资", value: 203350, limit: 200000, allot: 0.50},
-{text: "理财", value: 42680, limit: 40000, allot: 0.40},
-{text: "收益", value: 5670, limit: 5000, allot: 0.10},
+{tag: "投资", value: 203350, limit: 200000, allot: 50},
+{tag: "理财", value: 42680, limit: 40000, allot: 40},
+{tag: "收益", value: 5670, limit: 5000, allot: 10},
 ]},
 ]},
 

@@ -95,18 +95,18 @@ function setRank(content, data) {
 	var all = Elem.creat("div", flex, "rank");
 	var city = Elem.creat("div", flex, "rank");
 	var area = Elem.creat("div", flex, "rank");
-	all.innerHTML = "全国排名<br/><h3> " + data.rankAll;
-	city.innerHTML = "全市排名<br/><h3> " + data.rankCity;
-	area.innerHTML = "全区排名<br/><h3> " + data.rankArea;
+	all.innerHTML = "全国排名<br/><h2> " + data.rankAll;
+	city.innerHTML = "全市排名<br/><h2> " + data.rankCity;
+	area.innerHTML = "全区排名<br/><h2> " + data.rankArea;
 
 
 	var flex = Elem.creat("div", block, "flex");
 	var all = Elem.creat("div", flex, "value");
 	var used = Elem.creat("div", flex, "value");
 	var surplus = Elem.creat("div", flex, "value");
-	all.innerHTML = "总权值<br/><h3>" + data.valueAll;
-	used.innerHTML = "已分配<br/><h3>" + data.valueUsed;
-	surplus.innerHTML = "未分配<br/><h3>" + data.valueSurplus;
+	all.innerHTML = "总权值<br/><h2>" + data.valueAll;
+	used.innerHTML = "已分配<br/><h2>" + data.valueUsed;
+	surplus.innerHTML = "未分配<br/><h2>" + data.valueSurplus;
 }
 
 
@@ -125,36 +125,40 @@ function setTags(content, data) {
 	var flex5 = Elem.creat("div", block, "flex", 5);
 
 	for(let y in tags) {
-		var data = tags[y];
-		//BUTTON
-		var button = Elem.creat("div", flex1, "user-tag");
-		button.innerHTML = data.text;
-		button.btnIdx = y;
-		button.onclick = function() {
+		var _data = tags[y];
+		//TAG
+		var tag = Elem.creat("div", flex1, "user-tag", y);
+		tag.innerHTML = _data.tag;
+		tag.btnIdx = y;
+		tag.onclick = function() {
 			setTagSearch(this);
 		}
 
 		//VALUE
-		var value = Elem.creat("div", flex2, "value");
-		value.innerHTML = "分配权值<br/><h3>" + data.value;
+		var value = Elem.creat("div", flex2, "value", y);
+		value.innerHTML = data.valueStr.replace("#1", _data.value);
 
 		//ALLOT
-		var allot = Elem.creat("div", flex3, "allot");
-		allot.innerHTML = "分配策略<br/><h3>" + data.limit + "<br/>+" + data.allot * 100 + "%";
+		var allot = Elem.creat("div", flex3, "allot", y);
+		allot.innerHTML = data.allotStr.replace("#2", _data.allot);
 
 		//EDIT
-		var edit = Elem.creat("div", flex4, "button-min");
+		var edit = Elem.creat("div", flex4, "button-min", y);
 		edit.setAttribute("btype", "permit");
 		edit.innerHTML = "编辑标签";
+		edit.data = _data;
+		edit.idx = y;
+		edit.onclick = function() {
+			config.tagData = this.data;
+			config.tagIdx = this.idx;
+			setTagEdit(this);
+		}
 	}
 
 	//EDIT_DETAIL
 	var edit = Elem.creat("div", flex5, "button");
 	edit.setAttribute("btype", "permit");
 	edit.innerHTML = "编辑资料";
-	// edit.style.margin = "5px 0px";
-	// edit.style.marginBottom = "15px";
-	// flex4.style.margin = "5px 0px";
 	flex4.style.padding = "5px";
 	flex5.style.padding = "10px 5px";
 	flex5.style.marginTop = "5px";
@@ -172,8 +176,8 @@ function setAchieLine(content, lines, x, y) {
         var left = Elem.creat("div", flex, "ach-cell ach-left");
         var right = Elem.creat("div", flex, "ach-cell  ach-right");
 
-        data.name = "<h4>" + data.name + "</h4>";
-        data.prect = "<h4>" + data.prect + "</h4>";
+        data.name = "<h3>" + data.name + "</h3>";
+        data.prect = "<h3>" + data.prect + "</h3>";
         left.innerHTML = data.name + data.desc;
         right.innerHTML = data.prect + data.value;
     }
@@ -195,8 +199,8 @@ function setRecentLine(content, lines, x, y) {
         var flex = Elem.creat("div", block, "ach-flex", z);	
         var left = Elem.creat("div", flex, "ach-cell rec-left");
         var right = Elem.creat("div", flex, "ach-cell rec-right");
-        data.time =  data.time.replace("日", "日<h4>");
-        data.unit = "<h4>" + data.unit + "</h4>";
+        data.time =  data.time.replace("日", "日<h3>");
+        data.unit = "<h3>" + data.unit + "</h3>";
         left.innerHTML = data.time;
         right.innerHTML = data.unit + data.desc;
     }
@@ -208,6 +212,34 @@ function setAlert() {
     Elem.get("btn-close").onclick = function() {
         hideAlert();
     }
+    Elem.get("btn-doit").onclick = function() {
+        refresh();
+        hideAlert();
+    }
+    Elem.get("btn-quit").onclick = function() {
+        hideAlert();
+    }
+}
+
+function refresh() {
+	var data = items[0].list[0];
+	var idx = config.tagIdx;
+	var tag = Elem.get("input-tag");
+	var value = Elem.get("input-value");
+	var allot = Elem.get("input-allot");
+
+	data.tags[idx] = {
+		tag: tag.value,
+		value: data.valueStr.replace("#1", value.value),
+		allot: data.allotStr.replace("#2", allot.value)
+	}
+	console.log(data.tags);
+	if (tag.value)
+		Elem.get("user-tag_" + idx).innerHTML = tag.value;
+	if (value.value)
+		Elem.get("value_" + idx).innerHTML = data.valueStr.replace("#1", value.value);
+	if (allot.value)
+		Elem.get("allot_" + idx).innerHTML = data.allotStr.replace("#2", allot.value);
 }
 
 function setTagSearch(button) {
@@ -234,7 +266,18 @@ function setTagSearch(button) {
 		var data = config.lines[z];
 		setFlex(data, line);
 	}
-    showAlert();
+    showAlert("detail-bg");
+}
+
+function setTagEdit(button) {
+	var data = config.tagData;
+	var box = Elem.get("alert-box");
+    var title = Elem.get("puzzle-title");
+    var block = Elem.get("puzzle-block");
+    block.innerHTML = block.innerHTML.replace("#0", data.tag).replace("#1", data.value).replace("#2", data.allot)
+    block.style.maxHeight = config.alertHeight + "px";
+    Elem.color(box, "", getColorLight());
+    showAlert("puzzle-bg");
 }
 
 function setFlex(data, line) {
@@ -267,20 +310,17 @@ function setFlex(data, line) {
 	line.ladd.innerHTML = data.ladd + "阶";
 }
 
-//显示弹窗
-function showAlert() {
-    Style.display("alert", "block");
-    Style.display("detail-bg", "block");
-    Style.display("puzzle-bg", "none");
-    Style.display("result-bg", "none");
+function onInputTag() {
+
 }
 
+function onInputValue() {
 
-//隐藏弹窗
-function hideAlert() {
-    Style.display("alert", "none");
 }
 
+function onInputAllot() {
+
+}
 
 
 

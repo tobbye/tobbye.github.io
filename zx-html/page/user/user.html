@@ -13,12 +13,12 @@
 
 
 
-	h3 {
+	h2 {
 		margin: 3px;
 		font-size: 1.5em;
 	}
 
-	h4 {
+	h3 {
 		margin: 3px;
 		font-size: 1.3em;
 	}
@@ -122,6 +122,23 @@
         right: 20px;
     }
 
+    .alert-text {
+    	width: 30%;
+		margin: 10px;
+		padding: 10px;
+		font-size: 3.5em;
+	}
+
+	.alert-input {
+		width: 60%;
+		margin: 20px;
+		padding: 10px;
+		font-size: 5em;
+		font-weight: bold;
+		font-family: "Aril";
+		border: solid 6px #ccc;
+	}
+
 
 </style>
 
@@ -148,10 +165,24 @@
             </div>
 
             <div id="puzzle-bg">
-            	<div class="alert-title" id="puzzle-title">个人资料</div>
-            	<div class="alert-block" id="puzzle-block"></div>
+            	<div class="alert-title" id="puzzle-title">自定义标签</div>
+            	<div class="alert-block" id="puzzle-block">
+            		<div class="user-flex">
+						<text class="alert-text">标签名称<h3>#0</h3></text>
+						<input class="alert-input" id="input-tag" type="text" oninput="onInputTag()"/>
+					</div>
+					<div class="user-flex">
+						<text class="alert-text">分配权值<h3>#1</h3></text>
+						<input class="alert-input" id="input-value" type="number" oninput="onInputValue()"/>
+					</div>
+					<div class="user-flex">
+						<text class="alert-text">分配策略<h3>#2</h3></text>
+						<input class="alert-input" id="input-allot" type="number" oninput="onInputAllot()"/>
+					</div>
+            	</div>
             	<div class="alert-button">
-                	<div class="button" btype="danger" id="btn-close">关闭</div>
+                	<div class="button" btype="permit" id="btn-doit">确定</div>
+                	<div class="button" btype="danger" id="btn-quit">取消</div>
             	</div>
             </div>
             
