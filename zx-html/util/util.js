@@ -448,9 +448,17 @@ var getColorLight = function(idx) {
         return color["light"];
 }
 
+var addScript = function() {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "../../util/temp.js";
+    document.head.appendChild(script);
+}
+
 
 //获取浏览器是否是移动端
 var getAgent = function() {
+    // addScript();
     var val = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
     config.isHide = false;
     config.isMobile = val;
@@ -534,13 +542,18 @@ var showAlert = function(name) {
 var hideAlert = function() {
     Style.display("alert", "none");
     Style.display("chat-bg", "none");
-    Style.display("detail-bg", "none");
-    Style.display("puzzle-bg", "none");
-    Style.display("result-bg", "none");
+    var bgs = Elem.getClass("alert-bg");
+    for (let x in bgs) {
+        Elem.display(bgs[x], "none");
+    }
+    // Style.display("detail-bg", "none");
+    // Style.display("puzzle-bg", "none");
+    // Style.display("result-bg", "none");
+    // Style.display("search-bg", "none");
 }
 
 
-function jsonToTable(data) {
+var jsonToTable = function(data) {
     if (config.isMobile) {
         alert(JSON.stringify(data));
         return;

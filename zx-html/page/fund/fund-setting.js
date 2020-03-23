@@ -163,13 +163,13 @@ function setButton(content, data) {
 					togItem(this);
 					return;
 				}
-				showAlert();
+				showAlert("edit-bg");
 				var data = this.data;
-				var title = Elem.get("alert-title");
-				var limit = Elem.get("alert-limit");
-				var input = Elem.get("alert-input");
+				var title = Elem.get("edit-title");
+				var limit = Elem.get("edit-limit");
+				var input = Elem.get("edit-input");
 				Style.color("alert-box", "", getColorLight());
-				Style.color("alert-input", getColorType(), "#eee");
+				Style.color("edit-input", getColorType(), "#eee");
 				input.focus();
 				input.min = 0;
 				input.max = values[data.limit];
@@ -183,39 +183,30 @@ function setButton(content, data) {
 
 //设置弹窗
 function setAlert() {
-	for (let i in config.button) {
-		var data = config.button[i];
-		var button = Elem.get("button-" + data[0]);
-	}
-
 	hideAlert();
-	tapAlertBox("alert-bg");
 	tapAlertBox("button-cancel");
 	tapAlertBox("button-confirm");
-
-}
-
-
-//点击弹窗Box
-function tapAlertBox(id) {
-	Elem.get(id).onclick = function() {
+	Elem.get("button-cancel").onclick = function() {
+		var input = Elem.get("edit-input");
+		input.value = 0;
 		hideAlert();
-		var input = Elem.get("alert-input");
+	}
+	Elem.get("button-confirm").onclick = function() {
+		var input = Elem.get("edit-input");
 		if (input.value == 0) 
 			return;
-		if (id == "button-confirm") {
-			input.data = input.dataready;
-			if (input.data.idx == 301 && values.M == values.N) {
-				values.M = 0;
-				values.N = 0;
-			}
-			savejson(input);
-			refresh();
-		} else {
-			input.value = 0;
+		input.data = input.dataready;
+		if (input.data.idx == 301 && values.M == values.N) {
+			values.M = 0;
+			values.N = 0;
 		}
+		savejson(input);
+		hideAlert();
+		refresh();
 	};
+
 }
+
 
 function savejson(input) {
 	var date = new Date();
@@ -231,8 +222,8 @@ function savejson(input) {
 
 //刷新页面
 function refresh() {
-	var input = Elem.get("alert-input");
-	var limit = Elem.get("alert-limit");
+	var input = Elem.get("edit-input");
+	var limit = Elem.get("edit-limit");
 	var list = input.data.tran.split('|');
 	var str = "";
 	for (let i in list) {
@@ -255,7 +246,7 @@ function refresh() {
 
 //输入事件
 function onInput() {
-	var input = Elem.get("alert-input");
+	var input = Elem.get("edit-input");
 	input.value = Math.max(input.min, input.value);
 	input.value = Math.min(input.max, input.value);
 }

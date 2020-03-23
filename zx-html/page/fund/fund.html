@@ -5,6 +5,7 @@
 	<title>资金</title>
 	<link rel="stylesheet" href="../../util/common.css" type="text/css" />
 	<script src="../../util/util.js"> </script>
+    <script src="../../util/temp.js"> </script>
 	<script src="fund-data.js"> </script>
 	<script src="fund-setting.js"> </script>
 
@@ -92,12 +93,12 @@
 		right: calc(50% - 450px);
 	}
 
-	#alert-text {
+	.alert-text {
 		margin: 20px 0px 20px 20%;
 		font-size: 6em;
 	}
 
-	#alert-input {
+	.alert-input {
 		margin: 20px;
 		width: 50%;
 		font-size: 6em;
@@ -107,15 +108,13 @@
 	}
 
 	
-	#alert-limit {
-		/*width: 100%;*/
+	.alert-limit {
 		padding: 10px;
 		font-size: 4em;
 	}
 
 
-	#alert-scroll {
-		/*width: 100%;*/
+	.alert-block {
 		margin: 0px 10px;
 		margin-bottom: 5px;
 		background-color: white;
@@ -135,22 +134,24 @@
 	</div>
 
 	<div id="alert" display="none">
-		<div id="alert-bg" onclick="hideAlert()"></div>
+		<div id="alert-mask" onclick="hideAlert()"></div>
 		<div id="alert-box">
-			<div id="alert-title">借入金额</div>
-			<div id="alert-scroll"> 
-				<div id="alert-limit">
+		    <div class="alert-bg" id="edit-bg">
+
+				<div class="alert-title" id="edit-title">标题名称</div>
+        		<div class="alert-block" id="edit-block">
+					<div class="alert-limit" id="edit-limit"></div>
+					<div class="alert-flex">
+						<text class="alert-text" id="edit-text">￥</text>
+						<input class="alert-input" id="edit-input" type="number" oninput="onInput()"/>
+					</div>
 				</div>
-				<div class="alert-flex">
-					<text id="alert-text">￥</text>
-					<input id="alert-input" type="number" oninput="onInput()" name="input"/>
-				</div>
-			</div>
 
 
-			<div class="alert-button">
-				<div class="button" btype="permit" id="button-confirm" name="confirm">确定</div>
-				<div class="button" btype="danger" id="button-cancel" name="cancel">取消</div>
+				<div class="alert-button">
+					<div class="button" btype="permit" id="button-confirm" name="confirm">确定</div>
+					<div class="button" btype="danger" id="button-cancel" name="cancel">取消</div>
+				</div>
 			</div>
 		</div>
 	</div>

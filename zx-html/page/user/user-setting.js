@@ -244,13 +244,13 @@ function refresh() {
 
 function setTagSearch(button) {
 	var box = Elem.get("alert-box");
-    var title = Elem.get("detail-title");
-    var block = Elem.get("detail-block");
+    var title = Elem.get("search-title");
+    var block = Elem.get("search-block");
     block.innerHTML = "";
     block.style.maxHeight = config.alertHeight + "px";
     Elem.color(box, "", getColorLight());
     title.innerHTML = "标签搜索:" + button.innerHTML;
-	for (let z in config.lines) {
+	for (let z in tempData.searchData) {
 		var line = Elem.creat("div", block, "user-line", z);
 		line.top = Elem.creat("div", line, "user-top");
 		line.order = Elem.creat("div", line.top, "user-order");
@@ -263,10 +263,10 @@ function setTagSearch(button) {
 		line.right = Elem.creat("div", line.flex, "user-right");
 		line.ladd = Elem.creat("div", line.right, "user-ladd");
 		line.group = Elem.creat("div", line.right, "user-group");
-		var data = config.lines[z];
+		var data = tempData.searchData[z];
 		setFlex(data, line);
 	}
-    showAlert("detail-bg");
+    showAlert("search-bg");
 }
 
 function setTagEdit(button) {

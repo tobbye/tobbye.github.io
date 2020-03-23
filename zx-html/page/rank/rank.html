@@ -5,6 +5,7 @@
     <title>榜单</title>
     <link rel="stylesheet" href="../../util/common.css" type="text/css" />
     <script src="../../util/util.js"> </script>
+    <script src="../../util/temp.js"> </script>
     <script src="rank-data.js"> </script>
     <script src="rank-setting.js"> </script>
 
@@ -17,14 +18,7 @@
         text-align: center;
     }
 
-
-    #alert-box {
-        top: 220px;
-        left: 20px;
-        right: 20px;
-    }
-
-    #alert-textarea {
+    #chat-textarea {
         margin: 10px;
         flex: 50;
         height: auto;
@@ -54,22 +48,31 @@
     </div>
 
     <div id="alert" display="none">
-        <div id="alert-bg" onclick="hideAlert()"></div>
+        <div id="alert-mask" onclick="hideAlert()"></div>
         <div id="alert-box">
-            <div id="chat-bg">
+
+            <div class="alert-bg" id="detail-bg">
+                <div class="alert-title" id="detail-title">个人资料</div>
+                <div class="alert-block" id="detail-block"></div>
+                <div class="alert-button" id="detail-button"></div>
+            </div>
+
+            <div class="alert-bg" id="search-bg">
+                <div class="alert-title" id="search-title">搜索结果</div>
+                <div class="alert-block" id="search-block"></div>
+                <div class="alert-button" id="search-button">
+                    <div class="button" btype="danger" id="btn-close">关闭</div>
+                </div>
+            </div>
+            
+            <div class="alert-bg" id="chat-bg">
                 <div class="alert-title" id="chat-title">查看详情</div>
                 <div class="alert-block" id="chat-block"></div>
                 <div class="alert-button">
                     <div class="button-micro" id="btn-vocie" btype="permit">语音</div>
-                    <textarea id="alert-textarea" onfocus="onFocus()">输入内容</textarea>
+                    <textarea id="chat-textarea" onfocus="onFocus()">输入内容</textarea>
                     <div class="button-micro" id="btn-send" btype="permit">发送</div>
                 </div>
-            </div>
-
-            <div id="detail-bg">
-                <div class="alert-title" id="detail-title">个人资料</div>
-                <div class="alert-block" id="detail-block"></div>
-                <div class="alert-button" id="detail-button"></div>
             </div>
         </div>
     </div>

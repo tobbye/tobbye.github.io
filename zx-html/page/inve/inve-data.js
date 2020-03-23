@@ -17,8 +17,8 @@ var config = {
 	name: 'inve',
 	laddCount: 25,
 	laddSrc: '../../picture/ladd/',
-	showColor: 'red',
-	hideColor: 'green',
+	rightColor: '#0b0',
+	wrongColor: '#b00',
 
 	btnName: ['next',  'doit', 'quit', 'redo', 'abon', 'open', 'more', 'close'],
 };

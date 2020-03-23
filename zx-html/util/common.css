@@ -284,17 +284,21 @@ div, table [display="block"] {
 	background-color: #6aa;
 }
 
+.user-tag:hover {
+	background-color: #399;
+}
+
 #alert {
 
 }
 
-#alert-bg {
+#alert-mask {
 	display: block;
 	position: absolute;
-	top: -0px;
-	left: -0px;
-	right: -0px;
-	bottom: -0px;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
 	background-color: #222;
 	opacity: 0.90;
 }
@@ -302,6 +306,9 @@ div, table [display="block"] {
 #alert-box {
 	display: block;
 	position: absolute;
+    top: 220px;
+    left: 20px;
+    right: 20px;
 	border: solid 8px #fff;
 	border-radius: 30px;
 }
@@ -313,16 +320,14 @@ div, table [display="block"] {
 	margin: 5px 0px;
 }
 
-.alert-title,
-#alert-title {
+.alert-title {
 	margin: 10px 40px;
 	font-size: 5em;
 	height: 80px;
 	overflow: hidden;
 }
 
-.alert-text,
-#alert-text {
+.alert-text {
 	margin: 20px 0px 20px 20%;
 	font-size: 6em;
 }
@@ -330,7 +335,7 @@ div, table [display="block"] {
 .alert-block {
     overflow: auto;
     padding: 5px 10px;
-    min-height: 500px;
+    /*min-height: 500px;*/
     max-height: 1234px;
     font-size: 1em;
 }

@@ -364,12 +364,12 @@ function creatPuzzle(line, block, mix) {
                 console.log("tgt:" + wordTgt + " cur:" + wordCur);
                 var redo = Elem.get("btn-redo");
                 if (wordTgt.replace(wordCur, "") == wordTgt || wordTgt[0] != wordCur[0]) {
-                    Elem.color(this, "white", "darkred");
-                    Elem.style(this, "borderColor", "darkred");
+                    Elem.color(this, "white", config.wrongColor);
+                    Elem.style(this, "borderColor", config.wrongColor);
                     Elem.togType(redo, "permit");
                 } else {
-                    Elem.color(this, "white", "darkgreen");
-                    Elem.style(this, "borderColor", "darkgreen");
+                    Elem.color(this, "white", config.rightColor);
+                    Elem.style(this, "borderColor", config.rightColor);
                     Elem.togType(redo, "danger");
                 }
                 if (wordTgt == wordCur) {
