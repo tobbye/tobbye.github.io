@@ -100,8 +100,8 @@ function creatGrabBody(content, data, x) {
         body.line = line;
         body.onclick = function() {
             console.log(this.line);
-            selectLine(this);
-            alertDetail(this);
+            setLineSelect(this);
+            setDetailAlert(this);
         }
         var flex = Elem.creat("div", body, "user-flex");
         var index = Elem.creat("div", flex, "user-index");
@@ -110,15 +110,15 @@ function creatGrabBody(content, data, x) {
         index.innerHTML += "<br/>" + data.inverStr;
         stamp.innerHTML = "时间: " + line.stamp;
 
-        creatLineFlex(body, line, x);
+        setLineFlex(body, line, x);
 
         var flex = Elem.creat("div", body, "user-flex");
         flex.style.marginTop = "0px";
         flex.style.marginBottom = "10px";
-        var ladd = creatLineText(flex, line.laddStr);
-        var piece = creatLineText(flex, line.pieceStr);
-        var price = creatLineText(flex, line.priceStr);
-        var times = creatLineText(flex, line.timesStr);
+        var ladd = setLineText(flex, line.laddStr);
+        var piece = setLineText(flex, line.pieceStr);
+        var price = setLineText(flex, line.priceStr);
+        var times = setLineText(flex, line.timesStr);
         ladd.style.flex = 17;
     }
     data.lines = lines;
@@ -143,16 +143,16 @@ function creatInveBody(content, data, x) {
         body.line = line;
         body.onclick = function() {
             console.log(this.line);
-            selectLine(this);
-            alertDetail(this);
+            setLineSelect(this);
+            setDetailAlert(this);
         }
-        var ladd = creatLineText(body, line.laddStr);
-        var piece = creatLineText(body, line.pieceStr);
-        var price = creatLineText(body, line.priceStr);
-        var times = creatLineText(body, line.timesStr);
+        var ladd = setLineText(body, line.laddStr);
+        var piece = setLineText(body, line.pieceStr);
+        var price = setLineText(body, line.priceStr);
+        var times = setLineText(body, line.timesStr);
         ladd.style.flex = 17;
         if (z == 0) {
-            selectLine(body);
+            setLineSelect(body);
         }
     }
     data.lines = lines;
@@ -222,14 +222,14 @@ function initLineData(line, dot, isGrab) {
 }
 
 
-function creatLineText(flex, text) {
+function setLineText(flex, text) {
     var line = Elem.creat("text", flex, "line");
     line.innerHTML = text;
     return line;
 }
 
 
-function creatLineFlex(body, line, x) {
+function setLineFlex(body, line, x) {
     var flex = Elem.creat("div", body, "user-flex");
     var head = Elem.creat("img", flex, "user-head");
     var left = Elem.creat("div", flex, "user-left");
@@ -257,7 +257,7 @@ function creatLineFlex(body, line, x) {
 }
 
 
-function selectLine(flex) { 
+function setLineSelect(flex) { 
     var old = config.flex;
     if (old) {
         old.style.border = "solid 0px transparent";
@@ -271,7 +271,7 @@ function selectLine(flex) {
 }
 
 
-function alertDetail(body) {
+function setDetailAlert(body) {
     var data = body.data;
     var line = body.line;
     config.line = line;
@@ -279,14 +279,21 @@ function alertDetail(body) {
     config.puzzleText = data.puzzleText;
     config.cellText = data.cellText;
     config.cellTips = data.cellTips;
+
+    var box = Elem.get("alert-box");
+    var title = Elem.get("detail-title");
+    var block = Elem.get("detail-block");
+    Elem.color(box, "", getColorLight());
+    title.innerHTML = data.flexStr.replace("#0",line.inver);
+    block.style.maxHeight = config.alertHeight + "px";
+    block.innerHTML = "";
+
+
     var ladd = line.ladd - 1;
     //alert(JSON.stringify(line));
     var priceKey = "priceAllList";
     var pieceKey = data.isGrab ? "pieceCurList" : "pieceAllList";
     var timesKey = data.isGrab ? "timesCurList" : "timesAllList";
-    var block = Elem.get("detail-block");
-    block.style.maxHeight = config.alertHeight + "px";
-    block.innerHTML = "";
 
     for (var i = 0; i < line.ladd; i++) {
         var idx = line.ladd - i - 1;
@@ -302,10 +309,6 @@ function alertDetail(body) {
         times.innerHTML = data.timesStr.replace("#0", Parse.sub4Num(line[timesKey][idx]));
     }
 
-    var box = Elem.get("alert-box");
-    var title = Elem.get("detail-title");
-    box.style.backgroundColor = getColorLight();
-    title.innerHTML = data.flexStr.replace("#0",line.inver);
     if(block.firstChild)
         block.firstChild.scrollIntoView();
     showAlert("detail-bg");
@@ -313,33 +316,34 @@ function alertDetail(body) {
 }
 
 
-function alertPuzzle() {
-    Style.display("detail-bg", "none");
-    Style.display("puzzle-bg", "block");
+function setPuzzleAlert() {
+    hideAlert("detail-bg");
     Style.display("btn-open", "none");
     Style.display("btn-redo", "block");
     Elem.togType(Elem.get("btn-redo"), "danger");
+    var title = Elem.get("puzzle-title");
     var block = Elem.get("puzzle-block");
+    title.innerHTML = config.puzzleText;
     block.innerHTML = "";
     config.wordCur = "";
-    var title = Elem.get("puzzle-title");
-    title.innerHTML = config.puzzleText;
-    
+
+
     var line = config.line;
     line.mix = Parse.mix(line.word, 1);
     var cellText = Elem.creat("div", block, "cell-tips");
     cellText.innerHTML = config.cellText;
-    creatPuzzle(line, block, 0);
+    setPuzzleCell(line, block, 0);
 
     var cellTips = Elem.creat("div", block, "cell-tips");
     cellTips.style.marginTop = "5px";
     cellTips.innerHTML = config.cellTips;
-    creatPuzzle(line, block, 1);
+    setPuzzleCell(line, block, 1);
+    showAlert("puzzle-bg");
 }
 
 
 //解密字块
-function creatPuzzle(line, block, mix) {
+function setPuzzleCell(line, block, mix) {
     var str = mix ? line.mix : line.word;
     var space = Elem.creat("div", block, "space20");
     var flex = Elem.creat("div", block, "cell-flex");
@@ -387,9 +391,8 @@ function creatPuzzle(line, block, mix) {
 }
 
 
-function alertResult() {
-    Style.display("puzzle-bg", "none");
-    Style.display("result-bg", "block");
+function setResultAlert() {
+    hideAlert("puzzle-bg");
     var bg = Elem.get("result-bg");
     var block = Elem.get("result-block");
     block.innerHTML = "";
@@ -405,6 +408,7 @@ function alertResult() {
     pic.src = config.laddSrc + rollLadd + ".png";
     var price = Elem.creat("div", block, "line");
     price.innerHTML = "<h2>￥" +  Parse.addSplit(line.priceAllList[rollLadd - 1]);
+    showAlert("result-bg");
 }
 
 var rollLadd;
@@ -430,28 +434,9 @@ function setButton(inner, x) {
 
 
 function setAlert() {
-    hideAlert();
-    Elem.get("btn-next").onclick = function() {
-        alertPuzzle();
-    }
-    Elem.get("btn-doit").onclick = function() {
-        hideAlert();
-    }
-    Elem.get("btn-quit").onclick = function() {
-        hideAlert();
-    }
-    Elem.get("btn-close").onclick = function() {
-        hideAlert();
-    }
-    Elem.get("btn-redo").onclick = function() {
-        alertPuzzle();
-    }
-    Elem.get("btn-abon").onclick = function() {
-        hideAlert();
-    }
-    Elem.get("btn-open").onclick = function() {
-        alertResult();
-    }
+    setClick("btn-next", setPuzzleAlert);
+    setClick("btn-redo", setPuzzleAlert);
+    setClick("btn-open", setResultAlert);
 }
 
 

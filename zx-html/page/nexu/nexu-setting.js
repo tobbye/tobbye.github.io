@@ -67,19 +67,20 @@ function setLine(content, data, x, y) {
 	for (let z in lines) {
 		var line = lines[z];
 		var body = Elem.creat("div", block, "user-block");
-		var flex = creatLineFlex(body, line, x);
+		var flex = setLineFlex(body, line, x);
 		flex.data = data;
 		flex.line = line;
 		flex.x = x;
 		flex.onclick = function() {
 			config.line = this.line;
+			config.lines = this.data.lines;
 			console.log(this.line);
-			alertDetail(this);
+			setDetailAlert(this);
 		}
 	}
 }
 
-function creatLineFlex(body, line, x) {
+function setLineFlex(body, line, x) {
 	var flex = Elem.creat("div", body, "user-flex");
 	var head = Elem.creat("img", flex, "user-head");
 	var left = Elem.creat("div", flex, "user-left");
@@ -107,16 +108,17 @@ function creatLineFlex(body, line, x) {
 }
 
 
-function alertDetail(flex) {
-	Style.display("alert", "block");
-	Style.display("detail-bg", "block");
+function setDetailAlert(elem) {
+	var box = Elem.get("alert-box");
 	var block = Elem.get("detail-block");
+	Elem.color(box, "", getColorLight(x));
 	block.innerHTML = "";
-	var x = flex.x;
-	var data = flex.data;
+
+	var x = elem.x;
+	var data = elem.data;
 	var line = config.line;
 	var body = Elem.creat("div", block, "user-body");
-	var flex = creatLineFlex(body, line, x);
+	var flex = setLineFlex(body, line, x);
 	var tags = Elem.creat("div", body, "user-tags");
 	var desc = Elem.creat("div", body, "user-desc");
 
@@ -125,7 +127,7 @@ function alertDetail(flex) {
 			var tag = Elem.creat("div",tags, "user-tag");
 			tag.innerHTML = line.tag[i];
 			tag.onclick  = function() {
-				setTagSearch(this);
+				setSearchAlert(this);
 			}
 		}
 	}
@@ -145,140 +147,29 @@ function alertDetail(flex) {
 		btn.setAttribute("btype", _data.btype);
 		btn.innerHTML = _data.text;
 		btn.data = _data;
+		btn.elem = elem;
 		btn.onclick = function () {
 			setNexu(this);
 		}
 	}
-	Style.color("alert-box", "", getColorLight(x));
+	showAlert("detail-bg");
 }
 
 
 function setNexu(btn) {
 	var data = btn.data;
 	if (data.idx == 0)
-		showChat();
-
+		setChatAlert();
+	if (data.idx == 2) {
+		hideAlert();
+		Elem.remove(btn.elem);
+		Parse.remove(config.lines, config.line);
+	}
 }
 
 function setAlert() {
-	setChat();
-	hideAlert();
+
 }
 
-
-function setTagSearch(button) {
-	hideAlert();
-	var box = Elem.get("alert-box");
-    var title = Elem.get("search-title");
-    var block = Elem.get("search-block");
-    block.innerHTML = "";
-    block.style.maxHeight = config.alertHeight + "px";
-    Elem.color(box, "", getColorLight());
-    title.innerHTML = "标签搜索:" + button.innerHTML;
-	for (let z in tempData.searchData) {
-		var line = Elem.creat("div", block, "user-line", z);
-		line.top = Elem.creat("div", line, "user-top");
-		line.order = Elem.creat("div", line.top, "user-order");
-		line.value = Elem.creat("div", line.top, "user-value");
-		line.flex = Elem.creat("div", line, "user-flex");
-		line.head = Elem.creat("img", line.flex, "user-head");
-		line.left = Elem.creat("div", line.flex, "user-left");
-		line.name = Elem.creat("div", line.left, "user-name");
-		line.mark = Elem.creat("div", line.left, "user-flex");
-		line.right = Elem.creat("div", line.flex, "user-right");
-		line.ladd = Elem.creat("div", line.right, "user-ladd");
-		line.group = Elem.creat("div", line.right, "user-group");
-		var data = tempData.searchData[z];
-		setFlex(data, line);
-	}
-    showAlert("search-bg");
-}
-
-function setFlex(data, line) {
-	var order = data.order + "th";
-	if (order.length == 3)
-		data.order = order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
-	if (data.mark) {
-		for (let i in data.mark) {
-			var mark = Elem.creat("div", line.mark, "user-mark");
-			mark.innerHTML = data.mark[i];
-			mark.style.borderColor = getColorType();
-		}
-	}
-	data.group = data.uid[0].replace("s","赞助商").replace("d","淘金者");
-	
-	Elem.color(line.group, "white", getColorType());
-	Elem.style(line.group, "borderColor", getColorType());
-	line.head.style.backgroundColor = getColorLight();
-	// line.head.src = "../../picture/head1.jpg";
-	line.order.innerHTML = data.order;
-	line.value.innerHTML = "权值: " + Parse.sub4Num(data.value);
-	line.name.innerHTML = data.name;
-	line.group.innerHTML = data.group;
-	line.ladd.innerHTML = data.ladd + "阶";
-}
-
-
-function setChat() {
-
-	var block = Elem.get("chat-block");
-	for (let i in tempData.chatData) {
-		var data = tempData.chatData[i];
-		var cls = data.isMine ? "right" : "left";
-		creatChatText(block, cls, data.text);
-	}
-	var send = Elem.get("btn-send");
-	send.block = block;
-	send.onclick = function() {
-		var input = Elem.get("chat-textarea");
-		creatChatText(this.block, "right", input.value);
-		input.style.color = getColorLight();
-		input.value = "输入内容";
-	}
-}
-
-
-function creatChatText(block, cls, value) {
-	if (value == "" || value == "输入内容") {
-		Style.display("alert", "none");
-    	Style.display("chat-bg", "none");
-		return;
-	}
-	var flex = Elem.creat("div", block, "chat-" + cls);
-	var text = Elem.creat("div", flex, "text-" + cls);
-	text.innerHTML = value.replace(/\n/g, "<br/>");
-	text.scrollIntoView();
-}
-
-
-function showChat() {
-	Style.display("alert", "block");
-    Style.display("chat-bg", "block");
-    Style.display("detail-bg", "none");
-	var box = Elem.get("alert-box");
-	var block = Elem.get("chat-block");
-	var title = Elem.get("chat-title");
-	var input = Elem.get("chat-textarea");
-	box.style.backgroundColor = getColorLight();
-	box.style.maxHeight = (config.windHeight - 440) + "px";
-	block.style.maxHeight = (config.windHeight - 703) + "px";
-	block.lastChild.scrollIntoView();
-	input.style.color = getColorLight();
-	title.innerHTML = config.line.name;
-}
-
-
-function onFocus() {
-	var box = Elem.get("alert-box");
-	var block = Elem.get("detail-block");
-	box.style.maxHeight = (config.windHeight - 940) + "px";
-	block.style.maxHeight = (config.windHeight - 1203) + "px";
-	block.lastChild.scrollIntoView();
-	var input = Elem.get("chat-textarea");
-	input.style.color = getColorType();
-	input.value = "";
-
-	// Style.height("detail-block", "550px");
-}
 
 

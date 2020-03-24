@@ -7,6 +7,7 @@ window.onload = function() {
 
 var config = {
 	name: "user",
+    titleStr: "搜索:#0",
 
 };
 

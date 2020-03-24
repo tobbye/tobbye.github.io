@@ -68,3 +68,122 @@ var tempData = {
     {text:`启动资金的问题你不用担心，我大力支持。加油干！二狗子！`, time:"11：30", isMine:1},
     ],
 }
+
+
+
+function setSearchAlert(button) {
+    hideAlert('detail-bg');
+    var box = Elem.get("alert-box");
+    var title = Elem.get("search-title");
+    var block = Elem.get("search-block");
+    Elem.color(box, "", getColorLight());
+    block.innerHTML = "";
+    block.style.maxHeight = config.alertHeight + "px";
+    title.innerHTML = config.titleStr.replace("#0", button.innerHTML);
+    for (let z in tempData.searchData) {
+        var line = Elem.creat("div", block, "user-line", z);
+        line.top = Elem.creat("div", line, "user-top");
+        line.order = Elem.creat("div", line.top, "user-order");
+        line.value = Elem.creat("div", line.top, "user-value");
+        line.flex = Elem.creat("div", line, "user-flex");
+        line.head = Elem.creat("img", line.flex, "user-head");
+        line.left = Elem.creat("div", line.flex, "user-left");
+        line.name = Elem.creat("div", line.left, "user-name");
+        line.mark = Elem.creat("div", line.left, "user-flex");
+        line.right = Elem.creat("div", line.flex, "user-right");
+        line.ladd = Elem.creat("div", line.right, "user-ladd");
+        line.group = Elem.creat("div", line.right, "user-group");
+        var data = tempData.searchData[z];
+        setSearchFlex(data, line);
+    }
+    showAlert("search-bg");
+}
+
+function setSearchFlex(data, line) {
+    var order = data.order + "th";
+    if (order.length == 3)
+        data.order = order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
+    if (data.mark) {
+        for (let i in data.mark) {
+            var mark = Elem.creat("div", line.mark, "user-mark");
+            mark.innerHTML = data.mark[i];
+            mark.style.borderColor = getColorType();
+        }
+    }
+    data.group = data.uid[0].replace("s","赞助商").replace("d","淘金者");
+    
+    Elem.color(line.group, "white", getColorType());
+    Elem.style(line.group, "borderColor", getColorType());
+    line.head.style.backgroundColor = getColorLight();
+    // line.head.src = "../../picture/head1.jpg";
+    line.order.innerHTML = data.order;
+    line.value.innerHTML = "权值: " + Parse.sub4Num(data.value);
+    line.name.innerHTML = data.name;
+    line.group.innerHTML = data.group;
+    line.ladd.innerHTML = data.ladd + "阶";
+}
+
+
+function setChatAlert() {
+    hideAlert("detail-bg");
+    var box = Elem.get("alert-box");
+    var title = Elem.get("chat-title");
+    var block = Elem.get("chat-block");
+    var input = Elem.get("chat-textarea");
+    Elem.color(box, "", getColorLight());
+    Elem.color(input, getColorLight(), "");
+    title.innerHTML = config.line.name;
+    box.style.maxHeight = (config.windHeight - 440) + "px";
+    block.style.maxHeight = (config.windHeight - 703) + "px";
+    block.innerHTML = "";
+    for (let i in tempData.chatData) {
+        var data = tempData.chatData[i];
+        var cls = data.isMine ? "right" : "left";
+        setChatText(block, cls, data.text);
+    }
+    var send = Elem.get("btn-send");
+    send.block = block;
+    send.onclick = function() {
+        var input = Elem.get("chat-textarea");
+        setChatText(this.block, "right", input.value);
+        if (input.value != "" && input.value != "输入内容")
+            tempData.chatData.push({
+                text: input.value,
+                date: Parse.getDate(),
+                time: Parse.getTime(),
+                isMine: 1,
+            });
+        Elem.color(input, getColorLight(), "");
+        input.value = "输入内容";
+    }
+    
+    block.lastChild.scrollIntoView();
+    showAlert("chat-bg");
+}
+
+
+function setChatText(block, cls, value) {
+    if (value == "" || value == "输入内容") {
+        hideAlert();
+        return;
+    }
+    var flex = Elem.creat("div", block, "chat-" + cls);
+    var text = Elem.creat("div", flex, "text-" + cls);
+    text.innerHTML = value.replace(/\n/g, "<br/>");
+    text.scrollIntoView();
+}
+
+
+
+function onChatFocus() {
+    var box = Elem.get("alert-box");
+    var block = Elem.get("detail-block");
+    box.style.maxHeight = (config.windHeight - 940) + "px";
+    block.style.maxHeight = (config.windHeight - 1203) + "px";
+    block.lastChild.scrollIntoView();
+    var input = Elem.get("chat-textarea");
+    Elem.color(input, getColorType(), "");
+    input.value = "";
+
+    // Style.height("detail-block", "550px");
+}

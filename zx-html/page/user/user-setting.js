@@ -131,7 +131,7 @@ function setTags(content, data) {
 		tag.innerHTML = _data.tag;
 		tag.btnIdx = y;
 		tag.onclick = function() {
-			setTagSearch(this);
+			setSearchAlert(this);
 		}
 
 		//VALUE
@@ -151,7 +151,7 @@ function setTags(content, data) {
 		edit.onclick = function() {
 			config.tagData = this.data;
 			config.tagIdx = this.idx;
-			setTagEdit(this);
+			setEditAlert(this);
 		}
 	}
 
@@ -162,6 +162,19 @@ function setTags(content, data) {
 	flex4.style.padding = "5px";
 	flex5.style.padding = "10px 5px";
 	flex5.style.marginTop = "5px";
+}
+
+
+function setEditAlert(button) {
+	hideAlert();
+	var data = config.tagData;
+	var box = Elem.get("alert-box");
+    var title = Elem.get("edit-title");
+    var block = Elem.get("edit-block");
+    block.innerHTML = block.innerHTML.replace("#0", data.tag).replace("#1", data.value).replace("#2", data.allot);
+    block.style.maxHeight = config.alertHeight + "px";
+    Elem.color(box, "", getColorLight());
+    showAlert("edit-bg");
 }
 
 
@@ -208,15 +221,8 @@ function setRecentLine(content, lines, x, y) {
 
 
 function setAlert() {
-	hideAlert();
-    Elem.get("btn-close").onclick = function() {
-        hideAlert();
-    }
     Elem.get("btn-doit").onclick = function() {
         refresh();
-        hideAlert();
-    }
-    Elem.get("btn-quit").onclick = function() {
         hideAlert();
     }
 }
@@ -242,73 +248,9 @@ function refresh() {
 		Elem.get("allot_" + idx).innerHTML = data.allotStr.replace("#2", allot.value);
 }
 
-function setTagSearch(button) {
-	var box = Elem.get("alert-box");
-    var title = Elem.get("search-title");
-    var block = Elem.get("search-block");
-    block.innerHTML = "";
-    block.style.maxHeight = config.alertHeight + "px";
-    Elem.color(box, "", getColorLight());
-    title.innerHTML = "标签搜索:" + button.innerHTML;
-	for (let z in tempData.searchData) {
-		var line = Elem.creat("div", block, "user-line", z);
-		line.top = Elem.creat("div", line, "user-top");
-		line.order = Elem.creat("div", line.top, "user-order");
-		line.value = Elem.creat("div", line.top, "user-value");
-		line.flex = Elem.creat("div", line, "user-flex");
-		line.head = Elem.creat("img", line.flex, "user-head");
-		line.left = Elem.creat("div", line.flex, "user-left");
-		line.name = Elem.creat("div", line.left, "user-name");
-		line.mark = Elem.creat("div", line.left, "user-flex");
-		line.right = Elem.creat("div", line.flex, "user-right");
-		line.ladd = Elem.creat("div", line.right, "user-ladd");
-		line.group = Elem.creat("div", line.right, "user-group");
-		var data = tempData.searchData[z];
-		setFlex(data, line);
-	}
-    showAlert("search-bg");
-}
 
-function setTagEdit(button) {
-	var data = config.tagData;
-	var box = Elem.get("alert-box");
-    var title = Elem.get("puzzle-title");
-    var block = Elem.get("puzzle-block");
-    block.innerHTML = block.innerHTML.replace("#0", data.tag).replace("#1", data.value).replace("#2", data.allot)
-    block.style.maxHeight = config.alertHeight + "px";
-    Elem.color(box, "", getColorLight());
-    showAlert("puzzle-bg");
-}
 
-function setFlex(data, line) {
-	var order = data.order + "th";
-	if (order.length == 3)
-		data.order = order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
-	if (data.tag) {
-		for (let i in data.tag) {
-			var tag = Elem.creat("div", line.tag, "user-tag");
-			tag.innerHTML = data.tag[i];
-		}
-	}
-	if (data.mark) {
-		for (let i in data.mark) {
-			var mark = Elem.creat("div", line.mark, "user-mark");
-			mark.innerHTML = data.mark[i];
-			mark.style.borderColor = getColorType();
-		}
-	}
-	data.group = data.uid[0].replace("s","赞助商").replace("d","淘金者");
-	
-	Elem.color(line.group, "white", getColorType());
-	Elem.style(line.group, "borderColor", getColorType());
-	line.head.style.backgroundColor = getColorLight();
-	// line.head.src = "../../picture/head1.jpg";
-	line.order.innerHTML = data.order;
-	line.value.innerHTML = "权值: " + Parse.sub4Num(data.value);
-	line.name.innerHTML = data.name;
-	line.group.innerHTML = data.group;
-	line.ladd.innerHTML = data.ladd + "阶";
-}
+
 
 function onInputTag() {
 

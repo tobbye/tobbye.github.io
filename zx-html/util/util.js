@@ -126,10 +126,7 @@ Parse.swape = function(str, a, b) {
 
 
 Parse.getStamp = function(stamp) {
-    if (stamp) 
-        return stamp;
-    else
-        return new Date().getTime();
+    return stamp || new Date().getTime();
 }
 
 
@@ -156,6 +153,13 @@ Parse.getTime = function(stamp) {
     stamp = Parse.getStamp(stamp);
     var time = new Date(stamp);
     return time.getHours() + "时" + time.getMinutes() + "分";
+}
+
+Parse.remove = function(lines, line) {
+    for (let x in lines) {
+        if (lines[x] == line)
+            lines.splice(x, 1);
+    }
 }
 
 
@@ -188,7 +192,6 @@ Elem.getClass = function (className) {
 Elem.remove = function (elem) {
     if(elem)
         elem.parentNode.removeChild(elem);
-    return !!elem;
 }
 
 //清空元素子节点
@@ -455,6 +458,23 @@ var addScript = function() {
     document.head.appendChild(script);
 }
 
+var setEvent = function() {
+
+    hideAlert();
+    setClick("btn-quit", hideAlert);
+    setClick("btn-abon", hideAlert);
+    setClick("btn-close", hideAlert);
+
+}
+
+var setClick = function(name, func) {
+    if (Elem.get(name)) {
+        Elem.get(name).onclick = function() {
+            func();
+        }
+    }
+}
+
 
 //获取浏览器是否是移动端
 var getAgent = function() {
@@ -476,6 +496,7 @@ var getAgent = function() {
 
 //设置浏览器
 var setAgent = function() {
+    setEvent();
     togContent();
     if (!config.isMobile) {
         var body = document.body;
@@ -533,15 +554,19 @@ var togContent = function(tog) {
 //显示弹窗
 var showAlert = function(name) {
     Style.display("alert", "block");
-    if (name)
+    if (name) {
         Style.display(name, "block");
+    }
 }
 
 
 //隐藏弹窗
-var hideAlert = function() {
+var hideAlert = function(name) {
     Style.display("alert", "none");
-    Style.display("chat-bg", "none");
+    if (name) {
+        Style.display(name, "none");
+        return;
+    }
     var bgs = Elem.getClass("alert-bg");
     for (let x in bgs) {
         Elem.display(bgs[x], "none");

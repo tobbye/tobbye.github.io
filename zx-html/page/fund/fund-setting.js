@@ -183,9 +183,6 @@ function setButton(content, data) {
 
 //设置弹窗
 function setAlert() {
-	hideAlert();
-	tapAlertBox("button-cancel");
-	tapAlertBox("button-confirm");
 	Elem.get("button-cancel").onclick = function() {
 		var input = Elem.get("edit-input");
 		input.value = 0;

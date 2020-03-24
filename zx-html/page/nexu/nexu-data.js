@@ -7,6 +7,7 @@ window.onload = function() {
 
 var config = {
     name: "nexu",
+    titleStr: "搜索:#0",
     buttons:[
         { idx:0, text: '发消息', btype: 'permit'},
         { idx:1, text: '添加关注', btype: 'permit'},
