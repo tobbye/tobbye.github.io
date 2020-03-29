@@ -1,15 +1,3 @@
-window.onresize = function() {
-    config.windWidth = window.innerWidth;
-    config.windHeight = window.innerHeight;
-    config.windHeight *= config.isMobile ? 1:2.5;
-    config.alertHeight = config.windHeight - config.alertOffset;
-    config.maxHeight = config.windHeight - config.innerOffset;
-    config.isWidth = config.windWidth > config.windHeight;
-    config.isHeight = config.maxHeight > config.minHeight;
-    config.theHeight = Math.max(config.maxHeight, config.minHeight);
-    document.body.style.zoom = config.isMobile ? "1":"0.4";
-    Elem.autosize(null, config.outerOffset);
-}
 
 
 var elems = [{},{},{},{},{},{},{},{},{}];
@@ -495,6 +483,19 @@ var setClick = function(name, func) {
     }
 }
 
+var resize = function() {
+    config.windWidth = window.innerWidth;
+    config.windHeight = window.innerHeight;
+    config.windHeight *= config.isMobile ? 1:2.5;
+    config.alertHeight = config.windHeight - config.alertOffset;
+    config.maxHeight = config.windHeight - config.innerOffset;
+    config.isWidth = config.windWidth > config.windHeight;
+    config.isHeight = config.maxHeight > config.minHeight;
+    config.theHeight = Math.max(config.maxHeight, config.minHeight);
+    document.body.style.zoom = config.isMobile ? "1":"0.4";
+    Elem.autosize(null, config.outerOffset);
+}
+
 
 //获取浏览器是否是移动端
 var getAgent = function() {
@@ -511,7 +512,7 @@ var getAgent = function() {
     config.outerOffset = 230;
     config.alertOffset = 716;
     console.log(config);
-    window.onresize();
+    window.resize();
     return val;
 }
 
@@ -589,10 +590,6 @@ var hideAlert = function(name) {
     for (let x in bgs) {
         Elem.display(bgs[x], "none");
     }
-    // Style.display("detail-bg", "none");
-    // Style.display("puzzle-bg", "none");
-    // Style.display("result-bg", "none");
-    // Style.display("search-bg", "none");
 }
 
 
