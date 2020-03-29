@@ -7,6 +7,7 @@ window.onresize = function() {
     config.isWidth = config.windWidth > config.windHeight;
     config.isHeight = config.maxHeight > config.minHeight;
     config.theHeight = Math.max(config.maxHeight, config.minHeight);
+    document.body.style.zoom = config.isMobile ? "1":"0.4";
     Elem.autosize(null, config.outerOffset);
 }
 
@@ -63,6 +64,7 @@ Parse.cut4Num = function(num) {
 }
 
 Parse.fillZero = function (num, count) {
+    count = count || 2;
     var str = num.toString();
     if (str.length < count) {
        str = "0" + str;
@@ -134,25 +136,42 @@ Parse.formatTime = function(stamp) {
     stamp = Parse.getStamp(stamp);
     var time = new Date(stamp);
     var str = time.getFullYear() + "-";
-    str += Parse.fillZero(time.getMonth()+1, 2) + "-";
-    str += Parse.fillZero(time.getDate(), 2) + " ";
-    str += Parse.fillZero(time.getHours(), 2) + ":";
-    str += Parse.fillZero(time.getMinutes(), 2) + ":";
-    str += Parse.fillZero(time.getSeconds(), 2);
+    str += Parse.fillZero(time.getMonth()+1) + "-";
+    str += Parse.fillZero(time.getDate()) + " ";
+    str += Parse.fillZero(time.getHours()) + ":";
+    str += Parse.fillZero(time.getMinutes()) + ":";
+    str += Parse.fillZero(time.getSeconds());
     return str;
 }
 
-Parse.getDate = function(stamp) {
+Parse.getDate = function(stamp, str) {
     stamp = Parse.getStamp(stamp);
-    var date = new Date(stamp).toLocaleDateString();
-    return date.replace("/", "年").replace("/", "月") + "日";
+    var time = new Date(stamp);
+    var year = time.getFullYear();
+    var month = Parse.fillZero(time.getMonth()+1);
+    var day = Parse.fillZero(time.getDate());
+    if (str == "")
+        return year + "" + month + "" + day + "";
+    if (str == "/")
+        return year + "/" + month + "/" + day + "";
+    if (str == "-")
+        return year + "-" + month  + "-" + day + "";
+    else
+        return year + "年" + month + "月" + day + "日";
 }
 
 
-Parse.getTime = function(stamp) {
+Parse.getTime = function(stamp, str) {
     stamp = Parse.getStamp(stamp);
     var time = new Date(stamp);
-    return time.getHours() + "时" + time.getMinutes() + "分";
+    var hour = time.getHours();
+    var minute = time.getMinutes();
+    if (str == "")
+        return hour + "" + minute + "";
+    if (str == ":")
+        return hour + ":" + minute + "";
+    else
+        return hour + "时" + minute + "分";
 }
 
 Parse.remove = function(lines, line) {
@@ -244,7 +263,7 @@ Elem.height = function(elem, height) {
 
 //设置元素显示
 Elem.display = function(elem, display) {
-    Elem.attr(elem, "display", display);
+    Elem.style(elem, "display", display);
 }
 
 //切换元素显示
@@ -418,11 +437,11 @@ var setInner = function(innerIdx) {
         if (childTop.className != "button-top")
             break;
         if (i == idx) {
-            childTop.setAttribute("btype", "live");
-            childCenter.setAttribute("display", "block");
+            Elem.togType(childTop, "live");
+            Elem.display(childCenter, "block");
         } else {
-            childTop.setAttribute("btype", "dead");
-            childCenter.setAttribute("display", "none");
+            Elem.togType(childTop, "dead");
+            Elem.display(childCenter, "none");
         }
     }
     Elem.color(document.body, getColorType(idx), "");
@@ -498,10 +517,6 @@ var getAgent = function() {
 var setAgent = function() {
     setEvent();
     togContent();
-    if (!config.isMobile) {
-        var body = document.body;
-        body.style.zoom = "0.4";
-    }
 }
 
 var setFullScreen = function() {
@@ -535,16 +550,17 @@ var togContent = function(tog) {
             hide = Elem.creat('div', elem, 'hide');
             hide.innerHTML = "内容已隐藏，点击展开...";
             hide.onclick = function() {
-                togContent(1);
+                Elem.display(this, "none");
+                Elem.display(this.previousSibling, "block");
             }
         } 
 
         if (config.isHide || tog) {
-            block.style.display = 'block';
-            hide.style.display = 'none';
+            Elem.display(hide, "none");
+            Elem.display(block, "block");
         } else {
-            block.style.display = 'none';
-            hide.style.display = 'block';
+            Elem.display(hide, "block");
+            Elem.display(block, "none");
         }
     }
     config.isHide = !config.isHide;

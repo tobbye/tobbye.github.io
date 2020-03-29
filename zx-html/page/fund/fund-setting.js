@@ -172,10 +172,17 @@ function setButton(content, data) {
 				Style.color("edit-input", getColorType(), "#eee");
 				input.focus();
 				input.min = 0;
+				input.value = 0;
 				input.max = values[data.limit];
 				input.dataready = data;
 				title.innerHTML = data.title;
 				limit.innerHTML = "(范围：0-" + input.max + ")";
+
+				// var tran = Elem.get("fund-tran");
+				// var ref = tran.getAttribute("ref");
+				// var uid = Parse.getDate(null, "");
+				// console.log(uid);
+				// tran.action = ref.replace("#uid", uid).replace("#idx", data.idx);
 			}
 		}
 	}
@@ -234,7 +241,7 @@ function refresh() {
 	}
 	// values.R = Math.floor(values.Q / 100);
 	console.log(str);
-	input.value = 0;
+	// input.value = 0;
 	localData.save();
 	setOuterCenter();
 	setInner();

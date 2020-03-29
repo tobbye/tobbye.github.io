@@ -17,8 +17,8 @@ var config = {
 	name: 'inve',
 	laddCount: 25,
 	laddSrc: '../../picture/ladd/',
-	rightColor: '#0b0',
-	wrongColor: '#b00',
+	rightColor: 'green',
+	wrongColor: 'red',
 
 	btnName: ['next',  'doit', 'quit', 'redo', 'abon', 'open', 'more', 'close'],
 };
@@ -196,8 +196,8 @@ laddStr: '阶梯<br/><h3>#0阶</h3>',
 pieceStr: '剩余份数<br/><h3>#0份</h3>',
 priceStr: '单个金额<br/><h3>#0元</h3>',
 timesStr: '已传播<br/><h3>#0次</h3>',
-btnName: ['next', 'quit', 'redo', 'abon', 'open', 'more', 'close'],
-btnText: ['格杀勿论', '我佛慈悲', '翻天覆地', '慈悲为怀', '观世音菩萨保佑', '深藏功与名', '灵魂超度'],
+btnName: ['next', 'quit', 'redo', 'abon', 'open', 'close'],
+btnText: ['十步杀一人', '我佛慈悲', '天地大回旋', '慈悲为怀', '事了拂衣去', '深藏功与名'],
 lines: []}, 
 ]},
 
@@ -212,8 +212,8 @@ laddStr: '阶梯<br/><h3>#0阶</h3>',
 pieceStr: '剩余份数<br/><h3>#0份</h3>',
 priceStr: '单个金额<br/><h3>#0元</h3>',
 timesStr: '已传播<br/><h3>#0次</h3>',
-btnName: ['next', 'quit', 'redo', 'abon', 'open', 'more', 'close'],
-btnText: ['斩草除根', '我佛慈悲', '翻云覆雨', '慈悲为怀', '观世音菩萨保佑', '深藏功与名', '灵魂超度'],
+btnName: ['next', 'quit', 'redo', 'abon', 'open', 'close'],
+btnText: ['千里不留行', '我佛慈悲', '乾坤大挪移', '慈悲为怀', '事了拂衣去', '深藏功与名'],
 lines: []},
 ]}
 ];

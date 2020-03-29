@@ -112,7 +112,7 @@ function pushdata(json, sort, y) {
         sort[idx].list.lines.push(data);
     } else {
         var newlist = {
-            title:'',
+            title:list.title,
             vice: json.date,
             left: list.left,
             right:list.right,
