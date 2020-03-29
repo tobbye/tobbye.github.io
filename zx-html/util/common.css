@@ -46,7 +46,6 @@ form {
 	width: 100%;
 	overflow: auto;
 	padding-bottom: 10px;
-	transform: skew(0deg);
 }
 
 #outer-bot {
@@ -109,7 +108,7 @@ div, table [display="block"] {
 	flex: 10;
 	margin: 3px;
 	padding: 5px 15px;
-	font-size: 3em;
+	font-size: 3.6em;
 	background-color: #fff;
 }
 

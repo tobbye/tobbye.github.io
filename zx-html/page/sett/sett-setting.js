@@ -57,10 +57,13 @@ function setLine(content, data, x, y) {
 		btn.innerHTML = data.lines[z];
 		btn.y = y;
 		btn.z = z;
+		btn.data = data;
 		Elem.color(btn, "dodgerblue", "#fff");
 		btn.onclick = function() {
 			var btnText = this.innerHTML.toLowerCase();
-			Storage.set(data.key, btnText);
+    		var setting = Storage.get("setting") || new Object();
+			setting[this.data.key] = btnText;
+			Storage.set("setting", setting);
 			var nodes = this.parentNode.childNodes;
 			for (let idx in nodes) {
 				if (this.innerHTML == nodes[idx].innerHTML)  {

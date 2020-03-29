@@ -395,6 +395,7 @@ localData.init = function(state) {
     }
 
     if (state == "clear") {
+        Storage.clear();
         var dict = "HIJKLMNOPQRSTUV";
         for (let idx in dict)
             values[dict[idx]] = 0;
@@ -501,11 +502,12 @@ var getAgent = function() {
     var val = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
     config.isHide = false;
     config.isMobile = val;
-    config.colorType = Storage.get("colorType") || "black";
-    config.initType = Storage.get("initType") || "clear";
-    config.dataIdx = Storage.get("dataIdx") || "defalut";
-    config.isDevil = Storage.get("isDevil") == "devil";
-    config.isAlert = Storage.get("isAlert") == "alert";
+    var setting = Storage.get("setting") || new Object();
+    config.colorType = setting.colorType || "black";
+    config.initType = setting.initType || "clear";
+    config.dataIdx = setting.dataIdx || "defalut";
+    config.isDevil = setting.isDevil == "devil";
+    config.isAlert = setting.isAlert == "alert";
     config.outerOffset = 230;
     config.alertOffset = 716;
     console.log(config);

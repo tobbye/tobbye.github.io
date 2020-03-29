@@ -73,11 +73,14 @@ function setCell(flex, data, k, a, b) {
 	var cell = Elem.creat("div", flex, "cell", k);
 	var value = Math.floor(a + b* (Math.random() * 0.33 + 0.33) * data.seed * 5);
 	Elem.flex(cell, config[k].align, config[k].flex);
-	if (data[k]) 
-		cell.innerHTML = data[k].replace("年", "年<h3>");
-	else 
-		cell.innerHTML = "<h3>￥" + Parse.sub4Num(value);
-	data[k] = value;
+	if (data[k]) {
+		cell.innerHTML = data[k];
+	} else {
+		cell.innerHTML = "￥" + Parse.sub4Num(value);
+		data[k] = value;
+	}
+	if (cell.innerHTML.replace("年", "") != cell.innerHTML)
+		cell.innerHTML = "<h4>" + cell.innerHTML.replace("年", "年</h4>");
 	return cell;
 }
 
