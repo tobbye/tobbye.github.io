@@ -7,9 +7,9 @@ window.onload = function() {
 }
 
 var setDevil = function() {
-	if (config.isDevil) {
-		items = items_devil;
-		instance = instance_devil;
+	if (config.modeType = "ghost") {
+		items = items_ghost;
+		instance = instance_ghost;
 	}
 }
 
@@ -157,7 +157,7 @@ var instance = {
 };
 
 
-var items_devil = [
+var items_ghost = [
 { id: 0, title: '修炼', colorIdx: 1,
 list: [
 {title: '修炼中', vice: '请勿打扰！谢谢！', 
@@ -218,7 +218,7 @@ lines: []},
 ]}
 ];
 
-var instance_devil = {
+var instance_ghost = {
 	grab_str : `
 奴奵婒/姃姣嫌媾/娳娏嬆嫬婖,
 妁奻婐/姹姘嫄嫁/娒娚嬄嫽娹,

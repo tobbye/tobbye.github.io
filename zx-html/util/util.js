@@ -410,6 +410,7 @@ var contentText = function(a, b, c) {
 
 //显示内页
 var setInner = function(innerIdx) {
+    var page = Storage.get("json-page");
     var idx = innerIdx || config.innerIdx || 0;
     if (config.innerIdx == idx) {
         togContent();
@@ -434,10 +435,18 @@ var setInner = function(innerIdx) {
         }
     }
     Elem.color(document.body, getColorType(idx), "");
-    if (config.isAlert && innerIdx != null)
-        jsonToTable(items[idx]);
-    else
-        console.log(items[idx]);
+    if (config.debugType == "close") {
+        if (innerIdx != null) 
+            console.log(items[idx]);
+    } else
+    if (config.debugType == "alert") {
+        if (innerIdx != null) 
+            jsonToAlert(items[idx]);
+    } else 
+    if (config.debugType == "console") {
+        if (innerIdx != null) 
+            jsonToTable(items[idx]);
+    }
 }
 
 var getColorType = function(idx) {
@@ -504,11 +513,11 @@ var getAgent = function() {
     config.isHide = false;
     config.isMobile = val;
     var setting = Storage.get("setting") || new Object();
-    config.colorType = setting.colorType || "black";
-    config.initType = setting.initType || "clear";
     config.dataIdx = setting.dataIdx || "defalut";
-    config.isDevil = setting.isDevil == "devil";
-    config.isAlert = setting.isAlert == "alert";
+    config.initType = setting.initType || "clear";
+    config.modeType = setting.modeType || "normal";
+    config.colorType = setting.colorType || "black";
+    config.debugType = setting.debugType || "close";
     config.outerOffset = 230;
     config.alertOffset = 716;
     console.log(config);
@@ -593,11 +602,12 @@ var hideAlert = function(name) {
 }
 
 
+var jsonToAlert = function(data) {
+    alert(JSON.stringify(data));
+}
+
+
 var jsonToTable = function(data) {
-    if (config.isMobile) {
-        alert(JSON.stringify(data));
-        return;
-    }
     var page = '../#/#.html';
     Storage.set('json-page', page.replace(/#/g,config.name));
     Storage.set('json-data', JSON.stringify(data));

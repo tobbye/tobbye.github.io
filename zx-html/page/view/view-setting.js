@@ -1,6 +1,6 @@
 window.onload = function() {
 	var data = localStorage.getItem('json-data');
-	jsonToTable(data, 'json-data');
+	jsonToTable(data);
 	window.onresize();
 }
 
@@ -11,8 +11,14 @@ function back() {
 }
 
 window.onresize = function() {
-	var outer = Elem.get('outer');
-	outer.style.height = (window.innerHeight - 72) + 'px';
+    var outer = Elem.get('outer');
+    if (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent)) {
+        document.body.style.zoom =  2;
+        document.body.style.height = window.innerHeight * 0.5 + "px";
+        outer.style.height = (window.innerHeight * 0.5 - 72) + 'px';
+    } else {
+        outer.style.height = (window.innerHeight - 72) + 'px';
+    }
 }
 
 
@@ -27,6 +33,10 @@ function jsonToTable(data) {
 	var outer = Elem.get('outer');
 	var view = Elem.creat("table", outer, 'view');
 	view.innerHTML = str;
+}
+
+function setAgent() {
+
 }
 
 
