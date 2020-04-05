@@ -131,11 +131,11 @@ function setDetailAlert(elem) {
 			}
 		}
 	}
-
-	desc.innerHTML = "<h3>" + line.name + "的描述</h3>THE DESCRIBE OF " + line.name;
-	desc.innerHTML += "<br/>" + line.name + "的描述<br/>THE DESCRIBE OF " + line.name;
-	desc.innerHTML += "<br/>" + line.name + "的描述<br/>THE DESCRIBE OF " + line.name;
-
+	line.desc = "<h3>" + line.name + "的描述</h3>";
+	line.desc += "THE DESCRIBE OF " + line.name + "<br/>";
+	line.desc += "THE DESCRIBE OF " + line.name + "<br/>";
+	line.desc += "THE DESCRIBE OF " + line.name + "<br/>";
+	desc.innerHTML = line.desc;
 	
 	var button = Elem.get("detail-button");
 	button.innerHTML = "";

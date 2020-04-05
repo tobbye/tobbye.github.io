@@ -359,7 +359,8 @@ localData.save = function() {
 
 //初始化本地数据
 localData.init = function(state) {
-    var dataIdx = Storage.get("dataIdx") || "values";
+    var setting = Storage.get("setting");
+    var dataIdx = setting.dataIdx || "values";
     dataIdx = dataIdx.replace("default", "values");
 
     if (state == "set") {
@@ -378,6 +379,7 @@ localData.init = function(state) {
             console.log(values);
         } else {
             console.log(contentText("GET", dataIdx, "fail!!!"));
+            return "no data";
         }
         return values;
     }

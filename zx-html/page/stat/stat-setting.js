@@ -29,43 +29,37 @@ function setContent(inner, x) {
     for (let y in list) {
         var content = Elem.creat("div", inner, "content", x+y);
         var data = list[y];
-        if (data.title)
-            setTitle(content, data, x);
-        if (!data.lines)
-            setNotLine(content, x);
-        if (data.lines) {
-            setLine(content, data.lines, x, y);
-        }
+        setTitle(content, data, x);
+        setLine(content, data, x, y);
     }
 }
 
 
 function setTitle(content, data, x) {
-    //TITLE
-    var title = Elem.creat("div", content, "title");
-    title.innerHTML = data.title;
-    title.x = x;
-    //VICE
-    var vice = Elem.creat("div", content, "vice");
-    vice.innerHTML = data.vice;
-    vice.x = x;
+    if (data.title) {
+	    var title = Elem.creat("div", content, "title");
+	    title.innerHTML = data.title;
+    }
+    if (data.vice) {
+	    var vice = Elem.creat("div", content, "vice");
+	    vice.innerHTML = data.vice;
+	}
 }
 
 
-function setLine(content, lines, x, y) {
-
+function setLine(content, data, x, y) {
+	if (!data.lines) return;
 	var block = Elem.creat("div", content, "block", x);
-	for (let z in lines) {
-		var data = lines[z];
-		data.seed = items[x].seed;
-		// data.color = items[x].color;
+	for (let z in data.lines) {
+		var _data = data.lines[z];
+		_data.seed = items[x].seed;
 
 		//BLOCK
 		var flex = Elem.creat("div", block, "flex", z);
-		var date = setCell(flex, data, "date", 0, 0);
-		var inve = setCell(flex, data, "inve", 1e3, 1e4);
-		var grab = setCell(flex, data, "grab", 1e3, 1e4);
-		var gain = setCell(flex, data, "gain", 1e1, 1e2);
+		var date = setCell(flex, _data, "date", 0, 0);
+		var inve = setCell(flex, _data, "inve", 1e3, 1e4);
+		var grab = setCell(flex, _data, "grab", 1e3, 1e4);
+		var gain = setCell(flex, _data, "gain", 1e1, 1e2);
 	}
 }
 
@@ -85,9 +79,8 @@ function setCell(flex, data, k, a, b) {
 }
 
 
-function setButton(inner, x) {
 
-}
+
 
 
 

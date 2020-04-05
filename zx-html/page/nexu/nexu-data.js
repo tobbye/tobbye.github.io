@@ -41,7 +41,7 @@ lines: [
 
 {title: '关注', colorIdx: 2,
 list: [
-{title: '赞助商', vice: '强制关注的赞助商', btype: 'primary', buttonIdx: [0,1,3],
+{title: '赞助商', vice: '强制关注的赞助商', buttonIdx: [0,1,3],
 lines: [
 {uid: 's110004', name: '萌萌职业技术学院', ladd: 20, tag: ['挖掘机', '技术', '哪家强'], mark: ['技术培训', '技术学院']},
 {uid: 's110005', name: '萌萌部落格', ladd: 17, tag: ['孤独症患者', '抑郁症患者', '强迫症患者'], mark: ['二次元', '中二病']},
@@ -49,19 +49,16 @@ lines: [
 {uid: 's210001', name: '萌萌宠物店', ladd: 7, tag: ['宠物', '宠物店', '人狗情未了'], mark: ['宠物配种', '宠物医院']},
 ]},
 
-{title: '赞助商', vice:'我关注的赞助商', btype: 'primary', buttonIdx: [0,2,3],
+{title: '赞助商', vice:'我关注的赞助商', buttonIdx: [0,2,3],
 lines: [
 {uid: 's210002', name: '萌萌水果店', ladd: 9, tag: ['普陀区', '洛川路', '宜川路'], mark: ['种类丰富', '价格实惠']},
 {uid: 's210004', name: '萌萌家居(徐汇店)', ladd: 17, tag: ['徐汇区', '漕溪路', '126号'], mark: ['家居', '家具']},
 {uid: 's210004', name: '萌萌美容美发', ladd: 17, tag: ['理发', '美容', '美发'], mark: ['空标签', '空标签']},
 {uid: 's210009', name: '萌萌养生堂', ladd: 16, tag: ['针灸', '拔火罐', '刮痧'], mark: ['空标签', '空标签']},
 {uid: 's210009', name: '萌萌汽修', ladd: 16, tag: ['流动补胎', '保养', '洗车'], mark: ['金牌修理师', '金牌技师']},
-],
-buttons: [
-
 ]},
 
-{title: '淘金者', vice:'我关注的淘金者', btype: 'primary', buttonIdx: [0,2,3],
+{title: '淘金者', vice:'我关注的淘金者', buttonIdx: [0,2,3],
 lines: [
 {uid: 'd120001', name: '二狗子本人', ladd: 7, tag: ['你好', '我叫', '二狗子'], mark: ['ERGOUZI', '二狗家族']},
 {uid: 'd120005', name: '二狗子的老婆', ladd: 6, tag: ['年龄25', '体重150', '身高150'], mark: ['ERGOUZI', '二狗家族']},
@@ -76,7 +73,7 @@ lines: [
 
 {title: '粉丝', colorIdx: 3,
 list: [
-{title: '淘金者', vice:'关注我的淘金者', btype: 'default', buttonIdx: [0,1,3],
+{title: '淘金者', vice:'关注我的淘金者', buttonIdx: [0,1,3],
 lines: [
 {uid: 'd110001', name: '李刚猛', ladd: 18, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['身份标签1', '身份标签2']},
 {uid: 'd110002', name: '王坚强', ladd: 20, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['排名标签1', '排名标签2']},

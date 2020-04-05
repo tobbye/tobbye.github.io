@@ -166,7 +166,7 @@ function initTempLine(data, x, y) {
 			tag: unit.tag,
 			mark: unit.mark,
 			desc: unit.desc,
-			name: temps[z],
+			name: temps[z].replace("\n", ""),
 			group: data.group,
 		};
 
@@ -178,7 +178,10 @@ function initTempLine(data, x, y) {
 		var rand = Math.floor((Math.random()+40-z) * 2 * seed);
 		line.value = data.text + ": ￥" + Parse.sub4Num(rand);
 		line.ladd = Math.floor(Math.random() * 20) + 3;
-		//line.desc = line.name + "的描述";
+		line.desc = "<h3>" + line.name + "的描述</h3>";
+		line.desc += "THE DESCRIBE OF " + line.name + "<br/>";
+		line.desc += "THE DESCRIBE OF " + line.name + "<br/>";
+		line.desc += "THE DESCRIBE OF " + line.name + "<br/>";
 		lines.push(line);
 	}
 	return lines;
