@@ -3,7 +3,6 @@ window.onload = function() {
 	setConfig();
 	setElems();
 	setAgent();
-	setInner();
 }
 
 function setConfig() {

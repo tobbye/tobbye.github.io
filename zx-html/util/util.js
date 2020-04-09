@@ -110,9 +110,13 @@ Parse.mix = function(str) {
 }
 
 
-Parse.swape = function(str, a, b) {
-    return str.replace(a, "#00").replace(b, a).replace("#00", b);
-}
+Parse.reverse = function(arr){
+       var newArr = [];
+       for(var i=arr.length-1;i>=0;i--){
+           newArr[newArr.length] = arr[i];
+       }
+       return newArr;
+   }
 
 
 Parse.getStamp = function(stamp) {
@@ -180,7 +184,7 @@ Elem.creat = function(type, parent, className, id) {
 		parent.appendChild(elem);
 	if (className)
 		elem.className = className;
-	if (id)
+	if (id != null)
 		elem.id = className + "_" + id;
 	return elem;
 }
@@ -414,26 +418,26 @@ var contentText = function(a, b, c) {
 var setInner = function(innerIdx) {
     var page = Storage.get("json-page");
     var idx = innerIdx || config.innerIdx || 0;
-    if (config.innerIdx == idx) {
-        togContent();
-    } else {
-        config.innerIdx = idx;
-        config.isHide = 1;
-        togContent(1);
-    }
+    // if (config.innerIdx == idx) {
+    //     togContent();
+    // } else {
+    //     config.innerIdx = idx;
+    //     config.isHide = 1;
+    //     togContent(1);
+    // }
     var outerTop = Elem.get("outer-top").children;
     var outerCenter = Elem.get("outer-center").children;
     for (var i = 0; i < outerTop.length; i++) {
         var childTop = outerTop[i];
-        var childCenter = outerCenter[i];
+        // var childCenter = outerCenter[i];
         if (childTop.className != "button-top")
             break;
         if (i == idx) {
             Elem.togType(childTop, "live");
-            Elem.display(childCenter, "block");
+            // Elem.display(childCenter, "block");
         } else {
             Elem.togType(childTop, "dead");
-            Elem.display(childCenter, "none");
+            // Elem.display(childCenter, "none");
         }
     }
     Elem.color(document.body, getColorType(idx), "");
@@ -452,7 +456,7 @@ var setInner = function(innerIdx) {
 }
 
 var getColorType = function(idx) {
-    var innerIdx = idx || config.innerIdx;
+    var innerIdx = idx || config.innerIdx || 0;
     var colorIdx = items[innerIdx].colorIdx;
     var color = colors[colorIdx];
     var type = config.colorType;
@@ -460,7 +464,7 @@ var getColorType = function(idx) {
 }
 
 var getColorLight = function(idx) {
-    var innerIdx = idx || config.innerIdx;
+    var innerIdx = idx || config.innerIdx || 0;
     var colorIdx = items[innerIdx].colorIdx;
     var color = colors[colorIdx];
     var type = config.colorType;
@@ -530,7 +534,6 @@ var getAgent = function() {
 //设置浏览器
 var setAgent = function() {
     setEvent();
-    togContent();
 }
 
 var setFullScreen = function() {

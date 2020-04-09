@@ -1,12 +1,13 @@
 
 body {
-	/*font-family: Arial, Segoe UI, Helvetica,sans-serif;*/
+	font-family: sans-serif, Arial, Segoe UI, Helvetica;
 	margin: 0px;
 	padding: 0px;
 	font-size: 12px;
 	font-weight: bold;
 	text-align: center;
-	background-image: linear-gradient(#eee,#ddd);
+	background-color: #eee;
+	/*background-image: linear-gradient(#eee,#ddd);*/
 }
 
 a {

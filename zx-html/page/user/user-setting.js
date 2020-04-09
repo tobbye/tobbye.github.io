@@ -12,17 +12,18 @@ function setOuterTop() {
 		btn.innerHTML = items[x].title;
 		btn.idx = x;
 		btn.onclick = function() {
-			setInner(this.idx);
+			setOuterCenter(this.idx);
 		}
 	}
 }
 
-function setOuterCenter() {
-	var outerCenter = Elem.get("outer-center");
-	for (let x in items) {
-		var inner = Elem.creat("div", outerCenter, "inner", x);
-		setContent(inner, x);
-	}
+function setOuterCenter(x) {
+    x = x || 0;
+    var outerCenter = Elem.get("outer-center");
+    outerCenter.innerHTML = "";
+    var inner = Elem.creat("div", outerCenter, "inner", x);
+    setInner(x);
+    setContent(inner, x);
 }
 
 function setContent(inner, x) {

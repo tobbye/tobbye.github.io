@@ -2,7 +2,6 @@ window.onload = function() {
 	getAgent();
 	setElems();
 	setAgent();
-	setInner();
 }
 
 var config = {

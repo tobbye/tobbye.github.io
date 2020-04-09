@@ -3,7 +3,6 @@ window.onload = function() {
     getjson();
 	setElems();
 	setAgent();
-    setInner();
 }
 
 var config = {
