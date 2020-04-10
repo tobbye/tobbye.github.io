@@ -1,5 +1,7 @@
 window.onload = function() {
+	getAgent();
 	setElems();
+	setAgent();
 }
 
 

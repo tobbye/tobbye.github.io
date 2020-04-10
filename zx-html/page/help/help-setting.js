@@ -1,9 +1,6 @@
 function setElems() {
-	getAgent();
 	setOuterTop();
-	setOuterCenter();
-	setAgent();
-	setInner();
+	setOuterCenter(0);
 }
 
 
@@ -29,12 +26,12 @@ function getRoll(all, roll) {
     }
 }
 
-function setOuterCenter() {
-	var outerCenter = Elem.get('outer-center');
-	for (let x in items) {
-		var inner = Elem.creat('div', outerCenter, 'inner', x);
-		setContent(inner, x);
-	}
+function setOuterCenter(x) {
+    var outerCenter = Elem.get("outer-center");
+    outerCenter.innerHTML = "";
+    var inner = Elem.creat("div", outerCenter, "inner", x);
+    setInner(x);
+    setContent(inner, x);
 }
 
 function setContent(inner, x) {

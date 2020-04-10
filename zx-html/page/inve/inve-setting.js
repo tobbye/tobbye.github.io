@@ -1,7 +1,7 @@
 
 function setElems() {
     setOuterTop();
-    setOuterCenter();
+    setOuterCenter(0);
     setAlert();
 }
 
@@ -19,7 +19,6 @@ function setOuterTop() {
 }
 
 function setOuterCenter(x) {
-    x = x || 0;
     var outerCenter = Elem.get("outer-center");
     outerCenter.innerHTML = "";
     var inner = Elem.creat("div", outerCenter, "inner", x);
@@ -34,9 +33,6 @@ function setContent(inner, x) {
         var data = list[y];
         setTitle(content, data);
         setNotLine(content, data);
-        console.log(data.isGrab)
-        if (data.isGrab == 2)
-            creatDepotBody(content);
         if (data.isGrab == 0)
             creatInveBody(content, data, x);
         if (data.isGrab == 1)
@@ -64,84 +60,6 @@ function setNotLine(content, data) {
     block.innerHTML = "此处为空";
     Elem.color(block, "#888", "white");
 }
-
-
-
-function creatDepotBody(content) {
-    var num = 25*25*25*25*20;
-    var idx = getDepotIdx(num, []);
-    idx = Parse.reverse(idx);
-    config.depotIdx = idx;
-    console.log(idx);
-    var flex = Elem.creat("div", content, "flex");
-    var table = Elem.creat("table", content, "table");
-    var button = Elem.creat("div", content, "user-tag");
-    for (var i=0; i<idx.length; i++) {
-        var tag = Elem.creat("div", flex, "user-tag", i);
-        tag.i = i;
-        tag.onclick = function() {
-            setDepotTag(this, table);
-        }
-        setDepotTag(tag, table);
-    }
-}
-
-function setDepotTag(tag, table) {
-    table.innerHTML = "";
-    var idx = config.depotIdx[tag.i];
-    for (var x=0;x<idx[0];x++) {
-        var tr = Elem.creat("tr", table, "row-depot");
-        for (var y=0;y<idx[1];y++) {
-            var td = Elem.creat("td", tr, "col-depot");
-            td.depotText = config.lvlDict[tag.i] + config.rowDict[x] + config.colDict[y];
-            td.innerHTML = "<h3>" + config.lvlDict[tag.i] + "</h3>"
-            td.innerHTML += "<h2>" + config.rowDict[x] + config.colDict[y] + "</h2>";
-            td.innerHTML += "90%";
-            td.tag = tag;
-            td.onclick = function() {
-                setDepotClick(this);
-            }
-            if (x == idx[0]-1 && y == idx[1]-1)
-                setDepotClick(td);
-        }
-    }
-}
-
-function setDepotClick(td) {
-    td.tag.innerHTML = td.innerHTML;
-    config.depotArr[td.tag.i] = td.depotText;
-    var oldTd = config.depotTd;
-    if (oldTd) Elem.color(oldTd, getColorType(), "white");
-    Elem.color(td, "white", getColorType());
-    config.depotTd = td;
-    var button = td.tag.parentNode.parentNode.lastChild;
-    button.innerHTML = config.depotArr.join("-");
-    console.log(button.innerHTML);
-}
-
-
-function getDepotIdx(num, idx) {
-    if (num <= 0)
-        return [1, 5];
-
-    if (num <= 25) {
-        num = Math.floor((num-1)/5) + 1;
-        idx.push([num, 5]);
-        return idx;
-    }
-
-    if (num > 25) {
-        idx.push([5, 5]);
-        num = Math.floor((num-1)/25) + 1;
-        return getDepotIdx(num, idx);
-    }
-}
-
-
-
-
-
-
 
 
 function initTempLine(data) {

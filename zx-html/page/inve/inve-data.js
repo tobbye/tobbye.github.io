@@ -14,16 +14,10 @@ var setDevil = function() {
 
 var config = {
 	name: 'inve',
-	depotArr: [],
-	depotIdx: [],
-	depotNum: 8888,
 	laddCount: 25,
 	laddSrc: '../../picture/ladd/',
 	rightColor: 'green',
 	wrongColor: 'red',
-	lvlDict: "金木水火土",
-	rowDict: "ABCDEFGHI",
-	colDict: "123456789",
 	btnName: ['next',  'doit', 'quit', 'redo', 'abon', 'open', 'more', 'close'],
 };
 
@@ -31,7 +25,7 @@ var items = [
 { id: 0, title: '投入', colorIdx: 1,
 list: [
 {title: '我的投入', vice: '投入的资金可被淘金者抢夺', 
-dot: 1, isGrab: 2, group: '淘金者',
+dot: 1, isGrab: 1, group: '淘金者',
 puzzleText: "发现一个红包", cellText: "口令", cellTips:"输入正确口令打开红包",
 inverStr: "投入者：", flexStr: "#0的投入",
 laddStr: "阶梯<br/><h3>#0阶</h3>",
@@ -165,7 +159,7 @@ var items_ghost = [
 { id: 0, title: '修炼', colorIdx: 1,
 list: [
 {title: '修炼中', vice: '请勿打扰！谢谢！', 
-dot: 1, isGrab: 2, group: '凡人',
+dot: 1, isGrab: 1, group: '凡人',
 inverStr: '修炼者: ', flexStr: '#0正在修炼',
 laddStr: '阶梯<br/><h3>#0阶</h3>',
 pieceStr: '剩余份数<br/><h3>#0份</h3>',

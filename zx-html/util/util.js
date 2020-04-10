@@ -4,7 +4,7 @@ var elems = [{},{},{},{},{},{},{},{},{}];
 var values = {};
 var colors = [
     {normal:"#eee", dark:"#eee", light:"#eee", bright:"#eee", black:"#333", standard:"white"},
-    {normal:"#C48", dark:"#957", light:"#eac", bright:"#e28", black:"#333", standard:"red"},
+    {normal:"#c48", dark:"#957", light:"#eac", bright:"#e28", black:"#333", standard:"red"},
     {normal:"#c84", dark:"#975", light:"#eca", bright:"#e82", black:"#333", standard:"orange"},
     {normal:"#48c", dark:"#579", light:"#ace", bright:"#28e", black:"#333", standard:"blue"},
     {normal:"#84c", dark:"#759", light:"#cae", bright:"#82e", black:"#333", standard:"purple"},

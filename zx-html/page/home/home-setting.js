@@ -1,9 +1,6 @@
 function setElems() {
-	getAgent();
 	setOuterTop();
-	// setOuterCenter();
-	setAgent();
-	setInner();
+	setOuterCenter(0);
 }
 
 
@@ -11,66 +8,115 @@ function setOuterTop() {
 
 }
 
-function setOuterCenter() {
 
-	var map = new AMap.Map('container', {
-    	// mapsStyle: 'ba2e46da44e5a75289d3d41d895fd45e',
-    	mapsStyle: 'amap://styles/whitesmoke',
-        resizeEnable: true, //是否监控地图容器尺寸变化
-        zoom:15, //初始化地图层级
-        center: [116.397428, 39.90923] //初始化地图中心点
-    });
+function setOuterCenter(x) {
+    var outerCenter = Elem.get("outer-center");
+    outerCenter.innerHTML = "";
+    var inner = Elem.creat("div", outerCenter, "inner", x);
+    setInner(x);
+    setContent(inner, x);
+}
 
-	AMap.plugin('AMap.Geolocation', function() {
-		var geolocation = new AMap.Geolocation({
-	    // 是否使用高精度定位，默认：true
-	    enableHighAccuracy: true,
-	    // 设置定位超时时间，默认：无穷大
-	    timeout: 10000,
-	    // 定位按钮的停靠位置的偏移量，默认：Pixel(10, 20)
-	    buttonOffset: new AMap.Pixel(10, 20),
-	    //  定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
-	    zoomToAccuracy: true,     
-	    //  定位按钮的排放位置,  RB表示右下
-	    buttonPosition: 'RB'
-		});
+function setContent(inner, x) {
+	var list = items[x].list;
+    for (let y in list) {
+        var content = Elem.creat("div", inner, "content", y);
+        var data = list[y];
+        setTitle(content, data);
+		if (data.isDepot)
+			creatDepotBody(content);
+    }
+}
 
-		geolocation.getCurrentPosition()
-		AMap.event.addListener(geolocation, 'complete', onComplete);
-		AMap.event.addListener(geolocation, 'error', onError);
+function setTitle(content, data) {
+	if (data.title) {
+		var title = Elem.creat("div", content, "title");
+		title.innerHTML = data.title;
+	}
+	if (data.vice) {
+		var vice = Elem.creat("div", content, "vice");
+		vice.innerHTML = data.vice;
+	}
+}
 
-		function onComplete (data) {
-    		// data是具体的定位信息
-		}
+function creatDepotBody(content, data) {
+    var num = 25*25*25*25*25;
+    var idx = getDepotIdx(num, []);
+    config.depotIdx = Parse.reverse(idx);
+    config.depotCur = Parse.reverse(idx);
+    idx = Parse.reverse(idx);
+    console.log(idx);
+    var flex = Elem.creat("div", content, "flex");
+    var table = Elem.creat("table", content, "table");
+    var button = Elem.creat("div", content, "button-depot");
+    Elem.togType(button, "permit");
+    for (var i=0; i<idx.length; i++) {
+        var tag = Elem.creat("div", flex, "button-depot", i);
+        tag.i = i;
+        tag.onclick = function() {
+            setDepotTag(this, table);
+        }
+        setDepotTag(tag, table);
+    }
+}
 
-		function onError (data) {
-		    // 定位出错
-		}
-	});
+function setDepotTag(tag, table) {
+    table.innerHTML = "";
+    var idx = config.depotIdx[tag.i];
+    var cur = config.depotCur[tag.i];
+    var per = config.depotPer[tag.i];
+    var row = [];
+    for (var x=0;x<idx[0];x++) {
+    	var col = [];
+        var tr = Elem.creat("tr", table, "row-depot");
+        for (var y=0;y<idx[1];y++) {
+            var td = Elem.creat("td", tr, "col-depot");
+            var rnd = Math.random() < 0.9 ? 0:Math.random()*100;
+            col[y] = rnd == 0 ? "-" : rnd.toFixed(0) + "%";
+            td.depotText = config.lvlDict[tag.i] + config.rowDict[x] + config.colDict[y];
+            td.innerHTML = "<h3>" + config.lvlDict[tag.i] + "</h3>"
+            td.innerHTML += "<h2>" + config.rowDict[x] + config.colDict[y] + "</h2>";
+            td.innerHTML += per ? per[x][y] : col[y];
+            td.cur = [x+1, y+1];
+            td.tag = tag;
+            td.onclick = function() {
+                setDepotClick(this);
+            }
+            if (x == cur[0]-1 && y == cur[1]-1)
+                setDepotClick(td);
+        }
+        row[x] = col;
+    }
+    config.depotPer[tag.i] = per || row;
+}
 
-	AMap.plugin(['AMap.Autocomplete','AMap.PlaceSearch'],function(){
-		var autoOptions = {
-			city: "北京",
-			input: "input"
-		}
-		var autocomplete= new AMap.Autocomplete(autoOptions)
+function setDepotClick(td) {
+    td.tag.innerHTML = td.innerHTML;
+    config.depotCur[td.tag.i] = td.cur;
+    config.depotArr[td.tag.i] = td.depotText;
+    var oldTd = config.depotTd;
+    if (oldTd) Elem.color(oldTd, getColorType(), "white");
+    Elem.color(td, "white", getColorType());
+    config.depotTd = td;
+    var button = td.tag.parentNode.parentNode.lastChild;
+    button.innerHTML = "<h3>" + config.depotArr.join("-") + "</h3>";
+    console.log(button.innerHTML);
+}
 
-		var placeSearch = new AMap.PlaceSearch({
-			city:'北京',
-			map:map
-		})
-		AMap.event.addListener(autocomplete, 'select', function(e){
-			placeSearch.search(e.poi.name)
-		})
-	});
 
-	var markerList = [
-		new AMap.Marker({position: [116.39742, 39.9192],  title: '北京' }),
-		new AMap.Marker({position: [116.39702, 39.9792],  title: '北京' }),
-		new AMap.Marker({position: [116.39542, 39.9592],  title: '北京' }),
-		new AMap.Marker({position: [116.39242, 39.9392],  title: '北京' }),
-		new AMap.Marker({position: [116.39042, 39.9292],  title: '北京' }),
-	];
-	for (let x in markerList)
-		map.add(markerList[x]);
+function getDepotIdx(num, idx) {
+    if (num <= 0)
+        return [1, 5];
+
+    if (num <= 25) {
+        num = Math.floor((num-1)/5) + 1;
+        idx.push([num, 5]);
+        return idx;
+    }
+
+    if (num > 25) {
+        idx.push([5, 5]);
+        num = Math.floor((num-1)/25) + 1;
+        return getDepotIdx(num, idx);
+    }
 }

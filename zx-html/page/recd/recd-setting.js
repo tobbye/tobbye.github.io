@@ -1,6 +1,6 @@
 function setElems() {
     setOuterTop();
-    setOuterCenter();
+    setOuterCenter(0);
 }
 
 
@@ -17,7 +17,6 @@ function setOuterTop() {
 }
 
 function setOuterCenter(x) {
-    x = x || 0;
     var outerCenter = Elem.get("outer-center");
     outerCenter.innerHTML = "";
     var inner = Elem.creat("div", outerCenter, "inner", x);
