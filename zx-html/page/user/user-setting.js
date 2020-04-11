@@ -1,6 +1,6 @@
 function setElems() {
 	setOuterTop();
-	setOuterCenter(0);
+	setOuterCenter();
 	setAlert();
 }
 
@@ -21,8 +21,8 @@ function setOuterCenter(x) {
     var outerCenter = Elem.get("outer-center");
     outerCenter.innerHTML = "";
     var inner = Elem.creat("div", outerCenter, "inner", x);
+    setContent(inner, x || 0);
     setInner(x);
-    setContent(inner, x);
 }
 
 function setContent(inner, x) {
@@ -62,7 +62,7 @@ function setTitle(content, data, x) {
 
 function setDetail(content, data) {
 	var block = Elem.creat("div", content, "block");
-	var head = Elem.creat("img", block, "head");
+	var head = Elem.creat("div", block, "head");
 	var name = Elem.creat("div", block, "name");
 	var uid = Elem.creat("div", block, "uid");
 	var area = Elem.creat("span", block, "area");
@@ -73,6 +73,7 @@ function setDetail(content, data) {
 	var cls = Elem.creat("span", block, "cls");
 
 	block.id = "bg";
+	head.innerHTML = "zhongxin";
 	name.innerHTML = data.name;
 	uid.innerHTML = "ID: " + data.uid;
 	area.innerHTML = data.area + " | ";

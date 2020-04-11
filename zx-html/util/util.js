@@ -418,18 +418,11 @@ var contentText = function(a, b, c) {
 var setInner = function(innerIdx) {
     var page = Storage.get("json-page");
     var idx = innerIdx || config.innerIdx || 0;
-    // if (config.innerIdx == idx) {
-    //     togContent();
-    // } else {
-    //     config.innerIdx = idx;
-    //     config.isHide = 1;
-    //     togContent(1);
-    // }
     var outerTop = Elem.get("outer-top").children;
     var outerCenter = Elem.get("outer-center").children;
     for (var i = 0; i < outerTop.length; i++) {
         var childTop = outerTop[i];
-        // var childCenter = outerCenter[i];
+        var childCenter = outerCenter[i];
         if (childTop.className != "button-top")
             break;
         if (i == idx) {
@@ -453,6 +446,7 @@ var setInner = function(innerIdx) {
         if (innerIdx != null) 
             jsonToTable(items[idx]);
     }
+    config.innerIdx = idx;
 }
 
 var getColorType = function(idx) {
@@ -516,7 +510,6 @@ var resize = function() {
 var getAgent = function() {
     // addScript();
     var val = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
-    config.isHide = false;
     config.isMobile = val;
     var setting = Storage.get("setting") || new Object();
     config.dataIdx = setting.dataIdx || "defalut";
@@ -546,42 +539,16 @@ var setFullScreen = function() {
     }
 }
 
-var togContent = function(tog) {
-    var content = Elem.getClass('content');
-    for (let idx in content) {
-        var elem = content[idx];
-        var hide;
-        if (!elem.children) 
-            continue;
-        if (elem.children.length < 3)  
-            continue;
-        var title = elem.children[0];
-        if (title.className != 'title')  
-            continue;
-        var block = elem.children[2];
-        if (block.className != 'block')  
-            continue;
-        if (elem.children.length == 4)  
-            hide = elem.children[3];
-        if (elem.children.length == 3) {
-            hide = Elem.creat('div', elem, 'hide');
-            hide.innerHTML = "内容已隐藏，点击展开...";
-            hide.onclick = function() {
-                Elem.display(this, "none");
-                Elem.display(this.previousSibling, "block");
-            }
-        } 
 
-        if (config.isHide || tog) {
-            Elem.display(hide, "none");
-            Elem.display(block, "block");
-        } else {
-            Elem.display(hide, "block");
-            Elem.display(block, "none");
-        }
-    }
-    config.isHide = !config.isHide;
+
+var setNotLine = function(content, data) {
+    if (data.lines) 
+        return;
+    var block = Elem.creat("div", content, "block");
+    var hide = Elem.creat("div", block, "hide");
+    hide.innerHTML = "此处为空";
 }
+
 
 
 //显示弹窗
@@ -613,6 +580,7 @@ var jsonToAlert = function(data) {
 
 
 var jsonToTable = function(data) {
+    if (config.name == "home") return;
     var page = '../#/#.html';
     Storage.set('json-page', page.replace(/#/g,config.name));
     Storage.set('json-data', JSON.stringify(data));

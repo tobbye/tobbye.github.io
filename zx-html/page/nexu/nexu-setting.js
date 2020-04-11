@@ -1,6 +1,6 @@
 function setElems() {
 	setOuterTop();
-	setOuterCenter(0);
+	setOuterCenter();
 	setAlert();
 }
 
@@ -21,8 +21,8 @@ function setOuterCenter(x) {
     var outerCenter = Elem.get("outer-center");
     outerCenter.innerHTML = "";
     var inner = Elem.creat("div", outerCenter, "inner", x);
+    setContent(inner, x || 0);
     setInner(x);
-    setContent(inner, x);
 }
 
 
@@ -46,16 +46,6 @@ function setTitle(content, data) {
 		var vice = Elem.creat("div", content, "vice");
 		vice.innerHTML = data.vice;
 	}
-}
-
-
-function setNotLine(content, data) {
-	if (data.lines) 
-		return;
-    var block = Elem.creat("div", content, "block");
-    block.style.fontSize = "5em";
-    block.style.padding = "4em";
-    block.innerHTML = "此处为空";
 }
 
 

@@ -1,6 +1,6 @@
 function setElems() {
 	setOuterTop();
-	setOuterCenter(0);
+	setOuterCenter();
 }
 
 
@@ -20,8 +20,8 @@ function setOuterCenter(x) {
     var outerCenter = Elem.get("outer-center");
     outerCenter.innerHTML = "";
     var inner = Elem.creat("div", outerCenter, "inner", x);
+    setContent(inner, x || 0);
     setInner(x);
-    setContent(inner, x);
 }
 
 function setContent(inner, x) {
@@ -56,23 +56,19 @@ function setLine(content, data, x, y) {
 
 		//BLOCK
 		var flex = Elem.creat("div", block, "flex", z);
-		var date = setCell(flex, _data, "date", 0, 0);
-		var inve = setCell(flex, _data, "inve", 1e3, 1e4);
-		var grab = setCell(flex, _data, "grab", 1e3, 1e4);
-		var gain = setCell(flex, _data, "gain", 1e1, 1e2);
+		var date = setCell(flex, _data, "date", z, 0, 0);
+		var inve = setCell(flex, _data, "inve", z, 1e3, 1e4);
+		var grab = setCell(flex, _data, "grab", z, 1e3, 1e4);
+		var gain = setCell(flex, _data, "gain", z, 1e1, 1e2);
 	}
 }
 
-function setCell(flex, data, k, a, b) {
+function setCell(flex, data, k, z, a, b) {
 	var cell = Elem.creat("div", flex, "cell", k);
 	var value = Math.floor(a + b* (Math.random() * 0.33 + 0.33) * data.seed * 5);
 	Elem.flex(cell, config[k].align, config[k].flex);
-	if (data[k]) {
-		cell.innerHTML = data[k];
-	} else {
-		cell.innerHTML = "￥" + Parse.sub4Num(value);
-		data[k] = value;
-	}
+	data[k] = data[k] || "￥" + Parse.sub4Num(value);
+	cell.innerHTML = data[k];
 	if (cell.innerHTML.replace("年", "") != cell.innerHTML)
 		cell.innerHTML = "<h4>" + cell.innerHTML.replace("年", "年</h4>");
 	return cell;

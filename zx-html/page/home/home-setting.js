@@ -1,6 +1,6 @@
 function setElems() {
 	setOuterTop();
-	setOuterCenter(0);
+	setOuterCenter();
 }
 
 
@@ -13,8 +13,8 @@ function setOuterCenter(x) {
     var outerCenter = Elem.get("outer-center");
     outerCenter.innerHTML = "";
     var inner = Elem.creat("div", outerCenter, "inner", x);
+    setContent(inner, x || 0);
     setInner(x);
-    setContent(inner, x);
 }
 
 function setContent(inner, x) {
@@ -40,7 +40,7 @@ function setTitle(content, data) {
 }
 
 function creatDepotBody(content, data) {
-    var num = 25*25*25*25*25;
+    var num = Math.pow(25,5);
     var idx = getDepotIdx(num, []);
     config.depotIdx = Parse.reverse(idx);
     config.depotCur = Parse.reverse(idx);
@@ -73,9 +73,12 @@ function setDepotTag(tag, table) {
             var td = Elem.creat("td", tr, "col-depot");
             var rnd = Math.random() < 0.9 ? 0:Math.random()*100;
             col[y] = rnd == 0 ? "-" : rnd.toFixed(0) + "%";
-            td.depotText = config.lvlDict[tag.i] + config.rowDict[x] + config.colDict[y];
+            var num = config.depotLen[0]*x + y + 1;
+            var text = num < 10 ? "0" + num : num; 
+            // var text = config.depot[x] + config.colDict[y];
+            td.depotText = config.lvlDict[tag.i] + text;
             td.innerHTML = "<h3>" + config.lvlDict[tag.i] + "</h3>"
-            td.innerHTML += "<h2>" + config.rowDict[x] + config.colDict[y] + "</h2>";
+            td.innerHTML += "<h2>" + text + "</h2>";
             td.innerHTML += per ? per[x][y] : col[y];
             td.cur = [x+1, y+1];
             td.tag = tag;
@@ -99,24 +102,26 @@ function setDepotClick(td) {
     Elem.color(td, "white", getColorType());
     config.depotTd = td;
     var button = td.tag.parentNode.parentNode.lastChild;
-    button.innerHTML = "<h3>" + config.depotArr.join("-") + "</h3>";
+    button.innerHTML = "<h2>DISCOVER</h2>";
     console.log(button.innerHTML);
 }
 
 
 function getDepotIdx(num, idx) {
+	var row = config.depotLen[0];
+	var col = config.depotLen[1];
     if (num <= 0)
-        return [1, 5];
+        return [1, col];
 
-    if (num <= 25) {
-        num = Math.floor((num-1)/5) + 1;
-        idx.push([num, 5]);
+    if (num <= row * col) {
+        num = Math.floor((num-1)/col) + 1;
+        idx.push([num, col]);
         return idx;
     }
 
-    if (num > 25) {
-        idx.push([5, 5]);
-        num = Math.floor((num-1)/25) + 1;
+    if (num > row * col) {
+        idx.push([row, col]);
+        num = Math.floor((num-1)/row/col) + 1;
         return getDepotIdx(num, idx);
     }
 }

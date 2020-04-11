@@ -6,7 +6,7 @@ window.onload = function() {
 }
 
 var setDevil = function() {
-	if (config.modeType = "ghost") {
+	if (config.modeType == "ghost") {
 		items = items_ghost;
 		instance = instance_ghost;
 	}

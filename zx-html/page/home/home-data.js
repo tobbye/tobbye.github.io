@@ -12,6 +12,7 @@ var config = {
 	depotIdx: [],
 	depotPer: [],
 	depotNum: 8888,
+	depotLen: [5,5],
 	lvlDict: "金木水火土",
 	rowDict: "ABCDEFGHI",
 	colDict: "123456789",
@@ -21,6 +22,6 @@ var config = {
 var items = [
 {title:"主页", colorIdx: 1,
 list: [
-{title:"藏宝图", vice:"你能否发现其中的奥妙呢？", isDepot:1}
+{title:"藏宝图", vice:"无数人前往探索，却无所获", isDepot:1}
 ]},
 ];
