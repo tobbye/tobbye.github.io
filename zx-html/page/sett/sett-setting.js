@@ -1,6 +1,7 @@
 function setElems() {
 	setOuterTop();
 	setOuterCenter();
+	setInner();
 }
 
 
@@ -8,12 +9,12 @@ function setOuterTop() {
 	
 }
 
-function setOuterCenter(x) {
+function setOuterCenter() {
     var outerCenter = Elem.get("outer-center");
-    outerCenter.innerHTML = "";
-    var inner = Elem.creat("div", outerCenter, "inner", x);
-    setContent(inner, x || 0);
-    setInner(x);
+    for (let x in items) {
+    	var inner = Elem.creat("div", outerCenter, "inner", x);
+    	setContent(inner, x);
+    }
 }
 
 function setContent(inner, x) {
@@ -84,16 +85,18 @@ function setLine(content, data, x, y) {
 }
 
 function setStyle(content, lines, x, y) {
-	var line;
+	var table = Elem.creat("table", content, "table");
+	table.style.color = "white";
+	var tr;
 	for (let x in colors) {
 		for (let z in lines) {
 			if (x == 0) continue;
 			if (z == 0)
-				line = Elem.creat("div", content, "flex");
-			var cell = Elem.creat("div", line, "cell");
+				tr = Elem.creat("tr", table, "row", x);
+			var td = Elem.creat("td", tr, "col");
 			var key = lines[z].toLowerCase();
-			cell.innerHTML = colors[x][key];
-			Elem.color(cell, "white", cell.innerHTML);
+			td.innerHTML = colors[x][key];
+			Elem.color(td, "", td.innerHTML);
 		}
 	}
 }

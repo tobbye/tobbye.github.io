@@ -1,6 +1,7 @@
 function setElems() {
     setOuterTop();
     setOuterCenter();
+    setInner();
 }
 
 
@@ -11,23 +12,23 @@ function setOuterTop() {
         btn.innerHTML = items[x].title;
         btn.idx = x;
         btn.onclick = function() {
-            setOuterCenter(this.idx);
+            setInner(this.idx);
         }
     }
 }
 
-function setOuterCenter(x) {
+function setOuterCenter() {
     var outerCenter = Elem.get("outer-center");
-    outerCenter.innerHTML = "";
-    var inner = Elem.creat("div", outerCenter, "inner", x);
-    setContent(inner, x || 0);
-    setInner(x);
+    for (let x in items) {
+        var inner = Elem.creat("div", outerCenter, "inner", x);
+        setContent(inner, x);
+    }
 }
 
 function setContent(inner, x) {
     var list = items[x].list;
     for (let y in list) {
-        var content = Elem.creat("div", inner, "content", x+y);
+        var content = Elem.creat("div", inner, "content", y);
         var data = list[y];
         setTitle(content, data, x);
         setLine(content, data.lines, x, y);
@@ -61,10 +62,10 @@ function setLine(content, lines, x, y) {
         data.color = items[x].color;
 
         //BLOCK
-        var flex = Elem.creat("tr", block, "flex", z);	
-        var left = Elem.creat("td", flex, "left");
-        var stamp = Elem.creat("td", flex, "stamp");
-        var right = Elem.creat("td", flex, "right");
+        var flex = Elem.creat("tr", block, "row", z);	
+        var left = Elem.creat("td", flex, "col", 0);
+        var stamp = Elem.creat("td", flex, "col", 1);
+        var right = Elem.creat("td", flex, "col", 2);
 
         if (z == 0) {
             left.innerHTML = data.left;

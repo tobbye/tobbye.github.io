@@ -33,6 +33,21 @@ h4 {
     font-size: 0.8em;
 }
 
+
+table {
+	width: 100%;
+	margin: 10px 0px;
+	font-size: 1em;
+}
+
+td {
+	flex: 10;
+	margin: 2px;
+	padding: 10px 10px;
+	font-size: 3.5em;
+	background-color: #fff;	
+}
+
 input {
 	font-weight: bold;	
 }
@@ -63,6 +78,7 @@ form {
 }
 
 
+.row,
 .flex {
 	display: flex;
 }
@@ -91,16 +107,6 @@ form {
 	font-size: 4em;
 	background-color: #fff;
 }
-
-.cell {
-	flex: 10;
-	margin: 3px;
-	padding: 5px 15px;
-	font-size: 3.5em;
-	background-color: #fff;
-}
-
-
 
 .button, 
 .button-min,
@@ -131,12 +137,20 @@ form {
 
 
 	
-[btype=danger] {background-color: red;}
+/*[btype=danger] {background-color: red;}
 [btype=defult] {background-color: blue;}
 [btype=permit] {background-color: green;}
 [btype=danger]:hover {background-color: darkred;}
 [btype=defult]:hover {background-color: darkblue;}
-[btype=permit]:hover {background-color: darkgreen;}
+[btype=permit]:hover {background-color: darkgreen;}*/
+
+
+[btype=danger] {background-image: linear-gradient(to bottom,#b06, #b60);}
+[btype=permit] {background-image: linear-gradient(to bottom,#0b6, #6b0);}
+[btype=defult] {background-image: linear-gradient(to bottom,#06b, #60b);}
+[btype=danger]:hover {background-image: linear-gradient(to bottom,#804, #840);}
+[btype=permit]:hover {background-image: linear-gradient(to bottom,#084, #480);}
+[btype=defult]:hover {background-image: linear-gradient(to bottom,#048, #408);}
 
 .button-top {
 	flex: 10;

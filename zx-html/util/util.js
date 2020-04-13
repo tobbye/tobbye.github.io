@@ -109,6 +109,9 @@ Parse.mix = function(str) {
         return arr.join('');
 }
 
+Parse.swape = function(str, a, b){
+    return str.replace(a, "#0").replace(b, a).replace("#0", b);
+}
 
 Parse.reverse = function(arr){
        var newArr = [];
@@ -363,7 +366,7 @@ localData.save = function() {
 
 //初始化本地数据
 localData.init = function(state) {
-    var setting = Storage.get("setting");
+    var setting = Storage.get("setting") || {};
     var dataIdx = setting.dataIdx || "values";
     dataIdx = dataIdx.replace("default", "values");
 
@@ -427,10 +430,10 @@ var setInner = function(innerIdx) {
             break;
         if (i == idx) {
             Elem.togType(childTop, "live");
-            // Elem.display(childCenter, "block");
+            Elem.display(childCenter, "block");
         } else {
             Elem.togType(childTop, "dead");
-            // Elem.display(childCenter, "none");
+            Elem.display(childCenter, "none");
         }
     }
     Elem.color(document.body, getColorType(idx), "");

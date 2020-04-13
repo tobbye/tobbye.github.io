@@ -1,6 +1,7 @@
 function setElems() {
 	setOuterTop();
-	setOuterCenter();
+	// setOuterCenter();
+    setInner();
 }
 
 
@@ -9,12 +10,12 @@ function setOuterTop() {
 }
 
 
-function setOuterCenter(x) {
+function setOuterCenter() {
     var outerCenter = Elem.get("outer-center");
-    outerCenter.innerHTML = "";
-    var inner = Elem.creat("div", outerCenter, "inner", x);
-    setContent(inner, x || 0);
-    setInner(x);
+    for (let x in items) {
+        var inner = Elem.creat("div", outerCenter, "inner", x);
+        setContent(inner, x);
+    }
 }
 
 function setContent(inner, x) {
@@ -68,9 +69,9 @@ function setDepotTag(tag, table) {
     var row = [];
     for (var x=0;x<idx[0];x++) {
     	var col = [];
-        var tr = Elem.creat("tr", table, "row-depot");
+        var tr = Elem.creat("tr", table, "row");
         for (var y=0;y<idx[1];y++) {
-            var td = Elem.creat("td", tr, "col-depot");
+            var td = Elem.creat("td", tr, "col");
             var rnd = Math.random() < 0.9 ? 0:Math.random()*100;
             col[y] = rnd == 0 ? "-" : rnd.toFixed(0) + "%";
             var num = config.depotLen[0]*x + y + 1;
@@ -102,7 +103,7 @@ function setDepotClick(td) {
     Elem.color(td, "white", getColorType());
     config.depotTd = td;
     var button = td.tag.parentNode.parentNode.lastChild;
-    button.innerHTML = "<h2>DISCOVER</h2>";
+    button.innerHTML = "<h3>" + config.depotArr.join('-') + "</h3><h2>DISCOVER</h2>";
     console.log(button.innerHTML);
 }
 

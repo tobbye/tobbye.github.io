@@ -1,6 +1,7 @@
 function setElems() {
 	setOuterTop();
 	setOuterCenter();
+	setInner();
 	setAlert();
 }
 
@@ -12,17 +13,18 @@ function setOuterTop() {
         btn.innerHTML = items[x].title;
         btn.idx = x;
         btn.onclick = function() {
-            setOuterCenter(this.idx);
+            setInner(this.idx);
         }
     }
 }
 
-function setOuterCenter(x) {
+function setOuterCenter() {
     var outerCenter = Elem.get("outer-center");
     outerCenter.innerHTML = "";
-    var inner = Elem.creat("div", outerCenter, "inner", x);
-    setContent(inner, x || 0);
-    setInner(x);
+    for (let x in items) {
+    	var inner = Elem.creat("div", outerCenter, "inner", x);
+    	setContent(inner, x);
+    }
 }
 
 
@@ -63,10 +65,10 @@ function setLine(content, data) {
 	Elem.height(table, config.theHeight + "px");
 	Elem.display(table, "none");
 	for (let y in trs) {
-		var tr = Elem.creat("tr", table, "tr", y);
 		var tds = trs[y];
+		var tr = Elem.creat("tr", table, "tr-row", y);
 		for (let z in tds) {
-			var td = Elem.creat("td", tr);
+			var td = Elem.creat("td", tr, "td-col");
 			var col = tds[z].col;
 			if (!col) {
 				Elem.color(td, "#222", "#eee");
@@ -96,10 +98,10 @@ function setBlock(content, data) {
 	Elem.height(table, config.theHeight + "px");
 	Elem.display(table, "table");
 	for (let y in trs) {
-		var tr = Elem.creat("tr", table, "tr", y);
+		var tr = Elem.creat("tr", table, "tr-row", y);
 		var tds = trs[y];
 		for (let z in tds) {
-			var td = Elem.creat("td", tr);
+			var td = Elem.creat("td", tr, "td-col");
 			var row = tds[z].row;
 			if (!row) {
 				Elem.color(td, "#222", "#eee");
@@ -119,17 +121,19 @@ function setBlock(content, data) {
 
 //切换视图 Line和Block
 function togItem(item) {
-	var color, view;
+	var btype, view;
 	var data = item.data;
 	if (data.idx % 100 == 4) {
 		Storage.set("recd-innerIdx", values.innerIdx);
 		window.location.href = "../recd/recd.html";
 		return;
 	}
-	if (data.idx % 100 == 3)
+	if (data.idx % 100 == 3) {
 		view = ["none", "table"];
-	if (data.idx % 100 == 5)
+	}
+	if (data.idx % 100 == 5) {
 		view = ["table", "none"];
+	}
 	if (item.getAttribute("btype") == "danger")
 		return;
 	var lines = Elem.getClass("table-line");
@@ -156,6 +160,7 @@ function setButton(content, data) {
 			button.data = data;
 			button.innerHTML = data.text;
 			button.setAttribute("btype", data.btype);
+			var tableBlock = Elem.get("table-block");
 			if (!data.limit)
 				button.className = "button-min";
 			button.onclick = function() {
@@ -230,6 +235,7 @@ function refresh() {
 	var limit = Elem.get("edit-limit");
 	var list = input.data.tran.split('|');
 	var str = "";
+	var idx = config.innerIdx;
 	for (let i in list) {
 		var line = list[i].split('*');
 		var val = parseInt(input.value) * parseFloat(line[1]);
@@ -243,7 +249,7 @@ function refresh() {
 	console.log(str);
 	// input.value = 0;
 	localData.save();
-	setOuterCenter();
+	setOuterCenter(idx);
 	setInner();
 }
 

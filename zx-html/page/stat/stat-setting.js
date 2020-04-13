@@ -1,6 +1,7 @@
 function setElems() {
 	setOuterTop();
 	setOuterCenter();
+	setInner();
 }
 
 
@@ -11,23 +12,23 @@ function setOuterTop() {
 		btn.innerHTML = items[x].title;
 		btn.idx = x;
 		btn.onclick = function() {
-			setOuterCenter(this.idx);
+			setInner(this.idx);
 		}
 	}
 }
 
-function setOuterCenter(x) {
+function setOuterCenter() {
     var outerCenter = Elem.get("outer-center");
-    outerCenter.innerHTML = "";
-    var inner = Elem.creat("div", outerCenter, "inner", x);
-    setContent(inner, x || 0);
-    setInner(x);
+    for (let x in items) {
+    	var inner = Elem.creat("div", outerCenter, "inner", x);
+    	setContent(inner, x);
+    }
 }
 
 function setContent(inner, x) {
     var list = items[x].list;
     for (let y in list) {
-        var content = Elem.creat("div", inner, "content", x+y);
+        var content = Elem.creat("div", inner, "content", y);
         var data = list[y];
         setTitle(content, data, x);
         setLine(content, data, x, y);
@@ -49,13 +50,13 @@ function setTitle(content, data, x) {
 
 function setLine(content, data, x, y) {
 	if (!data.lines) return;
-	var block = Elem.creat("div", content, "block", x);
+	var block = Elem.creat("table", content, "block", x);
 	for (let z in data.lines) {
 		var _data = data.lines[z];
 		_data.seed = items[x].seed;
 
 		//BLOCK
-		var flex = Elem.creat("div", block, "flex", z);
+		var flex = Elem.creat("tr", block, "flex", z);
 		var date = setCell(flex, _data, "date", z, 0, 0);
 		var inve = setCell(flex, _data, "inve", z, 1e3, 1e4);
 		var grab = setCell(flex, _data, "grab", z, 1e3, 1e4);
@@ -64,7 +65,7 @@ function setLine(content, data, x, y) {
 }
 
 function setCell(flex, data, k, z, a, b) {
-	var cell = Elem.creat("div", flex, "cell", k);
+	var cell = Elem.creat("td", flex, "cell", k);
 	var value = Math.floor(a + b* (Math.random() * 0.33 + 0.33) * data.seed * 5);
 	Elem.flex(cell, config[k].align, config[k].flex);
 	data[k] = data[k] || "￥" + Parse.sub4Num(value);

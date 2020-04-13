@@ -12,8 +12,9 @@ function setConfig() {
 var config = {
 	name: "fund",
 	outerOffset: 230,
-	innerOffset: 790, 
+	innerOffset: 770, 
 	minHeight: 900,
+	showType: "block",
 	radius: "30px",
 	border: [[""],["TopLeft", "TopRight"],["BottomLeft"],["BottomRight"]],
 	dict: "HIJKLMNOPQRSTUV",

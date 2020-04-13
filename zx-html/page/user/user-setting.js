@@ -1,6 +1,7 @@
 function setElems() {
 	setOuterTop();
 	setOuterCenter();
+	setInner();
 	setAlert();
 }
 
@@ -12,23 +13,23 @@ function setOuterTop() {
 		btn.innerHTML = items[x].title;
 		btn.idx = x;
 		btn.onclick = function() {
-			setOuterCenter(this.idx);
+			setInner(this.idx);
 		}
 	}
 }
 
-function setOuterCenter(x) {
+function setOuterCenter() {
     var outerCenter = Elem.get("outer-center");
-    outerCenter.innerHTML = "";
-    var inner = Elem.creat("div", outerCenter, "inner", x);
-    setContent(inner, x || 0);
-    setInner(x);
+    for (let x in items) {
+    	var inner = Elem.creat("div", outerCenter, "inner", x);
+    	setContent(inner, x);
+    }
 }
 
 function setContent(inner, x) {
 	var list = items[x].list;
 	for (let y in list) {
-		var content = Elem.creat("div", inner, "content", x+y);
+		var content = Elem.creat("div", inner, "content", y);
 		var data = list[y];
 		if (data.title)
 			setTitle(content, data, x);
