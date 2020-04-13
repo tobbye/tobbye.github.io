@@ -294,7 +294,7 @@ form {
 }
 
 #alert {
-
+	display: none;
 }
 
 #alert-mask {
@@ -351,7 +351,6 @@ form {
 	margin: 30px 20px;
 	margin-right: 100px;
 	text-align: left;
-	word-break: normal;
 }
 
 
@@ -361,7 +360,6 @@ form {
 	margin-left: 100px;
 	justify-content: flex-end;
 	text-align: left;
-	word-break: normal;
 }
 
 .text-left {
