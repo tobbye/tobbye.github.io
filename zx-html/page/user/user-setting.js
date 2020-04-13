@@ -35,7 +35,7 @@ function setContent(inner, x) {
 			setTitle(content, data, x);
 
 		if (x == 0) {
-			setDetail(content, data, x);
+			setDetail(content, data);
 			setRank(content, data);
 			setTags(content, data);
 		}
@@ -61,29 +61,28 @@ function setTitle(content, data, x) {
     vice.x = x;
 }
 
-function setDetail(content, data, x) {
+function setDetail(content, data) {
 	var block = Elem.creat("div", content, "block");
-	var head  = Elem.creat("div", block, "head");
-	var name  = Elem.creat("div", block, "text-large");
-	var uid   = Elem.creat("div", block, "text-small");
-	var flex  = Elem.creat("div", block, "flex-top");
-	var area  = Elem.creat("div", flex, "text-small");
-	var sex   = Elem.creat("div", flex, "text-large");
-	var age   = Elem.creat("div", flex, "text-small");
-	var flex  = Elem.creat("div", block, "flex-top");
-	var auth  = Elem.creat("div", flex, "text-small");
-	var ladd  = Elem.creat("div", flex, "text-large");
-	var group = Elem.creat("div", flex, "text-small");
+	var head = Elem.creat("div", block, "head");
+	var name = Elem.creat("div", block, "name");
+	var uid = Elem.creat("div", block, "uid");
+	var area = Elem.creat("span", block, "area");
+	var sex = Elem.creat("span", block, "sex");
+	var age = Elem.creat("span", block, "age");
+	var auth = Elem.creat("span", block, "auth");
+	var ladd = Elem.creat("span", block, "ladd");
+	var cls = Elem.creat("span", block, "cls");
+
 	block.id = "bg";
 	head.innerHTML = "zhongxin";
 	name.innerHTML = data.name;
 	uid.innerHTML = "ID: " + data.uid;
 	area.innerHTML = data.area + " | ";
 	sex.innerHTML = data.sex;
-	age.innerHTML = " | " + data.age + "岁<br/>";
+	age.innerHTML =" | " + data.age + "岁<br/>";
 	auth.innerHTML = data.auth + " | ";
 	ladd.innerHTML = data.ladd + "阶";
-	group.innerHTML = " | " + data.group;
+	cls.innerHTML =  " | " + data.cls;
 }
 
 
