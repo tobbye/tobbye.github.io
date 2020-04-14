@@ -60,10 +60,11 @@ function initTempLine(data) {
     var str = instance[data.instance].replace(/\n/g, "");
     var list = Parse.mix(str.split(","));
     for (let idx in list) {
+        if (idx >= config.inveCount) break;
         var line = {};
         line.ladder = Math.floor(20 * Math.random() * Math.random()) + 6;
         line.ladd = line.ladder - Math.floor(5 * Math.random());
-        line.multi = Math.floor(100 * Math.random()) + 1;
+        line.multi = Math.floor(100 * Math.pow(Math.random(),8)) + 1;
         line.index = Math.floor((1547 + Math.random()) * 1e9);
         line.stamp = Parse.formatTime(line.index).replace(" ", "<h3>");
         line.inver = list[idx].split("/")[0];

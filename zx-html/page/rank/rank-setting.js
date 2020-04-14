@@ -148,8 +148,9 @@ function setDetailAlert(elem) {
 
 function initTempLine(data, x, y) {
 	var lines = [];
-	var temps = Parse.mix(industry.split(','));
-	for (let z in temps) {
+	var str = industry.replace(/\n/g, "");
+    var list = Parse.mix(str.split(","));
+	for (let z in list) {
 		if (z >= config.rankCount) break;
 		var unit = tempData.unitData;
 		var line = {
@@ -157,7 +158,7 @@ function initTempLine(data, x, y) {
 			tag: unit.tag,
 			mark: unit.mark,
 			desc: unit.desc,
-			name: temps[z].replace("\n", ""),
+			name: list[z],
 			group: data.group,
 		};
 
