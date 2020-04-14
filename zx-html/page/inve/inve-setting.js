@@ -269,6 +269,7 @@ function setDetailAlert(body) {
     config.line = line;
     config.wordCur = "";
     config.puzzleText = data.puzzleText;
+    config.resultText = data.resultText;
     config.cellText = data.cellText;
     config.cellTips = data.cellTips;
 
@@ -395,7 +396,7 @@ function setResultAlert() {
     getRoll(allCount, rollCount);
 
     var ladd = Elem.creat("div", block, "line");
-    ladd.innerHTML = rollLadd + "阶红包";
+    ladd.innerHTML = rollLadd + config.resultText;
     var pic = Elem.creat("img", block, "img");
     pic.src = config.laddSrc + rollLadd + ".png";
     var price = Elem.creat("div", block, "line");

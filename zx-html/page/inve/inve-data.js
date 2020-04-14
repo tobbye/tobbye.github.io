@@ -6,9 +6,9 @@ window.onload = function() {
 }
 
 var setUsers = function() {
-	if (config.userType == "sponer") {
+	if (config.modeType == "sponer") {
 		items = items_sponer;
-	} else if (config.userType == "inver") {
+	} else if (config.modeType == "ghost") {
 		items = items_ghost;
 	}
 }
@@ -28,7 +28,7 @@ var items = [
 list: [
 {title: '我的投入', vice: '投入的资金可被淘金者抢夺', 
 dot: 1, isGrab: 1, group: '淘金者',
-puzzleText: "发现一个红包", cellText: "口令", cellTips:"输入正确口令打开红包",
+puzzleText: "发现一个红包", resultText:"阶福袋", cellText: "口令", cellTips:"输入正确口令打开红包",
 inverStr: "投入者：", flexStr: "#0的投入",
 laddStr: "阶梯<br/><h3>#0阶</h3>",
 pieceStr: "剩余份数<br/><h3>#0份</h3>",
@@ -40,7 +40,7 @@ lines: [
 {index: "1548342507258", stamp: "2019-01-24 23:08:27", ladder: 12, ladd: 8, multi: 3, inver: "我", tag: ['众鑫淘金', '海量红包', '等你发掘']},
 {index: "1548342507258", stamp: "2019-01-23 12:18:10", ladder: 9, ladd: 5, multi: 15, inver: "我", tag: ['众鑫淘金', '海量红包', '等你发掘']},
 ]},
-{title: '选择阶梯', vice: '投入资金后可以抢夺等量的资金', 
+{title: '选择投入', vice: '投入资金后可以抢夺等量的资金', 
 dot: 1, isGrab: 0, 
 inverStr: "投入者：", flexStr: "投入预览",
 laddStr: "阶梯<br/><h3>#0阶</h3>",
@@ -57,7 +57,7 @@ lines: []},
 list: [
 {title: '资金池', vice: '抢夺资金以提高可获收益上限',
 dot: 1, isGrab: 1, group: '淘金者', instance: "luxury",
-puzzleText: "发现一个福袋", cellText: "口令", cellTips:"输入正确口令打开福袋",
+puzzleText: "发现一个福袋", resultText:"阶福袋", cellText: "口令", cellTips:"输入正确口令打开福袋",
 inverStr: "投入者：", flexStr: "#0的投入",
 laddStr: "阶梯<br/><h3>#0阶</h3>",
 pieceStr: "剩余份数<br/><h3>#0份</h3>",
@@ -73,7 +73,7 @@ lines: []},
 list: [
 {title: '红包池', vice: '抢夺投放的红包来获取收益', puzzleText: '发现一个红包',
 dot: 100, isGrab: 1, group: '赞助商', instance: "car",
-puzzleText: "发现一个红包", cellText: "口令", cellTips:"输入正确口令打开红包",
+puzzleText: "发现一个红包", resultText:"阶红包", cellText: "口令", cellTips:"输入正确口令打开红包",
 inverStr: "投放者：", flexStr: "#0的投放",
 laddStr: "阶梯<br/><h3>#0阶</h3>",
 pieceStr: "剩余份数<br/><h3>#0份</h3>",
@@ -90,7 +90,7 @@ var items_sponer = [
 list: [
 {title: '我的投放', vice: '投放的红包可被淘金者抢夺', 
 dot: 1, isGrab: 1, group: '赞助商',
-puzzleText: "发现一个红包", cellText: "口令", cellTips:"输入正确口令打开红包",
+puzzleText: "发现一个红包", resultText:"阶红包", cellText: "口令", cellTips:"输入正确口令打开红包",
 inverStr: "投放者: ", flexStr: "#0的投放",
 laddStr: "阶梯<br/><h3>#0阶</h3>",
 pieceStr: "剩余份数<br/><h3>#0份</h3>",
@@ -285,14 +285,14 @@ lines: []},
 list: [
 {title: '锁妖塔', vice: '我杀！故我在！！！',
 dot: 1, isGrab: 1, group: '妖女', instance: 'ghost',
-puzzleText: "放下屠刀 立地成佛", cellText: "咒语", cellTips:"正确吟诵咒语击杀妖魔",
+puzzleText: "放下屠刀 立地成佛", resultText:"阶妖精的尾巴", cellText: "咒语", cellTips:"正确吟诵咒语击杀妖魔",
 inverStr: '领主: ', flexStr: '#0的栖息地',
 laddStr: '阶梯<br/><h3>#0阶</h3>',
 pieceStr: '剩余份数<br/><h3>#0份</h3>',
 priceStr: '单个金额<br/><h3>#0元</h3>',
 timesStr: '已传播<br/><h3>#0次</h3>',
 btnName: ['next', 'quit', 'redo', 'abon', 'open', 'close'],
-btnText: ['十步杀一人', '我佛慈悲', '天地大回旋', '慈悲为怀', '事了拂衣去', '深藏功与名'],
+btnText: ['十步杀一Yao', '我佛慈悲', '天地大回旋', '慈悲为怀', '事了拂衣去', '深藏功与名'],
 lines: []}, 
 ]},
 
@@ -301,14 +301,14 @@ lines: []},
 list: [
 {title: '魔界', vice: '破山贼易，破心魔难！',
 dot: 100, isGrab: 1, group: '魔鬼', instance: 'monster',
-puzzleText: "阿弥陀佛 善哉善哉", cellText: "咒语", cellTips:"正确吟诵咒语击杀妖魔",
+puzzleText: "阿弥陀佛 善哉善哉", resultText:"阶魔石", cellText: "咒语", cellTips:"正确吟诵咒语击杀妖魔",
 inverStr: '领主: ', flexStr: '#0的栖息地',
 laddStr: '阶梯<br/><h3>#0阶</h3>',
 pieceStr: '剩余份数<br/><h3>#0份</h3>',
 priceStr: '单个金额<br/><h3>#0元</h3>',
 timesStr: '已传播<br/><h3>#0次</h3>',
 btnName: ['next', 'quit', 'redo', 'abon', 'open', 'close'],
-btnText: ['千里不留行', '我佛慈悲', '乾坤大挪移', '慈悲为怀', '事了拂衣去', '深藏功与名'],
+btnText: ['千里不留Mo', '我佛慈悲', '乾坤大挪移', '慈悲为怀', '事了拂衣去', '深藏功与名'],
 lines: []},
 ]}
 ];

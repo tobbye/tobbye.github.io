@@ -32,9 +32,9 @@ btnName: ['Close', 'Console', 'Alert'],
 btnText: ['关闭', '跳转', '弹窗'],
 },
 
-{title: '身份', vice: '请选择一个身份', default: 0, key: 'userType',
-btnName: ['Digger', 'Inver', 'Sponer'],
-btnText: ['淘金者', '投资者', '赞助商'],
+{title: '模式', vice: '请选择一个模式', default: 0, key: 'modeType',
+btnName: ['Digger', 'Ghost'],
+btnText: ['众鑫淘金', '凡人修仙'],
 },
 
 ]},
