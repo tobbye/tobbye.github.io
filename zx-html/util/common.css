@@ -49,6 +49,7 @@ td {
 }
 
 input {
+	padding: 5px 5px;
 	font-weight: bold;	
 }
 
@@ -98,14 +99,6 @@ form {
 	font-size: 5em;
 	padding: 2em;
 	background-color: white;
-}
-
-.text {
-	display: block;
-	overflow: auto;
-	padding: 10px;
-	font-size: 4em;
-	background-color: #fff;
 }
 
 .button, 
@@ -337,7 +330,8 @@ form {
 }
 
 .alert-text {
-	margin: 20px 0px 20px 20%;
+	margin: auto 0px;
+	margin-left: 20%;
 	font-size: 6em;
 }
 

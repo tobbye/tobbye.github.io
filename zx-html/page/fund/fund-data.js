@@ -13,7 +13,7 @@ var config = {
 	name: "fund",
 	outerOffset: 230,
 	innerOffset: 770, 
-	minHeight: 900,
+	minHeight: 700,
 	showType: "block",
 	radius: "30px",
 	border: [[""],["TopLeft", "TopRight"],["BottomLeft"],["BottomRight"]],

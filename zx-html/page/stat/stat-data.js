@@ -7,10 +7,6 @@ window.onload = function() {
 var config = {
 	name: "stat",
 	list: ["-cur", "-rec"],
-	date: {flex: 50, align:"left"},
-	inve: {flex: 50, align:"right"},
-	grab: {flex: 50, align:"right"},
-	gain: {flex: 50, align:"right"},
 };
 
 

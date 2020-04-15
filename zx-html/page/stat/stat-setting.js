@@ -57,19 +57,19 @@ function setLine(content, data, x, y) {
 
 		//BLOCK
 		var flex = Elem.creat("tr", block, "flex", z);
-		var date = setCell(flex, _data, "date", z, 0, 0);
-		var inve = setCell(flex, _data, "inve", z, 1e3, 1e4);
-		var grab = setCell(flex, _data, "grab", z, 1e3, 1e4);
-		var gain = setCell(flex, _data, "gain", z, 1e1, 1e2);
+		var date = setCell(flex, _data, "date", "left", 0, 0);
+		var inve = setCell(flex, _data, "inve", "right", 1e3, 1e4);
+		var grab = setCell(flex, _data, "grab", "right", 1e3, 1e4);
+		var gain = setCell(flex, _data, "gain", "right", 1e1, 1e2);
 	}
 }
 
-function setCell(flex, data, k, z, a, b) {
+function setCell(flex, data, k, align, a, b) {
 	var cell = Elem.creat("td", flex, "cell", k);
 	var value = Math.floor(a + b* (Math.random() * 0.33 + 0.33) * data.seed * 5);
-	Elem.flex(cell, config[k].align, config[k].flex);
 	data[k] = data[k] || "￥" + Parse.sub4Num(value);
 	cell.innerHTML = data[k];
+	cell.style.textAlign = align;
 	if (cell.innerHTML.replace("年", "") != cell.innerHTML)
 		cell.innerHTML = "<h4>" + cell.innerHTML.replace("年", "年</h4>");
 	return cell;

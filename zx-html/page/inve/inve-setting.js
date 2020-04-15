@@ -250,7 +250,7 @@ function setLineFlex(body, line, x) {
 
 
 function setLineSelect(flex) { 
-    var old = config.flex;
+    var old = document.body.flex;
     if (old) {
         old.style.border = "solid 0px transparent";
         old.style.marginBottom = "5px";
@@ -258,7 +258,7 @@ function setLineSelect(flex) {
     if (flex) {
         flex.style.border =  "solid 12px dodgerblue";
         flex.style.marginBottom =  "10px";
-        config.flex = flex; 
+        document.body.flex = flex; 
     }
 }
 
@@ -266,7 +266,7 @@ function setLineSelect(flex) {
 function setDetailAlert(body) {
     var data = body.data;
     var line = body.line;
-    config.line = line;
+    document.body.line = line;
     config.wordCur = "";
     config.puzzleText = data.puzzleText;
     config.resultText = data.resultText;
@@ -321,7 +321,7 @@ function setPuzzleAlert() {
     config.wordCur = "";
 
 
-    var line = config.line;
+    var line = document.body.line;
     line.mix = Parse.mix(line.word, 1);
     var cellText = Elem.creat("div", block, "cell-tips");
     cellText.innerHTML = config.cellText;
@@ -354,7 +354,7 @@ function setPuzzleCell(line, block, mix) {
         textCell.onclick = function() {
             if (mix && this.able) {
                 var color = config.curColor;
-                var wordTgt = config.line.wordTgt;
+                var wordTgt = document.body.line.wordTgt;
                 var wordCur = config.wordCur || "";
                 wordCur += this.innerHTML;
                 config.wordCur = wordCur;
@@ -389,7 +389,7 @@ function setResultAlert() {
     var bg = Elem.get("result-bg");
     var block = Elem.get("result-block");
     block.innerHTML = "";
-    var line = config.line;
+    var line = document.body.line;
     rollLadd = 1;
     var allCount = Math.pow(2, line.ladd);
     var rollCount = Math.floor(Math.random() * allCount);

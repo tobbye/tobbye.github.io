@@ -438,15 +438,15 @@ var setInner = function(innerIdx) {
     Elem.color(document.body, getColorType(idx), "");
     if (config.debugType == "close") {
         if (innerIdx != null) 
-            console.log(items[idx]);
+            console.log(config);
     } else
     if (config.debugType == "alert") {
         if (innerIdx != null) 
-            jsonToAlert(items[idx]);
+            jsonToAlert(config);
     } else 
     if (config.debugType == "console") {
         if (innerIdx != null) 
-            jsonToTable(items[idx]);
+            jsonToTable(config);
     }
     config.innerIdx = idx;
 }
@@ -513,7 +513,7 @@ var getAgent = function() {
     // addScript();
     config.outerOffset = 230;
     config.alertOffset = 716;
-    config.zoomMobile  = 0.95;
+    config.zoomMobile  = 1.00;
     config.zoomWechat  = 0.90;
     config.zoomComput  = 0.40;
     config.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
