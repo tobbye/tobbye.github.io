@@ -497,13 +497,13 @@ var setClick = function(name, func) {
 var resize = function() {
     config.windWidth = window.innerWidth;
     config.windHeight = window.innerHeight;
-    config.windHeight *= config.isMobile ? 1:2.5;
+    config.windHeight *= config.isMobile ? 1/0.95:2.5;
     config.alertHeight = config.windHeight - config.alertOffset;
     config.maxHeight = config.windHeight - config.innerOffset;
     config.isWidth = config.windWidth > config.windHeight;
     config.isHeight = config.maxHeight > config.minHeight;
     config.theHeight = Math.max(config.maxHeight, config.minHeight);
-    document.body.style.zoom = config.isMobile ? "1":"0.4";
+    document.body.style.zoom = config.isMobile ? "0.95":"0.4";
     Elem.autosize(null, config.outerOffset);
 }
 
@@ -513,6 +513,7 @@ var getAgent = function() {
     // addScript();
     var val = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
     config.isMobile = val;
+    config.isWechat = (/micromessenger|MicroMessenger/i.test(navigator.userAgent));
     var setting = Storage.get("setting") || new Object();
     config.dataIdx = setting.dataIdx || "defalut";
     config.initType = setting.initType || "clear";
