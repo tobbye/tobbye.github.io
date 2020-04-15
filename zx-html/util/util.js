@@ -497,13 +497,13 @@ var setClick = function(name, func) {
 var resize = function() {
     config.windWidth = window.innerWidth;
     config.windHeight = window.innerHeight;
-    config.windHeight *= config.isMobile ? 1/0.95:2.5;
+    config.windHeight *= 1/config.zoom;
     config.alertHeight = config.windHeight - config.alertOffset;
     config.maxHeight = config.windHeight - config.innerOffset;
     config.isWidth = config.windWidth > config.windHeight;
     config.isHeight = config.maxHeight > config.minHeight;
     config.theHeight = Math.max(config.maxHeight, config.minHeight);
-    document.body.style.zoom = config.isMobile ? "0.95":"0.4";
+    document.body.style.zoom = config.zoom;
     Elem.autosize(null, config.outerOffset);
 }
 
@@ -511,9 +511,16 @@ var resize = function() {
 //获取浏览器是否是移动端
 var getAgent = function() {
     // addScript();
-    var val = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
-    config.isMobile = val;
+    config.outerOffset = 230;
+    config.alertOffset = 716;
+    config.zoomMobile  = 0.95;
+    config.zoomWechat  = 0.90;
+    config.zoomComput  = 0.40;
+    config.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
     config.isWechat = (/micromessenger|MicroMessenger/i.test(navigator.userAgent));
+    config.zoom = config.isMobile ? config.zoomMobile : config.zoomComput;
+    config.zoom = config.isWechat ? config.zoomWechat : config.zoom;
+
     var setting = Storage.get("setting") || new Object();
     config.dataIdx = setting.dataIdx || "defalut";
     config.initType = setting.initType || "clear";
@@ -521,11 +528,9 @@ var getAgent = function() {
     config.fontType = setting.fontType || "arial";
     config.colorType = setting.colorType || "black";
     config.debugType = setting.debugType || "close";
-    config.outerOffset = 230;
-    config.alertOffset = 716;
+
     console.log(config);
     window.resize();
-    return val;
 }
 
 //设置浏览器

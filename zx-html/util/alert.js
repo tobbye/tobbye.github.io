@@ -1,9 +1,9 @@
 var tempData = {
 	searchData: [
 		{order: 1, value: 948670, group: "无关系的", uid: 'd110001', name: '李刚猛', ladd: 18, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['身份标签1', '身份标签2']},
-		{order: 2, value: 699972, group: "无关系的", uid: 'd110002', name: '王坚强', ladd: 20, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['排名标签1', '排名标签2']},
-		{order: 3, value: 690663, group: "无关系的", uid: 'd110002', name: '张雄壮', ladd: 17, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['阶层标签1', '阶层标签2']},
-		{order: 4, value: 582830, group: "无关系的", uid: 'd110004', name: '章威武', ladd: 12, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['成就标签1', '成就标签2']},
+		{order: 2, value: 690663, group: "无关系的", uid: 'd110002', name: '张雄壮', ladd: 17, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['阶层标签1', '阶层标签2']},
+		{order: 3, value: 582830, group: "无关系的", uid: 'd110004', name: '章威武', ladd: 12, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['成就标签1', '成就标签2']},
+        {order: 4, value: 699972, group: "无关系的", uid: 'd110002', name: '王坚强', ladd: 20, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['排名标签1', '排名标签2']},
 		{order: 5, value: 414480, group: "无关系的", uid: 'd110005', name: '徐福贵', ladd: 17, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['评价标签1', '评价标签2']},
 		{order: 6, value: 341222, group: "无关系的", uid: 's110006', name: '赵铁柱', ladd: 15, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['理财专家', '投资顾问']},
 		{order: 7, value: 202098, group: "无关系的", uid: 's110007', name: '赵铁牛', ladd: 15, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['理财专家', '投资顾问']},
@@ -35,13 +35,13 @@ var tempData = {
 哎红得好像，
 红得好像燃烧的火，
 它象征着纯洁的友谊和爱情。`
-        // 陈晴晴2009，叶梦梦2009，王嫚嫚2010，胡泱秧2013，邓小丽2016，赵素华2016，黎桂清2017，章威威2018，
-        // 崔慧珍2019，鲍青青2019，汤小英2019，张沙沙2019觉得很赞！,
+        // `陈晴晴2009，叶梦梦2009，王嫚嫚2010，胡泱秧2013，邓小丽2016，赵素华2016，黎桂清2017，章威威2018，
+        // 崔慧珍2019，鲍青青2019，汤小英2019，张沙沙2019觉得很赞！`,
 
     },
 
 	chatData: [
-    {text:"大佬您好，我这有个价值20亿的项目，前无古人后无来者！", time:"11：25", isMine:0},
+    {text:"大佬您好，我有个价值20亿的项目，前无古人后无来者！", time:"11：25", isMine:0},
     {text:"静静的听你装完这个逼。", time:"11：25", isMine:1},
     {text:"如何一块变两块？", time:"11：25", isMine:0},
     {text:`今天一块变两块，
@@ -63,7 +63,7 @@ var tempData = {
 10).等冷却凝固后，地上一堆黄色金属，称重约7.866吨，价值估算21.47亿元
 如此目标实现！`, time:"11：27", isMine:0},
 
-    {text:`二狗子，你这个项目我很有兴趣，你市场调研一下，出个详细的策划案出来，把步骤和细节都罗列出来，最好到非洲金矿实地考察一下。`, time:"11：30", isMine:1},
+    {text:`二狗子，你这个项目我很有兴趣，你先去市场调研一下，出个详细的策划案出来，把步骤和细节都罗列出来，最好到非洲金矿实地考察一下。`, time:"11：30", isMine:1},
     {text:`另外PPT也是必不可少的，一定要做的美观一点，你上次那个「母猪如何择优配种」项目就是栽在PPT上，做的像狗屎一样，这次可不能再像上次那样瞎搞了。`, time:"11：30", isMine:1},
     {text:`启动资金的问题你不用担心，我大力支持。加油干！二狗子！`, time:"11：30", isMine:1},
     ],
@@ -170,9 +170,20 @@ function setChatText(block, cls, value) {
     var flex = Elem.creat("div", block, "chat-" + cls);
     var text = Elem.creat("div", flex, "text-" + cls);
     text.innerHTML = value.replace(/\n/g, "<br/>");
+    if (getChatLength(value) < 17)
+        text.style.wordBreak = "keep-all";
     text.scrollIntoView();
 }
 
+function getChatLength(value) {
+    var len = 0;
+    var list = value.split('\n');
+    for (let idx in list) {
+        if (list[idx].length > len)
+            len = list[idx].length;
+    }
+    return len;
+}
 
 
 function onChatFocus() {

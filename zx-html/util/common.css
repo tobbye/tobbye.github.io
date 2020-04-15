@@ -294,7 +294,7 @@ form {
 }
 
 #alert {
-
+	display: none;
 }
 
 #alert-mask {
