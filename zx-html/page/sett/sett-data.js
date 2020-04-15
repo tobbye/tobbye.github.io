@@ -12,7 +12,7 @@ var config = {
 var items = [
 {title: '设置', colorIdx: 1,
 list: [
-{title: '样式', vice: '选择一个色彩样式', default: 0, key: 'colorType',
+{title: '色彩', vice: '选择一个色彩样式', default: 0, key: 'colorType',
 btnName: ['Black', 'Dark', 'Normal', 'Bright'],
 btnText: ['黑色', '深色', '正常色', '亮色'],
 },
@@ -26,6 +26,11 @@ btnText: ['默认', '数据1', '数据2', '数据3'],
 btnName: ['Get', 'Set', 'Clear'],
 btnText: ['获取', '写入', '清空'],
 },
+
+// {title: '字体', vice: '选择一种字体样式', default: 0, key: 'fontIdx',
+// btnName: ['Arial', 'sans-serif', null, 'Segoe UI', 'Helvetica'],
+// btnText: ['Arial', 'sans-serif', null, 'Segoe UI', 'Helvetica'],
+// },
 
 {title: '调试', vice: '选择调试方式', default: 0, key: 'debugType',
 btnName: ['Close', 'Console', 'Alert'],

@@ -319,7 +319,11 @@ form {
 }
 
 
-.alert-flex,
+.alert-flex {
+	display: flex;
+	margin: 5px 0px;
+}
+
 .alert-button {
 	display: flex;
 	margin: 5px 0px;
@@ -339,12 +343,11 @@ form {
 
 .alert-block {
     overflow: auto;
-    padding: 5px 10px;
+    padding: 0px 10px 5px 10px;
     /*min-height: 500px;*/
     max-height: 1234px;
     font-size: 1em;
 }
-
 
 .chat-left {
 	display: flex;

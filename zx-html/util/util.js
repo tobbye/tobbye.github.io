@@ -1,6 +1,5 @@
 
 
-var elems = [{},{},{},{},{},{},{},{},{}];
 var values = {};
 var colors = [
     {normal:"#eee", dark:"#eee", light:"#eee", bright:"#eee", black:"#333", standard:"white"},
@@ -518,6 +517,7 @@ var getAgent = function() {
     config.dataIdx = setting.dataIdx || "defalut";
     config.initType = setting.initType || "clear";
     config.modeType = setting.modeType || "digger";
+    config.fontType = setting.fontType || "arial";
     config.colorType = setting.colorType || "black";
     config.debugType = setting.debugType || "close";
     config.outerOffset = 230;

@@ -51,6 +51,10 @@ function setLine(content, data, x, y) {
 
 	var flex = Elem.creat("div", content, "alert-flex");
 	for (let z in data.btnName) {
+		if (data.btnName[z] == null) {
+			flex = Elem.creat("div", content, "alert-flex");
+			continue;
+		}
 		var btn = Elem.creat("div", flex, "button-top");
 		btn.y = y;
 		btn.z = z;
