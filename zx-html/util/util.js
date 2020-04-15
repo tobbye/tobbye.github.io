@@ -1,5 +1,5 @@
 
-
+var elems = {};
 var values = {};
 var colors = [
     {normal:"#eee", dark:"#eee", light:"#eee", bright:"#eee", black:"#333", standard:"white"},
@@ -440,13 +440,9 @@ var setInner = function(innerIdx) {
         if (innerIdx != null) 
             console.log(config);
     } else
-    if (config.debugType == "alert") {
+    if (config.debugType == "open") {
         if (innerIdx != null) 
-            jsonToAlert(config);
-    } else 
-    if (config.debugType == "console") {
-        if (innerIdx != null) 
-            jsonToTable(config);
+            jsonToTable(items[idx]);
     }
     config.innerIdx = idx;
 }
@@ -588,11 +584,13 @@ var jsonToAlert = function(data) {
 }
 
 
-var jsonToTable = function(data) {
+var jsonToTable = function(item) {
     if (config.name == "home") return;
     var page = '../#/#.html';
     Storage.set('json-page', page.replace(/#/g,config.name));
-    Storage.set('json-data', JSON.stringify(data));
+    Storage.set('json-item', JSON.stringify(item));
+    Storage.set('json-config', JSON.stringify(config));
+    Storage.set('json-tempdata', JSON.stringify(tempData));
     window.location.href = "../view/view.html";
 }
 

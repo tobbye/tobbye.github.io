@@ -7,8 +7,8 @@
 			font-family: "Consolas", "Trebuchet MS", Verdana;
 			margin: 0px;
 			padding: 0px;
+			font-size: 16px;
 			font-weight: bold;
-			text-align: center;
 		}
 
 
@@ -45,39 +45,67 @@
 			border: solid 1.5px #888;
 		}
 
-		h3 {
+		h1, h2, h3, h4, h5 {
 			margin: 0px;
-			padding: 0px;
+			padding: 0px;	
+		}
+
+		h1 {
 			color: dodgerblue;
 			font-size: 1em;
 		}
 
+		h2 {
+			color: darkred;
+	        font-size: 1.2em;
+			margin-bottom: 2px; 
+    	}
+
+		h3 {
+	        font-size: 1.2em;
+    	}
+
+	 	h4 {
+	        font-size: 0.8em;
+    	}
+
+	 	h5 {
+	        font-size: 1.2em;
+	        margin-bottom: 10px;
+    	}
+
 
 		#outer {
-			height: 100%;
+			height: 95%;
+			padding: 10px;
 			overflow: auto;
+		}
 
+		.inner {
+			margin: 10px 0px;
+		}
+
+		.view {
+			margin: 0px;
 		}
 
 		.flex {
 			display: flex;
-			color: red;
-			font-size: 1.3em;
+			color: dodgerblue;
+			text-align: center;
+			background-color: #eee;
 		}
-
-		.view {
-			padding: 10px;
-		}
-
 
 		.button {
-			margin: auto;
-			padding: 15px;
-			height: 30px;
-			color: white;
+			flex: 10;
+			margin: 2px;
+			padding: 10px;
 			font-size: 1.5em;
-			border: solid 6px white;
-			border-radius: 20px;
+			background-color: #fff;
+		}
+
+		.button:hover,.button:active {
+			color: #fff;
 			background-color: dodgerblue;
 		}
 
@@ -85,9 +113,28 @@
 
 </head>
 <body>
-	<div id="outer">
-	<div id="view"></div>
+	<div id="outer"></div>
+	<div class="flex">
+		<div class="button" onclick='back()'>返回</div>
+		<div class="button" onclick='initJoin()'>合并</div>
+		<div class="button" onclick='initSplit()'>拆分</div>
+		<div class="button" onclick='initText()'>纯文本</div>
 	</div>
-	<div class="button" onclick='back()'>确定</div>
+	<div class="flex">
+		<div class="button" onclick='initBreak(10)'>10</div>
+		<div class="button" onclick='initBreak(20)'>20</div>
+		<div class="button" onclick='initBreak(50)'>50</div>
+		<div class="button" onclick='initBreak(100)'>100</div>
+		<div class="button" onclick='initBreak(200)'>200</div>
+	</div>
+	<div class="flex">
+		<div class="button" onclick='initMode("Array")'>Array</div>
+		<div class="button" onclick='initMode("Object")'>Object</div>
+	</div>
+	<div class="flex">
+		<div class="button" onclick='initData("item")'>Item</div>
+		<div class="button" onclick='initData("config")'>Config</div>
+		<div class="button" onclick='initData("tempdata")'>TempData</div>
+	</div>
 </body>
 </html>

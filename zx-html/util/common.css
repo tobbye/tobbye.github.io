@@ -343,39 +343,28 @@ form {
     font-size: 1em;
 }
 
-.chat-left {
+.chat-flex {
 	display: flex;
 	margin: 30px 20px;
-	margin-right: 100px;
 	text-align: left;
 	word-break: normal;
-}
-
-
-.chat-right {
-	display: flex;
-	margin: 30px 20px;
+}.chat-flex[ctype=left] {
+	margin-right: 100px;
+}.chat-flex[ctype=right] {
 	margin-left: 100px;
 	justify-content: flex-end;
-	text-align: left;
-	word-break: normal;
 }
 
-.text-left {
+
+.chat-text {
 	color: white;
 	padding: 20px;
 	font-size: 3.5em;
 	font-weight: normal;
 	border-radius: 20px;
+}.chat-text[ctype=left] {
 	background-color: dodgerblue;
-}
-
-.text-right {
-	color: white;
-	padding: 20px;
-	font-size: 3.5em;
-	font-weight: normal;
-	border-radius: 20px;
+}.chat-text[ctype=right] {
 	background-color: darkorange;
 }
 

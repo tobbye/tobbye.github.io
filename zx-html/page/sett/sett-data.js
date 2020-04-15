@@ -27,14 +27,9 @@ btnName: ['Get', 'Set', 'Clear'],
 btnText: ['获取', '写入', '清空'],
 },
 
-// {title: '字体', vice: '选择一种字体样式', default: 0, key: 'fontIdx',
-// btnName: ['Arial', 'sans-serif', null, 'Segoe UI', 'Helvetica'],
-// btnText: ['Arial', 'sans-serif', null, 'Segoe UI', 'Helvetica'],
-// },
-
 {title: '调试', vice: '选择调试方式', default: 0, key: 'debugType',
-btnName: ['Close', 'Console', 'Alert'],
-btnText: ['关闭', '跳转', '弹窗'],
+btnName: ['Close', 'Open'],
+btnText: ['关闭', '开启'],
 },
 
 {title: '模式', vice: '请选择一个模式', default: 0, key: 'modeType',

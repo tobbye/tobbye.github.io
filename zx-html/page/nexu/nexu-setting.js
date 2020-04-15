@@ -63,8 +63,8 @@ function setLine(content, data, x, y) {
 		flex.line = line;
 		flex.x = x;
 		flex.onclick = function() {
-			config.line = this.line;
-			config.lines = this.data.lines;
+			elems.line = this.line;
+			elems.lines = this.data.lines;
 			console.log(this.line);
 			setDetailAlert(this);
 		}
@@ -99,17 +99,17 @@ function setLineFlex(body, line, x) {
 }
 
 
-function setDetailAlert(elem) {
+function setDetailAlert(flex) {
 	var box = Elem.get("alert-box");
 	var block = Elem.get("detail-block");
 	Elem.color(box, "", getColorLight(x));
 	block.innerHTML = "";
 
-	var x = elem.x;
-	var data = elem.data;
-	var line = config.line;
+	var x = flex.x;
+	var data = flex.data;
+	var line = elems.line;
 	var body = Elem.creat("div", block, "user-body");
-	var flex = setLineFlex(body, line, x);
+	var head = setLineFlex(body, line, x);
 	var tags = Elem.creat("div", body, "user-tags");
 	var desc = Elem.creat("div", body, "user-desc");
 
@@ -138,7 +138,7 @@ function setDetailAlert(elem) {
 		btn.setAttribute("btype", _data.btype);
 		btn.innerHTML = _data.text;
 		btn.data = _data;
-		btn.elem = elem;
+		btn.flex = flex;
 		btn.onclick = function () {
 			setNexu(this);
 		}
@@ -153,8 +153,8 @@ function setNexu(btn) {
 		setChatAlert();
 	if (data.idx == 2) {
 		hideAlert();
-		Elem.remove(btn.elem);
-		Parse.remove(config.lines, config.line);
+		Elem.remove(btn.flex);
+		Parse.remove(elems.lines, elems.line);
 	}
 }
 

@@ -107,11 +107,10 @@ function creatGrabBody(content, data, x) {
         var flex = Elem.creat("div", body, "user-flex");
         flex.style.marginTop = "0px";
         flex.style.marginBottom = "10px";
-        var ladd = setLineText(flex, line.laddStr);
-        var piece = setLineText(flex, line.pieceStr);
-        var price = setLineText(flex, line.priceStr);
-        var times = setLineText(flex, line.timesStr);
-        ladd.style.flex = 17;
+        var ladd = setLineText(flex, "A", line.laddStr);
+        var piece = setLineText(flex, "B", line.pieceStr);
+        var price = setLineText(flex, "B", line.priceStr);
+        var times = setLineText(flex, "B", line.timesStr);
     }
     data.lines = lines;
 }
@@ -138,11 +137,10 @@ function creatInveBody(content, data, x) {
             setLineSelect(this);
             setDetailAlert(this);
         }
-        var ladd = setLineText(body, line.laddStr);
-        var piece = setLineText(body, line.pieceStr);
-        var price = setLineText(body, line.priceStr);
-        var times = setLineText(body, line.timesStr);
-        ladd.style.flex = 17;
+        var ladd = setLineText(body, "A", line.laddStr);
+        var piece = setLineText(body, "B", line.pieceStr);
+        var price = setLineText(body, "B", line.priceStr);
+        var times = setLineText(body, "B", line.timesStr);
         if (z == 0) {
             setLineSelect(body);
         }
@@ -214,8 +212,8 @@ function initLineData(line, dot, isGrab) {
 }
 
 
-function setLineText(flex, text) {
-    var line = Elem.creat("text", flex, "line");
+function setLineText(flex, idx, text) {
+    var line = Elem.creat("text", flex, "line" + idx);
     line.innerHTML = text;
     return line;
 }
@@ -291,15 +289,14 @@ function setDetailAlert(body) {
     for (var i = 0; i < line.ladd; i++) {
         var idx = line.ladd - i - 1;
         var flex = Elem.creat("div", block, "user-flex", idx);
-        var ladd = Elem.creat("text", flex, "line");
-        var piece = Elem.creat("text", flex, "line");
-        var price = Elem.creat("text", flex, "line");
-        var times = Elem.creat("text", flex, "line");
-        ladd.style.flex = "15";
-        ladd.innerHTML = data.laddStr.replace("#0", (line.ladd - i));
-        piece.innerHTML = data.pieceStr.replace("#0", Parse.sub4Num(line[pieceKey][idx]));
-        price.innerHTML = data.priceStr.replace("#0", Parse.sub4Num(line[priceKey][idx]));
-        times.innerHTML = data.timesStr.replace("#0", Parse.sub4Num(line[timesKey][idx]));
+        var laddStr = data.laddStr.replace("#0", (line.ladd - i));
+        var pieceStr = data.pieceStr.replace("#0", Parse.sub4Num(line[pieceKey][idx]));
+        var priceStr = data.priceStr.replace("#0", Parse.sub4Num(line[priceKey][idx]));
+        var timesStr = data.timesStr.replace("#0", Parse.sub4Num(line[timesKey][idx]));
+        var ladd = setLineText(flex, "A", laddStr);
+        var piece = setLineText(flex, "B", pieceStr);
+        var price = setLineText(flex, "B", priceStr);
+        var times = setLineText(flex, "B", timesStr);
     }
 
     if(block.firstChild)

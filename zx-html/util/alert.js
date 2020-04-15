@@ -138,8 +138,8 @@ function setChatAlert() {
     block.innerHTML = "";
     for (let i in tempData.chatData) {
         var data = tempData.chatData[i];
-        var cls = data.isMine ? "right" : "left";
-        setChatText(block, cls, data.text);
+        var ctype = data.isMine ? "right" : "left";
+        setChatText(block, ctype, data.text);
     }
     var send = Elem.get("btn-send");
     send.block = block;
@@ -162,13 +162,15 @@ function setChatAlert() {
 }
 
 
-function setChatText(block, cls, value) {
+function setChatText(block, ctype, value) {
     if (value == "" || value == "输入内容") {
         hideAlert();
         return;
     }
-    var flex = Elem.creat("div", block, "chat-" + cls);
-    var text = Elem.creat("div", flex, "text-" + cls);
+    var flex = Elem.creat("div", block, "chat-flex");
+    var text = Elem.creat("div", flex, "chat-text");
+    Elem.attr(flex, "ctype", ctype);
+    Elem.attr(text, "ctype", ctype);
     text.innerHTML = value.replace(/\n/g, "<br/>");
     if (getChatLength(value) < 17)
         text.style.wordBreak = "keep-all";
