@@ -1,6 +1,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
+    <title>调试</title>
 	<script src="view-data.js"> </script>
 	<script src="view-setting.js"> </script>
 	<style type="text/css"> 
@@ -29,14 +30,7 @@
 			height:1.2em;
 		}
 
-		th {
-			color: darkred;
-			padding: 3px 20px;
-			min-width: 50px;
-			text-align: center;
-			background-color: #eee;
-			border: solid 1.5px #888;
-		}
+
 
 		td {
 			padding: 3px 10px;
@@ -58,9 +52,7 @@
 		}
 
 		h2 {
-			color: darkorange;
-	        font-size: 1.2em;
-			margin-bottom: 2px; 
+	        font-size: 1.5em;
     	}
 
 		h3 {
@@ -84,14 +76,22 @@
 		}
 
 		#outer-bot {
+			background-color: #eee;
 		}
 
 		.inner {
-			margin: 10px 0px;
+
 		}
 
 		.view {
 			margin: 0px;
+		}
+
+		.title {
+			color: darkorange;
+	        font-size: 1.3em;
+			padding: 10px 2px 2px 2px; 
+			border: solid 0px #fff;
 		}
 
 		.block {
@@ -131,8 +131,9 @@
 			<div class="flex" id="flex1">
 				<div class="button" val-mode='back'>返回</div>
 				<div class="button" val-mode='initJoin'>合并</div>
+				<div class="button" val-mode='initCenter'>居中</div>
 				<div class="button" val-mode='initSplit'>拆分</div>
-				<div class="button" val-mode='initText'>纯文本</div>
+				<div class="button" val-mode='initText'>文本</div>
 			</div>
 		</div>
 		<div class="block">

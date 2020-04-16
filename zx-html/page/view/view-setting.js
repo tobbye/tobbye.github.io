@@ -4,6 +4,9 @@ var gap = 0.2;
 var leng = 100;
 var name = 'item';
 var mode = 'initSplit';
+
+var isMobile;
+var isCenter = false;
 var zoomMobile = 2.00;
 var zoomComputer = 0.60;
 window.onload = function() {
@@ -25,6 +28,7 @@ function initJoin() {
     var outer = Elem.get('outer');
     outer.innerHTML = '';
     jsonToTable(outer, list, name);
+    resetOuter(outer);
     window.onresize();
 }
 
@@ -33,17 +37,44 @@ function initSplit() {
     var outer = Elem.get('outer');
     outer.innerHTML = '';
     loopSplit(outer, list, name, 0);
-    for (let x in outer.childNodes) {
-        var child = outer.childNodes[x];
-        if (child && child.style) {
-            child.id = child.className + x;
-            var node = child.childNodes[1];
-            if (node && node.style) {
-                node.className = 'view';
-            }
-        }
-    }
+    resetOuter(outer);
 	window.onresize();
+}
+
+function initCenter() {
+
+}
+
+function resetOuter(outer) {
+    if (isCenter) continue;
+    for (var i=0;i<outer.children.length;i++) {
+        var inner = outer.children[i];
+        inner.id = inner.className + i;
+
+        var table = inner.children[0];
+        var title = table.children[0].children[0].children[0];
+        table.className = 'view';
+        title.style.textAlign = "left";
+    }
+    for (var i=0;i<outer.children.length;i++) {
+        var inner = outer.children[i];
+        restInner(inner);
+    }
+}
+
+function restInner(inner) {
+    var next = inner.nextSibling;
+    if (!next || !next.style) 
+        return;
+    if (next.getAttribute("layer") == inner.getAttribute("layer")) {
+        var tbodyThis = inner.children[0].children[0];
+        var tbodyNext = next.children[0].children[0];
+        while (tbodyNext.hasChildNodes())
+            tbodyThis.appendChild(tbodyNext.firstChild);
+        next.parentNode.removeChild(next);
+        restInner(inner);
+    }
+
 }
 
 
@@ -56,15 +87,21 @@ function loopSplit(outer, list, path, layer) {
         if (typeof (list[y]).constructor === Array) {
             lines[y] = cloneJson(list[y]);
             list[y] = [y];
+            console.log('--------------------------------');
+            console.log(path);
+            console.log(list[y]);
+            console.log('obj.length: ' + list[y].length);
+            console.log('str.length: ' + length);
         } else if (typeof (list[y]) == 'object' && (length > leng*(1-gap))) {
             lines[y] = cloneJson(list[y]);
             list[y] = [y];
+            console.log('--------------------------------');
+            console.log(path);
+            console.log(list[y]);
+            console.log('obj.length: ' + list[y].length);
+            console.log('str.length: ' + length);
         }
-        console.log('--------------------------------');
-        console.log('path: ' + path);
-        console.log(list[y]);
-        console.log('obj.length: ' + list[y].length);
-        console.log('str.length: ' + length);
+
     }
     layer ++;
     jsonToTable(outer, list, path, layer);
@@ -90,9 +127,10 @@ function jsonToTable(outer, data, title, layer) {
 	str = str.replace(/{/g, '<tr><td><h1>').replace(/}/g, '</td></tr>');
 	str = str.replace(/,/g, '</td><td><h1>').replace(/,/g, '</td><td>');
 	str = str.replace(/":/g, '</h1>').replace(/"/g, '');
+    str = str.replace("<tr><td>", "<tr><td class='title' colspan='100'>" + title + "</td></tr><tr><td>");
 	var inner = Elem.creat('div', outer, 'inner');
     inner.setAttribute('layer', layer);
-	inner.innerHTML = '<h2>' + title + '</h2>' + str;
+	inner.innerHTML = str;
 }
 
 
@@ -124,6 +162,10 @@ function tapButton(btn) {
     var lengVal = btn.getAttribute('val-leng');
     var nameVal = btn.getAttribute('val-name');
     //run action
+    if (modeVal == "initCenter") {
+        isCenter = !isCenter;
+        eval(mode+'();');
+    } else
     if (modeVal && typeof(eval(modeVal)) == 'function') {
         mode = modeVal;
         eval(mode+'();');
@@ -207,15 +249,8 @@ var Elem = {
             elem.style.backgroundColor = bgcolor;
         }
     },
-    align: function(elem, align, width) {
-        if (elem) {
-            elem.style.textAlign = align;
-            elem.style.width = width + '%';
-        }
-    },
     remove: function (elem) {
-        if(elem)
+        if(elem && elem.style)
             elem.parentNode.removeChild(elem);
-        return !!elem;
     }
 }
