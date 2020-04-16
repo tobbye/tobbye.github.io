@@ -1,6 +1,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
+	<script src="view-data.js"> </script>
 	<script src="view-setting.js"> </script>
 	<style type="text/css"> 
 		body {
@@ -40,6 +41,7 @@
 		td {
 			padding: 3px 10px;
 			min-width: 30px;
+			font-size: 1em;
 			text-align: center;
 			word-break: keep-all;
 			border: solid 1.5px #888;
@@ -56,7 +58,7 @@
 		}
 
 		h2 {
-			color: darkred;
+			color: darkorange;
 	        font-size: 1.2em;
 			margin-bottom: 2px; 
     	}
@@ -81,12 +83,19 @@
 			overflow: auto;
 		}
 
+		#outer-bot {
+		}
+
 		.inner {
 			margin: 10px 0px;
 		}
 
 		.view {
 			margin: 0px;
+		}
+
+		.block {
+			flex: 10;
 		}
 
 		.flex {
@@ -96,17 +105,19 @@
 			background-color: #eee;
 		}
 
-		.button {
-			flex: 10;
-			margin: 2px;
-			padding: 10px;
+		.vice {
 			font-size: 1.5em;
-			background-color: #fff;
+			font-style: italic;
+			line-height: 40px;
+			color: dodgerblue;
+			text-align: center;
 		}
 
-		.button:hover,.button:active {
-			color: #fff;
-			background-color: dodgerblue;
+		.button {
+			flex: 10;
+			font-size: 1.4em;
+			line-height: 50px;
+			background-color: #fff;
 		}
 
 	</style>
@@ -114,27 +125,35 @@
 </head>
 <body>
 	<div id="outer"></div>
-	<div class="flex">
-		<div class="button" onclick='back()'>返回</div>
-		<div class="button" onclick='initJoin()'>合并</div>
-		<div class="button" onclick='initSplit()'>拆分</div>
-		<div class="button" onclick='initText()'>纯文本</div>
-	</div>
-	<div class="flex">
-		<div class="button" onclick='initBreak(10)'>10</div>
-		<div class="button" onclick='initBreak(20)'>20</div>
-		<div class="button" onclick='initBreak(50)'>50</div>
-		<div class="button" onclick='initBreak(100)'>100</div>
-		<div class="button" onclick='initBreak(200)'>200</div>
-	</div>
-	<div class="flex">
-		<div class="button" onclick='initMode("Array")'>Array</div>
-		<div class="button" onclick='initMode("Object")'>Object</div>
-	</div>
-	<div class="flex">
-		<div class="button" onclick='initData("item")'>Item</div>
-		<div class="button" onclick='initData("config")'>Config</div>
-		<div class="button" onclick='initData("tempdata")'>TempData</div>
+	<div id="outer-bot">
+		<div class="block">
+			<div class="vice">Slect A Action</div>
+			<div class="flex" id="flex1">
+				<div class="button" val-mode='back'>返回</div>
+				<div class="button" val-mode='initJoin'>合并</div>
+				<div class="button" val-mode='initSplit'>拆分</div>
+				<div class="button" val-mode='initText'>纯文本</div>
+			</div>
+		</div>
+		<div class="block">
+			<div class="vice">Split Length</div>
+			<div class="flex" id="flex2">
+				<div class="button" val-leng=10>10</div>
+				<div class="button" val-leng=20>20</div>
+				<div class="button" val-leng=50>50</div>
+				<div class="button" val-leng=100>100</div>
+				<div class="button" val-leng=200>200</div>
+				<div class="button" val-leng=500>500</div>
+			</div>
+		</div>
+		<div class="block">
+			<div class="vice">Slect A Data</div>
+			<div class="flex" id="flex3">
+				<div class="button" val-name="item">Item</div>
+				<div class="button" val-name="config">Config</div>
+				<div class="button" val-name="testdata">TestData</div>
+			</div>
+		</div>
 	</div>
 </body>
 </html>

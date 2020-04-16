@@ -35,11 +35,11 @@ var testData = {
 		lineLength: 30,
 		fontStyle: "40px bold 黑体",
 		cells: [
-		{text:'', rotate: 0.0, textPos:[0, -1.2], fillStyle:'#fff', pos:[[0,0],[-5.7,-2],[5.7,-2], [0,0]]},
-		{text:'三棱', rotate: 0.3, textPos:[-3, 1], fillStyle:'#fff', pos:[[0,0],[-6,-2],[-6,2],[0,4]]},
-		{text:'科技', rotate: -0.6, textPos:[ 3, 1], fillStyle:'#fff', pos:[[0,0],[6,-2],[6,2], [0,4]]},
+		{text:'ZHANG', rotate: 0.0, textPos:[0, -1.2], fillStyle:'#fff', pos:[[0,0],[-5.7,-2],[5.7,-2], [0,0]]},
+		{text:'JIA', rotate: 0.3, textPos:[-3, 1], fillStyle:'#fff', pos:[[0,0],[-6,-2],[-6,2],[0,4]]},
+		{text:'LIANG', rotate: -0.6, textPos:[ 3, 1], fillStyle:'#fff', pos:[[0,0],[6,-2],[6,2], [0,4]]},
 		],
-		style1: [{
+		style1: {
 			drawTran: [-176, 100],
 			drawRote: -0.48,
 			paintTran: [-303, 80],
@@ -53,9 +53,9 @@ var testData = {
 			{color:'blue',		tranX:72, tranY:-29, rotate:0.16},
 			{color:'purple',	tranX:72, tranY:-29, rotate:0.16},
 			]
-		}],
+		},
 
-		style2: [{
+		style2: {
 			drawTran: [-192, 100],
 			drawRote: -0.48,
 			paintTran: [-308, 50],
@@ -69,9 +69,9 @@ var testData = {
 			{color:'blue',		tranX:75, tranY:-59, rotate:0.16},
 			{color:'purple',	tranX:75, tranY:  1, rotate:0.16},
 			]
-		}],
+		},
 
-		style3: [{
+		style3: {
 			drawTran: [-150,-140],
 			drawRote: 0,
 			paintTran: [-200, 100],
@@ -85,7 +85,7 @@ var testData = {
 			{color:'blue',		tranX:50, tranY: 20, rotate:0},
 			{color:'purple',	tranX:50, tranY: 20, rotate:0},
 			]
-		}],
+		},
 	},
 }
 

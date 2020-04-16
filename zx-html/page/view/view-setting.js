@@ -1,25 +1,29 @@
 
-var data, num, mode, name, title;
+var data, title;
+var gap = 0.2;
+var leng = 100;
+var name = 'item';
+var mode = 'initSplit';
+var zoomMobile = 2.00;
+var zoomComputer = 0.60;
 window.onload = function() {
-    num = 50;
-    name = "item";
-    mode = "Array";
-    data = getJson("json-" + name);
-    initJoin();
-    // setButton();
+
+    data = getJson('json-' + name);
+    initSplit();
+    setButton();
 }
 
 function initText() {
     var list = cloneJson(data);
     var outer = Elem.get('outer');
-    outer.innerHTML = JSON.stringify(list);
+    outer.innerHTML = JSON.stringify(list).replace(/,/g, ', ');
     window.onresize();
 }
 
 function initJoin() {
     var list = cloneJson(data);
     var outer = Elem.get('outer');
-    outer.innerHTML = "";
+    outer.innerHTML = '';
     jsonToTable(outer, list, name);
     window.onresize();
 }
@@ -27,15 +31,15 @@ function initJoin() {
 function initSplit() {
     var list = cloneJson(data);
     var outer = Elem.get('outer');
-    outer.innerHTML = "";
-    loopSplit(outer, list, name);
+    outer.innerHTML = '';
+    loopSplit(outer, list, name, 0);
     for (let x in outer.childNodes) {
         var child = outer.childNodes[x];
         if (child && child.style) {
             child.id = child.className + x;
             var node = child.childNodes[1];
             if (node && node.style) {
-                node.className = "view";
+                node.className = 'view';
             }
         }
     }
@@ -43,59 +47,52 @@ function initSplit() {
 }
 
 
-function loopSplit(outer, list, key) {
+function loopSplit(outer, list, path, layer) {
     var dict;
     var lines = {};
     for (let y in list) {
-        // if (list[y] !=  null)
-        //     continue;
+        if (list[y] == null) continue;
         var length = JSON.stringify(list[y]).length;
-        if (list[y] != null && mode == "Object") {
-            //流下object, 以及str.len>50 || list.len>=3
-            if (typeof (list[y]) !== "object")
-                continue;
-            if (length < num && list[y].length < 3)
-                continue;
-        } 
-        if (list[y] != null && mode == "Array") {
-            //忽略Array和长的，留下短的
-            if (typeof (list[y]).constructor === Array)
-                continue;
-            if (length < num)
-                continue;
+        if (typeof (list[y]).constructor === Array) {
+            lines[y] = cloneJson(list[y]);
+            list[y] = [y];
+        } else if (typeof (list[y]) == 'object' && (length > leng*(1-gap))) {
+            lines[y] = cloneJson(list[y]);
+            list[y] = [y];
         }
-
-
-        lines[y] = cloneJson(list[y]);
-        list[y] = [y];
+        console.log('--------------------------------');
+        console.log('path: ' + path);
+        console.log(list[y]);
+        console.log('obj.length: ' + list[y].length);
+        console.log('str.length: ' + length);
     }
-    // if (list.length > 0)
-        jsonToTable(outer, list, key);
+    layer ++;
+    jsonToTable(outer, list, path, layer);
     for (let y in lines) {
         if (/^\d+$/.test(y))
-            dict = key + "[" + y + "]";
+            dict = path + '[' + y + ']';
         else
-            dict = key + "." + y;
-        loopSplit(outer, lines[y], dict);
+            dict = path + '.' + y;
+        loopSplit(outer, lines[y], dict, layer);
     }
 }
 
 
 
-function jsonToTable(outer, data, title) {
-    console.log(mode);
+function jsonToTable(outer, data, title, layer) {
     console.log(data);
     var str = JSON.stringify(data);
-    // title = title.replace(/]./g, "]");
-    str = str[0] == "{" ? "[" + str + "]" : str;
+    // title = title.replace(/]./g, ']');
+    str = str[0] == '{' ? '[' + str + ']' : str;
 	str = str.replace(/\\n/g, '<br/>').replace(/\\/g, '');
 	str = str.replace(/\[{/g, '<table><tr><td><h1>').replace(/}]/g, ']').replace(/},/g, '}');
 	str = str.replace(/\[/g, '<table><tr><td>').replace(/]/g, '</td></tr></table>');
 	str = str.replace(/{/g, '<tr><td><h1>').replace(/}/g, '</td></tr>');
 	str = str.replace(/,/g, '</td><td><h1>').replace(/,/g, '</td><td>');
 	str = str.replace(/":/g, '</h1>').replace(/"/g, '');
-	var inner = Elem.creat("div", outer, 'inner');
-	inner.innerHTML = "<h2>" + title + "</h2>" + str;
+	var inner = Elem.creat('div', outer, 'inner');
+    inner.setAttribute('layer', layer);
+	inner.innerHTML = '<h2>' + title + '</h2>' + str;
 }
 
 
@@ -111,36 +108,56 @@ function getJson(name) {
     return json;
 }
 
-function initData(str) {
-    name = str;
-    data = getJson("json-" + name);
-    initJoin();
-}
-
-function initMode(str) {
-    mode = str;
-}
-
-function initBreak(str) {
-    num = str;
-}
-
 function setButton() {
-    var buttons = document.getElementsByClassName("button");
+    var buttons = document.getElementsByClassName('button');
     for (var i=0;i<buttons.length;i++) {
-        buttons[i].onclick = function() {
-            var nodes = this.parentNode.childNodes;
-            for (let idx in nodes) {
-                if (this.innerHTML == nodes[idx].innerHTML)  {
-                    Elem.color(nodes[idx], "#fff", "dodgerblue");
-                } else {
-                    Elem.color(nodes[idx], "dodgerblue", "#fff");
-                }               
-            }
+        var btn = buttons[i];
+        togButton(btn);  
+        btn.onclick = function() {
+            tapButton(this);
         }
     }
 }
 
+function tapButton(btn) {
+    var modeVal = btn.getAttribute('val-mode');
+    var lengVal = btn.getAttribute('val-leng');
+    var nameVal = btn.getAttribute('val-name');
+    //run action
+    if (modeVal && typeof(eval(modeVal)) == 'function') {
+        mode = modeVal;
+        eval(mode+'();');
+    }
+    //split length
+    if (lengVal) {
+        leng = lengVal;
+        eval(mode+'();');
+    }
+    //data name
+    if (nameVal) {
+        name = nameVal;
+        if (name == 'testdata') 
+            data = cloneJson(testData);
+        else
+            data = getJson('json-' + name);
+        eval(mode+'();');
+    }
+    var nodes = btn.parentNode.childNodes;
+    for (let x in nodes) {
+        togButton(nodes[x]);            
+    }
+}
+
+function togButton(btn) {
+    if (!btn || !btn.style) return;
+    if (btn.getAttribute('val-mode') == mode || 
+        btn.getAttribute('val-leng') == leng || 
+        btn.getAttribute('val-name') == name) {
+        Elem.color(btn, '#fff', 'dodgerblue');
+    } else {
+        Elem.color(btn, 'dodgerblue', '#fff');
+    }     
+}
 
 
 function back() {
@@ -149,13 +166,23 @@ function back() {
 }
 
 window.onresize = function() {
+    var isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
+    var zoom = isMobile ? zoomMobile : zoomComputer;
+    //20 = outer.paddingTop + outer.paddingBot;
+    var height = window.innerHeight / zoom - 20;
+    document.body.style.zoom = zoom;
     var outer = Elem.get('outer');
-    if (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent)) {
-        document.body.style.zoom =  2;
-        document.body.style.height = window.innerHeight * 0.5 + "px";
-        outer.style.height = (window.innerHeight * 0.5 - 80) + 'px';
-    } else {
-        outer.style.height = (window.innerHeight - 80) + 'px';
+    outer.style.height = (height - 90) + 'px';
+    if (isMobile) return;
+    var outerBot = Elem.get('outer-bot');
+    outerBot.style.display = 'flex';
+    outerBot.style.marginTop = "-4px";
+    outerBot.style.marginLeft = "-4px";
+    var blocks = document.getElementsByClassName('block');
+    for (var i=0;i<blocks.length;i++) {
+        blocks[i].style.fontSize = '1.2em';
+        blocks[i].style.borderTop = 'solid 4px #aaa';
+        blocks[i].style.borderLeft = 'solid 4px #aaa';
     }
 }
 
@@ -171,7 +198,7 @@ var Elem = {
         if (parent)
             parent.appendChild(data);
         if (idx && className)
-            data.id = className + "_" + idx;
+            data.id = className + '_' + idx;
         return data;
     },
     color: function(elem, color, bgcolor) {
@@ -183,7 +210,7 @@ var Elem = {
     align: function(elem, align, width) {
         if (elem) {
             elem.style.textAlign = align;
-            elem.style.width = width + "%";
+            elem.style.width = width + '%';
         }
     },
     remove: function (elem) {
