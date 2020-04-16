@@ -27,7 +27,7 @@ btnName: ['Get', 'Set', 'Clear'],
 btnText: ['获取', '写入', '清空'],
 },
 
-{title: '调试', vice: '选择调试方式', default: 0, key: 'debugType',
+{title: '调试', vice: '是否开启调试功能', default: 0, key: 'debugType',
 btnName: ['Close', 'Open'],
 btnText: ['关闭', '开启'],
 },

@@ -6,9 +6,11 @@ var name = 'item';
 var mode = 'initSplit';
 
 var isMobile;
+var isHide = false;
 var isCenter = false;
+var zoom = 1.00;
 var zoomMobile = 2.00;
-var zoomComputer = 0.60;
+var zoomComputer = 0.70;
 window.onload = function() {
 
     data = getJson('json-' + name);
@@ -46,20 +48,24 @@ function initCenter() {
 }
 
 function resetOuter(outer) {
-    if (isCenter) continue;
-    for (var i=0;i<outer.children.length;i++) {
-        var inner = outer.children[i];
-        inner.id = inner.className + i;
+    if (!isCenter) {
+        for (var i=0;i<outer.children.length;i++) {
+            var inner = outer.children[i];
+            inner.id = inner.className + i;
 
-        var table = inner.children[0];
-        var title = table.children[0].children[0].children[0];
-        table.className = 'view';
-        title.style.textAlign = "left";
-    }
+            var title = inner.children[0];
+            var table = inner.children[1];
+            table.className = 'view';
+            title.style.textAlign = "left";
+        } 
+    } 
+
     for (var i=0;i<outer.children.length;i++) {
         var inner = outer.children[i];
         restInner(inner);
-    }
+    } 
+
+    
 }
 
 function restInner(inner) {
@@ -67,8 +73,15 @@ function restInner(inner) {
     if (!next || !next.style) 
         return;
     if (next.getAttribute("layer") == inner.getAttribute("layer")) {
-        var tbodyThis = inner.children[0].children[0];
-        var tbodyNext = next.children[0].children[0];
+        var tbodyThis = inner.children[1].children[0];
+        var tbodyNext = next.children[1].children[0];
+        if (tbodyThis.children[0].children.length < 6)
+            return;
+        var title = Elem.creat("tr", tbodyThis);
+        var align = isCenter ? "center" : "left";
+        var tdstr = "<tr><td class='title' colspan='100' style='text-align:" + align + "';>";
+        title.innerHTML = tdstr + next.children[0].innerHTML + "</td></tr>";
+
         while (tbodyNext.hasChildNodes())
             tbodyThis.appendChild(tbodyNext.firstChild);
         next.parentNode.removeChild(next);
@@ -89,7 +102,6 @@ function loopSplit(outer, list, path, layer) {
             list[y] = [y];
             console.log('--------------------------------');
             console.log(path);
-            console.log(list[y]);
             console.log('obj.length: ' + list[y].length);
             console.log('str.length: ' + length);
         } else if (typeof (list[y]) == 'object' && (length > leng*(1-gap))) {
@@ -97,7 +109,6 @@ function loopSplit(outer, list, path, layer) {
             list[y] = [y];
             console.log('--------------------------------');
             console.log(path);
-            console.log(list[y]);
             console.log('obj.length: ' + list[y].length);
             console.log('str.length: ' + length);
         }
@@ -117,9 +128,8 @@ function loopSplit(outer, list, path, layer) {
 
 
 function jsonToTable(outer, data, title, layer) {
-    console.log(data);
+    // console.log(data);
     var str = JSON.stringify(data);
-    // title = title.replace(/]./g, ']');
     str = str[0] == '{' ? '[' + str + ']' : str;
 	str = str.replace(/\\n/g, '<br/>').replace(/\\/g, '');
 	str = str.replace(/\[{/g, '<table><tr><td><h1>').replace(/}]/g, ']').replace(/},/g, '}');
@@ -127,7 +137,7 @@ function jsonToTable(outer, data, title, layer) {
 	str = str.replace(/{/g, '<tr><td><h1>').replace(/}/g, '</td></tr>');
 	str = str.replace(/,/g, '</td><td><h1>').replace(/,/g, '</td><td>');
 	str = str.replace(/":/g, '</h1>').replace(/"/g, '');
-    str = str.replace("<tr><td>", "<tr><td class='title' colspan='100'>" + title + "</td></tr><tr><td>");
+    str = "<div class='title'>" + title + "</div>" + str;
 	var inner = Elem.creat('div', outer, 'inner');
     inner.setAttribute('layer', layer);
 	inner.innerHTML = str;
@@ -197,7 +207,7 @@ function togButton(btn) {
         btn.getAttribute('val-name') == name) {
         Elem.color(btn, '#fff', 'dodgerblue');
     } else {
-        Elem.color(btn, 'dodgerblue', '#fff');
+        Elem.color(btn, 'dodgerblue', '#eee');
     }     
 }
 
@@ -209,22 +219,28 @@ function back() {
 
 window.onresize = function() {
     var isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
-    var zoom = isMobile ? zoomMobile : zoomComputer;
+    zoom = isMobile ? zoomMobile : zoomComputer;
     //20 = outer.paddingTop + outer.paddingBot;
     var height = window.innerHeight / zoom - 20;
     document.body.style.zoom = zoom;
     var outer = Elem.get('outer');
+    var child = Elem.get("flex1").children[2];
+    //outer.scrollWidth超出body.inner,隐藏居中按钮
+    isHide = outer.scrollWidth * zoom > window.innerWidth;
     outer.style.height = (height - 90) + 'px';
-    if (isMobile) return;
+    child.style.display = isHide ? "none" : "inline";
+    if (isMobile) 
+        return;
+    //改变outerBot的布局，使3个flex排成一排
     var outerBot = Elem.get('outer-bot');
     outerBot.style.display = 'flex';
-    outerBot.style.marginTop = "-4px";
-    outerBot.style.marginLeft = "-4px";
+    outerBot.style.marginTop = "-2px";
+    outerBot.style.marginLeft = "-2px";
     var blocks = document.getElementsByClassName('block');
     for (var i=0;i<blocks.length;i++) {
         blocks[i].style.fontSize = '1.2em';
-        blocks[i].style.borderTop = 'solid 4px #aaa';
-        blocks[i].style.borderLeft = 'solid 4px #aaa';
+        blocks[i].style.borderTop = 'solid 2px #888';
+        blocks[i].style.borderLeft = 'solid 2px #888';
     }
 }
 
