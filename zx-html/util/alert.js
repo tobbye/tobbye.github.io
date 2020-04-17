@@ -132,7 +132,7 @@ function setChatAlert() {
     var input = Elem.get("chat-textarea");
     Elem.color(box, "", getColorLight());
     Elem.color(input, getColorLight(), "");
-    title.innerHTML = config.line.name;
+    title.innerHTML = document.body.line.name;
     box.style.maxHeight = (config.windHeight - 440) + "px";
     block.style.maxHeight = (config.windHeight - 703) + "px";
     block.innerHTML = "";
@@ -191,8 +191,10 @@ function getChatLength(value) {
 function onChatFocus() {
     var box = Elem.get("alert-box");
     var block = Elem.get("detail-block");
-    box.style.maxHeight = (config.windHeight - 940) + "px";
-    block.style.maxHeight = (config.windHeight - 1203) + "px";
+    if (config.isMobile && !config.isWechat) {
+        box.style.maxHeight = (config.windHeight - 940) + "px";
+        block.style.maxHeight = (config.windHeight - 1203) + "px";
+    }
     block.lastChild.scrollIntoView();
     var input = Elem.get("chat-textarea");
     Elem.color(input, getColorType(), "");

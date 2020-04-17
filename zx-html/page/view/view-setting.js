@@ -9,24 +9,24 @@ var isMobile;
 var isHide = false;
 var isCenter = false;
 var zoom = 1.00;
-var zoomMobile = 2.10;
+var zoomMobile = 2.00;
 var zoomComputer = 0.70;
 window.onload = function() {
 
-    data = getJson('json-' + name);
+    data = getJson(name);
     initSplit();
     setButton();
 }
 
 function initText() {
-    var list = cloneJson(data);
+    var list = copyJson(data);
     var outer = Elem.get('outer');
     outer.innerHTML = JSON.stringify(list).replace(/,/g, ', ');
     window.onresize();
 }
 
 function initJoin() {
-    var list = cloneJson(data);
+    var list = copyJson(data);
     var outer = Elem.get('outer');
     outer.innerHTML = '';
     jsonToTable(outer, list, name);
@@ -35,7 +35,7 @@ function initJoin() {
 }
 
 function initSplit() {
-    var list = cloneJson(data);
+    var list = copyJson(data);
     var outer = Elem.get('outer');
     outer.innerHTML = '';
     loopSplit(outer, list, name, 0);
@@ -63,9 +63,6 @@ function resetOuter(outer) {
     } 
 }
 
-String.prototype.endWith=function(str){  
-    return new RegExp(str+"$").test(this);     
-} 
 
 function resetInner(inner) {
     var next = inner.nextSibling;
@@ -102,7 +99,7 @@ function loopSplit(outer, list, path, layer) {
         if (list[y] == null) continue;
         var length = JSON.stringify(list[y]).length;
         if (typeof (list[y]) == 'object' && (length > leng * mix)) {
-            lines[y] = cloneJson(list[y]);
+            lines[y] = copyJson(list[y]);
             list[y] = [y];
         }
     }
@@ -140,16 +137,12 @@ function jsonToTable(outer, data, title, layer) {
 }
 
 
-function cloneJson(obj) {
-    obj = obj || [];
-    return JSON.parse(JSON.stringify(obj));
+function copyJson(json) {
+    return JSON.parse(JSON.stringify(json || []));
 }
 
 function getJson(name) {
-    var json = localStorage.getItem(name);
-    json = JSON.parse(json);
-    json = JSON.parse(json.toString());
-    return json;
+    return JSON.parse(localStorage.getItem(name));
 }
 
 function setButton() {
@@ -162,6 +155,7 @@ function setButton() {
         }
     }
 }
+
 
 function tapButton(btn) {
     var modeVal = btn.getAttribute('val-mode');
@@ -185,9 +179,9 @@ function tapButton(btn) {
     if (nameVal) {
         name = nameVal;
         if (name == 'testdata') 
-            data = cloneJson(testData);
+            data = copyJson(testData);
         else
-            data = getJson('json-' + name);
+            data = getJson(name);
         eval(mode+'();');
     }
     var nodes = btn.parentNode.childNodes;
@@ -209,8 +203,7 @@ function togButton(btn) {
 
 
 function back() {
-    var page = JSON.parse(localStorage.getItem('json-page'));
-    window.location.href = page;
+    window.location.href = getJson('page');
 }
 
 window.onresize = function() {
@@ -225,20 +218,19 @@ window.onresize = function() {
     isHide = outer.scrollWidth * zoom > window.innerWidth;
     outer.style.height = (height - 90) + 'px';
     child.style.display = isHide ? "none" : "inline";
-    if (isMobile) 
-        return;
-    //改变outerBot的布局，使3个flex排成一排
+    var agent = isMobile ? "mobile" : "computer";
     var outerBot = Elem.get('outer-bot');
-    outerBot.style.display = 'flex';
-    outerBot.style.marginTop = "-2px";
-    outerBot.style.marginLeft = "-2px";
+    outerBot.setAttribute("agent", agent);
     var blocks = document.getElementsByClassName('block');
     for (var i=0;i<blocks.length;i++) {
-        blocks[i].style.fontSize = '1.2em';
-        blocks[i].style.borderTop = 'solid 2px #888';
-        blocks[i].style.borderLeft = 'solid 2px #888';
+        blocks[i].setAttribute("agent", agent);
     }
 }
+
+
+String.prototype.endWith=function(str){  
+    return new RegExp(str+"$").test(this);     
+} 
 
 
 var Elem = {

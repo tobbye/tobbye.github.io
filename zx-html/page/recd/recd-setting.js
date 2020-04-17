@@ -104,13 +104,14 @@ function pushdata(json, sort, y) {
         left: json.value * sort[y].left,
         right: json.value * sort[y].right
     };
+    var order = config.order;
     var idx = sort[y].idx;
     var list = items[idx].list[0];
     if (items[idx].list.length == 1)
-        sort[idx].list = list;
-    if (!sort[idx].day || sort[idx].day == json.date) {
-        sort[idx].list.vice = json.date;
-        sort[idx].list.lines.push(data);
+        order[idx] = list;
+    if (!order[idx].day || order[idx].day == json.date) {
+        order[idx].vice = json.date;
+        order[idx].lines.push(data);
     } else {
         var newlist = {
             title:"",
@@ -120,10 +121,10 @@ function pushdata(json, sort, y) {
             lines:[list.lines[0]]
         }
         items[idx].list.push(newlist);
-        sort[idx].list = newlist;
-        sort[idx].list.lines.push(data);
+        order[idx] = newlist;
+        order[idx].lines.push(data);
     }
-    sort[idx].day = json.date;
+    order[idx].day = json.date;
 }
 
 

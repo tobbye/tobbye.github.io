@@ -65,9 +65,7 @@ function setLine(content, data, x, y) {
 		Elem.color(btn, "dodgerblue", "#fff");
 		btn.onclick = function() {
 			var btnName = this.btnName.toLowerCase();
-    		var setting = Storage.get("setting") || new Object();
-			setting[this.key] = btnName;
-			Storage.set("setting", setting);
+    		Storage.update("config", this.key, btnName);
 			var nodes = this.parentNode.childNodes;
 			for (let idx in nodes) {
 				if (this.innerHTML == nodes[idx].innerHTML)  {
@@ -78,6 +76,10 @@ function setLine(content, data, x, y) {
 			}
 			btnName = btnName.replace("default", "values");
 			var value = Storage.get(btnName);
+			if (this.y == 0) {
+				config.colorType = btnName;
+				document.body.style.color = getColorType();
+			}
 			if (this.y == 2)
 				value = localData.init(btnName);
 			if (Elem.get('data-box'))

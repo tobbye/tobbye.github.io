@@ -73,6 +73,14 @@
 
 		#outer-bot {
 			background-color: #eee;
+		}#outer-bot[agent=mobile] {
+			display: block;
+			margin-top: 0px;
+			margin-left: 0px;
+		}#outer-bot[agent=computer] {
+			display: flex;
+			margin-top: -2px;
+			margin-left: -2px;
 		}
 
 		.inner {
@@ -94,6 +102,12 @@
 
 		.block {
 			flex: 10;
+		}.block[agent=mobile] {
+			border-top: solid 0px #eee;
+			border-left: solid 0px #eee;
+		}.block[agent=computer] {
+			border-top: solid 2px #888;
+			border-left: solid 2px #888;
 		}
 
 		.flex {
@@ -104,6 +118,7 @@
 
 		.vice {
 			height: 40px;
+			font-size: 1.1em;
 			line-height: 40px;
 			color: dodgerblue;
 			text-align: center;
@@ -111,7 +126,7 @@
 
 		.button {
 			flex: 10;
-			font-size: 1.2em;
+			font-size: 1.3em;
 			line-height: 50px;
 		}
 

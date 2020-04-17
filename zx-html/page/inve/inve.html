@@ -41,16 +41,14 @@
         margin-bottom: 0px;
     }
 
-    .lineA {
-        flex: 6;
-        padding: 10px 10px;
-        font-size: 3em; 
-    }
-
-    .lineB{
+    .line {
         flex: 10;
         padding: 10px 10px;
         font-size: 3em; 
+    }.line[btype=A] {
+        flex: 12;
+    }.line[btype=B] {
+        flex: 20;
     }
 
     .user-index {

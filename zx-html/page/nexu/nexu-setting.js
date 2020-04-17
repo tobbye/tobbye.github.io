@@ -63,8 +63,8 @@ function setLine(content, data, x, y) {
 		flex.line = line;
 		flex.x = x;
 		flex.onclick = function() {
-			elems.line = this.line;
-			elems.lines = this.data.lines;
+			document.body.line = this.line;
+			document.body.lines = this.data.lines;
 			console.log(this.line);
 			setDetailAlert(this);
 		}
@@ -107,7 +107,7 @@ function setDetailAlert(flex) {
 
 	var x = flex.x;
 	var data = flex.data;
-	var line = elems.line;
+	var line = document.body.line;
 	var body = Elem.creat("div", block, "user-body");
 	var head = setLineFlex(body, line, x);
 	var tags = Elem.creat("div", body, "user-tags");
@@ -154,7 +154,7 @@ function setNexu(btn) {
 	if (data.idx == 2) {
 		hideAlert();
 		Elem.remove(btn.flex);
-		Parse.remove(elems.lines, elems.line);
+		Parse.remove(document.body.lines, document.body.line);
 	}
 }
 

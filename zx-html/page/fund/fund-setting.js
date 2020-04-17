@@ -249,8 +249,9 @@ function refresh() {
 	console.log(str);
 	// input.value = 0;
 	localData.save();
-	setOuterCenter(idx);
-	setInner();
+	setOuterCenter();
+	config.isInto = true;
+	setInner(idx);
 }
 
 

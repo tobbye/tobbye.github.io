@@ -62,8 +62,8 @@ function setLine(content, data, x, y) {
 		body.line = line;
 		body.x = x;
 		body.onclick = function() {
-			config.line = this.line;
-			config.lines = this.data.lines;
+			document.body.line = this.line;
+			document.body.lines = this.data.lines;
 			console.log(this.line);
 			setDetailAlert(this);
 		}
@@ -186,7 +186,7 @@ function setNexu(btn) {
 	if (data.idx == 2) {
 		hideAlert();
 		Elem.remove(btn.elem);
-		Parse.remove(config.lines, config.line);
+		Parse.remove(document.body.lines, document.body.line);
 	}
 }
 

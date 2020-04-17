@@ -212,8 +212,9 @@ function initLineData(line, dot, isGrab) {
 }
 
 
-function setLineText(flex, idx, text) {
-    var line = Elem.creat("text", flex, "line" + idx);
+function setLineText(flex, attr, text) {
+    var line = Elem.creat("text", flex, "line");
+    line.setAttribute("btype", attr);
     line.innerHTML = text;
     return line;
 }

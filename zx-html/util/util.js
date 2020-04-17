@@ -350,6 +350,13 @@ Storage.add = function (name, addVal) {
     Storage.set(name, newVal);
 }
 
+Storage.update = function(name, key, val) {
+    var data = Storage.get(name) || {};
+    data[key] = val;
+    Storage.set(name, data);
+}
+
+
 Storage.clear = function () {
   localStorage.clear();
 }
@@ -418,7 +425,7 @@ var contentText = function(a, b, c) {
 
 //显示内页
 var setInner = function(innerIdx) {
-    var page = Storage.get("json-page");
+    var page = Storage.get("page");
     var idx = config.isInto ? config.innerIdx : innerIdx || 0;
     var outerTop = Elem.get("outer-top").children;
     var outerCenter = Elem.get("outer-center").children;
@@ -437,18 +444,15 @@ var setInner = function(innerIdx) {
     }
     Elem.color(document.body, getColorType(idx), "");
     config.innerIdx = idx;
-    Storage.update('setting', 'innerIdx', idx);
-    if (config.isInto || innerIdx == null) {
+    if (config.isInto || innerIdx == null || config.debugType == "close") {
         config.isInto = false;
-        Storage.update('setting', 'isInto', false);
-        return;
+        Storage.set('config', config);
+        console.log(config);
+    } else if (config.debugType == "open") {
+        config.isInto = true;
+        Storage.set('config', config);
+        jsonToTable(items[idx]); 
     }
-    setTimeout(function() {
-        if (config.debugType == "close")
-            console.log(config);
-        else if (config.debugType == "open")
-            jsonToTable(items[idx]); 
-    }, 0);
 
 }
 
@@ -495,45 +499,63 @@ var setClick = function(name, func) {
     }
 }
 
-var resize = function() {
-    config.windWidth = window.innerWidth;
-    config.windHeight = window.innerHeight;
-    config.windHeight *= 1/config.zoom;
-    config.alertHeight = config.windHeight - config.alertOffset;
+window.onresize = function() {
+    var constant = config.constant;
+    if (!constant) return;
+    config.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
+    config.isWechat = (/micromessenger|MicroMessenger/i.test(navigator.userAgent));
+    config.zoom = config.isMobile ? constant.zoomMobile : constant.zoomComput;
+    config.zoom = config.isWechat ? constant.zoomWechat : config.zoom;
+    config.windWidth = Math.floor(window.innerWidth / config.zoom);
+    config.windHeight = Math.floor(window.innerHeight / config.zoom);
+    config.alertHeight = config.windHeight - constant.alertOffset;
     config.maxHeight = config.windHeight - config.innerOffset;
     config.isWidth = config.windWidth > config.windHeight;
     config.isHeight = config.maxHeight > config.minHeight;
     config.theHeight = Math.max(config.maxHeight, config.minHeight);
     document.body.style.zoom = config.zoom;
-    Elem.autosize(null, config.outerOffset);
+    Elem.autosize(null, constant.outerOffset);
 }
 
 
 //获取浏览器是否是移动端
 var getAgent = function() {
     // addScript();
-    config.outerOffset = 230;
-    config.alertOffset = 716;
-    config.zoomMobile  = 1.00;
-    config.zoomWechat  = 0.90;
-    config.zoomComput  = 0.40;
-    config.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
-    config.isWechat = (/micromessenger|MicroMessenger/i.test(navigator.userAgent));
-    config.zoom = config.isMobile ? config.zoomMobile : config.zoomComput;
-    config.zoom = config.isWechat ? config.zoomWechat : config.zoom;
+    config.constant = {
+        isInto: false,
+        dataIdx: "default",
+        initType: "get",
+        modeType: "digger",
+        colorType: "black",
+        debugType: "close",
+        outerOffset: 230,
+        alertOffset: 716,
+        zoomMobile: 1.00,
+        zoomWechat: 0.90,
+        zoomComput: 0.40,
+    };
 
-    var setting = Storage.get("setting") || new Object();
-    config.dataIdx = setting.dataIdx || "defalut";
-    config.initType = setting.initType || "clear";
-    config.modeType = setting.modeType || "digger";
-    config.fontType = setting.fontType || "arial";
-    config.colorType = setting.colorType || "black";
-    config.debugType = setting.debugType || "close";
-    config.innerIdx = setting.innerIdx || 0;
-    config.isInto = setting.isInto || false;
+
+    var cfg = Storage.get("config") || {};
+    if (config.name == "sett")
+        cfg = {};
+    if (config.name == cfg.name && cfg.isInto)
+        config.innerIdx = cfg.innerIdx || 0;
+    else
+        config.innerIdx = 0;
+    setDefult(cfg, "isInto");
+    setDefult(cfg, "dataIdx");
+    setDefult(cfg, "initType");
+    setDefult(cfg, "modeType");
+    setDefult(cfg, "colorType");
+    setDefult(cfg, "debugType");
 
     console.log(config);
-    window.resize();
+    window.onresize();
+}
+
+var setDefult = function(cfg, key) {
+    config[key] = cfg[key] || config.constant[key];
 }
 
 //设置浏览器
@@ -590,21 +612,13 @@ var jsonToAlert = function(data) {
     alert(JSON.stringify(data));
 }
 
-Storage.update = function(name, key, val) {
-    var data = Storage.get(name);
-    data[key] = val;
-    Storage.set(name, data);
-}
-
 
 var jsonToTable = function(item) {
     if (config.name == "home") return;
     var page = '../#/#.html';
-    Storage.update('setting', 'isInto', true);
-    Storage.set('json-page', page.replace(/#/g,config.name));
-    Storage.set('json-item', JSON.stringify(item));
-    Storage.set('json-config', JSON.stringify(config));
-    Storage.set('json-tempdata', JSON.stringify(tempData));
+    Storage.set('page', page.replace(/#/g,config.name));
+    Storage.set('item', item);
+    Storage.set('config', config);
     window.location.href = "../view/view.html";
 }
 

@@ -15,6 +15,7 @@ var config = {
 	    {type:401, idx:2, left:1, right:0},
 	    {type:402, idx:2, left:0, right:1},
     ],
+    order: [],
 };
 
 
