@@ -1,5 +1,6 @@
 
 var data, title;
+var mix = 0.9;
 var leng = 100;
 var name = 'item';
 var mode = 'initSplit';
@@ -8,7 +9,7 @@ var isMobile;
 var isHide = false;
 var isCenter = false;
 var zoom = 1.00;
-var zoomMobile = 2.00;
+var zoomMobile = 2.10;
 var zoomComputer = 0.70;
 window.onload = function() {
 
@@ -100,7 +101,7 @@ function loopSplit(outer, list, path, layer) {
     for (let y in list) {
         if (list[y] == null) continue;
         var length = JSON.stringify(list[y]).length;
-        if (typeof (list[y]) == 'object' && (length > leng)) {
+        if (typeof (list[y]) == 'object' && (length > leng * mix)) {
             lines[y] = cloneJson(list[y]);
             list[y] = [y];
         }

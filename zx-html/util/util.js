@@ -15,10 +15,6 @@ var colors = [
 // 0 1 2 3 4 5 6 7 8
 // 0 f e d c b a 9 8
 
-String.prototype.endWith=function(str){  
-    return new RegExp(str+"$").test(this);     
-} 
-
 var Parse = {}; 
 
 Parse.addSplit = function addSplit(num) {
