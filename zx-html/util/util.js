@@ -15,6 +15,10 @@ var colors = [
 // 0 1 2 3 4 5 6 7 8
 // 0 f e d c b a 9 8
 
+String.prototype.endWith=function(str){  
+    return new RegExp(str+"$").test(this);     
+} 
+
 var Parse = {}; 
 
 Parse.addSplit = function addSplit(num) {
@@ -419,7 +423,7 @@ var contentText = function(a, b, c) {
 //显示内页
 var setInner = function(innerIdx) {
     var page = Storage.get("json-page");
-    var idx = innerIdx || config.innerIdx || 0;
+    var idx = config.isInto ? config.innerIdx : innerIdx || 0;
     var outerTop = Elem.get("outer-top").children;
     var outerCenter = Elem.get("outer-center").children;
     for (var i = 0; i < outerTop.length; i++) {
@@ -436,19 +440,24 @@ var setInner = function(innerIdx) {
         }
     }
     Elem.color(document.body, getColorType(idx), "");
-    if (config.debugType == "close") {
-        if (innerIdx != null) 
-            console.log(config);
-    } else
-    if (config.debugType == "open") {
-        if (innerIdx != null) 
-            jsonToTable(items[idx]);
-    }
     config.innerIdx = idx;
+    Storage.update('setting', 'innerIdx', idx);
+    if (config.isInto || innerIdx == null) {
+        config.isInto = false;
+        Storage.update('setting', 'isInto', false);
+        return;
+    }
+    setTimeout(function() {
+        if (config.debugType == "close")
+            console.log(config);
+        else if (config.debugType == "open")
+            jsonToTable(items[idx]); 
+    }, 0);
+
 }
 
 var getColorType = function(idx) {
-    var innerIdx = idx || config.innerIdx || 0;
+    var innerIdx = idx || config.innerIdx;
     var colorIdx = items[innerIdx].colorIdx;
     var color = colors[colorIdx];
     var type = config.colorType;
@@ -456,7 +465,7 @@ var getColorType = function(idx) {
 }
 
 var getColorLight = function(idx) {
-    var innerIdx = idx || config.innerIdx || 0;
+    var innerIdx = idx || config.innerIdx;
     var colorIdx = items[innerIdx].colorIdx;
     var color = colors[colorIdx];
     var type = config.colorType;
@@ -524,6 +533,8 @@ var getAgent = function() {
     config.fontType = setting.fontType || "arial";
     config.colorType = setting.colorType || "black";
     config.debugType = setting.debugType || "close";
+    config.innerIdx = setting.innerIdx || 0;
+    config.isInto = setting.isInto || false;
 
     console.log(config);
     window.resize();
@@ -583,10 +594,17 @@ var jsonToAlert = function(data) {
     alert(JSON.stringify(data));
 }
 
+Storage.update = function(name, key, val) {
+    var data = Storage.get(name);
+    data[key] = val;
+    Storage.set(name, data);
+}
+
 
 var jsonToTable = function(item) {
     if (config.name == "home") return;
     var page = '../#/#.html';
+    Storage.update('setting', 'isInto', true);
     Storage.set('json-page', page.replace(/#/g,config.name));
     Storage.set('json-item', JSON.stringify(item));
     Storage.set('json-config', JSON.stringify(config));

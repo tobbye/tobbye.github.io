@@ -1,6 +1,5 @@
 
 var data, title;
-var gap = 0.2;
 var leng = 100;
 var name = 'item';
 var mode = 'initSplit';
@@ -43,9 +42,6 @@ function initSplit() {
 	window.onresize();
 }
 
-function initCenter() {
-
-}
 
 function resetOuter(outer) {
     if (!isCenter) {
@@ -62,20 +58,26 @@ function resetOuter(outer) {
 
     for (var i=0;i<outer.children.length;i++) {
         var inner = outer.children[i];
-        restInner(inner);
+        resetInner(inner);
     } 
-
-    
 }
 
-function restInner(inner) {
+String.prototype.endWith=function(str){  
+    return new RegExp(str+"$").test(this);     
+} 
+
+function resetInner(inner) {
     var next = inner.nextSibling;
     if (!next || !next.style) 
         return;
     if (next.getAttribute("layer") == inner.getAttribute("layer")) {
+        var titleThis = inner.children[0];
+        if (!titleThis.innerHTML.endWith("]"))
+            return;
         var tbodyThis = inner.children[1].children[0];
         var tbodyNext = next.children[1].children[0];
-        if (tbodyThis.children[0].children.length < 6)
+        // if (tbodyThis.children[0].children.length < 6)
+        if (tbodyThis.innerHTML.length < 4*titleThis.innerHTML.length)
             return;
         var title = Elem.creat("tr", tbodyThis);
         var align = isCenter ? "center" : "left";
@@ -85,36 +87,29 @@ function restInner(inner) {
         while (tbodyNext.hasChildNodes())
             tbodyThis.appendChild(tbodyNext.firstChild);
         next.parentNode.removeChild(next);
-        restInner(inner);
+        resetInner(inner);
     }
 
 }
 
 
 function loopSplit(outer, list, path, layer) {
-    var dict;
+    layer ++;
+    var dict = "";
     var lines = {};
     for (let y in list) {
         if (list[y] == null) continue;
         var length = JSON.stringify(list[y]).length;
-        if (typeof (list[y]).constructor === Array) {
+        if (typeof (list[y]) == 'object' && (length > leng)) {
             lines[y] = cloneJson(list[y]);
             list[y] = [y];
-            console.log('--------------------------------');
-            console.log(path);
-            console.log('obj.length: ' + list[y].length);
-            console.log('str.length: ' + length);
-        } else if (typeof (list[y]) == 'object' && (length > leng*(1-gap))) {
-            lines[y] = cloneJson(list[y]);
-            list[y] = [y];
-            console.log('--------------------------------');
-            console.log(path);
-            console.log('obj.length: ' + list[y].length);
-            console.log('str.length: ' + length);
         }
-
     }
-    layer ++;
+    console.log('--------------------------------');
+    console.log(path);
+    console.log(list);
+    console.log('obj.length: ' + list.length);
+    console.log('str.length: ' + JSON.stringify(list).length);
     jsonToTable(outer, list, path, layer);
     for (let y in lines) {
         if (/^\d+$/.test(y))
