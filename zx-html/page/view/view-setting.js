@@ -26,8 +26,14 @@ var setting = {
 
 
 window.onload = function() {
-    var name = "item";
-    data = getJson(name);
+    if (localStorage.getItem("item")) {
+        name = "item";
+        data = getJson(name);  
+    } else {
+        name = "setting";
+        data = setting;
+    }
+
     initSplit();
     setButton();
 }
@@ -336,7 +342,7 @@ function togButtonText(btn, viewVal, key) {
 }
 
 function back() {
-    window.location.href = getJson('page');
+    window.location.href = getJson('page') || "../home/home.html";
 }
 
 window.onresize = function() {
