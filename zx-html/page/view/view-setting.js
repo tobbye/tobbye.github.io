@@ -26,7 +26,7 @@ var setting = {
 
 
 window.onload = function() {
-    var name = name || setting.name;
+    var name = "item";
     data = getJson(name);
     initSplit();
     setButton();
