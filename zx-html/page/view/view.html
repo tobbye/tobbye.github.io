@@ -27,7 +27,7 @@
 		}
 
 		tr {
-			height:25px;
+			height: 30px;
 			font-size: 1em;
 		}
 
@@ -73,11 +73,11 @@
 
 		#outer-bot {
 			background-color: #eee;
-		}#outer-bot[agent=mobile] {
+		} #outer-bot[agent=mobile] {
 			display: block;
 			margin-top: 0px;
 			margin-left: 0px;
-		}#outer-bot[agent=computer] {
+		} #outer-bot[agent=computer] {
 			display: flex;
 			margin-top: -2px;
 			margin-left: -2px;
@@ -87,17 +87,29 @@
 
 		}
 
-		.view {
-			margin: 0px;
+		h2 {
+			color: darkred;
+	        padding: 8px 2px 2px 2px;
+	        font-size: 1.2em;
+	        text-align: center;
+		} h2[float=top] {
+			position: sticky;
+      		top: 10px;
+		} h2[float=left] {
+			position: sticky;
+      		left: 10px;
 		}
 
 		.title {
-			color: darkred;
-	        font-size: 1.2em;
-	        text-align: center;
-			padding: 10px 2px 2px 2px; 
-			border: solid 0px #fff;
+			margin: 0px;
+			padding: 5px;
+			max-width: 800px;
+			border: solid 0px white;
 			background-color: #eee;
+		}
+
+		.align-left {
+			margin: 0px;
 		}
 
 		.block {
@@ -141,27 +153,37 @@
 			<div class="flex" id="flex1">
 				<div class="button" val-mode='back'>返回</div>
 				<div class="button" val-mode='initJoin'>合并</div>
-				<div class="button" val-mode='initCenter'>居中</div>
 				<div class="button" val-mode='initSplit'>拆分</div>
 				<div class="button" val-mode='initText'>文本</div>
+			</div>
+
+		</div>
+		<div class="block">
+			<div class="vice">切换视图</div>
+			<div class="flex" id="flex2">
+				<div class="button" val-view='isFlex'>堆叠</div>
+				<div class="button" val-view='isFlow'>直流</div>
+				<div class="button" val-view='isCenter'>居中</div>
+				<div class="button" val-view='isAlign'>对齐</div>
 			</div>
 		</div>
 		<div class="block">
 			<div class="vice">拆分长度</div>
-			<div class="flex" id="flex2">
+			<div class="flex" id="flex3">
 				<div class="button" val-leng=10>10</div>
 				<div class="button" val-leng=20>20</div>
 				<div class="button" val-leng=50>50</div>
 				<div class="button" val-leng=100>100</div>
 				<div class="button" val-leng=200>200</div>
-				<div class="button" val-leng=500>500</div>
+				<div class="button" val-leng=50000>max</div>
 			</div>
 		</div>
 		<div class="block">
 			<div class="vice">选择数据</div>
-			<div class="flex" id="flex3">
+			<div class="flex" id="flex4">
 				<div class="button" val-name="item">Item</div>
 				<div class="button" val-name="config">Config</div>
+				<div class="button" val-name="setting">Setting</div>
 				<div class="button" val-name="testdata">TestData</div>
 			</div>
 		</div>
