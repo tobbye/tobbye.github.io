@@ -11,7 +11,7 @@ var setting = {
     tgtText: ["平铺", "堆叠", "分流", "直流", "居左", "居中", "分散", "对齐"],
 
     isPile: true,
-    isFlex: true,
+    isFlex: false,
     isFlow: true,
     isAlign: true,
     isCenter: true,
@@ -116,12 +116,12 @@ function toReplace(outer, data, title, layer) {
 	str = str.replace(/\\n/g, '<br/>').replace(/\\/g, '');
 
     if (setting.isSplit) {
-        if (setting.isFlex) 
+        if (!setting.isFlex) 
             str = str.replace(/\[{/g, '{').replace(/}]/g, '}');
-        
         str = str.replace(/{/g, '<table><tr><td><h1>').replace(/}/g, '</td></tr></table>');
     } else {
         str = str[0] == '{' ? '[' + str + ']' : str;
+        str = str.replace(/:{/g, ':[<h1>').replace(/(},"[^\W]*":)/g, "##]$1").replace(/##]}/g, "]");
         str = str.replace(/\[{/g, '<table><tr><td><h1>').replace(/}]/g, ']').replace(/},/g, '}');
         str = str.replace(/{/g, '<tr><td><h1>').replace(/}/g, '</td></tr>');
     }
@@ -197,7 +197,7 @@ function resetOuter(outer) {
             title.style.textAlign = "left";
         } 
         //堆叠
-        while (setting.isFlex && inner.children.length > 2) {
+        while (!setting.isFlex && inner.children.length > 2) {
             var tableNext = inner.children[2];
             var trNext = tableNext.children[0].children[0];
             table.appendChild(trNext);

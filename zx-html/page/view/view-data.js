@@ -1,6 +1,8 @@
 
+
 var testData = {
-	fundValue: [{
+
+	fundValue: {
 		H: 13000,
 		I: 7720,
 		J: 5280,
@@ -17,7 +19,7 @@ var testData = {
 		U: 547,
 		V: 488,
 		h: 50000,		
-	}],
+	},
 	logoText: [
 		{text:'鑫', textPos:[[ 1,-0.33],[ 1,-0.33],[0,-0.66]], pos:[[0,0], [ 2, 0], [ 1, 1]], rotate:[0,  0,  60], fillStyle:'#FFC000'},
 		{text:'聚', textPos:[[ 0,-0.66],[ 0,-0.66],[0,-0.66]], pos:[[0,0], [ 1, 1], [-1, 1]], rotate:[0,  0, 300], fillStyle:'#0070C0'},
