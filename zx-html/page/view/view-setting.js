@@ -7,14 +7,15 @@ var setting = {
     name: "item",
     mode: "initSplit",
     view: "isFlex",
-    orgText: ["堆叠", "平铺", "直流", "分流", "居中", "居左", "对齐", "分散"],
-    tgtText: ["平铺", "堆叠", "分流", "直流", "居左", "居中", "分散", "对齐"],
+    btnKey: ["isFlex", "isFlow", "isCenter", "isAlign"],
+    btnDefault: ["平铺", "直流", "居中", "对齐"],
+    btnOpposite: ["堆叠", "分流", "居左", "分散"],
 
     isPile: true,
     isFlex: false,
     isFlow: true,
     isAlign: true,
-    isCenter: true,
+    isCenter: false,
     isHide: false,
     isSplit: true,
     isMobile: false,
@@ -57,8 +58,8 @@ function initJoin() {
     var outer = Elem.get('outer');
     outer.innerHTML = '';
     jsonToView(outer, list, name, 0);
-    resetOuter(outer);
     window.onresize();
+    resetOuter(outer);
 }
 
 function initSplit() {
@@ -66,8 +67,8 @@ function initSplit() {
     var outer = Elem.get('outer');
     outer.innerHTML = '';
     loopSplit(outer, list, name, 0);
+    window.onresize();
     resetOuter(outer);
-	window.onresize();
 }
 
 
@@ -207,15 +208,14 @@ function resetOuter(outer) {
 
     for (var i=0;i<outer.children.length;i++) {
         var inner = outer.children[i];
-        //对齐
         if (setting.isAlign) {
-            setAlign(inner);
+            resetAlign(inner);
         }
     } 
 }
 
-
-function setAlign(inner) {
+//对齐
+function resetAlign(inner) {
     var next = inner.nextSibling;
     if (!next || !next.hasChildNodes()) 
         return;
@@ -244,9 +244,8 @@ function setAlign(inner) {
         while (nextTbody.hasChildNodes())
             thisTbody.appendChild(nextTbody.firstChild);
         next.parentNode.removeChild(next);
-        setAlign(inner);
+        resetAlign(inner);
     }
-
 }
 
 
@@ -279,12 +278,17 @@ function tapButton(btn) {
     if (modeVal && typeof(eval(modeVal)) == 'function') {
         setting.isSplit = modeVal == "initSplit";
         setting.mode = modeVal;
+        var block2 = Elem.get("flex2").parentNode;
+        var block3 = Elem.get("flex3").parentNode;
+        block2.style.display = modeVal == "initText" ? "none" : "block";
+        block3.style.display = modeVal == "initText" ? "none" : "block";
+        block3.style.display = modeVal == "initSplit" ? "block" : "none";
     }
     if (viewVal) {
-        togButtonText(btn, viewVal, "isFlex");
-        togButtonText(btn, viewVal, "isFlow");
-        togButtonText(btn, viewVal, "isAlign");
-        togButtonText(btn, viewVal, "isCenter"); 
+        togButtonView(btn, viewVal, "isFlex");
+        togButtonView(btn, viewVal, "isFlow");
+        togButtonView(btn, viewVal, "isAlign");
+        togButtonView(btn, viewVal, "isCenter"); 
         setting.view = viewVal;
     }
 
@@ -311,6 +315,10 @@ function tapButton(btn) {
     }
 }
 
+function tapButtonAfter() {
+
+}
+
 
 function togButton(btn) {
     if (!btn || !btn.style) return;
@@ -324,7 +332,7 @@ function togButton(btn) {
     }     
 }
 
-function togButtonText(btn, viewVal, key) {
+function togButtonView(btn, viewVal, key) {
     if (viewVal == key) {
         console.log(viewVal + "=" + key);
         if (viewVal == "isFlex") 
@@ -332,14 +340,22 @@ function togButtonText(btn, viewVal, key) {
         if (viewVal == "isFlow") 
             setting.isPile = false;
         setting[key] = !setting[key];
-        for (let x in setting.orgText) {
-            if (btn.innerHTML == setting.orgText[x]) {
-                btn.innerHTML = setting.tgtText[x];
-                return;
-            }
+        togButtonText(btn, key);
+    }
+}
+
+
+function togButtonText(btn, key) {
+    for (let x in setting.btnKey) {
+        if (key == setting.btnKey[x]) {
+            if (setting[key])
+                btn.innerHTML = setting.btnDefault[x];
+            else
+                btn.innerHTML = setting.btnOpposite[x];
         }
     }
 }
+
 
 function back() {
     window.location.href = getJson('page') || "../home/home.html";
@@ -352,17 +368,40 @@ window.onresize = function() {
     var height = window.innerHeight / setting.zoom - 20;
     document.body.style.zoom = setting.zoom;
     var outer = Elem.get('outer');
-    var child = Elem.get("flex2").children[1];
+    var btnCenter = Elem.get("flex2").children[2];
+    var btnAlign = Elem.get("flex2").children[3];
     //outer.scrollWidth超出body.inner,隐藏居中按钮
     setting.isHide = outer.scrollWidth * setting.zoom > window.innerWidth;
+
     outer.style.height = (height - 90) + 'px';
-    // child.style.display = setting.isHide ? "none" : "inline";
+    if (setting.isHide || !setting.isPile) {
+        btnCenter.style.display = "none";
+    } else {
+        btnCenter.style.display = "inline";
+    }
+
+    if (!setting.isPile) 
+        setting.isCenter = true;
+    if (setting.isHide) 
+        setting.isCenter = false;
+    togButtonText(btnCenter, "isCenter");
+
+    // btnCenter.style.display = setting.isHide ? "none" : "flex";
     var agent = setting.isMobile ? "mobile" : "computer";
     var outerBot = Elem.get('outer-bot');
     outerBot.setAttribute("agent", agent);
     var blocks = document.getElementsByClassName('block');
     for (var i=0;i<blocks.length;i++) {
         blocks[i].setAttribute("agent", agent);
+    }
+}
+
+function setCenter() {
+    if (setting.isHide || !setting.isPile) {
+        setting.isCenter = false;
+        child.style.display = "none";
+    } else {
+        child.style.display = "flex";
     }
 }
 
