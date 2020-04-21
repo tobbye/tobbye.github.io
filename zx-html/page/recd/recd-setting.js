@@ -104,7 +104,7 @@ function pushdata(json, sort, y) {
         left: json.value * sort[y].left,
         right: json.value * sort[y].right
     };
-    var order = config.order;
+    var order = [];
     var idx = sort[y].idx;
     var list = items[idx].list[0];
     if (items[idx].list.length == 1)

@@ -17,6 +17,7 @@ var setting = {
     isAlign: true,
     isCenter: false,
     isHide: false,
+    isOver: false,
     isSplit: true,
     isMobile: false,
     isElement: false,
@@ -35,8 +36,8 @@ window.onload = function() {
         data = setting;
     }
 
-    initSplit();
     setButton();
+    initSplit();
 }
 
 function initText() {
@@ -44,6 +45,24 @@ function initText() {
     var outer = Elem.get('outer');
     outer.innerHTML = JSON.stringify(list).replace(/,/g, ', ');
     window.onresize();
+}
+
+function initEdit() {
+    var outer = Elem.get("outer");
+    outer.innerHTML = "";
+    var textarea = Elem.creat("textarea", outer);
+    textarea.id = "textarea";
+    textarea.innerHTML = JSON.stringify(data).replace(/,/g, ', ');
+}
+
+function initSave() {
+    setting.name = "custom";
+    setting.mode = "initText";
+    var textarea = Elem.get("textarea");
+    var str = "var custom = #0;";
+    str = str.replace("#0", textarea.value).replace(/[\t\n\s]/g, "");
+    data = eval(str);
+    initText();
 }
 
 
@@ -263,11 +282,20 @@ function setButton() {
     var buttons = document.getElementsByClassName('button');
     for (var i=0;i<buttons.length;i++) {
         var btn = buttons[i];
+        setButtonId(btn);
         togButton(btn);  
         btn.onclick = function() {
             tapButton(this);
         }
     }
+}
+
+function setButtonId(btn) {
+    var modeVal = btn.getAttribute('val-mode');
+    var viewVal = btn.getAttribute('val-view');
+    var lengVal = btn.getAttribute('val-leng');
+    var nameVal = btn.getAttribute('val-name');
+    btn.id = modeVal || viewVal || lengVal || nameVal;
 }
 
 
@@ -277,14 +305,15 @@ function tapButton(btn) {
     var lengVal = btn.getAttribute('val-leng');
     var nameVal = btn.getAttribute('val-name');
     //run action
-    if (modeVal && typeof(eval(modeVal)) == 'function') {
-        setting.isSplit = modeVal == "initSplit";
-        setting.mode = modeVal;
+    if (modeVal) {
         var block2 = Elem.get("flex2").parentNode;
         var block3 = Elem.get("flex3").parentNode;
-        block2.style.display = modeVal == "initText" ? "none" : "block";
-        block3.style.display = modeVal == "initText" ? "none" : "block";
-        block3.style.display = modeVal == "initSplit" ? "block" : "none";
+        togButtonHide(block2, modeVal == "initText", "block");
+        togButtonHide(block3, modeVal == "initText", "block");
+        togButtonHide(block3, modeVal != "initSplit", "block");
+        setting.mode = modeVal;
+        setting.isSplit = modeVal == "initSplit";
+        setting.isEdit = /initText|initEdit|initSave/i.test(modeVal);
     }
     if (viewVal) {
         togButtonView(btn, viewVal, "isFlex");
@@ -302,23 +331,17 @@ function tapButton(btn) {
     if (nameVal) {
         name = nameVal;
         setting.name = nameVal;
-        if (nameVal == 'testdata') 
-            data = copyJson(testData);
-        else
-            data = getJson(nameVal);
+        data = getJson(nameVal);
     }
 
     if (name == 'setting') 
         data = copyJson(setting);
-    eval(setting.mode+'();');
+    // if (typeof(setting.mode) == 'function')
+        eval(setting.mode+'();');
     var nodes = btn.parentNode.childNodes;
     for (let x in nodes) {
         togButton(nodes[x]);            
     }
-}
-
-function tapButtonAfter() {
-
 }
 
 
@@ -328,9 +351,9 @@ function togButton(btn) {
         btn.getAttribute('val-view') == setting.view || 
         btn.getAttribute('val-leng') == setting.leng || 
         btn.getAttribute('val-name') == setting.name) {
-        Elem.color(btn, '#fff', 'dodgerblue');
+        btn.setAttribute("btype", "live");
     } else {
-        Elem.color(btn, 'dodgerblue', '#eee');
+        btn.setAttribute("btype", "dead");
     }     
 }
 
@@ -358,37 +381,26 @@ function togButtonText(btn, key) {
     }
 }
 
+function togButtonHide(btn, hide, display) {
+    if (btn && btn.style)
+        btn.style.display = hide ? "none" : display;
+}
+
 
 function back() {
     window.location.href = getJson('page') || "../home/home.html";
 }
 
 window.onresize = function() {
+    setAgent();
+    setCenter();
+    setCustom();
+}
+
+function setAgent() {
     setting.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
     setting.zoom = setting.isMobile ? setting.zoomMobile : setting.zoomComputer;
-    //20 = outer.paddingTop + outer.paddingBot;
-    var height = window.innerHeight / setting.zoom - 20;
     document.body.style.zoom = setting.zoom;
-    var outer = Elem.get('outer');
-    var btnCenter = Elem.get("flex2").children[2];
-    var btnAlign = Elem.get("flex2").children[3];
-    //outer.scrollWidth超出body.inner,隐藏居中按钮
-    setting.isHide = outer.scrollWidth * setting.zoom > window.innerWidth;
-
-    outer.style.height = (height - 90) + 'px';
-    if (setting.isHide || !setting.isPile) {
-        btnCenter.style.display = "none";
-    } else {
-        btnCenter.style.display = "inline";
-    }
-
-    if (!setting.isPile) 
-        setting.isCenter = true;
-    if (setting.isHide) 
-        setting.isCenter = false;
-    togButtonText(btnCenter, "isCenter");
-
-    // btnCenter.style.display = setting.isHide ? "none" : "flex";
     var agent = setting.isMobile ? "mobile" : "computer";
     var outerBot = Elem.get('outer-bot');
     outerBot.setAttribute("agent", agent);
@@ -399,12 +411,29 @@ window.onresize = function() {
 }
 
 function setCenter() {
-    if (setting.isHide || !setting.isPile) {
+    //20 = outer.paddingTop + outer.paddingBot;
+    var height = window.innerHeight / setting.zoom - 20;
+    var outer = Elem.get('outer');
+    var btnCenter = Elem.get("flex2").children[2];
+    var btnAlign = Elem.get("flex2").children[3];
+    //outer.scrollWidth超出body.inner,隐藏居中按钮
+    setting.isOver = outer.scrollWidth * setting.zoom > window.innerWidth;
+    setting.isHide = setting.isOver || !setting.isPile;
+    outer.style.height = (height - 90) + 'px';
+    togButtonHide(btnCenter, setting.isHide, "inline");
+    togButtonText(btnCenter, "isCenter");
+    if (!setting.isPile) 
+        setting.isCenter = true;
+    if (setting.isOver) 
         setting.isCenter = false;
-        child.style.display = "none";
-    } else {
-        child.style.display = "flex";
-    }
+}
+
+function setCustom() {
+    var btnEdit = Elem.get("initEdit");
+    var btnSave = Elem.get("initSave");
+    togButtonHide(btnEdit, !setting.isEdit, "inline");
+    togButtonHide(btnSave, !setting.isEdit, "inline");
+
 }
 
 

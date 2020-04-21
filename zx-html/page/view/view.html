@@ -41,6 +41,14 @@
 			background-color: #fff;
 		}
 
+		textarea {
+			width: 100%;
+			height: 100%;
+			font-size: 1.1em;
+			font-weight: bold;
+			font-family: Segoe UI, Helvetica, Consolas, Trebuchet MS;
+		}
+
 
 		h1, h2, h3, h4, h5 {
 			margin: 0px;
@@ -143,12 +151,21 @@
 			font-size: 1.3em;
 			line-height: 50px;
 		}
+		.button[btype=dead] {
+			color: dodgerblue;
+			background-color: #eee;
+		}
+		.button[btype=live] {
+			color: #fff;
+			background-color: dodgerblue;
+		}
 
 	</style>
 
 </head>
 <body>
-	<div id="outer"></div>
+	<div id="outer">
+	</div>
 	<div id="outer-bot">
 		<div class="block">
 			<div class="vice">执行操作</div>
@@ -157,6 +174,8 @@
 				<div class="button" val-mode='initJoin'>合并</div>
 				<div class="button" val-mode='initSplit'>拆分</div>
 				<div class="button" val-mode='initText'>文本</div>
+				<div class="button" val-mode='initEdit'>编辑</div>
+				<div class="button" val-mode='initSave'>保存</div>
 			</div>
 
 		</div>
@@ -186,7 +205,7 @@
 				<div class="button" val-name="item">Item</div>
 				<div class="button" val-name="config">Config</div>
 				<div class="button" val-name="setting">Setting</div>
-				<div class="button" val-name="testdata">TestData</div>
+				<div class="button" val-name="custom">Custom</div>
 			</div>
 		</div>
 	</div>

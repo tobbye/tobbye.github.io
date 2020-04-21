@@ -1,34 +1,7 @@
 
 
 var testData = {
-
-	fundValue: {
-		H: 13000,
-		I: 7720,
-		J: 5280,
-		K: 7720,
-		L: 13000,
-		M: 56000,
-		N: 50720,
-		O: 5280,
-		P: 176220,
-		Q: 181500,
-		R: 1815,
-		S: 780,
-		T: 1035,
-		U: 547,
-		V: 488,
-		h: 50000,		
-	},
-	logoText: [
-		{text:'鑫', textPos:[[ 1,-0.33],[ 1,-0.33],[0,-0.66]], pos:[[0,0], [ 2, 0], [ 1, 1]], rotate:[0,  0,  60], fillStyle:'#FFC000'},
-		{text:'聚', textPos:[[ 0,-0.66],[ 0,-0.66],[0,-0.66]], pos:[[0,0], [ 1, 1], [-1, 1]], rotate:[0,  0, 300], fillStyle:'#0070C0'},
-		{text:'众', textPos:[[-1,-0.33],[-1,-0.33],[0,-0.66]], pos:[[0,0], [-1, 1], [-2, 0]], rotate:[0,  0, 300], fillStyle:'#FF0000'},
-		{text:'众', textPos:[[-1, 0.33],[ 1,-0.33],[0,-0.66]], pos:[[0,0], [-2, 0], [-1,-1]], rotate:[0,180, 300], fillStyle:'#FF0000'},
-		{text:'合', textPos:[[ 0, 0.66],[ 0,-0.66],[0,-0.66]], pos:[[0,0], [-1,-1], [ 1,-1]], rotate:[0,  0, 300], fillStyle:'#0070C0'},
-		{text:'鑫', textPos:[[ 1, 0.33],[-1,-0.33],[0,-0.66]], pos:[[0,0], [ 1,-1], [ 2, 0]], rotate:[0,  0, 300], fillStyle:'#FFC000'},
-	],
-	logoImage: {
+	logoSetting: {
 		multiX: 1,
 		multiY: 1,
 		width: 440,
@@ -36,12 +9,23 @@ var testData = {
 		lineWidth: 10,
 		lineLength: 30,
 		fontStyle: "40px bold 黑体",
-		cells: [
-		{text:'ZHANG', rotate: 0.0, textPos:[0, -1.2], fillStyle:'#fff', pos:[[0,0],[-5.7,-2],[5.7,-2], [0,0]]},
-		{text:'JIA', rotate: 0.3, textPos:[-3, 1], fillStyle:'#fff', pos:[[0,0],[-6,-2],[-6,2],[0,4]]},
-		{text:'LIANG', rotate: -0.6, textPos:[ 3, 1], fillStyle:'#fff', pos:[[0,0],[6,-2],[6,2], [0,4]]},
+	},
+	logoText: [
+		{text:'文本1', textPos:[[ 1,-0.33],[ 1,-0.33],[0,-0.66]], pos:[[0,0], [ 2, 0], [ 1, 1]], rotate:[0,  0,  60], fillStyle:'#FFC000'},
+		{text:'文本2', textPos:[[ 0,-0.66],[ 0,-0.66],[0,-0.66]], pos:[[0,0], [ 1, 1], [-1, 1]], rotate:[0,  0, 300], fillStyle:'#0070C0'},
+		{text:'文本3', textPos:[[-1,-0.33],[-1,-0.33],[0,-0.66]], pos:[[0,0], [-1, 1], [-2, 0]], rotate:[0,  0, 300], fillStyle:'#FF0000'},
+		{text:'文本4', textPos:[[-1, 0.33],[ 1,-0.33],[0,-0.66]], pos:[[0,0], [-2, 0], [-1,-1]], rotate:[0,180, 300], fillStyle:'#FF0000'},
+		{text:'文本5', textPos:[[ 0, 0.66],[ 0,-0.66],[0,-0.66]], pos:[[0,0], [-1,-1], [ 1,-1]], rotate:[0,  0, 300], fillStyle:'#0070C0'},
+		{text:'文本6', textPos:[[ 1, 0.33],[-1,-0.33],[0,-0.66]], pos:[[0,0], [ 1,-1], [ 2, 0]], rotate:[0,  0, 300], fillStyle:'#FFC000'},
+	],
+
+	logoCells: [
+		{text:'文本7', rotate: 0.0, textPos:[0, -1.2], fillStyle:'#fff', pos:[[0,0],[-5.7,-2],[5.7,-2], [0,0]]},
+		{text:'文本8', rotate: 0.3, textPos:[-3, 1], fillStyle:'#fff', pos:[[0,0],[-6,-2],[-6,2],[0,4]]},
+		{text:'文本9', rotate: -0.6, textPos:[ 3, 1], fillStyle:'#fff', pos:[[0,0],[6,-2],[6,2], [0,4]]},
 		],
-		style1: {
+	logoStyle: [
+		{
 			drawTran: [-176, 100],
 			drawRote: -0.48,
 			paintTran: [-303, 80],
@@ -57,7 +41,7 @@ var testData = {
 			]
 		},
 
-		style2: {
+		 {
 			drawTran: [-192, 100],
 			drawRote: -0.48,
 			paintTran: [-308, 50],
@@ -73,7 +57,7 @@ var testData = {
 			]
 		},
 
-		style3: {
+		 {
 			drawTran: [-150,-140],
 			drawRote: 0,
 			paintTran: [-200, 100],
@@ -87,7 +71,7 @@ var testData = {
 			{color:'blue',		tranX:50, tranY: 20, rotate:0},
 			{color:'purple',	tranX:50, tranY: 20, rotate:0},
 			]
-		},
-	},
+		}
+	],
 }
 
