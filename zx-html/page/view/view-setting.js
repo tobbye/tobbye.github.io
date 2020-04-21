@@ -108,29 +108,30 @@ function jsonToView(outer, data, title, layer) {
 }
 
 
-const objStr = '<table><tr><td><h1>';
-const arrStr = '<table><tr><td>';
-
 function toReplace(outer, data, title, layer) {
     // console.log(data);
     var str = JSON.stringify(data);
-	str = str.replace(/\\n/g, '<br/>').replace(/\\/g, '');
-
+    str = str.replace(/\\n/g, '<br/>').replace(/\\/g, '');
+    //[,,]转换成[;;]
+	str = str.replace(/(\[[^\[\]\{\}]*\])/g, function($1) {return $1.replace(/,/g, ';')});
+    //拆分
     if (setting.isSplit) {
         if (!setting.isFlex) 
             str = str.replace(/\[{/g, '{').replace(/}]/g, '}');
-        str = str.replace(/{/g, '<table><tr><td><h1>').replace(/}/g, '</td></tr></table>');
+        str = str.replace(/\{/g, '[<h1>').replace(/}/g, ']');
     } else {
         str = str[0] == '{' ? '[' + str + ']' : str;
-        str = str.replace(/:{/g, ':[<h1>').replace(/(},"[^\W]*":)/g, "##]$1").replace(/##]}/g, "]");
-        str = str.replace(/\[{/g, '<table><tr><td><h1>').replace(/}]/g, ']').replace(/},/g, '}');
-        str = str.replace(/{/g, '<tr><td><h1>').replace(/}/g, '</td></tr>');
+        //{{},{}}转换成{[],[]}
+        str = str.replace(/:{/g, ':[<h1>').replace(/(},"[^\W]*":)/g, function($1) {return $1.replace("}", ']')});
+        str = str.replace(/\[{/g, '[<h1>').replace(/}]/g, ']').replace(/},/g, '}');
     }
-    // str = str.replace(/,\[/g, '</td><td>[').replace(/,{/g, '</td><td>{');
+    // {}转换成tr, []转换成table
+    str = str.replace(/\{/g, '<tr><td><h1>').replace(/}/g, '</td></tr>');
     str = str.replace(/\[/g, '<table><tr><td>').replace(/]/g, '</td></tr></table>');
     if (setting.isPile) {
         //平铺 && 堆叠
         str = str.replace(/,/g, '</td><td><h1>');
+        str = str.replace(/;/g, '</td><td>');
         if (setting.isFlex) 
             str = str.replace(/":/g, '</h1>');
         else
@@ -140,6 +141,7 @@ function toReplace(outer, data, title, layer) {
     } else {
         //直流 && 分流
         str = str.replace(/,/g, '</td></tr><tr><td><h1>');
+        str = str.replace(/;/g, '</td></tr><tr><td>');
         if (setting.isFlow)
             str = str.replace(/":/g, '</h1>');
         else 
