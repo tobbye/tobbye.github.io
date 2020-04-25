@@ -247,12 +247,12 @@ function refresh() {
 	}
 	// values.R = Math.floor(values.Q / 100);
 	console.log(str);
-	showLog('操作成功!');
 	// input.value = 0;
 	localData.save();
 	setOuterCenter();
 	config.isInto = true;
 	setInner(idx);
+	showLog('操作成功!');
 }
 
 

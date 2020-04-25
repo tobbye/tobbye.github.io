@@ -552,7 +552,7 @@ var showLog = function(str) {
     var log = Elem.get('log') || Elem.creat('div', document.body, 'log');
     log.id = 'log';
     log.innerHTML = str;
-    Elem.color(log, getColorType(), getColorBgd());
+    Elem.color(log, getColorType(), getColorLight());
     Elem.display(log, 'block');
     var list = str.split('');
     setTimeout(function() {
