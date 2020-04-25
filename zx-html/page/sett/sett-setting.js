@@ -137,21 +137,21 @@ function togStyle(option) {
 	Elem.display(table, 'none');
 	if (option.optName == 'black') {
 		color = {
-            font: "#333",
-            light: "#ccc",
-            bgd: "#eee",
-            text: "黑色",
-            type: "black",
-            style: "standard",
+            font: '#333',
+            light: '#ccc',
+            bgd: '#eee',
+            text: '黑色',
+            type: 'black',
+            style: 'standard',
         };
 	} else if (option.optName == 'white') {
 		color = {
-            font: "#666",
-            light: "#ccc",
-            bgd: "#eee",
-            text: "黑色",
-            type: "black",
-            style: "standard",
+            font: '#666',
+            light: '#ccc',
+            bgd: '#eee',
+            text: '黑色',
+            type: 'black',
+            style: 'standard',
         };
 	}
 	config.color = color;

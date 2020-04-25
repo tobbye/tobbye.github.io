@@ -1,20 +1,20 @@
 function setElems() {
 	setOuterTop();
-    if (config.modeType == "ghost")
+    if (config.modeType == 'ghost')
 	setOuterCenter();
     setInner();
 }
 
 
 function setOuterTop() {
-
+    showLog('您的好友二狗已上线!');
 }
 
 
 function setOuterCenter() {
-    var outerCenter = Elem.get("outer-center");
+    var outerCenter = Elem.get('outer-center');
     for (let x in items) {
-        var inner = Elem.creat("div", outerCenter, "inner", x);
+        var inner = Elem.creat('div', outerCenter, 'inner', x);
         setContent(inner, x);
     }
 }
@@ -22,7 +22,7 @@ function setOuterCenter() {
 function setContent(inner, x) {
 	var list = items[x].list;
     for (let y in list) {
-        var content = Elem.creat("div", inner, "content", y);
+        var content = Elem.creat('div', inner, 'content', y);
         var data = list[y];
         setTitle(content, data);
 		if (data.isDepot)
@@ -32,11 +32,11 @@ function setContent(inner, x) {
 
 function setTitle(content, data) {
 	if (data.title) {
-		var title = Elem.creat("div", content, "title");
+		var title = Elem.creat('div', content, 'title');
 		title.innerHTML = data.title;
 	}
 	if (data.vice) {
-		var vice = Elem.creat("div", content, "vice");
+		var vice = Elem.creat('div', content, 'vice');
 		vice.innerHTML = data.vice;
 	}
 }
@@ -50,9 +50,9 @@ function Depot(content, data) {
     var degree = [];
     var oldCell = [];
     var tgtCell = [];
-    var lvlDict = "金木水火土";
-    var rowDict = "ABCDEFGHI";
-    var colDict = "123456789";
+    var lvlDict = '金木水火土';
+    var rowDict = 'ABCDEFGHI';
+    var colDict = '123456789';
     init(content, data);
 
 function init(content, data) {
@@ -62,17 +62,17 @@ function init(content, data) {
     // config.mapTgt = Parse.reverse(idx);
     // idx = Parse.reverse(idx);
     // console.log(idx);
-    var flex = Elem.creat("div", content, "flex");
-    var table = Elem.creat("table", content, "table");
-    var button = Elem.creat("div", content, "button-depot");
-    Elem.togType(button, "permit");
+    var flex = Elem.creat('div', content, 'flex');
+    var table = Elem.creat('table', content, 'table');
+    var button = Elem.creat('div', content, 'button-depot');
+    Elem.togType(button, 'permit');
 
     for (var i=0;i<scale.length;i++) {
         setDegree(i, 0);
     }
     console.log(degree);
     for (var i=0;i<scale.length;i++) {
-        var tag = Elem.creat("div", flex, "button-depot", i);
+        var tag = Elem.creat('div', flex, 'button-depot', i);
         tag.i = i;
         tag.onclick = function() {
             setTag(table, this);
@@ -103,11 +103,11 @@ function setDegree(i, val) {
 
 function setTag(table, tag) {
     var i = tag.i;
-    table.innerHTML = "";
+    table.innerHTML = '';
     for (var x=0; x<size[0]; x++) {
-        var tr = Elem.creat("tr", table, "row", x);
+        var tr = Elem.creat('tr', table, 'row', x);
         for (var y=0; y<size[1]; y++) {
-            var td = Elem.creat("td", tr, "col", y);
+            var td = Elem.creat('td', tr, 'col', y);
             td.tag = tag;
             setText(td, i, [x, y]);
             td.onclick = function() {
@@ -122,12 +122,12 @@ function setTag(table, tag) {
 function setText(td, i, tgt) {
     var idx = size[0]*tgt[0]+tgt[1];
     var deg = degree[i][idx];
-    var pos = idx < 9 ? "0" + (idx+1) : (idx+1);
+    var pos = idx < 9 ? '0' + (idx+1) : (idx+1);
 
-    td.top = "<h3>" + lvlDict[i] + "</h3>";
-    td.center = "<h2>" + pos + "</h2>";
-    // td.center = "<h2>" +rowDict[tgt[0]] + colDict[tgt[1]] + "</h2>";
-    td.bot = deg == 0 ? "-" : deg + "%";
+    td.top = '<h3>' + lvlDict[i] + '</h3>';
+    td.center = '<h2>' + pos + '</h2>';
+    // td.center = '<h2>' +rowDict[tgt[0]] + colDict[tgt[1]] + '</h2>';
+    td.bot = deg == 0 ? '-' : deg + '%';
     td.idx = idx;
     td.tgt = tgt;
     td.deg = deg;
@@ -150,7 +150,7 @@ function setCell(td) {
     var oldTd = oldCell[i] || td;
 
     var tgtTd = tgtCell[i] || td;
-    Elem.color(oldTd, getColorType(), "white");
+    Elem.color(oldTd, getColorType(), 'white');
     if (td.tag.i - tgtTd.tag.i > 1) {
         resetTag(tgtTd.tag, 1);
     } else {
@@ -158,9 +158,9 @@ function setCell(td) {
         tgtCell[i] = td;
     }
     oldCell[i] = td;
-    Elem.color(td, "white", getColorType(0));
+    Elem.color(td, 'white', getColorType(0));
     var button = td.tag.parentNode.parentNode.lastChild;
-    button.innerHTML = "<h2>DISCOVER</h2>";
+    button.innerHTML = '<h2>DISCOVER</h2>';
 }
 
 function resetTag(tag, val) {
@@ -171,12 +171,12 @@ function resetTag(tag, val) {
         var tgt = target[next.i];
         var idx = size[0]*tgt[0]+tgt[1];
         var deg = degree[next.i][idx];
-        var pos = idx < 9 ? "0" + (idx+1) : (idx+1);
+        var pos = idx < 9 ? '0' + (idx+1) : (idx+1);
         if (val == 0) deg = 0;
-        next.innerHTML = "<h3>" + lvlDict[next.i] + "</h3>";
-        next.innerHTML += "<h2>-</h2>-";
-        // next.innerHTML += "<h2>" + pos + "</h2>";
-        // next.innerHTML += deg == 0 ? "-" : deg + "%";
+        next.innerHTML = '<h3>' + lvlDict[next.i] + '</h3>';
+        next.innerHTML += '<h2>-</h2>-';
+        // next.innerHTML += '<h2>' + pos + '</h2>';
+        // next.innerHTML += deg == 0 ? '-' : deg + '%';
         resetTag(next, deg);
     }
 }

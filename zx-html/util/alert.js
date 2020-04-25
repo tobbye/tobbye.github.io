@@ -96,6 +96,7 @@ function setSearchAlert(button) {
         var data = tempData.searchData[z];
         setSearchFlex(data, line);
     }
+    showLog('搜索成功!');
     showAlert("search-bg");
 }
 

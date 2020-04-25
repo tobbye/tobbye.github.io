@@ -19,26 +19,26 @@ Parse.sub4Num = function(num) {
     if (num < 1e4)
         return num;
     if (num < 1e8) 
-        return (num / 1e4).toFixed(8 - length) + "万";
+        return (num / 1e4).toFixed(8 - length) + '万';
     if (num < 1e12) 
-        return (num / 1e8).toFixed(12 - length) + "亿";
+        return (num / 1e8).toFixed(12 - length) + '亿';
 }
 
 Parse.cut4Num = function(num) {
     var str = num.toString();
     var len = str.length - 1;
-    var list = ["", "万<br/>", "亿<br/>", "万亿<br/>"];
+    var list = ['', '万<br/>', '亿<br/>', '万亿<br/>'];
     var index = Math.floor(len / 4);
     var start = (len + 1) % 4;
-    console.log("str: " + str);
-    var ans = "";
+    console.log('str: ' + str);
+    var ans = '';
     for (var i = index;i >= 0;i--) {
         if (i == index)
           ans += str.substr(0, len % 4 + 1) + list[i];
       else
           ans += str.substr((index - i)*4-start, 4) + list[i];
   }
-  console.log("ans: " + ans);
+  console.log('ans: ' + ans);
   return ans;
 }
 
@@ -46,7 +46,7 @@ Parse.fillZero = function (num, count) {
     count = count || 2;
     var str = num.toString();
     if (str.length < count) {
-       str = "0" + str;
+       str = '0' + str;
        return Parse.fillZero(str, count);
    } else {
       return str;
@@ -57,25 +57,25 @@ Parse.limitText = function (str, len) {
     var str = str.toString();
 	var regexp = /[^\x00-\xff]/g;// 正在表达式匹配中文
 	// 当字符串字节长度小于指定的字节长度时
-	if (str.replace(regexp, "aa").length <= len) {
+	if (str.replace(regexp, 'aa').length <= len) {
 		return str;
 	}
 	// 假设指定长度内都是中文
 	var m = Math.floor(len/2);
 	for (var i = m, j = str.length; i < j; i++) {
 		// 当截取字符串字节长度满足指定的字节长度
-		if (str.substring(0, i).replace(regexp, "aa").length >= len - 1) {
-			return str.substring(0, i) + "...";
+		if (str.substring(0, i).replace(regexp, 'aa').length >= len - 1) {
+			return str.substring(0, i) + '...';
 		}
 	}
-	return str + "...";
+	return str + '...';
 }
 
 Parse.mixText = function(str) {
     var arr = str.split(' ');
-    var result = "";
+    var result = '';
     for(var i=0;i<arr.length;i++) {
-        result += Parse.mix(arr[i]) + " ";
+        result += Parse.mix(arr[i]) + ' ';
     }
     return result;
 }
@@ -88,7 +88,7 @@ Parse.mix = function(str) {
         arr[i] = str[i];
     for(var i=0;i<len;i++) {
     rand = Math.floor(Math.random()*len);//随机数的产生范围每次都变化
-    if (arr[i] == " " || arr[rand] == " " || arr[i] == "/" || arr[rand] == "/") 
+    if (arr[i] == ' ' || arr[rand] == ' ' || arr[i] == '/' || arr[rand] == '/') 
         continue;
     cur = arr[rand];
     arr[rand] = arr[i];
@@ -101,7 +101,7 @@ Parse.mix = function(str) {
 }
 
 Parse.swape = function(str, a, b){
-    return str.replace(a, "#0").replace(b, a).replace("#0", b);
+    return str.replace(a, '#0').replace(b, a).replace('#0', b);
 }
 
 Parse.reverse = function(arr){
@@ -121,11 +121,11 @@ Parse.getStamp = function(stamp) {
 Parse.formatTime = function(stamp) {
     stamp = Parse.getStamp(stamp);
     var time = new Date(stamp);
-    var str = time.getFullYear() + "-";
-    str += Parse.fillZero(time.getMonth()+1) + "-";
-    str += Parse.fillZero(time.getDate()) + " ";
-    str += Parse.fillZero(time.getHours()) + ":";
-    str += Parse.fillZero(time.getMinutes()) + ":";
+    var str = time.getFullYear() + '-';
+    str += Parse.fillZero(time.getMonth()+1) + '-';
+    str += Parse.fillZero(time.getDate()) + ' ';
+    str += Parse.fillZero(time.getHours()) + ':';
+    str += Parse.fillZero(time.getMinutes()) + ':';
     str += Parse.fillZero(time.getSeconds());
     return str;
 }
@@ -136,14 +136,14 @@ Parse.getDate = function(stamp, str) {
     var year = time.getFullYear();
     var month = Parse.fillZero(time.getMonth()+1);
     var day = Parse.fillZero(time.getDate());
-    if (str == "")
-        return year + "" + month + "" + day + "";
-    if (str == "/")
-        return year + "/" + month + "/" + day + "";
-    if (str == "-")
-        return year + "-" + month  + "-" + day + "";
+    if (str == '')
+        return year + '' + month + '' + day + '';
+    if (str == '/')
+        return year + '/' + month + '/' + day + '';
+    if (str == '-')
+        return year + '-' + month  + '-' + day + '';
     else
-        return year + "年" + month + "月" + day + "日";
+        return year + '年' + month + '月' + day + '日';
 }
 
 
@@ -152,12 +152,12 @@ Parse.getTime = function(stamp, str) {
     var time = new Date(stamp);
     var hour = time.getHours();
     var minute = time.getMinutes();
-    if (str == "")
-        return hour + "" + minute + "";
-    if (str == ":")
-        return hour + ":" + minute + "";
+    if (str == '')
+        return hour + '' + minute + '';
+    if (str == ':')
+        return hour + ':' + minute + '';
     else
-        return hour + "时" + minute + "分";
+        return hour + '时' + minute + '分';
 }
 
 Parse.remove = function(lines, line) {
@@ -179,7 +179,7 @@ Elem.creat = function(type, parent, className, id) {
 	if (className)
 		elem.className = className;
 	if (id != null)
-		elem.id = className + "_" + id;
+		elem.id = className + '_' + id;
 	return elem;
 }
 
@@ -209,7 +209,7 @@ Elem.removeClass = function(elem,text){
     var str =  elem.className,
         index = str.indexOf(text);
     if(index > -1) {
-        elem.className = str.replace(text,"");
+        elem.className = str.replace(text,'');
     }
 }
 
@@ -220,51 +220,51 @@ Elem.addClass = function(elem,text){
 
 //设置元素对齐方式
 Elem.align = function(elem, align) {
-    Elem.style(elem, "textAlign", align);
+    Elem.style(elem, 'textAlign', align);
 }
 
 //设置元素字体颜色和背景颜色
 Elem.color = function(elem, color, bgcolor) {
-    Elem.style(elem, "color", color);
-    Elem.style(elem, "backgroundColor", bgcolor);
+    Elem.style(elem, 'color', color);
+    Elem.style(elem, 'backgroundColor', bgcolor);
 }
 
 //设置元素flex权重
 Elem.flex = function(elem, align, flex) {
-    Elem.style(elem, "textAlign", align);
-    Elem.style(elem, "flex", flex);
+    Elem.style(elem, 'textAlign', align);
+    Elem.style(elem, 'flex', flex);
 }
 
 //设置元素宽度
 Elem.width = function(elem, align, width) {
-    Elem.style(elem, "textAlign", align);
-    Elem.style(elem, "width", width);
+    Elem.style(elem, 'textAlign', align);
+    Elem.style(elem, 'width', width);
 }
 
 //设置元素高度
 Elem.height = function(elem, height) {
-    Elem.style(elem, "height", height);
-    Elem.style(elem, "maxHeight", height);
+    Elem.style(elem, 'height', height);
+    Elem.style(elem, 'maxHeight', height);
 }
 
 //设置元素显示
 Elem.display = function(elem, display) {
-    Elem.style(elem, "display", display);
+    Elem.style(elem, 'display', display);
 }
 
 //切换元素显示
 Elem.toggle = function(elem, display) {
     if (!elem || !elem.style) return;
-    var attr = elem.getAttribute("display") || "block";
-    display = display || Parse.swape(attr, "attr", "none");
-    Elem.attr(elem, "display", display);
+    var attr = elem.getAttribute('display') || 'block';
+    display = display || Parse.swape(attr, 'attr', 'none');
+    Elem.attr(elem, 'display', display);
 }
 
 Elem.togType = function(elem, btype) {
     if (!elem || !elem.style) return;
-    var attr = elem.getAttribute("btype") || "default";
-    btype = btype || Parse.swape(attr, "permit", "danger");
-    elem.setAttribute("btype", btype);
+    var attr = elem.getAttribute('btype') || 'default';
+    btype = btype || Parse.swape(attr, 'permit', 'danger');
+    elem.setAttribute('btype', btype);
 }
 
 
@@ -286,9 +286,9 @@ Elem.attr = function(elem, key, value) {
 //设置元素高度自适应
 Elem.autosize = function(elem, offset) {
     var windHeight = config.windHeight;
-    if (!elem) elem = Elem.get("outer-center");
-    elem.style.height = windHeight - offset + "px";
-    elem.style.maxHeight = windHeight - offset + "px";
+    if (!elem) elem = Elem.get('outer-center');
+    elem.style.height = windHeight - offset + 'px';
+    elem.style.maxHeight = windHeight - offset + 'px';
     //alert(windHeight);
 }
 
@@ -326,14 +326,14 @@ var Storage = {};
 Storage.get = function (name) {
     var value = localStorage.getItem(name);
     var data = JSON.parse(value);
-    // console.log("Storage.get(" + name + ":" + value + ")");
+    // console.log('Storage.get(' + name + ':' + value + ')');
     return data;
 }
 
 Storage.set = function (name, val) {
     var value = JSON.stringify(val);
     localStorage.setItem(name, value);
-    // console.log("Storage.set(" + name + ":" + value + ")");
+    // console.log('Storage.set(' + name + ':' + value + ')');
 }
 
 Storage.add = function (name, addVal) { 
@@ -358,89 +358,89 @@ var localData = {};
 
 //保存本地数据
 localData.save = function() {
-    Storage.set("values", values);
+    Storage.set('values', values);
     // window.location.reload();
 }
 
 //初始化本地数据
 localData.init = function(state) {
-    var setting = Storage.get("setting") || {};
-    var dataIdx = setting.dataIdx || "values";
-    dataIdx = dataIdx.replace("default", "values");
+    var setting = Storage.get('setting') || {};
+    var dataIdx = setting.dataIdx || 'values';
+    dataIdx = dataIdx.replace('default', 'values');
 
-    if (state == "set") {
-        values = Storage.get("values");
+    if (state == 'set') {
+        values = Storage.get('values');
         Storage.set(dataIdx, values);
-        console.log(contentText("SET", dataIdx, "succeed!"));
+        console.log(contentText('SET', dataIdx, 'succeed!'));
         console.log(values);
         return values;
     }
 
-    if (state == "get") {
+    if (state == 'get') {
         if (Storage.get(dataIdx)) {
             values = Storage.get(dataIdx);
-            Storage.set("values", values);
-            console.log(contentText("GET", dataIdx, "succeed!"));
+            Storage.set('values', values);
+            console.log(contentText('GET', dataIdx, 'succeed!'));
             console.log(values);
         } else {
-            console.log(contentText("GET", dataIdx, "fail!!!"));
-            return "no data";
+            console.log(contentText('GET', dataIdx, 'fail!!!'));
+            return 'no data';
         }
         return values;
     }
 
-    if (state == "clear") {
+    if (state == 'clear') {
         Storage.clear();
-        var dict = "HIJKLMNOPQRSTUV";
+        var dict = 'HIJKLMNOPQRSTUV';
         for (let idx in dict)
             values[dict[idx]] = 0;
         values.h = 50000;
         Storage.set(dataIdx, values);
-        Storage.set("values", values);
-        console.log(contentText("CLEAR", dataIdx, "succeed!"));
+        Storage.set('values', values);
+        console.log(contentText('CLEAR', dataIdx, 'succeed!'));
         console.log(values);
         return values;
     }
 
-    if (state == "init") {
-        values = Storage.get("values") || localData.init("clear");
-        console.log(contentText("INIT", dataIdx, "succeed!"));
+    if (state == 'init') {
+        values = Storage.get('values') || localData.init('clear');
+        console.log(contentText('INIT', dataIdx, 'succeed!'));
         console.log(values);
         return values;
     }
 }
 
 var contentText = function(a, b, c) {
-    var line = " —————————— ";
-    return line + " " + a + " " + b + " " + c + " " + line; 
+    var line = ' —————————— ';
+    return line + ' ' + a + ' ' + b + ' ' + c + ' ' + line; 
 }
 
 //显示内页
 var setInner = function(innerIdx) {
-    var page = Storage.get("page");
+    var page = Storage.get('page');
     var idx = config.isInto ? config.innerIdx : innerIdx || 0;
-    var outerTop = Elem.get("outer-top").children;
-    var outerCenter = Elem.get("outer-center").children;
+    var outerTop = Elem.get('outer-top').children;
+    var outerCenter = Elem.get('outer-center').children;
     for (var i = 0; i < outerTop.length; i++) {
         var childTop = outerTop[i];
         var childCenter = outerCenter[i];
-        if (childTop.className != "button-top")
+        if (childTop.className != 'button-top')
             break;
         if (i == idx) {
-            Elem.togType(childTop, "live");
-            Elem.display(childCenter, "block");
+            Elem.togType(childTop, 'live');
+            Elem.display(childCenter, 'block');
         } else {
-            Elem.togType(childTop, "dead");
-            Elem.display(childCenter, "none");
+            Elem.togType(childTop, 'dead');
+            Elem.display(childCenter, 'none');
         }
     }
     Elem.color(document.body, getColorType(), getColorBgd());
     config.innerIdx = idx;
-    if (config.isInto || innerIdx == null || config.debugType == "close") {
+    if (config.isInto || innerIdx == null || config.debugType == 'close') {
         config.isInto = false;
         Storage.set('config', config);
         console.log(config);
-    } else if (config.debugType == "open") {
+    } else if (config.debugType == 'open') {
         config.isInto = true;
         Storage.set('config', config);
         jsonToTable(items[idx]); 
@@ -461,27 +461,10 @@ var getColorLight = function() {
 }
 
 var addScript = function() {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = "../../util/temp.js";
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = '../../util/temp.js';
     document.head.appendChild(script);
-}
-
-var setEvent = function() {
-
-    hideAlert();
-    setClick("btn-quit", hideAlert);
-    setClick("btn-abon", hideAlert);
-    setClick("btn-close", hideAlert);
-
-}
-
-var setClick = function(name, func) {
-    if (Elem.get(name)) {
-        Elem.get(name).onclick = function() {
-            func();
-        }
-    }
 }
 
 window.onresize = function() {
@@ -508,19 +491,19 @@ var getAgent = function() {
     // addScript();
     config.constant = {
         color: {
-            font: "#333",
-            light: "#ccc",
-            bgd: "#eee",
-            text: "深黑",
-            type: "black",
-            style: "dark",
+            font: '#333',
+            light: '#ccc',
+            bgd: '#eee',
+            text: '深黑',
+            type: 'black',
+            style: 'dark',
         },
         isInto: false,
-        dataIdx: "default",
-        initType: "get",
-        modeType: "digger",
+        dataIdx: 'default',
+        initType: 'get',
+        modeType: 'digger',
         colorType: 'black',
-        debugType: "close",
+        debugType: 'close',
         outerOffset: 230,
         alertOffset: 716,
         zoomMobile: 1.00,
@@ -529,20 +512,20 @@ var getAgent = function() {
     };
 
 
-    var cfg = Storage.get("config") || {};
-    // if (config.name == "sett")
+    var cfg = Storage.get('config') || {};
+    // if (config.name == 'sett')
     //     cfg = {};
     if (config.name == cfg.name && cfg.isInto)
         config.innerIdx = cfg.innerIdx || 0;
     else
         config.innerIdx = 0;
-    setDefult(cfg, "isInto");
-    setDefult(cfg, "dataIdx");
-    setDefult(cfg, "initType");
-    setDefult(cfg, "modeType");
-    setDefult(cfg, "color");
-    setDefult(cfg, "colorType");
-    setDefult(cfg, "debugType");
+    setDefult(cfg, 'isInto');
+    setDefult(cfg, 'dataIdx');
+    setDefult(cfg, 'initType');
+    setDefult(cfg, 'modeType');
+    setDefult(cfg, 'color');
+    setDefult(cfg, 'colorType');
+    setDefult(cfg, 'debugType');
 
     console.log(config);
     window.onresize();
@@ -554,12 +537,36 @@ var setDefult = function(cfg, key) {
 
 //设置浏览器
 var setAgent = function() {
-    setEvent();
+    hideAlert();
+    setClick('btn-quit', hideAlert);
+    setClick('btn-abon', hideAlert);
+    setClick('btn-close', hideAlert);
     setWhite('user-top');
     setWhite('user-flex');
     setWhite('user-line');
     setWhite('user-body');
     setWhite('user-block');
+}
+
+var showLog = function(str) {
+    var log = Elem.get('log') || Elem.creat('div', document.body, 'log');
+    log.id = 'log';
+    log.innerHTML = str;
+    Elem.color(log, getColorType(), getColorBgd());
+    Elem.display(log, 'block');
+    var list = str.split('');
+    setTimeout(function() {
+        var log = Elem.get('log') || Elem.creat('div', document.body, 'log');
+        Elem.display(log, 'none');
+    }, 5000);
+}
+
+var setClick = function(name, func) {
+    if (Elem.get(name)) {
+        Elem.get(name).onclick = function() {
+            func();
+        }
+    }
 }
 
 var setWhite = function(cls) {
@@ -585,32 +592,32 @@ var setFullScreen = function() {
 var setNotLine = function(content, data) {
     if (data.lines) 
         return;
-    var block = Elem.creat("div", content, "block");
-    var hide = Elem.creat("div", block, "hide");
-    hide.innerHTML = "此处为空";
+    var block = Elem.creat('div', content, 'block');
+    var hide = Elem.creat('div', block, 'hide');
+    hide.innerHTML = '此处为空';
 }
 
 
 
 //显示弹窗
 var showAlert = function(name) {
-    Style.display("alert", "block");
+    Style.display('alert', 'block');
     if (name) {
-        Style.display(name, "block");
+        Style.display(name, 'block');
     }
 }
 
 
 //隐藏弹窗
 var hideAlert = function(name) {
-    Style.display("alert", "none");
+    Style.display('alert', 'none');
     if (name) {
-        Style.display(name, "none");
+        Style.display(name, 'none');
         return;
     }
-    var bgs = Elem.getClass("alert-bg");
+    var bgs = Elem.getClass('alert-bg');
     for (let x in bgs) {
-        Elem.display(bgs[x], "none");
+        Elem.display(bgs[x], 'none');
     }
 }
 
@@ -621,12 +628,12 @@ var jsonToAlert = function(data) {
 
 
 var jsonToTable = function(item) {
-    if (config.name == "home") return;
+    if (config.name == 'home') return;
     var page = '../#/#.html';
     Storage.set('page', page.replace(/#/g,config.name));
     Storage.set('item', item);
     Storage.set('config', config);
-    window.location.href = "../view/view.html";
+    window.location.href = '../view/view.html';
 }
 
 

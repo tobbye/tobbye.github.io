@@ -6,9 +6,9 @@ function setElems() {
 
 
 function setOuterTop() {
-    var outerTop = Elem.get("outer-top");
+    var outerTop = Elem.get('outer-top');
     for (let x in items) {
-        var btn = Elem.creat("div", outerTop, "button-top");
+        var btn = Elem.creat('div', outerTop, 'button-top');
         btn.innerHTML = items[x].title;
         btn.idx = x;
         btn.onclick = function() {
@@ -18,9 +18,9 @@ function setOuterTop() {
 }
 
 function setOuterCenter() {
-    var outerCenter = Elem.get("outer-center");
+    var outerCenter = Elem.get('outer-center');
     for (let x in items) {
-        var inner = Elem.creat("div", outerCenter, "inner", x);
+        var inner = Elem.creat('div', outerCenter, 'inner', x);
         setContent(inner, x);
     }
 }
@@ -29,7 +29,7 @@ function setOuterCenter() {
 function setContent(inner, x) {
     var list = items[x].list;
     for (let y in list) {
-        var content = Elem.creat("div", inner, "content", y);
+        var content = Elem.creat('div', inner, 'content', y);
         var data = list[y];
         setTitle(content, data);
         setHelp(content, data);
@@ -39,11 +39,11 @@ function setContent(inner, x) {
 
 function setTitle(content, data) {
     if (data.title) {
-        var title = Elem.creat("div", content, "title");
+        var title = Elem.creat('div', content, 'title');
         title.innerHTML = data.title;
     }
     if (data.vice) {
-        var vice = Elem.creat("div", content, "vice");
+        var vice = Elem.creat('div', content, 'vice');
         vice.innerHTML = data.vice;
     }
 }

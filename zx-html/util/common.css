@@ -58,6 +58,33 @@ form {
 	padding: 0px;
 }
 
+@keyframes fade-in {  
+    0% {opacity: 0; top:-100px;}
+    20% {opacity: 1; top:0px;}
+    80% {opacity: 1; top:0px;}
+    100% {opacity: 0; top:-100px;}
+}
+
+@-webkit-keyframes fade-in {
+    0% {opacity: 0; top:-100px;}
+    20% {opacity: 1; top:0px;}
+    80% {opacity: 1; top:0px;}
+    100% {opacity: 0; top:-100px;}
+}
+
+#log {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	padding: 25px;
+	font-size: 4em;
+	padding: 25px;
+    animation: fade-in 5s;
+    -webkit-animation:fade-in 5s;/*针对webkit内核*/ 
+    animation-timing-function: ease; 
+} 
+
 #outer-top {
 	display: flex;
 	width: 100%;
@@ -188,9 +215,9 @@ form {
 	flex: 10;
 	margin: 0px;
 	padding: 20px;
-	height: 50px;
-	line-height: 50px;
-	font-size: 3.5em;
+	height: 64px;
+	line-height: 64px;
+	font-size: 4em;
 }.option[btype=dead] {
 	color: dodgerblue;
 	background-color: white;
@@ -293,7 +320,6 @@ form {
 	font-size: 3.5em;
 	font-weight: normal;
 	max-height: 5000px;
-	background-color: white;
 }
 
 .user-tag {

@@ -18,6 +18,7 @@ var setting = {
     isCenter: false,
     isHide: false,
     isOver: false,
+    isEdit: false,
     isSplit: true,
     isMobile: false,
     isElement: false,
@@ -56,13 +57,15 @@ function initEdit() {
 }
 
 function initSave() {
-    setting.name = "custom";
     setting.mode = "initText";
     var textarea = Elem.get("textarea");
     var str = "var custom = #0;"
-    var val = textarea ? textarea.innerHTML : JSON.stringify(data);
+    var val = textarea ? textarea.value : JSON.stringify(data);
+    console.log(val);
     str = str.replace("#0", val).replace(/[\t\n\s]/g, "");
     data = eval(str);
+    if (name == 'custom')
+        localStorage.setItem(name, JSON.stringify(data));
     initText();
 }
 
@@ -104,11 +107,11 @@ function loopSplit(outer, list, path, layer) {
             list[y] = [y];
         }
     }
-    // console.log('--------------------------------');
-    // console.log(path);
-    // console.log(list);
-    // console.log('obj.length: ' + list.length);
-    // console.log('str.length: ' + JSON.stringify(list).length);
+    console.log('--------------------------------');
+    console.log(path);
+    console.log(list);
+    console.log('obj.length: ' + list.length);
+    console.log('str.length: ' + JSON.stringify(list).length);
     jsonToView(outer, list, path, layer);
     for (let y in lines) {
         if (/^\d+$/.test(y))
@@ -360,7 +363,6 @@ function togButton(btn) {
 
 function togButtonView(btn, viewVal, key) {
     if (viewVal == key) {
-        console.log(viewVal + "=" + key);
         if (viewVal == "isFlex") 
             setting.isPile = true;
         if (viewVal == "isFlow") 

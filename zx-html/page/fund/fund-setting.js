@@ -7,9 +7,9 @@ function setElems() {
 
 
 function setOuterTop() {
-    var outerTop = Elem.get("outer-top");
+    var outerTop = Elem.get('outer-top');
     for (let x in items) {
-        var btn = Elem.creat("div", outerTop, "button-top");
+        var btn = Elem.creat('div', outerTop, 'button-top');
         btn.innerHTML = items[x].title;
         btn.idx = x;
         btn.onclick = function() {
@@ -19,10 +19,10 @@ function setOuterTop() {
 }
 
 function setOuterCenter() {
-    var outerCenter = Elem.get("outer-center");
-    outerCenter.innerHTML = "";
+    var outerCenter = Elem.get('outer-center');
+    outerCenter.innerHTML = '';
     for (let x in items) {
-    	var inner = Elem.creat("div", outerCenter, "inner", x);
+    	var inner = Elem.creat('div', outerCenter, 'inner', x);
     	setContent(inner, x);
     }
 }
@@ -32,7 +32,7 @@ function setOuterCenter() {
 function setContent(inner, x) {
     var list = items[x].list;
     for (let y in list) {
-        var content = Elem.creat("div", inner, "content", y);
+        var content = Elem.creat('div', inner, 'content', y);
         var data = list[y];
 		setTitle(content, data);
 		setLine(content, data);
@@ -44,11 +44,11 @@ function setContent(inner, x) {
 
 function setTitle(content, data) {
 	if (data.title) {
-		var title = Elem.creat("div", content, "title");
+		var title = Elem.creat('div', content, 'title');
 		title.innerHTML = data.title;
 	}
 	if (data.vice) {
-		var vice = Elem.creat("div", content, "vice");
+		var vice = Elem.creat('div', content, 'vice');
 		var va = values[data.vice.split('/')[0].split('.')[0]];
 		var vb = values[data.vice.split('/')[1].split('.')[0]];
 		var vc = Math.abs(va / vb).toFixed(4);
@@ -61,29 +61,29 @@ function setTitle(content, data) {
 //设置Line视图
 function setLine(content, data) {
 	var trs = data.lines;
-	var table = Elem.creat("table", content, "table-line");
-	Elem.height(table, config.theHeight + "px");
-	Elem.display(table, "none");
+	var table = Elem.creat('table', content, 'table-line');
+	Elem.height(table, config.theHeight + 'px');
+	Elem.display(table, 'none');
 	for (let y in trs) {
 		var tds = trs[y];
-		var tr = Elem.creat("tr", table, "tr-row", y);
+		var tr = Elem.creat('tr', table, 'tr-row', y);
 		for (let z in tds) {
-			var td = Elem.creat("td", tr, "td-col");
+			var td = Elem.creat('td', tr, 'td-col');
 			var col = tds[z].col;
 			if (!col) {
-				Elem.color(td, "#222", "#eee");
+				Elem.color(td, '#222', '#eee');
 				continue;
 			}
 			td.colSpan = col;
 			var key = tds[z].text.split('.')[0];
-			var size = col > 1 ? "<h3>" : "<h4>";
+			var size = col > 1 ? '<h3>' : '<h4>';
 			tds[z].value = values[key];
-			text = tds[z].text + "<br/>" + size + formatKey(key);
+			text = tds[z].text + '<br/>' + size + formatKey(key);
 			td.innerHTML = text;
 
 			var border = config.border[tds[z].border];
 			for(let i in border) {
-				var radius = "border" + border[i] + "Radius";
+				var radius = 'border' + border[i] + 'Radius';
 				td.style[radius] = config.radius;
 			}
 		}
@@ -94,25 +94,25 @@ function setLine(content, data) {
 //设置Block视图
 function setBlock(content, data) {
 	var trs = data.blocks;
-	var table = Elem.creat("table", content, "table-block");
-	Elem.height(table, config.theHeight + "px");
-	Elem.display(table, "table");
+	var table = Elem.creat('table', content, 'table-block');
+	Elem.height(table, config.theHeight + 'px');
+	Elem.display(table, 'table');
 	for (let y in trs) {
-		var tr = Elem.creat("tr", table, "tr-row", y);
+		var tr = Elem.creat('tr', table, 'tr-row', y);
 		var tds = trs[y];
 		for (let z in tds) {
-			var td = Elem.creat("td", tr, "td-col");
+			var td = Elem.creat('td', tr, 'td-col');
 			var row = tds[z].row;
 			if (!row) {
-				Elem.color(td, "#222", "#eee");
+				Elem.color(td, '#222', '#eee');
 				continue;
 			}
 			td.rowSpan = row;
 			var text = tds[z].text;
 			var key = text.split('.')[0];
 			tds[z].value = values[key];
-			text = "<h3>" + text.replace('.', "</h3>");
-			text += "<br/>" + formatKey(key);
+			text = '<h3>' + text.replace('.', '</h3>');
+			text += '<br/>' + formatKey(key);
 			td.innerHTML = text;
 		}
 	}
@@ -124,21 +124,21 @@ function togItem(item) {
 	var btype, view;
 	var data = item.data;
 	if (data.idx % 100 == 4) {
-		Storage.set("recd-innerIdx", values.innerIdx);
-		window.location.href = "../recd/recd.html";
+		Storage.set('recd-innerIdx', values.innerIdx);
+		window.location.href = '../recd/recd.html';
 		return;
 	}
 	if (data.idx % 100 == 3) {
-		view = ["none", "table"];
+		view = ['none', 'table'];
 	}
 	if (data.idx % 100 == 5) {
-		view = ["table", "none"];
+		view = ['table', 'none'];
 	}
-	if (item.getAttribute("btype") == "danger")
+	if (item.getAttribute('btype') == 'danger')
 		return;
-	var lines = Elem.getClass("table-line");
-	var blocks = Elem.getClass("table-block");
-	var buttons = Elem.getClass("button-min");
+	var lines = Elem.getClass('table-line');
+	var blocks = Elem.getClass('table-block');
+	var buttons = Elem.getClass('button-min');
 	for (let x in lines)
 		Elem.display(lines[x], view[0]);
 	for (let y in blocks)
@@ -151,43 +151,43 @@ function togItem(item) {
 
 function setButton(content, data) {
 	var list = data.buttons;
-	var block = Elem.creat("div", content, "block");
+	var block = Elem.creat('div', content, 'block');
 	for (let y in list) {
-		var flex = Elem.creat("div", block, "flex");
+		var flex = Elem.creat('div', block, 'flex');
 		for(let z in list[y]) {
 			var data = list[y][z];
-			var button = Elem.creat("div", flex, "button");
+			var button = Elem.creat('div', flex, 'button');
 			button.data = data;
 			button.innerHTML = data.text;
-			button.setAttribute("btype", data.btype);
-			var tableBlock = Elem.get("table-block");
+			button.setAttribute('btype', data.btype);
+			var tableBlock = Elem.get('table-block');
 			if (!data.limit)
-				button.className = "button-min";
+				button.className = 'button-min';
 			button.onclick = function() {
 				if (!this.data.limit) {
 					togItem(this);
 					return;
 				}
-				showAlert("edit-bg");
+				showAlert('edit-bg');
 				var data = this.data;
-				var title = Elem.get("edit-title");
-				var limit = Elem.get("edit-limit");
-				var input = Elem.get("edit-input");
-				Style.color("alert-box", "", getColorLight());
-				Style.color("edit-input", getColorType(), "#eee");
+				var title = Elem.get('edit-title');
+				var limit = Elem.get('edit-limit');
+				var input = Elem.get('edit-input');
+				Style.color('alert-box', '', getColorLight());
+				Style.color('edit-input', getColorType(), '#eee');
 				input.focus();
 				input.min = 0;
 				input.value = 0;
 				input.max = values[data.limit];
 				input.dataready = data;
 				title.innerHTML = data.title;
-				limit.innerHTML = "(范围：0-" + input.max + ")";
+				limit.innerHTML = '(范围：0-' + input.max + ')';
 
-				// var tran = Elem.get("fund-tran");
-				// var ref = tran.getAttribute("ref");
-				// var uid = Parse.getDate(null, "");
+				// var tran = Elem.get('fund-tran');
+				// var ref = tran.getAttribute('ref');
+				// var uid = Parse.getDate(null, '');
 				// console.log(uid);
-				// tran.action = ref.replace("#uid", uid).replace("#idx", data.idx);
+				// tran.action = ref.replace('#uid', uid).replace('#idx', data.idx);
 			}
 		}
 	}
@@ -195,13 +195,13 @@ function setButton(content, data) {
 
 //设置弹窗
 function setAlert() {
-	Elem.get("button-cancel").onclick = function() {
-		var input = Elem.get("edit-input");
+	Elem.get('button-cancel').onclick = function() {
+		var input = Elem.get('edit-input');
 		input.value = 0;
 		hideAlert();
 	}
-	Elem.get("button-confirm").onclick = function() {
-		var input = Elem.get("edit-input");
+	Elem.get('button-confirm').onclick = function() {
+		var input = Elem.get('edit-input');
 		if (input.value == 0) 
 			return;
 		input.data = input.dataready;
@@ -225,16 +225,16 @@ function savejson(input) {
 		type: input.data.idx,
 		value: input.value
 	}
-	Storage.add("recd-json", json);
+	Storage.add('recd-json', json);
 }
 
 
 //刷新页面
 function refresh() {
-	var input = Elem.get("edit-input");
-	var limit = Elem.get("edit-limit");
+	var input = Elem.get('edit-input');
+	var limit = Elem.get('edit-limit');
 	var list = input.data.tran.split('|');
-	var str = "";
+	var str = '';
 	var idx = config.innerIdx;
 	for (let i in list) {
 		var line = list[i].split('*');
@@ -243,10 +243,11 @@ function refresh() {
 			val *= values[line[2]];
 		values[line[0]] += val;
 		values[line[0]] = Math.round(values[line[0]]);
-		str += line[0] + " += " + val + " | ";
+		str += line[0] + ' += ' + val + ' | ';
 	}
 	// values.R = Math.floor(values.Q / 100);
 	console.log(str);
+	showLog('操作成功!');
 	// input.value = 0;
 	localData.save();
 	setOuterCenter();
@@ -257,7 +258,7 @@ function refresh() {
 
 //输入事件
 function onInput() {
-	var input = Elem.get("edit-input");
+	var input = Elem.get('edit-input');
 	input.value = Math.max(input.min, input.value);
 	input.value = Math.min(input.max, input.value);
 }
@@ -276,5 +277,5 @@ function getLineValue(data, i, values) {
 
 
 function formatKey(key) {
-	return "￥" + Parse.addSplit(Math.abs(values[key]));
+	return '￥' + Parse.addSplit(Math.abs(values[key]));
 }
