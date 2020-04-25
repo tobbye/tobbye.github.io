@@ -84,12 +84,12 @@ function setLineFlex(body, line, x) {
 		for (let i in line.mark) {
 			var mark = Elem.creat("div", marks, "user-mark");
 			mark.innerHTML = line.mark[i];
-			mark.style.borderColor = getColorType(x);
+			mark.style.borderColor = getColorType();
 		}
 	}
-	Elem.color(head, "", getColorLight(x));
-	Elem.color(group, "white", getColorType(x));
-	Elem.style(group, "borderColor", getColorType(x));
+	Elem.color(head, "", getColorLight());
+	Elem.color(group, "white", getColorType());
+	Elem.style(group, "borderColor", getColorType());
 	line.group = line.uid[0].replace("s","赞助商").replace("d","淘金者");
 
 	name.innerHTML = line.name;
@@ -102,7 +102,7 @@ function setLineFlex(body, line, x) {
 function setDetailAlert(flex) {
 	var box = Elem.get("alert-box");
 	var block = Elem.get("detail-block");
-	Elem.color(box, "", getColorLight(x));
+	Elem.color(box, "", getColorLight());
 	block.innerHTML = "";
 
 	var x = flex.x;

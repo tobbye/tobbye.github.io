@@ -1,29 +1,19 @@
 function setElems() {
-	setOuterTop();
-	setOuterCenter();
+    setOuterTop();
+    setOuterCenter();
     setInner();
 }
 
 
 function setOuterTop() {
-	for (var i = 0;i<100;i++) {
-	rollLadd = 1;
-	var allCount = Math.pow(2, 10);
-    var rollCount = Math.floor(Math.random() * allCount);
-    getRoll(allCount, rollCount);
-    console.log("allCount:" + allCount + ' rollCount:' + rollCount + " rollLadd:" + rollLadd);
-	}
-}
-
-var rollLadd;
-
-function getRoll(all, roll) {
-	all = all / 2;
-    if (roll > all) {
-        rollLadd += 1;
-         getRoll(all, roll - all);
-    } else{
-        return rollLadd;
+    var outerTop = Elem.get("outer-top");
+    for (let x in items) {
+        var btn = Elem.creat("div", outerTop, "button-top");
+        btn.innerHTML = items[x].title;
+        btn.idx = x;
+        btn.onclick = function() {
+            setInner(this.idx);
+        }
     }
 }
 
@@ -35,33 +25,63 @@ function setOuterCenter() {
     }
 }
 
+
 function setContent(inner, x) {
-	var list = items[x].list;
-	for (let y in list) {
-		var content = Elem.creat('div', inner, 'content', y);
-		var data = list[y];
-		if (data.title)
-			setTitle(content, data, x);
-		if (data.text)
-			setText(content, data, x, y);
-	}
+    var list = items[x].list;
+    for (let y in list) {
+        var content = Elem.creat("div", inner, "content", y);
+        var data = list[y];
+        setTitle(content, data);
+        setHelp(content, data);
+        setFeed(content, data);
+    }
 }
 
-function setTitle(content, data, x) {
-    //TITLE
-    var title = Elem.creat('div', content, 'title');
-    title.innerHTML = data.title;
-    title.x = x;
-    //VICE
-    var vice = Elem.creat('div', content, 'vice');
-    vice.innerHTML = data.vice;
-    vice.x = x;
+function setTitle(content, data) {
+    if (data.title) {
+        var title = Elem.creat("div", content, "title");
+        title.innerHTML = data.title;
+    }
+    if (data.vice) {
+        var vice = Elem.creat("div", content, "vice");
+        vice.innerHTML = data.vice;
+    }
 }
 
-function setText(content, data, x, y) {
-
-	var block = Elem.creat('div', content, 'block');
+function setHelp(content, data) {
+    if (!data.text) return; 
+    var block = Elem.creat('div', content, 'block');
 	var text = Elem.creat('div', block, 'text');
 	text.innerHTML = data.text;
+}
 
+function setSlect() {
+
+}
+
+function setFeed(content, data) {
+    if (!data.stype) return; 
+    var block = Elem.creat('div', content, 'block');
+    var select = Elem.creat('div', block, 'alert-flex');
+    for (let x in data.stype) {
+        var option = Elem.creat('div', select, 'option');
+        // button.value = data.stype[x];
+        option.innerHTML = data.stype[x];
+        option.onclick = function() {
+            var childs = this.parentNode.children;
+            for (var i=0; i<childs.length; i++) {
+                if (this.innerHTML == childs[i].innerHTML)  {
+                    childs[i].setAttribute('btype', 'live');
+                } else {
+                    childs[i].setAttribute('btype', 'dead');
+                }               
+            }
+        }
+    }
+    select.children[0].onclick();
+    var textarea = Elem.creat('textarea', block, 'textarea');
+    textarea.innerHTML = data.tips;
+    var button = Elem.creat('div', block, 'button');
+    button.innerHTML = data.btnText;
+    button.setAttribute('btype', 'permit');
 }

@@ -20,7 +20,7 @@ var config = {
 
 var items = [
 
-{title:"日榜", colorIdx: 1, seed: 1,
+{title:"日榜", seed: 1,
 list:[
 {title: '1.1 赞助商投放', text: '投放', vice: '2019年1月15日', group: "赞助商", seed: 1e4, buttonIdx:[0,1,3]},
 {title: '1.2 赞助商捐赠', text: '捐赠', vice: '2019年1月15日', group: "赞助商", seed: 1e2, buttonIdx:[0,1,3]},
@@ -31,7 +31,7 @@ list:[
 ]},
 
 
-{title:"周榜", colorIdx: 2, seed: 7,
+{title:"周榜", seed: 7,
 list:[
 {title: '2.1 赞助商投放', text: '投放', vice: '2019年第2周', group: "赞助商", seed: 1e4, buttonIdx:[0,1,3]},
 {title: '2.2 赞助商捐赠', text: '捐赠', vice: '2019年第2周', group: "赞助商", seed: 1e2, buttonIdx:[0,1,3]},
@@ -42,7 +42,7 @@ list:[
 ]},
 
 
-{title:"月榜", colorIdx: 3, seed: 30,
+{title:"月榜", seed: 30,
 list:[
 {title: '3.1 赞助商投放', text: '投放', vice: '2018年12月', group: "赞助商", seed: 1e4, buttonIdx:[0,1,3]},
 {title: '3.2 赞助商捐赠', text: '捐赠', vice: '2018年12月', group: "赞助商", seed: 1e2, buttonIdx:[0,1,3]},
@@ -53,7 +53,7 @@ list:[
 ]},
 
 
-{title:"总榜", colorIdx: 4, seed: 750,
+{title:"总榜", seed: 750,
 list:[
 {title: '4.1 赞助商投放', text: '投放', vice: '2017年4月5日至今', group: "赞助商", seed: 1e4, buttonIdx:[0,1,3]},
 {title: '4.2 赞助商捐赠', text: '捐赠', vice: '2017年4月5日至今', group: "赞助商", seed: 1e2, buttonIdx:[0,1,3]},

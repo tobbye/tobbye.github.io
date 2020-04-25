@@ -1,15 +1,7 @@
 
 var elems = {};
 var values = {};
-var colors = [
-    {normal:"#eee", dark:"#eee", light:"#eee", bright:"#eee", black:"#333", standard:"white"},
-    {normal:"#c48", dark:"#957", light:"#eac", bright:"#e28", black:"#333", standard:"red"},
-    {normal:"#c84", dark:"#975", light:"#eca", bright:"#e82", black:"#333", standard:"orange"},
-    {normal:"#48c", dark:"#579", light:"#ace", bright:"#28e", black:"#333", standard:"blue"},
-    {normal:"#84c", dark:"#759", light:"#cae", bright:"#82e", black:"#333", standard:"purple"},
-    {normal:"#4c8", dark:"#597", light:"#aec", bright:"#2e8", black:"#333", standard:"seagreen"},
-    {normal:"#8c4", dark:"#795", light:"#cea", bright:"#8e2", black:"#333", standard:"green"},
-];
+
 // 0 1 2 3 4 5 
 // 0 9 8 7 6 5
 // 0 1 2 3 4 5 6 7 8
@@ -442,7 +434,7 @@ var setInner = function(innerIdx) {
             Elem.display(childCenter, "none");
         }
     }
-    Elem.color(document.body, getColorType(idx), "");
+    Elem.color(document.body, getColorType(), getColorBgd());
     config.innerIdx = idx;
     if (config.isInto || innerIdx == null || config.debugType == "close") {
         config.isInto = false;
@@ -456,23 +448,16 @@ var setInner = function(innerIdx) {
 
 }
 
-var getColorType = function(idx) {
-    var innerIdx = idx || config.innerIdx;
-    var colorIdx = items[innerIdx].colorIdx;
-    var color = colors[colorIdx];
-    var type = config.colorType;
-    return color[type];
+var getColorBgd = function() {
+    return config.color.bgd;
 }
 
-var getColorLight = function(idx) {
-    var innerIdx = idx || config.innerIdx;
-    var colorIdx = items[innerIdx].colorIdx;
-    var color = colors[colorIdx];
-    var type = config.colorType;
-    if (type == "black")
-        return "#ccc";
-    else
-        return color["light"];
+var getColorType = function() {
+    return config.color.font;
+}
+
+var getColorLight = function() {
+    return config.color.light;
 }
 
 var addScript = function() {
@@ -522,11 +507,19 @@ window.onresize = function() {
 var getAgent = function() {
     // addScript();
     config.constant = {
+        color: {
+            font: "#333",
+            light: "#ccc",
+            bgd: "#eee",
+            text: "深黑",
+            type: "black",
+            style: "dark",
+        },
         isInto: false,
         dataIdx: "default",
         initType: "get",
         modeType: "digger",
-        colorType: "black",
+        colorType: 'black',
         debugType: "close",
         outerOffset: 230,
         alertOffset: 716,
@@ -537,8 +530,8 @@ var getAgent = function() {
 
 
     var cfg = Storage.get("config") || {};
-    if (config.name == "sett")
-        cfg = {};
+    // if (config.name == "sett")
+    //     cfg = {};
     if (config.name == cfg.name && cfg.isInto)
         config.innerIdx = cfg.innerIdx || 0;
     else
@@ -547,6 +540,7 @@ var getAgent = function() {
     setDefult(cfg, "dataIdx");
     setDefult(cfg, "initType");
     setDefult(cfg, "modeType");
+    setDefult(cfg, "color");
     setDefult(cfg, "colorType");
     setDefult(cfg, "debugType");
 
@@ -561,6 +555,19 @@ var setDefult = function(cfg, key) {
 //设置浏览器
 var setAgent = function() {
     setEvent();
+    setWhite('user-top');
+    setWhite('user-flex');
+    setWhite('user-line');
+    setWhite('user-body');
+    setWhite('user-block');
+}
+
+var setWhite = function(cls) {
+    return;
+    var childs = document.getElementsByClassName(cls);
+    for (var i=0; i<childs.length; i++) {
+        Elem.color(childs[i], '', getColorBgd());
+    }
 }
 
 var setFullScreen = function() {

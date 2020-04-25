@@ -24,7 +24,7 @@ var config = {
 };
 
 var items = [
-{ id: 0, title: '投入', colorIdx: 1,
+{ id: 0, title: '投入',
 list: [
 {title: '我的投入', vice: '投入的资金可被淘金者抢夺', 
 dot: 1, isGrab: 1, group: '淘金者',
@@ -53,7 +53,7 @@ lines: []},
 ]},
 
 
-{ id: 1, title: '抢夺', colorIdx: 2, 
+{ id: 1, title: '抢夺', 
 list: [
 {title: '资金池', vice: '抢夺资金以提高可获收益上限',
 dot: 1, isGrab: 1, group: '淘金者', instance: "luxury",
@@ -69,7 +69,7 @@ lines: []},
 ]},
 
 
-{ id: 2, title: '获取', colorIdx: 3, 
+{ id: 2, title: '获取', 
 list: [
 {title: '红包池', vice: '抢夺投放的红包来获取收益', puzzleText: '发现一个红包',
 dot: 100, isGrab: 1, group: '赞助商', instance: "car",
@@ -86,7 +86,7 @@ lines: []},
 ];
 
 var items_sponer = [
-{ id: 0, title: '投放', colorIdx: 1,
+{ id: 0, title: '投放', 
 list: [
 {title: '我的投放', vice: '投放的红包可被淘金者抢夺', 
 dot: 1, isGrab: 1, group: '赞助商',
@@ -253,7 +253,7 @@ var instance = {
 
 
 var items_ghost = [
-{ id: 0, title: '修炼', colorIdx: 1,
+{ id: 0, title: '修炼', 
 list: [
 {title: '修炼中', vice: '请勿打扰！谢谢！', 
 dot: 1, isGrab: 1, group: '凡人',
@@ -281,7 +281,7 @@ lines: []},
 ]},
 
 
-{ id: 1, title: '斩妖', colorIdx: 2, 
+{ id: 1, title: '斩妖', 
 list: [
 {title: '锁妖塔', vice: '我杀！故我在！！！',
 dot: 1, isGrab: 1, group: '妖女', instance: 'ghost',
@@ -297,7 +297,7 @@ lines: []},
 ]},
 
 
-{ id: 3, title: '除魔', colorIdx: 3, 
+{ id: 3, title: '除魔',
 list: [
 {title: '魔界', vice: '破山贼易，破心魔难！',
 dot: 100, isGrab: 1, group: '魔鬼', instance: 'monster',

@@ -59,8 +59,9 @@ function initSave() {
     setting.name = "custom";
     setting.mode = "initText";
     var textarea = Elem.get("textarea");
-    var str = "var custom = #0;";
-    str = str.replace("#0", textarea.value).replace(/[\t\n\s]/g, "");
+    var str = "var custom = #0;"
+    var val = textarea ? textarea.innerHTML : JSON.stringify(data);
+    str = str.replace("#0", val).replace(/[\t\n\s]/g, "");
     data = eval(str);
     initText();
 }
@@ -133,7 +134,7 @@ function toReplace(outer, data, title, layer) {
     str = str.replace(/\\n/g, '<br/>').replace(/\\/g, '');
     //[,,]转换成[;;]
 	str = str.replace(/(\[[^\[\]\{\}]*\])/g, function($1) {return $1.replace(/,/g, ';')});
-    //拆分
+    //拆分 && 合并
     if (setting.isSplit) {
         if (!setting.isFlex) 
             str = str.replace(/\[{/g, '{').replace(/}]/g, '}');
@@ -306,14 +307,14 @@ function tapButton(btn) {
     var nameVal = btn.getAttribute('val-name');
     //run action
     if (modeVal) {
-        var block2 = Elem.get("flex2").parentNode;
-        var block3 = Elem.get("flex3").parentNode;
-        togButtonHide(block2, modeVal == "initText", "block");
-        togButtonHide(block3, modeVal == "initText", "block");
-        togButtonHide(block3, modeVal != "initSplit", "block");
         setting.mode = modeVal;
         setting.isSplit = modeVal == "initSplit";
-        setting.isEdit = /initText|initEdit|initSave/i.test(modeVal);
+        setting.isEdit = /initText|initEdit/i.test(modeVal);
+        var block2 = Elem.get("flex2").parentNode;
+        var block3 = Elem.get("flex3").parentNode;
+        togButtonHide(block2, setting.isEdit, "block");
+        togButtonHide(block3, setting.isEdit, "block");
+        togButtonHide(block3, !setting.isSplit, "block");
     }
     if (viewVal) {
         togButtonView(btn, viewVal, "isFlex");
@@ -429,11 +430,15 @@ function setCenter() {
 }
 
 function setCustom() {
+    var btnJoin = Elem.get("initJoin");
+    var btnSplit = Elem.get("initSplit");
+    togButtonHide(btnJoin, setting.isEdit, "inline");
+    togButtonHide(btnSplit, setting.isEdit, "inline");
+
     var btnEdit = Elem.get("initEdit");
     var btnSave = Elem.get("initSave");
     togButtonHide(btnEdit, !setting.isEdit, "inline");
     togButtonHide(btnSave, !setting.isEdit, "inline");
-
 }
 
 

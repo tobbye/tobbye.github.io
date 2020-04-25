@@ -11,7 +11,7 @@ var config = {
 
 
 var items = [
-{title:"主页", colorIdx: 1,
+{title:"主页", 
 list: [
 {title:"天机图", vice:"天机不可泄露！", isDepot:1}
 ]},

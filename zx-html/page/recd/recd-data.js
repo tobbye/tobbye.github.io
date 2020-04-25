@@ -21,7 +21,7 @@ var config = {
 
 var items = [
 
-{title:"本金", colorIdx: 1,
+{title:"本金", 
 list: [
 {title:"本金记录", vice:"2019年1月",
 left: "<h4>充值</h4>￥#0", right: "<h4>提现</h4>￥#0",
@@ -32,7 +32,7 @@ lines: [
 ]},
 
 
-{title:"资金",  colorIdx: 2,
+{title:"资金",  
 list: [
 {title:"资金记录", vice:"2019年1月",
 left: "<h4>投入</h4>￥#0", right: "<h4>抢夺</h4>￥#0",
@@ -43,7 +43,7 @@ lines: [
 ]},
 
 
-{title:"收益", colorIdx: 3,
+{title:"收益", 
 list: [
 {title:"收益记录", vice:"2019年1月",
 left: "<h4>获取</h4>￥#0", right: "<h4>提现</h4>￥#0",

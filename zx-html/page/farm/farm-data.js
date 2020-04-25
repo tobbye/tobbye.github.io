@@ -20,7 +20,7 @@ var config = {
 
 
 var items = [
-{title: '农田', colorIdx: 1,
+{title: '农田', 
 list: [
 {title: '', vice:'小麦', btype: 'warn', buttonIdx: [0,3],
 lines: [
@@ -37,7 +37,7 @@ lines: [
 ]},
 
 
-{title: '水田', colorIdx: 2,
+{title: '水田', 
 list: [
 {title: '', vice:'水稻', btype: 'warn', buttonIdx: [0,3],
 lines: [
@@ -46,7 +46,7 @@ lines: [
 ]},
 
 
-{title: '果园', colorIdx: 3,
+{title: '果园', 
 list: [
 {title: '', vice:'苹果', btype: 'warn', buttonIdx: [0,3],
 lines: [

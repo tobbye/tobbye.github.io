@@ -145,6 +145,8 @@ form {
 [btype=permit]:hover {background-image: linear-gradient(to bottom,#084, #480);}
 [btype=defult]:hover {background-image: linear-gradient(to bottom,#048, #408);}
 
+
+
 .button-top {
 	flex: 10;
 	margin: 0px;
@@ -173,6 +175,28 @@ form {
 }.button-bot[btype=live] {
 	color: white;
 	background-color: darkorange;
+}
+
+
+
+.select {
+	display: flex;
+	margin: 5px 0px;
+}
+
+.option {
+	flex: 10;
+	margin: 0px;
+	padding: 20px;
+	height: 50px;
+	line-height: 50px;
+	font-size: 3.5em;
+}.option[btype=dead] {
+	color: dodgerblue;
+	background-color: white;
+}.option[btype=live] {
+	color: white;
+	background-color: dodgerblue;
 }
 
 

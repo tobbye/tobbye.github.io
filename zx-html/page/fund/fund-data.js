@@ -21,7 +21,7 @@ var config = {
 };
 
 var items = [
-{title: "本金", colorIdx: 1,
+{title: "本金", 
 list:[
 {title:"我的本金", vice:"I.可以提现/H.充值本金 = ", check:"HIJKL", trrow: 3,
 lines:[
@@ -42,7 +42,7 @@ buttons:[
 ]},
 ]},
 
-{title: "资金", colorIdx: 2,
+{title: "资金", 
 list:[
 {title:"我的资金", vice:"O.可以抢夺/M.上次投入 = ", check: "MNOPQ", trrow: 3,
 lines: [
@@ -63,7 +63,7 @@ buttons:[
 ]},
 ]},
 
-{title: "收益", colorIdx: 3, 
+{title: "收益", 
 list:[
 {title:"我的收益", vice:"S.可获收益/R.收益上限 = ", check: "RSTUV", trrow: 3,
 lines:[

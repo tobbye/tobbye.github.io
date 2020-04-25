@@ -20,7 +20,7 @@ var config = {
 
 
 var items = [
-{title: '消息', colorIdx: 1,
+{title: '消息', 
 list: [
 {title: '', vice:'', btype: 'warn', buttonIdx: [0,3],
 lines: [
@@ -38,7 +38,7 @@ lines: [
 ]},
 
 
-{title: '关注', colorIdx: 2,
+{title: '关注', 
 list: [
 {title: '赞助商', vice: '强制关注的赞助商', buttonIdx: [0,1,3],
 lines: [
@@ -70,7 +70,7 @@ lines: [
 ]},
 
 
-{title: '粉丝', colorIdx: 3,
+{title: '粉丝', 
 list: [
 {title: '淘金者', vice:'关注我的淘金者', buttonIdx: [0,1,3],
 lines: [
