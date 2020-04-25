@@ -77,9 +77,8 @@ form {
 	top: 0px;
 	left: 0px;
 	right: 0px;
-	padding: 25px;
+	padding: 22px;
 	font-size: 4em;
-	padding: 25px;
     animation: fade-in 5s;
     -webkit-animation:fade-in 5s;/*针对webkit内核*/ 
     animation-timing-function: ease; 
