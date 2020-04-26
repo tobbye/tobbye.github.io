@@ -499,6 +499,7 @@ var getAgent = function() {
             style: 'dark',
         },
         isInto: false,
+        isOnline: false,
         dataIdx: 'default',
         initType: 'get',
         modeType: 'digger',
@@ -520,6 +521,7 @@ var getAgent = function() {
     else
         config.innerIdx = 0;
     setDefult(cfg, 'isInto');
+    setDefult(cfg, 'isOnline');
     setDefult(cfg, 'dataIdx');
     setDefult(cfg, 'initType');
     setDefult(cfg, 'modeType');
