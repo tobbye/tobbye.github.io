@@ -59,30 +59,45 @@ form {
 }
 
 @keyframes fade-in {  
-    0% {opacity: 0; top:-100px;}
-    20% {opacity: 1; top:0px;}
-    80% {opacity: 1; top:0px;}
-    100% {opacity: 0; top:-100px;}
+    0% {opacity: 0; top:-200px;}
+    100% {opacity: 1; top:0px;}
 }
 
 @-webkit-keyframes fade-in {
-    0% {opacity: 0; top:-100px;}
-    20% {opacity: 1; top:0px;}
-    80% {opacity: 1; top:0px;}
-    100% {opacity: 0; top:-100px;}
+    0% {opacity: 0; top:-200px;}
+    100% {opacity: 1; top:0px;}
+}
+
+@keyframes fade-out {  
+    0% {opacity: 1; top:0px;}
+    100% {opacity: 0; top:-200px;}
+}
+
+@-webkit-keyframes fade-out {  
+    0% {opacity: 1; top:0px;}
+    100% {opacity: 0; top:-200px;}
 }
 
 #log {
 	position: absolute;
-	top: 0px;
+	top: -200px;
 	left: 0px;
 	right: 0px;
 	padding: 22px;
 	font-size: 4em;
-    animation: fade-in 5s;
-    -webkit-animation:fade-in 5s;/*针对webkit内核*/ 
-    animation-timing-function: ease; 
 } 
+#log[fade=in] {
+	top: 0px;
+    animation: fade-in 1s;
+    -webkit-animation:fade-in 1s;/*针对webkit内核*/ 
+    animation-timing-function: ease; 	
+} 
+#log[fade=out] {
+	top: -200px;
+    animation: fade-out 1s;
+    -webkit-animation:fade-out 1s;/*针对webkit内核*/ 
+    animation-timing-function: ease; 	
+}
 
 #outer-top {
 	display: flex;

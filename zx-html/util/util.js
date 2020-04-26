@@ -552,14 +552,45 @@ var setAgent = function() {
 var showLog = function(str) {
     var log = Elem.get('log') || Elem.creat('div', document.body, 'log');
     log.id = 'log';
-    log.innerHTML = str;
-    Elem.color(log, getColorBgd(), getColorType());
-    Elem.display(log, 'block');
-    var list = str.split('');
-    setTimeout(function() {
+    config.fadeText = str;
+    if (config.fadeOut) {
+        window.clearTimeout(config.fadeOut);
+        log.setAttribute('fade', 'out');
+        setFadeIn(1000);
+        setFadeOut(5000);
+        setFadeOver(6000);
+    } else {
+        setFadeIn(0);
+        setFadeOut(4000);
+        setFadeOver(5000);
+    }
+    log.style.color = getColorBgd();
+    log.style.backgroundColor = getColorType();
+}
+
+var setFadeIn = function(gap) {
+    config.fadeIn = setTimeout(function() {
         var log = Elem.get('log') || Elem.creat('div', document.body, 'log');
-        Elem.display(log, 'none');
-    }, 5000);
+        log.innerHTML = config.fadeText;
+        log.setAttribute('fade', 'in');
+        config.showLog = true;
+        config.fadeIn = null;
+    }, gap);  
+}
+
+var setFadeOut = function(gap) {
+    config.fadeOut = setTimeout(function() {
+        var log = Elem.get('log') || Elem.creat('div', document.body, 'log');
+        log.setAttribute('fade', 'out');
+        config.showLog = false;
+        config.fadeOut = null;
+    }, gap);  
+}
+
+var setFadeOver = function(gap) {
+    config.fadeOver = setTimeout(function() {
+        config.fadeOver = null;
+    }, gap); 
 }
 
 var setClick = function(name, func) {
@@ -630,8 +661,6 @@ var jsonToAlert = function(data) {
 
 var jsonToTable = function(item) {
     if (config.name == 'home') return;
-    var page = '../#/#.html';
-    Storage.set('page', page.replace(/#/g,config.name));
     Storage.set('item', item);
     Storage.set('config', config);
     window.location.href = '../view/view.html';

@@ -7,7 +7,6 @@ function setElems() {
 
 
 function setOuterTop() {
-    showLog('您的好友二狗已上线!');
 }
 
 

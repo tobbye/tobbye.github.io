@@ -43,8 +43,8 @@ window.onload = function() {
 
 function initText() {
     var list = copyJson(data);
-    var outer = Elem.get('outer');
-    outer.innerHTML = JSON.stringify(list).replace(/,/g, ', ');
+    var outer = Elem.get("outer");
+    outer.innerHTML = JSON.stringify(list).replace(/,/g, ", ");
     window.onresize();
 }
 
@@ -53,7 +53,7 @@ function initEdit() {
     outer.innerHTML = "";
     var textarea = Elem.creat("textarea", outer);
     textarea.id = "textarea";
-    textarea.innerHTML = JSON.stringify(data).replace(/,/g, ', ');
+    textarea.innerHTML = JSON.stringify(data).replace(/,/g, ", ");
 }
 
 function initSave() {
@@ -64,7 +64,7 @@ function initSave() {
     console.log(val);
     str = str.replace("#0", val).replace(/[\t\n\s]/g, "");
     data = eval(str);
-    if (name == 'custom')
+    if (name == "custom")
         localStorage.setItem(name, JSON.stringify(data));
     initText();
 }
@@ -78,8 +78,8 @@ function initSave() {
 
 function initJoin() {
     var list = copyJson(data);
-    var outer = Elem.get('outer');
-    outer.innerHTML = '';
+    var outer = Elem.get("outer");
+    outer.innerHTML = "";
     jsonToView(outer, list, name, 0);
     window.onresize();
     resetOuter(outer);
@@ -87,8 +87,8 @@ function initJoin() {
 
 function initSplit() {
     var list = copyJson(data);
-    var outer = Elem.get('outer');
-    outer.innerHTML = '';
+    var outer = Elem.get("outer");
+    outer.innerHTML = "";
     loopSplit(outer, list, name, 0);
     window.onresize();
     resetOuter(outer);
@@ -102,22 +102,22 @@ function loopSplit(outer, list, path, layer) {
     for (let y in list) {
         if (list[y] == null) continue;
         var length = JSON.stringify(list[y]).length;
-        if (typeof (list[y]) == 'object' && (length > setting.leng * setting.mix)) {
+        if (typeof (list[y]) == "object" && (length > setting.leng * setting.mix)) {
             lines[y] = copyJson(list[y]);
             list[y] = [y];
         }
     }
-    console.log('--------------------------------');
+    console.log("--------------------------------");
     console.log(path);
     console.log(list);
-    console.log('obj.length: ' + list.length);
-    console.log('str.length: ' + JSON.stringify(list).length);
+    console.log("obj.length: " + list.length);
+    console.log("str.length: " + JSON.stringify(list).length);
     jsonToView(outer, list, path, layer);
     for (let y in lines) {
         if (/^\d+$/.test(y))
-            dict = path + '[' + y + ']';
+            dict = path + "[" + y + "]";
         else
-            dict = path + '.' + y;
+            dict = path + "." + y;
         loopSplit(outer, lines[y], dict, layer);
     }
 }
@@ -134,55 +134,55 @@ function jsonToView(outer, data, title, layer) {
 function toReplace(outer, data, title, layer) {
     // console.log(data);
     var str = JSON.stringify(data);
-    str = str.replace(/\\n/g, '<br/>').replace(/\\/g, '');
+    str = str.replace(/\\n/g, "<br/>").replace(/\\/g, "");
     //[,,]转换成[;;]
-	str = str.replace(/(\[[^\[\]\{\}]*\])/g, function($1) {return $1.replace(/,/g, ';')});
+	str = str.replace(/(\[[^\[\]\{\}]*\])/g, function($1) {return $1.replace(/,/g, ";")});
     //拆分 && 合并
     if (setting.isSplit) {
         if (!setting.isFlex) 
-            str = str.replace(/\[{/g, '{').replace(/}]/g, '}');
-        str = str.replace(/\{/g, '[<h1>').replace(/}/g, ']');
+            str = str.replace(/\[{/g, "{").replace(/}]/g, "}");
+        str = str.replace(/\{/g, "[<h1>").replace(/}/g, "]");
     } else {
-        str = str[0] == '{' ? '[' + str + ']' : str;
+        str = str[0] == "{" ? "[" + str + "]" : str;
         //{{},{}}转换成{[],[]}
-        str = str.replace(/:{/g, ':[<h1>').replace(/(},"[^\W]*":)/g, function($1) {return $1.replace("}", ']')});
-        str = str.replace(/\[{/g, '[<h1>').replace(/}]/g, ']').replace(/},/g, '}');
+        str = str.replace(/:{/g, ":[<h1>").replace(/(},"[^\W]*":)/g, function($1) {return $1.replace("}", "]")});
+        str = str.replace(/\[{/g, "[<h1>").replace(/}]/g, "]").replace(/},/g, "}");
     }
     // {}转换成tr, []转换成table
-    str = str.replace(/\{/g, '<tr><td><h1>').replace(/}/g, '</td></tr>');
-    str = str.replace(/\[/g, '<table><tr><td>').replace(/]/g, '</td></tr></table>');
+    str = str.replace(/\{/g, "<tr><td><h1>").replace(/}/g, "</td></tr>");
+    str = str.replace(/\[/g, "<table><tr><td>").replace(/]/g, "</td></tr></table>");
     if (setting.isPile) {
         //平铺 && 堆叠
-        str = str.replace(/,/g, '</td><td><h1>');
-        str = str.replace(/;/g, '</td><td>');
+        str = str.replace(/,/g, "</td><td><h1>");
+        str = str.replace(/;/g, "</td><td>");
         if (setting.isFlex) 
-            str = str.replace(/":/g, '</h1>');
+            str = str.replace(/":/g, "</h1>");
         else
-            str = str.replace(/":/g, '</h1>'); 
-        str = str.replace(/"/g, '');
+            str = str.replace(/":/g, "</h1>"); 
+        str = str.replace(/"/g, "");
         str = "<h2 float='left'>" + title + "</h2>" + str;
     } else {
         //直流 && 分流
-        str = str.replace(/,/g, '</td></tr><tr><td><h1>');
-        str = str.replace(/;/g, '</td></tr><tr><td>');
+        str = str.replace(/,/g, "</td></tr><tr><td><h1>");
+        str = str.replace(/;/g, "</td></tr><tr><td>");
         if (setting.isFlow)
-            str = str.replace(/":/g, '</h1>');
+            str = str.replace(/":/g, "</h1>");
         else 
-            str = str.replace(/":/g, '</h1></td><td>'); 
-        str = str.replace(/"/g, '');
+            str = str.replace(/":/g, "</h1></td><td>"); 
+        str = str.replace(/"/g, "");
         str = "<h2 float='top'>" + title + "</h2>" + str;
     }
 
-	var inner = Elem.creat('div', outer, 'inner');
-    inner.setAttribute('layer', layer);
+	var inner = Elem.creat("div", outer, "inner");
+    inner.setAttribute("layer", layer);
 	inner.innerHTML = str;
 }
 
 
 
 function toElement(outer, data, title, layer) {
-    var inner = Elem.creat('div', outer, 'inner');
-    inner.setAttribute('layer', layer);
+    var inner = Elem.creat("div", outer, "inner");
+    inner.setAttribute("layer", layer);
     var child = Elem.creat("div", inner, "title");
     child.innerHTML = title;
     loopElement(inner, data, 0);
@@ -219,7 +219,7 @@ function resetOuter(outer) {
         //居中
         if (!setting.isCenter) {
 
-            table.className = 'align-left';
+            table.className = "align-left";
             title.style.textAlign = "left";
         } 
         //堆叠
@@ -263,7 +263,7 @@ function resetAlign(inner) {
 
         var title = Elem.creat("tr", thisTbody);
         var align = setting.isCenter ? "center" : "left";
-        var tdstr = "<tr><td class='title' colspan='100'><h2 style='text-align:" + align + "';>";
+        var tdstr = `<tr><td class='title' colspan='100'><h2 style='text-align:` + align + `';>`;
         title.innerHTML = tdstr + next.children[0].innerHTML + "</h2></td></tr>";
 
         while (nextTbody.hasChildNodes())
@@ -283,7 +283,7 @@ function getJson(name) {
 }
 
 function setButton() {
-    var buttons = document.getElementsByClassName('button');
+    var buttons = document.getElementsByClassName("button");
     for (var i=0;i<buttons.length;i++) {
         var btn = buttons[i];
         setButtonId(btn);
@@ -295,19 +295,19 @@ function setButton() {
 }
 
 function setButtonId(btn) {
-    var modeVal = btn.getAttribute('val-mode');
-    var viewVal = btn.getAttribute('val-view');
-    var lengVal = btn.getAttribute('val-leng');
-    var nameVal = btn.getAttribute('val-name');
+    var modeVal = btn.getAttribute("val-mode");
+    var viewVal = btn.getAttribute("val-view");
+    var lengVal = btn.getAttribute("val-leng");
+    var nameVal = btn.getAttribute("val-name");
     btn.id = modeVal || viewVal || lengVal || nameVal;
 }
 
 
 function tapButton(btn) {
-    var modeVal = btn.getAttribute('val-mode');
-    var viewVal = btn.getAttribute('val-view');
-    var lengVal = btn.getAttribute('val-leng');
-    var nameVal = btn.getAttribute('val-name');
+    var modeVal = btn.getAttribute("val-mode");
+    var viewVal = btn.getAttribute("val-view");
+    var lengVal = btn.getAttribute("val-leng");
+    var nameVal = btn.getAttribute("val-name");
     //run action
     if (modeVal) {
         setting.mode = modeVal;
@@ -338,10 +338,10 @@ function tapButton(btn) {
         data = getJson(nameVal);
     }
 
-    if (name == 'setting') 
+    if (name == "setting") 
         data = copyJson(setting);
-    // if (typeof(setting.mode) == 'function')
-        eval(setting.mode+'();');
+    // if (typeof(setting.mode) == "function")
+        eval(setting.mode+"();");
     var nodes = btn.parentNode.childNodes;
     for (let x in nodes) {
         togButton(nodes[x]);            
@@ -351,10 +351,10 @@ function tapButton(btn) {
 
 function togButton(btn) {
     if (!btn || !btn.style) return;
-    if (btn.getAttribute('val-mode') == setting.mode || 
-        btn.getAttribute('val-view') == setting.view || 
-        btn.getAttribute('val-leng') == setting.leng || 
-        btn.getAttribute('val-name') == setting.name) {
+    if (btn.getAttribute("val-mode") == setting.mode || 
+        btn.getAttribute("val-view") == setting.view || 
+        btn.getAttribute("val-leng") == setting.leng || 
+        btn.getAttribute("val-name") == setting.name) {
         btn.setAttribute("btype", "live");
     } else {
         btn.setAttribute("btype", "dead");
@@ -391,7 +391,9 @@ function togButtonHide(btn, hide, display) {
 
 
 function back() {
-    window.location.href = getJson('page') || "../home/home.html";
+    var config = getJson("config");
+    var href = config ? config.name : "home";
+    window.location.href = "../#1/#1.html".replace(/#1/g, href);
 }
 
 window.onresize = function() {
@@ -405,9 +407,9 @@ function setAgent() {
     setting.zoom = setting.isMobile ? setting.zoomMobile : setting.zoomComputer;
     document.body.style.zoom = setting.zoom;
     var agent = setting.isMobile ? "mobile" : "computer";
-    var outerBot = Elem.get('outer-bot');
+    var outerBot = Elem.get("outer-bot");
     outerBot.setAttribute("agent", agent);
-    var blocks = document.getElementsByClassName('block');
+    var blocks = document.getElementsByClassName("block");
     for (var i=0;i<blocks.length;i++) {
         blocks[i].setAttribute("agent", agent);
     }
@@ -416,13 +418,13 @@ function setAgent() {
 function setCenter() {
     //20 = outer.paddingTop + outer.paddingBot;
     var height = window.innerHeight / setting.zoom - 20;
-    var outer = Elem.get('outer');
+    var outer = Elem.get("outer");
     var btnCenter = Elem.get("flex2").children[2];
     var btnAlign = Elem.get("flex2").children[3];
     //outer.scrollWidth超出body.inner,隐藏居中按钮
     setting.isOver = outer.scrollWidth * setting.zoom > window.innerWidth;
     setting.isHide = setting.isOver || !setting.isPile;
-    outer.style.height = (height - 90) + 'px';
+    outer.style.height = (height - 90) + "px";
     togButtonHide(btnCenter, setting.isHide, "inline");
     togButtonText(btnCenter, "isCenter");
     if (!setting.isPile) 
@@ -460,7 +462,7 @@ var Elem = {
         if (parent)
             parent.appendChild(data);
         if (idx && className)
-            data.id = className + '_' + idx;
+            data.id = className + "_" + idx;
         return data;
     },
     color: function(elem, color, bgcolor) {
