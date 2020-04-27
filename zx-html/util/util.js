@@ -421,20 +421,31 @@ var setInner = function(innerIdx) {
     var idx = config.isInto ? config.innerIdx : innerIdx || 0;
     var outerTop = Elem.get('outer-top').children;
     var outerCenter = Elem.get('outer-center').children;
+    var isText = config.colorType == 'text';
+    var isPage = config.colorType == 'page';
     for (var i = 0; i < outerTop.length; i++) {
         var childTop = outerTop[i];
         var childCenter = outerCenter[i];
         if (childTop.className != 'button-top')
             break;
         if (i == idx) {
-            Elem.togType(childTop, 'live');
+            if (isPage)
+                Elem.color(childTop, getColorBgd(), getColorType());
+            else
+                Elem.togType(childTop, 'live');
             Elem.display(childCenter, 'block');
         } else {
-            Elem.togType(childTop, 'dead');
+            if (isPage)
+                Elem.color(childTop, getColorType(), getColorBgd());
+            else
+                Elem.togType(childTop, 'dead');
             Elem.display(childCenter, 'none');
         }
     }
-    Elem.color(document.body, getColorType(), getColorBgd());
+    if (isText)
+        Elem.color(document.body, getColorType(), '');
+    else
+        Elem.color(document.body, getColorType(), getColorBgd());
     config.innerIdx = idx;
     if (config.isInto || innerIdx == null || config.debugType == 'close') {
         config.isInto = false;
@@ -503,7 +514,7 @@ var getAgent = function() {
         dataIdx: 'default',
         initType: 'get',
         modeType: 'digger',
-        colorType: 'black',
+        colorType: 'text',
         debugType: 'close',
         outerOffset: 230,
         alertOffset: 716,
@@ -551,6 +562,44 @@ var setAgent = function() {
     window.onresize();
 }
 
+
+var setClick = function(name, func) {
+    if (Elem.get(name)) {
+        Elem.get(name).onclick = function() {
+            func();
+        }
+    }
+}
+
+var setWhite = function(cls) {
+    return;
+    var childs = document.getElementsByClassName(cls);
+    for (var i=0; i<childs.length; i++) {
+        Elem.color(childs[i], '', getColorBgd());
+    }
+}
+
+var setFullScreen = function() {
+    if (config.isMobile) {
+        var body = document.body;
+        if (body.requestFullScreen) body.requestFullScreen(); //W3C
+        if (body.msRequestFullScreen) body.msRequestFullScreen();  //IE11
+        if (body.mozRequestFullScreen) body.mozRequestFullScreen(); //FireFox
+        if (body.webkitRequestFullScreen) body.webkitRequestFullScreen(); //Chrome
+    }
+}
+
+
+
+var setNotLine = function(content, data) {
+    if (data.lines) 
+        return;
+    var block = Elem.creat('div', content, 'block');
+    var hide = Elem.creat('div', block, 'hide');
+    hide.innerHTML = '此处为空';
+}
+
+//显示提醒信息
 var showLog = function(str) {
     var log = Elem.get('log') || Elem.creat('div', document.body, 'log');
     log.id = 'log';
@@ -595,48 +644,16 @@ var setFadeOver = function(gap) {
     }, gap); 
 }
 
-var setClick = function(name, func) {
-    if (Elem.get(name)) {
-        Elem.get(name).onclick = function() {
-            func();
-        }
-    }
-}
-
-var setWhite = function(cls) {
-    return;
-    var childs = document.getElementsByClassName(cls);
-    for (var i=0; i<childs.length; i++) {
-        Elem.color(childs[i], '', getColorBgd());
-    }
-}
-
-var setFullScreen = function() {
-    if (config.isMobile) {
-        var body = document.body;
-        if (body.requestFullScreen) body.requestFullScreen(); //W3C
-        if (body.msRequestFullScreen) body.msRequestFullScreen();  //IE11
-        if (body.mozRequestFullScreen) body.mozRequestFullScreen(); //FireFox
-        if (body.webkitRequestFullScreen) body.webkitRequestFullScreen(); //Chrome
-    }
-}
-
-
-
-var setNotLine = function(content, data) {
-    if (data.lines) 
-        return;
-    var block = Elem.creat('div', content, 'block');
-    var hide = Elem.creat('div', block, 'hide');
-    hide.innerHTML = '此处为空';
-}
-
-
 
 //显示弹窗
 var showAlert = function(name) {
     Style.display('alert', 'block');
     if (name) {
+        setWhite('user-top');
+        setWhite('user-flex');
+        setWhite('user-line');
+        setWhite('user-body');
+        setWhite('user-block');
         Style.display(name, 'block');
     }
 }

@@ -8,21 +8,19 @@ var config = {
 	name: 'sett',
 	styleName: ['dark', 'normal', 'bright', 'standard'],
 	styleText: ['深色', '正常色', '亮色', '标准色'],
-	typeIdx: '234567',
-	typeText: '红橙蓝紫青绿',
+	typeIdx: '0123456',
+	typeText: '黑红橙蓝紫青绿',
 };
 
 var colors = [
-    {normal:'#888', dark:'#333', light:'#ccc', bgd:'#eee', bright:'#888', standard:'black'},
-    {normal:'#888', dark:'#ccc', light:'#333', bgd:'#111', bright:'#888', standard:'white'},
+    {normal:'#888', dark:'#333', light:'#ccc', bgd:'#eee', bright:'#aaa', standard:'black'},
     {normal:'#c48', dark:'#957', light:'#eac', bgd:'#fde', bright:'#e28', standard:'red'},
     {normal:'#c84', dark:'#975', light:'#eca', bgd:'#fed', bright:'#e82', standard:'orange'},
     {normal:'#48c', dark:'#579', light:'#ace', bgd:'#def', bright:'#28e', standard:'blue'},
     {normal:'#84c', dark:'#759', light:'#cae', bgd:'#edf', bright:'#82e', standard:'purple'},
-    {normal:'#4c8', dark:'#597', light:'#aec', bgd:'#dfe', bright:'#2e8', standard:'seagreen'},
-    {normal:'#8c4', dark:'#795', light:'#cea', bgd:'#efd', bright:'#8e2', standard:'green'},
+    {normal:'#4c8', dark:'#597', light:'#aec', bgd:'#dfe', bright:'#2d8', standard:'seagreen'},
+    {normal:'#8c4', dark:'#795', light:'#cea', bgd:'#efd', bright:'#8d2', standard:'green'},
 ];
-
 
 
 
@@ -30,9 +28,9 @@ var colors = [
 var items = [
 {title: '设置', 
 list: [
-{title: '色彩', vice: '选择一个色彩样式', default: 0, key: 'colorType',
-optName: ['Black', 'Colorful', 'White'],
-optText: ['黑色', '彩色', '白色'],
+{title: '色彩', vice: '选择一个色彩样式和应用方式', default: 0, key: 'colorType',
+optName: ['Text', 'Bgd', 'Page'],
+optText: ['文字', '背景','标签页'],
 },
 
 {title: '数据', vice: '选择一个数据初始化', default: 0, key: 'dataIdx',

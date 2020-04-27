@@ -73,7 +73,7 @@ function setLine(content, data) {
 			optName = optName.replace('default', 'values');
 			var value = Storage.get(optName);
 			if (this.key == 'colorType') {
-				togStyle(this);
+				// togStyle(this);
 			}
 			if (this.key == 'initType')
 				value = localData.init(optName);
@@ -121,7 +121,10 @@ function setStyle(content, data) {
 			td.onclick = function() {
 				config.color = this.color;
     			Storage.set('config', config);
-				Elem.color(document.body, this.color.font, this.color.bgd);
+    			if (config.colorType == 'text')
+					Elem.color(document.body, this.color.font, '#eee');
+				else
+					Elem.color(document.body, this.color.font, this.color.bgd);
 			}
 		}
 	}
@@ -146,11 +149,11 @@ function togStyle(option) {
         };
 	} else if (option.optName == 'white') {
 		color = {
-            font: '#666',
-            light: '#ccc',
-            bgd: '#eee',
-            text: '黑色',
-            type: 'black',
+            font: '#111',
+            light: '#666',
+            bgd: '#999',
+            text: '白色',
+            type: 'white',
             style: 'standard',
         };
 	}

@@ -19,12 +19,37 @@ var setting = {
     isHide: false,
     isOver: false,
     isEdit: false,
+    isText: false,
     isSplit: true,
     isMobile: false,
     isElement: false,
     zoom: 1.00,
     zoomMobile: 2.00,
     zoomComputer: 0.70,
+
+    desc: {
+        mix: "混合系数",
+        leng: "拆分长度",
+        name: "数据名称",
+        mode: "操作模式",
+        view: "视图类型",
+
+        isPile: "堆叠吗",
+        isFlex: "堆叠还是平铺",
+        isFlow: "直流还是分流",
+        isAlign: "对齐吗",
+        isCenter: "居中吗",
+        isHide: "页面超出宽度时隐藏居中按钮吗",
+        isOver: "页面超出宽度了吗",
+        isEdit: "是编辑模式吗",
+        isText: "是文本模式吗",
+        isSplit: "是拆分模式吗",
+        isMobile: "是手机端吗",
+        isElement: "采用DOM节点的方式生成吗",
+        zoom: "当前页面缩放比例",
+        zoomMobile: "手机端缩放比例",
+        zoomComputer: "电脑端缩放比例",
+    }
 };
 
 
@@ -313,10 +338,11 @@ function tapButton(btn) {
         setting.mode = modeVal;
         setting.isSplit = modeVal == "initSplit";
         setting.isEdit = /initText|initEdit/i.test(modeVal);
+        setting.isText = /initText|initEdit|initSave/i.test(modeVal);
         var block2 = Elem.get("flex2").parentNode;
         var block3 = Elem.get("flex3").parentNode;
-        togButtonHide(block2, setting.isEdit, "block");
-        togButtonHide(block3, setting.isEdit, "block");
+        togButtonHide(block2, setting.isText, "block");
+        togButtonHide(block3, setting.isText, "block");
         togButtonHide(block3, !setting.isSplit, "block");
     }
     if (viewVal) {
