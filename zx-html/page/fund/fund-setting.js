@@ -76,7 +76,7 @@ function setLine(content, data) {
 			}
 			td.colSpan = col;
 			var key = tds[z].text.split('.')[0];
-			var size = col > 1 ? '<h3>' : '<h4>';
+			var size = col > 1 ? '<h2>' : '<h3>';
 			tds[z].value = values[key];
 			text = tds[z].text + '<br/>' + size + formatKey(key);
 			td.innerHTML = text;
@@ -111,7 +111,7 @@ function setBlock(content, data) {
 			var text = tds[z].text;
 			var key = text.split('.')[0];
 			tds[z].value = values[key];
-			text = '<h3>' + text.replace('.', '</h3>');
+			text = '<h2>' + text.replace('.', '</h2>');
 			text += '<br/>' + formatKey(key);
 			td.innerHTML = text;
 		}
@@ -247,13 +247,13 @@ function refresh() {
 		str += line[0] + ' += ' + val + ' | ';
 	}
 	// values.R = Math.floor(values.Q / 100);
+	showLog('<h4>操作成功!</h4>' + input.data.title + ' ￥' +  input.value);
 	console.log(str);
 	// input.value = 0;
 	localData.save();
 	setOuterCenter();
 	config.isInto = true;
 	setInner(idx);
-	showLog('操作成功!');
 }
 
 

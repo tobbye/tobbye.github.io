@@ -615,8 +615,11 @@ var showLog = function(str) {
         setFadeOut(4000);
         setFadeOver(5000);
     }
-    log.style.color = getColorBgd();
-    log.style.backgroundColor = getColorType();
+    if (config.colorType == 'page')
+        Elem.color(log, getColorBgd(), getColorType());
+    else
+        Elem.color(log, 'white', 'dodgerblue');
+
 }
 
 var setFadeIn = function(gap) {

@@ -6,20 +6,20 @@ window.onload = function() {
 
 var config = {
 	name: 'sett',
-	styleName: ['dark', 'normal', 'bright', 'standard'],
-	styleText: ['深色', '正常色', '亮色', '标准色'],
+	styleName: ['dark', 'bright', 'standard'],
+	styleText: ['暗色', '亮色', '标准色'],
 	typeIdx: '0123456',
 	typeText: '黑红橙蓝紫青绿',
 };
 
 var colors = [
-    {normal:'#888', dark:'#333', light:'#ccc', bgd:'#eee', bright:'#aaa', standard:'black'},
-    {normal:'#c48', dark:'#957', light:'#eac', bgd:'#fde', bright:'#e28', standard:'red'},
-    {normal:'#c84', dark:'#975', light:'#eca', bgd:'#fed', bright:'#e82', standard:'orange'},
-    {normal:'#48c', dark:'#579', light:'#ace', bgd:'#def', bright:'#28e', standard:'blue'},
-    {normal:'#84c', dark:'#759', light:'#cae', bgd:'#edf', bright:'#82e', standard:'purple'},
-    {normal:'#4c8', dark:'#597', light:'#aec', bgd:'#dfe', bright:'#2d8', standard:'seagreen'},
-    {normal:'#8c4', dark:'#795', light:'#cea', bgd:'#efd', bright:'#8d2', standard:'green'},
+    {dark:'#333', bright:'#555', light:'#ccc', bgd:'#eee', standard:'black'},
+    {dark:'#957', bright:'#e28', light:'#eac', bgd:'#fde', standard:'red'},
+    {dark:'#975', bright:'#e82', light:'#eca', bgd:'#fed', standard:'orange'},
+    {dark:'#579', bright:'#28e', light:'#ace', bgd:'#def', standard:'blue'},
+    {dark:'#759', bright:'#82e', light:'#cae', bgd:'#edf', standard:'purple'},
+    {dark:'#597', bright:'#2b8', light:'#aec', bgd:'#dfe', standard:'seagreen'},
+    {dark:'#795', bright:'#8b2', light:'#cea', bgd:'#efd', standard:'green'},
 ];
 
 
