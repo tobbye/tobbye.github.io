@@ -28,10 +28,10 @@ function setOuterCenter() {
 }
 
 function setContent(inner, x) {
-    var list = items[x].list;
+    var list = items[x].list
     for (let y in list) {
-        var content = Elem.creat('div', inner, 'content', y);
         var data = list[y];
+        var content = Elem.creat('div', inner, 'content', y);
         setTitle(content, data);
         setNotLine(content, data);
         if (data.isGrab == 0)
@@ -62,11 +62,13 @@ function initTempLine(data) {
     for (let idx in list) {
         if (idx >= config.inveCount) break;
         var line = {};
+        line.group = data.group;
         line.ladder = Math.floor(20 * Math.random() * Math.random()) + 6;
         line.ladd = line.ladder - Math.floor(5 * Math.random());
         line.multi = Math.floor(100 * Math.pow(Math.random(),8)) + 1;
         line.index = Math.floor((1547 + Math.random()) * 1e9);
         line.stamp = Parse.formatTime(line.index).replace(' ', '<h3>');
+        line.mark = ['身份标签1', '身份标签2'];
         line.inver = list[idx].split('/')[0];
         line.word = list[idx].replace(/ /g, '/');
         line.wordOrg = line.word;
@@ -86,7 +88,7 @@ function creatGrabBody(content, data, x) {
         var line = lines[z];
         if (!line.ladd) continue;
         line = initLineData(line, data.dot, data.isGrab);
-        line.row = parseInt(line.ladd / 5 - 0.2);
+
         var body = Elem.creat('div', block, 'user-block');
         body.data = data;
         body.line = line;
@@ -102,7 +104,7 @@ function creatGrabBody(content, data, x) {
         index.innerHTML += '<br/>' + data.inverStr;
         stamp.innerHTML = '时间: ' + line.stamp;
 
-        setLineFlex(body, line, x);
+        setUserFlex(body, line);
 
         var flex = Elem.creat('div', body, 'user-flex');
         flex.style.marginTop = '0px';
@@ -151,7 +153,7 @@ function creatInveBody(content, data, x) {
 
 
 function initLineData(line, dot, isGrab) {
-
+    line.row = parseInt(line.ladd / 5 - 0.2);
     line.priceAllList = [];    
     line.pieceAllList = [];
     line.timesAllList = [];
@@ -219,33 +221,6 @@ function setLineText(flex, attr, text) {
     return line;
 }
 
-
-function setLineFlex(body, line, x) {
-    var flex = Elem.creat('div', body, 'user-flex');
-    var head = Elem.creat('img', flex, 'user-head');
-    var left = Elem.creat('div', flex, 'user-left');
-    var right = Elem.creat('div', flex, 'user-right');
-    var name = Elem.creat('div', left, 'user-name');
-    var marks = Elem.creat('div', left, 'user-flex');
-    var ladd = Elem.creat('div', right, 'user-ladd');
-    var group = Elem.creat('div', right, 'user-group');
-
-    line.mark = ['身份标签1', '身份标签2'];
-    if (line.mark) {
-        for (let i in line.mark) {
-            var mark = Elem.creat('div', marks, 'user-mark');
-            mark.innerHTML = line.mark[i];
-            mark.style.borderColor = getColorType(x);
-        }
-    }
-    Elem.color(head, '', getColorLight(x));
-    Elem.color(group, 'white', getColorType(x));
-    Elem.style(group, 'borderColor', getColorType(x));
-
-    name.innerHTML = line.inver;
-    ladd.innerHTML = line.ladder  + '阶';
-    group.innerHTML = body.data.group;
-}
 
 
 function setLineSelect(flex) { 
@@ -395,13 +370,12 @@ function setResultAlert() {
     getRoll(allCount, rollCount);
 
     var ladd = Elem.creat('div', block, 'line');
-    ladd.innerHTML = line.inver + config.inverStr.substring(0, 2) + '的';
-    ladd.innerHTML += rollLadd + config.resultText;
+    ladd.innerHTML = line.inver + '的' + rollLadd + config.resultText;
     var pic = Elem.creat('img', block, 'img');
     pic.src = config.laddSrc + rollLadd + '.png';
     var price = Elem.creat('div', block, 'line');
     price.innerHTML = '<h2>￥' +  Parse.addSplit(line.priceAllList[rollLadd - 1]);
-    showLog(`<h4>恭喜您获得了</h4>${ladd.innerText}`);
+    showLog('<h4>恭喜您获得了</h4>' + ladd.innerText);
     showAlert('result-bg');
 }
 

@@ -1,13 +1,13 @@
 var tempData = {
 	searchData: [
-		{order: 1, value: 948670, group: "无关系的", uid: 'd110001', name: '李刚猛', ladd: 18, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['身份标签1', '身份标签2']},
-		{order: 2, value: 690663, group: "无关系的", uid: 'd110002', name: '张雄壮', ladd: 17, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['阶层标签1', '阶层标签2']},
-		{order: 3, value: 582830, group: "无关系的", uid: 'd110004', name: '章威武', ladd: 12, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['成就标签1', '成就标签2']},
-        {order: 4, value: 699972, group: "无关系的", uid: 'd110002', name: '王坚强', ladd: 20, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['排名标签1', '排名标签2']},
-		{order: 5, value: 414480, group: "无关系的", uid: 'd110005', name: '徐福贵', ladd: 17, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['评价标签1', '评价标签2']},
-		{order: 6, value: 341222, group: "无关系的", uid: 's110006', name: '赵铁柱', ladd: 15, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['理财专家', '投资顾问']},
-		{order: 7, value: 202098, group: "无关系的", uid: 's110007', name: '赵铁牛', ladd: 15, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['理财专家', '投资顾问']},
-		{order: 8, value: 132256, group: "无关系的", uid: 's110008', name: '赵铁蛋', ladd: 15, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['理财专家', '投资顾问']},
+		{order: 1, val: 948670, uid: 'd110001', name: '李刚猛', ladd: 18, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['身份标签1', '身份标签2']},
+		{order: 2, val: 690663, uid: 'd110002', name: '张雄壮', ladd: 17, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['阶层标签1', '阶层标签2']},
+		{order: 3, val: 582830, uid: 'd110004', name: '章威武', ladd: 12, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['成就标签1', '成就标签2']},
+        {order: 4, val: 699972, uid: 'd110002', name: '王坚强', ladd: 20, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['排名标签1', '排名标签2']},
+		{order: 5, val: 414480, uid: 'd110005', name: '徐福贵', ladd: 17, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['评价标签1', '评价标签2']},
+		{order: 6, val: 341222, uid: 's110006', name: '赵铁柱', ladd: 15, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['理财专家', '投资顾问']},
+		{order: 7, val: 202098, uid: 's110007', name: '赵铁牛', ladd: 15, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['理财专家', '投资顾问']},
+		{order: 8, val: 132256, uid: 's110008', name: '赵铁蛋', ladd: 15, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['理财专家', '投资顾问']},
 	],
     unitData: {
         uid: 'uid001', 
@@ -69,7 +69,83 @@ var tempData = {
     ],
 }
 
+function setUserFlex(user, line, isOrder) {
+    if (config.isRank || isOrder) {
+        var top = Elem.creat('div', user, 'user-top');
+        var order = Elem.creat('div', top, 'user-order');
+        var value = Elem.creat('div', top, 'user-value');
 
+        order.innerHTML = line.order;
+        value.innerHTML = line.value;  
+    }
+
+    var flex = Elem.creat('div', user, 'user-flex');
+    var head = Elem.creat('img', flex, 'user-head');
+    var left = Elem.creat('div', flex, 'user-left');
+    var right = Elem.creat('div', flex, 'user-right');
+    var name = Elem.creat('div', left, 'user-name');
+    var marks = Elem.creat('div', left, 'user-flex');
+    var ladd = Elem.creat('div', right, 'user-ladd');
+    var group = Elem.creat('div', right, 'user-group');
+    line.mark = line.mark || ["身份标签1", "身份标签2"];
+    for (let i in line.mark) {
+        var mark = Elem.creat('div', marks, 'user-mark');
+        mark.innerHTML = line.mark[i];
+        mark.style.borderColor = getColorType();
+    }
+    Elem.color(head, '', getColorLight());
+    Elem.color(group, 'white', getColorType());
+    Elem.style(group, 'borderColor', getColorType());
+
+    name.innerHTML = line.name || line.inver;
+    ladd.innerHTML = line.ladd + '阶' || '??阶';
+    group.innerHTML = line.group || '未知';
+    return flex;
+}
+
+
+function setUserAlert(user) {
+    var box = Elem.get('alert-box');
+    var block = Elem.get('detail-block');
+    Elem.color(box, '', getColorLight());
+    block.innerHTML = '';
+
+    var x = user.x;
+    var data = user.data;
+    var line = user.line;
+    var body = Elem.creat('div', block, 'user-body');
+    var flex = setUserFlex(body, line, x);
+    var tags = Elem.creat('div', body, 'user-tags');
+    var desc = Elem.creat('div', body, 'user-desc');
+    if (line.tag) {
+        for (let i in line.tag) {
+            var tag = Elem.creat('div',tags, 'user-tag');
+            tag.innerHTML = line.tag[i];
+            tag.onclick = function() {
+                setSearchAlert(this);
+            }
+        }
+    }
+
+    desc.innerHTML = line.desc.replace(/\n/g, '<br/>');;
+    
+    var button = Elem.get('detail-button');
+    button.innerHTML = '';
+    for (let k in data.buttonIdx) {
+        var _idx = data.buttonIdx[k];
+        var _data = config.buttons[_idx];
+        //BUTTON
+        var btn = Elem.creat('div', button, 'button');
+        btn.setAttribute('btype', _data.btype);
+        btn.innerHTML = _data.text;
+        btn.data = _data;
+        btn.user = user;
+        btn.onclick = function () {
+            setNexu(this);
+        }
+    }
+    showAlert('detail-bg');
+}
 
 function setSearchAlert(button) {
     hideAlert('detail-bg');
@@ -81,47 +157,18 @@ function setSearchAlert(button) {
     block.style.maxHeight = config.alertHeight + "px";
     title.innerHTML = config.titleStr.replace("#0", button.innerHTML);
     for (let z in tempData.searchData) {
-        var line = Elem.creat("div", block, "user-line", z);
-        line.top = Elem.creat("div", line, "user-top");
-        line.order = Elem.creat("div", line.top, "user-order");
-        line.value = Elem.creat("div", line.top, "user-value");
-        line.flex = Elem.creat("div", line, "user-flex");
-        line.head = Elem.creat("img", line.flex, "user-head");
-        line.left = Elem.creat("div", line.flex, "user-left");
-        line.name = Elem.creat("div", line.left, "user-name");
-        line.mark = Elem.creat("div", line.left, "user-flex");
-        line.right = Elem.creat("div", line.flex, "user-right");
-        line.ladd = Elem.creat("div", line.right, "user-ladd");
-        line.group = Elem.creat("div", line.right, "user-group");
-        var data = tempData.searchData[z];
-        setSearchFlex(data, line);
+
+        var user = Elem.creat("div", block, "user-block", z);
+        var line = tempData.searchData[z];
+        var order = line.order + "th";
+        if (order.length == 3)
+            line.order = order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
+        line.group = line.uid[0].replace('s','赞助商').replace('d','淘金者');
+        line.value = "权值: " + Parse.sub4Num(line.val);
+        setUserFlex(user, line, true);
     }
     showLog('搜索成功!');
     showAlert("search-bg");
-}
-
-function setSearchFlex(data, line) {
-    var order = data.order + "th";
-    if (order.length == 3)
-        data.order = order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
-    if (data.mark) {
-        for (let i in data.mark) {
-            var mark = Elem.creat("div", line.mark, "user-mark");
-            mark.innerHTML = data.mark[i];
-            mark.style.borderColor = getColorType();
-        }
-    }
-    data.group = data.uid[0].replace("s","赞助商").replace("d","淘金者");
-    
-    Elem.color(line.group, "white", getColorType());
-    Elem.style(line.group, "borderColor", getColorType());
-    line.head.style.backgroundColor = getColorLight();
-    // line.head.src = "../../picture/head1.jpg";
-    line.order.innerHTML = data.order;
-    line.value.innerHTML = "权值: " + Parse.sub4Num(data.value);
-    line.name.innerHTML = data.name;
-    line.group.innerHTML = data.group;
-    line.ladd.innerHTML = data.ladd + "阶";
 }
 
 

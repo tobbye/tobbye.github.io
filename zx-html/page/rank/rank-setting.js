@@ -33,8 +33,7 @@ function setContent(inner, x) {
 		var content = Elem.creat('div', inner, 'content', y);
 		var data = list[y];
 		setTitle(content, data);
-		setLine(content, data, x, y);
-		setNotLine(content, data);
+		setLine(content, data);
 	}
 }
 
@@ -50,103 +49,27 @@ function setTitle(content, data) {
 }
 
 
-function setLine(content, data, x, y) {
-	data.lines = data.lines || initTempLine(data, x, y);
+function setLine(content, data) {
+	data.lines = data.lines || initTempLine(data);
 	var block = Elem.creat('div', content, 'block');
 	for (let z in data.lines) {
 		var line = data.lines[z];
-		var body = Elem.creat('div', block, 'user-block');
+		var user = Elem.creat('div', block, 'user-block');
 
-		body.flex = setLineFlex(body, line, x);
-		body.data = data;
-		body.line = line;
-		body.x = x;
-		body.onclick = function() {
+		user.flex = setUserFlex(user, line);
+		user.data = data;
+		user.line = line;
+		user.onclick = function() {
 			document.body.line = this.line;
 			document.body.lines = this.data.lines;
 			console.log(this.line);
-			setDetailAlert(this);
+			setUserAlert(this);
 		}
 	}
 }
 
-function setLineFlex(body, line, x) {
-	var top = Elem.creat('div', body, 'user-top');
-	var order = Elem.creat('div', top, 'user-order');
-	var value = Elem.creat('div', top, 'user-value');
 
-	var flex = Elem.creat('div', body, 'user-flex');
-	var head = Elem.creat('img', flex, 'user-head');
-	var left = Elem.creat('div', flex, 'user-left');
-	var right = Elem.creat('div', flex, 'user-right');
-	var name = Elem.creat('div', left, 'user-name');
-	var marks = Elem.creat('div', left, 'user-flex');
-	var ladd = Elem.creat('div', right, 'user-ladd');
-	var group = Elem.creat('div', right, 'user-group');
-	if (line.mark) {
-		for (let i in line.mark) {
-			var mark = Elem.creat('div', marks, 'user-mark');
-			mark.innerHTML = line.mark[i];
-			mark.style.borderColor = getColorType(x);
-		}
-	}
-	Elem.color(head, '', getColorLight(x));
-	Elem.color(group, 'white', getColorType(x));
-	Elem.style(group, 'borderColor', getColorType(x));
-	order.innerHTML = line.order;
-	value.innerHTML = line.value;
-	name.innerHTML = line.name;
-	ladd.innerHTML = line.ladd + '阶';
-	group.innerHTML = line.group;
-	return flex;
-}
-
-
-function setDetailAlert(elem) {
-	var box = Elem.get('alert-box');
-	var block = Elem.get('detail-block');
-	Elem.color(box, '', getColorLight(x));
-	block.innerHTML = '';
-
-	var x = elem.x;
-	var line = elem.line;
-	var data = elem.data;
-	var body = Elem.creat('div', block, 'user-body');
-	var flex = setLineFlex(body, line, x);
-	var tags = Elem.creat('div', body, 'user-tags');
-	var desc = Elem.creat('div', body, 'user-desc');
-	if (line.tag) {
-		for (let i in line.tag) {
-			var tag = Elem.creat('div',tags, 'user-tag');
-			tag.innerHTML = line.tag[i];
-			tag.onclick = function() {
-				setSearchAlert(this);
-			}
-		}
-	}
-
-	desc.innerHTML = line.desc.replace(/\n/g, '<br/>');;
-	
-	var button = Elem.get('detail-button');
-	button.innerHTML = '';
-	for (let k in data.buttonIdx) {
-		var _idx = data.buttonIdx[k];
-		var _data = config.buttons[_idx];
-		//BUTTON
-		var btn = Elem.creat('div', button, 'button');
-		btn.setAttribute('btype', _data.btype);
-		btn.innerHTML = _data.text;
-		btn.data = _data;
-		btn.elem = elem;
-		btn.onclick = function () {
-			setNexu(this);
-		}
-	}
-	showAlert('detail-bg');
-}
-
-
-function initTempLine(data, x, y) {
+function initTempLine(data) {
 	var lines = [];
 	var str = industry.replace(/\n/g, '');
     var list = Parse.mix(str.split(','));
@@ -166,7 +89,7 @@ function initTempLine(data, x, y) {
 		if (line.order.length == 3)
 			line.order = line.order.replace('1th', '1st').replace('2th', '2nd').replace('3th', '3rd');
 		// setNotFlex()
-		var seed = items[x].seed * data.seed;
+		var seed = data.power * data.seed;
 		var rand = Math.floor((Math.random()+40-z) * 2 * seed);
 		line.value = data.text + ': ￥' + Parse.sub4Num(rand);
 		line.ladd = Math.floor(Math.random() * 20) + 3;
@@ -185,7 +108,7 @@ function setNexu(btn) {
 		setChatAlert();
 	if (data.idx == 2) {
 		hideAlert();
-		Elem.remove(btn.elem);
+		Elem.remove(btn.user);
 		Parse.remove(document.body.lines, document.body.line);
 	}
 }

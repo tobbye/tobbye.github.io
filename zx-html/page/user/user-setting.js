@@ -85,6 +85,7 @@ function setDetail(content, data, x) {
 	ladd.innerHTML = data.ladd + '阶';
 	group.innerHTML = ' | ' + data.group;
 	Elem.color(head, '', getColorLight());
+	// Elem.style(head, 'borderColor', getColorType());
 }
 
 

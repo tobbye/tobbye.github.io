@@ -20,7 +20,7 @@ var config = {
 	laddSrc: '../../picture/ladd/',
 	rightColor: 'green',
 	wrongColor: 'red',
-	btnName: ['next',  'doit', 'quit', 'redo', 'abon', 'open', 'more', 'close'],
+	btnName: ['next',  'doit', 'quit', 'redo', 'abon', 'open', 'home', 'follow', 'close'],
 };
 
 var items = [
@@ -63,8 +63,8 @@ laddStr: "阶梯<br/><h3>#0阶</h3>",
 pieceStr: "剩余份数<br/><h3>#0份</h3>",
 priceStr: "单个金额<br/><h3>#0元</h3>",
 timesStr: "已传播<br/><h3>#0次</h3>",
-btnName: ["next", "quit", "redo", "abon", "open", "more", "close"],
-btnText: ["抢夺", "取消", "重置", "丢弃", "打开", "查看", "关闭"],
+btnName: ["next", "quit", "redo", "abon", "open", "home", "follow", "close"],
+btnText: ["抢夺", "取消", "重置", "丢弃", "打开", "查看主页", "关注", "关闭"],
 lines: []}, 
 ]},
 
@@ -79,8 +79,8 @@ laddStr: "阶梯<br/><h3>#0阶</h3>",
 pieceStr: "剩余份数<br/><h3>#0份</h3>",
 priceStr: "单个金额<br/><h3>#0元</h3>",
 timesStr: "已传播<br/><h3>#0次</h3>",
-btnName: ["next", "quit", "redo", "abon", "open", "more", "close"],
-btnText: ["获取", "取消", "重置", "丢弃", "打开", "查看", "关闭"],
+btnName: ["next", "quit", "redo", "abon", "open", "home", "follow", "close"],
+btnText: ["获取", "取消", "重置", "丢弃", "打开", "查看主页", "关注", "关闭"],
 lines: []},
 ]}
 ];
