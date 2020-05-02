@@ -62,7 +62,7 @@ function setTitle(content, data) {
 function setLine(content, data) {
 	var trs = data.lines;
 	var table = Elem.creat('table', content, 'table-line');
-	Elem.height(table, config.theHeight + 'px');
+	Elem.height(table, config.flowHeight + 'px');
 	Elem.display(table, 'none');
 	for (let y in trs) {
 		var tds = trs[y];
@@ -95,7 +95,7 @@ function setLine(content, data) {
 function setBlock(content, data) {
 	var trs = data.blocks;
 	var table = Elem.creat('table', content, 'table-block');
-	Elem.height(table, config.theHeight + 'px');
+	Elem.height(table, config.flowHeight + 'px');
 	Elem.display(table, 'table');
 	for (let y in trs) {
 		var tr = Elem.creat('tr', table, 'tr-row', y);

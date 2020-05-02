@@ -271,6 +271,7 @@ function setDetailAlert(body) {
     config.resultText = data.resultText;
     config.cellText = data.cellText;
     config.cellTips = data.cellTips;
+    config.inverStr = data.inverStr;
 
     var box = Elem.get('alert-box');
     var title = Elem.get('detail-title');
@@ -394,12 +395,13 @@ function setResultAlert() {
     getRoll(allCount, rollCount);
 
     var ladd = Elem.creat('div', block, 'line');
-    ladd.innerHTML = rollLadd + config.resultText;
+    ladd.innerHTML = line.inver + config.inverStr.substring(0, 2) + '的';
+    ladd.innerHTML += rollLadd + config.resultText;
     var pic = Elem.creat('img', block, 'img');
     pic.src = config.laddSrc + rollLadd + '.png';
     var price = Elem.creat('div', block, 'line');
     price.innerHTML = '<h2>￥' +  Parse.addSplit(line.priceAllList[rollLadd - 1]);
-    showLog('操作成功!');
+    showLog(`<h4>恭喜您获得了</h4>${ladd.innerText}`);
     showAlert('result-bg');
 }
 

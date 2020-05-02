@@ -1,5 +1,5 @@
 
-var elems = {};
+var fade = {};
 var values = {};
 
 // 0 1 2 3 4 5 
@@ -488,10 +488,11 @@ window.onresize = function() {
     config.windWidth = Math.floor(window.innerWidth / config.zoom);
     config.windHeight = Math.floor(window.innerHeight / config.zoom);
     config.alertHeight = config.windHeight - constant.alertOffset;
-    config.maxHeight = config.windHeight - config.innerOffset;
+    config.outerHeight = config.windHeight - constant.outerOffset;
+    config.innerHeight = config.windHeight - config.innerOffset;
     config.isWidth = config.windWidth > config.windHeight;
-    config.isHeight = config.maxHeight > config.minHeight;
-    config.theHeight = Math.max(config.maxHeight, config.minHeight);
+    config.isFlow = config.innerHeight > config.minHeight;
+    config.flowHeight = Math.max(config.innerHeight, config.minHeight);
     document.body.style.zoom = config.zoom;
     Elem.autosize(null, constant.outerOffset);
 }
@@ -509,6 +510,13 @@ var getAgent = function() {
             type: 'black',
             style: 'dark',
         },
+        fade: {
+            isLog: true,
+            timeIn: 1000,
+            timeOn: 3000,
+            timeOut: 1000,
+            timeTog: 1000,
+        },
         isInto: false,
         isOnline: false,
         dataIdx: 'default',
@@ -516,13 +524,12 @@ var getAgent = function() {
         modeType: 'digger',
         colorType: 'text',
         debugType: 'close',
-        outerOffset: 230,
+        outerOffset: 220,
         alertOffset: 716,
         zoomMobile: 1.00,
         zoomWechat: 0.90,
         zoomComput: 0.40,
     };
-
 
     var cfg = Storage.get('config') || {};
     // if (config.name == 'sett')
@@ -531,12 +538,13 @@ var getAgent = function() {
         config.innerIdx = cfg.innerIdx || 0;
     else
         config.innerIdx = 0;
+    setDefult(cfg, 'color');
+    setDefult(cfg, 'fade');
     setDefult(cfg, 'isInto');
     setDefult(cfg, 'isOnline');
     setDefult(cfg, 'dataIdx');
     setDefult(cfg, 'initType');
     setDefult(cfg, 'modeType');
-    setDefult(cfg, 'color');
     setDefult(cfg, 'colorType');
     setDefult(cfg, 'debugType');
 
@@ -599,64 +607,95 @@ var setNotLine = function(content, data) {
     hide.innerHTML = '此处为空';
 }
 
+
+var showLog = function(text) {
+    fadeAnim(text);
+}
+
 //显示提醒信息
-var showLog = function(str) {
-    var log = Elem.get('log') || Elem.creat('div', document.body, 'log');
-    log.id = 'log';
-    config.fadeText = str;
-    if (config.fadeOut) {
-        window.clearTimeout(config.fadeOut);
-        log.setAttribute('fade', 'out');
-        setFadeIn(1000);
-        setFadeOut(5000);
-        setFadeOver(6000);
-    } else {
-        setFadeIn(0);
-        setFadeOut(4000);
-        setFadeOver(5000);
+var fade = {};
+
+var getFadeElem = function(elem) {
+    fade = config.fade;
+    if (!elem) {
+        elem = Elem.get('log');
+        if (!elem) {
+            elem = Elem.creat('div', document.body, 'log');
+            elem.id = 'log';
+            elem.setAttribute('fade', 'over');
+        }
+        if (config.colorType == 'page')
+            Elem.color(elem, getColorBgd(), getColorType());
+        else
+            Elem.color(elem, 'white', 'dodgerblue');
     }
-    if (config.colorType == 'page')
-        Elem.color(log, getColorBgd(), getColorType());
-    else
-        Elem.color(log, 'white', 'dodgerblue');
-
+    return elem;
 }
 
-var setFadeIn = function(gap) {
-    config.fadeIn = setTimeout(function() {
-        var log = Elem.get('log') || Elem.creat('div', document.body, 'log');
-        log.innerHTML = config.fadeText;
-        log.setAttribute('fade', 'in');
-        config.showLog = true;
-        config.fadeIn = null;
-    }, gap);  
+var fadeAnim = function(text, elem, timeOn) {
+    fade = config.fade;
+    fade.elem = getFadeElem(elem);
+    fade.text = text;
+    fade.timeOn = timeOn || fade.timeOn;
+    if (fade.elem.getAttribute('fade') != 'over') {
+        window.clearTimeout(fade.fadeIn);
+        window.clearTimeout(fade.fadeOn);
+        window.clearTimeout(fade.fadeOut);
+        window.clearTimeout(fade.fadeTog);
+        fade.elem.setAttribute('fade', 'on');
+        setFadeTog();
+    } else {
+        setFadeIn();
+    }
 }
 
-var setFadeOut = function(gap) {
-    config.fadeOut = setTimeout(function() {
-        var log = Elem.get('log') || Elem.creat('div', document.body, 'log');
-        log.setAttribute('fade', 'out');
-        config.showLog = false;
-        config.fadeOut = null;
-    }, gap);  
+var setFadeIn = function() {
+    if (fade.text)
+        fade.elem.innerHTML = fade.text;
+    fade.elem.setAttribute('fade', 'in');
+    fade.fadeIn = setTimeout(function() {
+        fade.fadeIn = null;
+        setFadeOn();
+    }, fade.timeIn);  
 }
 
-var setFadeOver = function(gap) {
-    config.fadeOver = setTimeout(function() {
-        config.fadeOver = null;
-    }, gap); 
+var setFadeOn = function() {
+    fade.elem.setAttribute('fade', 'on');
+    fade.fadeOn = setTimeout(function() {
+        fade.fadeOn = null;    
+        setFadeOut();
+    }, fade.timeOn); 
 }
+
+var setFadeTog = function() {
+    if (fade.text)
+        fade.elem.innerHTML = fade.text;
+    fade.elem.setAttribute('fade', 'tog');
+    fade.fadeTog = setTimeout(function() {
+        fade.fadeTog = null;
+        setFadeOn();
+    }, fade.timeTog);  
+}
+
+var setFadeOut = function() {
+    fade.elem.setAttribute('fade', 'out');
+    fade.fadeOut = setTimeout(function() {
+        fade.fadeOut = null;
+        setFadeOver();
+    }, fade.timeOut);  
+}
+
+var setFadeOver = function() {
+    fade.elem.setAttribute('fade', 'over');
+}
+
+
 
 
 //显示弹窗
 var showAlert = function(name) {
     Style.display('alert', 'block');
     if (name) {
-        setWhite('user-top');
-        setWhite('user-flex');
-        setWhite('user-line');
-        setWhite('user-body');
-        setWhite('user-block');
         Style.display(name, 'block');
     }
 }

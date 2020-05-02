@@ -59,44 +59,73 @@ form {
 }
 
 @keyframes fade-in {  
-    0% {opacity: 0; top:-250px;}
-    100% {opacity: 1; top:520px;}
+    0% {opacity: 0; top: -200px;}
+    100% {opacity: 1; top: 0px;}
 }
 
 @-webkit-keyframes fade-in {
-    0% {opacity: 0; top:-250px;}
-    100% {opacity: 1; top:520px;}
+    0% {opacity: 0; top: -200px;}
+    100% {opacity: 1; top: 0px;}
 }
 
 @keyframes fade-out {  
-    0% {opacity: 1; top:520px;}
-    100% {opacity: 0; top:-250px;}
+    0% {opacity: 1; top: 0px;}
+    100% {opacity: 0; top: -200px;}
 }
 
 @-webkit-keyframes fade-out {  
-    0% {opacity: 1; top:520px;}
-    100% {opacity: 0; top:-250px;}
+    0% {opacity: 1; top:0px;}
+    100% {opacity: 0; top: -200px;}
 }
 
-#log {
+@keyframes fade-tog {  
+    0% {opacity: 0; top: 0px;}
+    100% {opacity: 1; top: 0px;}
+}
+
+@-webkit-keyframes fade-in {
+    0% {opacity: 0; top: 0px;}
+    100% {opacity: 1; top: 0px;}
+}
+
+div[fade] {
 	position: absolute;
-	top: -250px;
 	left: 0px;
 	right: 0px;
-	padding: 30px;
-	font-size: 4em;
-} 
-#log[fade=in] {
-	top: 520px;
+}
+
+div[fade=in] {
+	top: 0px;
     animation: fade-in 1s;
     -webkit-animation:fade-in 1s;/*针对webkit内核*/ 
     animation-timing-function: ease; 	
 } 
-#log[fade=out] {
-	top: -250px;
+
+div[fade=on] {
+	top: 0px;
+} 
+
+div[fade=tog] {
+	top: 0px;
+    animation: fade-tog 1s;
+    -webkit-animation:fade-tog 1s;/*针对webkit内核*/ 
+    animation-timing-function: ease; 	
+} 
+
+div[fade=out] {
+	top: -200px;
     animation: fade-out 1s;
     -webkit-animation:fade-out 1s;/*针对webkit内核*/ 
     animation-timing-function: ease; 	
+}
+
+div[fade=over] {
+	top: -200px;
+} 
+
+#log {
+	padding: 30px;
+	font-size: 4em;
 }
 
 #outer-top {
@@ -192,8 +221,8 @@ form {
 	flex: 10;
 	margin: 0px;
 	padding: 20px;
-	height: 64px;
-	line-height: 64px;
+	height: 60px;
+	line-height: 60px;
 	font-size: 4em;
 }.button-top[btype=dead] {
 	color: dodgerblue;
@@ -207,8 +236,8 @@ form {
 	flex: 10;
 	margin: 0px;
 	padding: 20px;
-	height: 64px;
-	line-height: 64px;
+	height: 60px;
+	line-height: 60px;
 	font-size: 4em;
 }.button-bot[btype=dead] {
 	color: darkorange;
@@ -229,8 +258,8 @@ form {
 	flex: 10;
 	margin: 0px;
 	padding: 20px;
-	height: 64px;
-	line-height: 64px;
+	height: 60px;
+	line-height: 60px;
 	font-size: 4em;
 }.option[btype=dead] {
 	color: dodgerblue;

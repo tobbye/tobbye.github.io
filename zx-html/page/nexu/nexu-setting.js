@@ -164,14 +164,14 @@ function setAlert() {
 }
 
 function showOnline() {
-    var gap = Math.floor(Math.random()*10000 + 2000);
+    var gap = Math.floor(Math.random()*10000 + 2000)/2;
     setTimeout(function() {
     	var y = Math.floor(Math.random() * items[1].list.length);
     	var z = Math.floor(Math.random() * items[1].list[y].lines.length);
     	var list = items[1].list[y];
     	var line = items[1].list[y].lines[z];
     	var text = list.vice.replace('强制', '您').replace('我', '您');
-    	text = '<h4>' + text + '</h4>' + line.name + ' 已上线!';
+    	text = '<h4>' + text + '</h4>' + line.name + ' 上线了!';
     	showLog(text);
         showOnline();
     }, gap)
