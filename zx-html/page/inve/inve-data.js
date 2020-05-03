@@ -20,7 +20,7 @@ var config = {
 	laddSrc: '../../picture/ladd/',
 	rightColor: 'green',
 	wrongColor: 'red',
-	btnName: ['next',  'doit', 'quit', 'redo', 'abon', 'open', 'home', 'follow', 'close'],
+	btnName: ['next',  'doit', 'quit', 'redo', 'abon', 'open', 'start', 'home', 'follow', 'close'],
 };
 
 var items = [
@@ -71,7 +71,7 @@ lines: []},
 
 { id: 2, title: '获取', 
 list: [
-{title: '红包池', vice: '抢夺投放的红包来获取收益', puzzleText: '发现一个红包',
+{title: '红包池', vice: '抢夺投放的红包来获取收益',
 dot: 100, isGrab: 1, group: '赞助商', instance: "car",
 puzzleText: "发现一个红包", resultText:"阶红包", cellText: "口令", cellTips:"输入正确口令打开红包",
 inverStr: "投放者: ", flexStr: "#0的投放",
@@ -79,8 +79,8 @@ laddStr: "阶梯<br/><h3>#0阶</h3>",
 pieceStr: "剩余份数<br/><h3>#0份</h3>",
 priceStr: "单个金额<br/><h3>#0元</h3>",
 timesStr: "已传播<br/><h3>#0次</h3>",
-btnName: ["next", "quit", "redo", "abon", "open", "home", "follow", "close"],
-btnText: ["获取", "取消", "重置", "丢弃", "打开", "查看主页", "关注", "关闭"],
+btnName: ["next", "quit", "redo", "abon", "start", "home", "follow", "close"],
+btnText: ["获取", "取消", "重置", "丢弃", "开始", "查看主页", "关注", "关闭"],
 lines: []},
 ]}
 ];
@@ -117,11 +117,17 @@ lines: []},
 
 var instance = {
 	user: `
-张雄壮,
 李刚猛,
-王坚强,
-赵震撼,
 章威武,
+张雄壮,
+王坚强,
+徐福贵,
+赵铁柱,
+赵铁牛,
+赵铁蛋,
+王强棒,
+马大炮,
+马高大,
 `,
 	luxury: `
 香奈儿/Chanel,

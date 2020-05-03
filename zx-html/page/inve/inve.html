@@ -88,6 +88,14 @@
         background-color: white;
     }
 
+    .cell-tips {
+        font-size: 3.5em;
+        padding: 10px;
+        margin: 5px 0px;
+        background-color: white;
+    }
+
+
     .cell-text {
         margin: 6px;
         padding: 10px 20px;
@@ -97,11 +105,13 @@
         border: solid 6px red;
     }
 
-    .cell-tips {
-        font-size: 3.5em;
-        padding: 10px;
-        margin: 5px 0px;
-        background-color: white;
+    .cell-jigsaw {
+        margin: 0px;
+        padding: 0px;
+        /*position: absolute;*/
+        border: solid 10px white;
+        background-repeat: no-repeat;
+        background-image: url(../../picture/head/3.jpeg);
     }
 
     .img {
@@ -137,6 +147,7 @@
                 <div class="alert-title" id="puzzle-title">发现一个红包</div>
                 <div class="alert-block" id="puzzle-block"></div>
                 <div class="alert-button" id="puzzle-button">
+                    <div class="button" btype="permit" id="btn-start">开始</div>
                     <div class="button" btype="permit" id="btn-open">打开</div>
                     <div class="button" btype="danger" id="btn-redo">重置</div>
                     <div class="button" btype="danger" id="btn-abon">丢弃</div>

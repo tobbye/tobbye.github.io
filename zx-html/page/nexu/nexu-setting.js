@@ -97,7 +97,7 @@ function setAlert() {
 }
 
 function showOnline() {
-    var gap = Math.floor(Math.random()*10000 + 2000);
+    var gap = Math.floor(Math.random()*20000 + 2000);
     setTimeout(function() {
     	var y = Math.floor(Math.random() * items[1].list.length);
     	var z = Math.floor(Math.random() * items[1].list[y].lines.length);

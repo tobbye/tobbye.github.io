@@ -63,7 +63,7 @@ function setTitle(content, data, x) {
 
 function setDetail(content, data, x) {
 	var block = Elem.creat('div', content, 'block');
-	var head  = Elem.creat('div', block, 'head');
+	var head  = Elem.creat('img', block, 'head');
 	var name  = Elem.creat('div', block, 'text-large');
 	var uid   = Elem.creat('div', block, 'text-small');
 	var flex  = Elem.creat('div', block, 'flex-top');
@@ -75,7 +75,6 @@ function setDetail(content, data, x) {
 	var ladd  = Elem.creat('div', flex, 'text-large');
 	var group = Elem.creat('div', flex, 'text-small');
 	block.id = 'bg';
-	head.innerHTML = 'zhongxin';
 	name.innerHTML = data.name;
 	uid.innerHTML = 'ID: ' + data.uid;
 	area.innerHTML = data.area + ' | ';
@@ -84,7 +83,8 @@ function setDetail(content, data, x) {
 	auth.innerHTML = data.auth + ' | ';
 	ladd.innerHTML = data.ladd + '阶';
 	group.innerHTML = ' | ' + data.group;
-	Elem.color(head, '', getColorLight());
+	// head.innerHTML = 'zhongxin';
+	// Elem.color(head, '', getColorLight());
 	// Elem.style(head, 'borderColor', getColorType());
 }
 

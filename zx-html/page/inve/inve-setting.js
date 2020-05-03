@@ -62,14 +62,14 @@ function initTempLine(data) {
     for (let idx in list) {
         if (idx >= config.inveCount) break;
         var line = {};
+        line.inver = list[idx].split('/')[0];
         line.group = data.group;
         line.ladder = Math.floor(20 * Math.random() * Math.random()) + 6;
         line.ladd = line.ladder - Math.floor(5 * Math.random());
         line.multi = Math.floor(100 * Math.pow(Math.random(),8)) + 1;
+        line.mark = ['身份标签1', '身份标签2'];
         line.index = Math.floor((1547 + Math.random()) * 1e9);
         line.stamp = Parse.formatTime(line.index).replace(' ', '<h3>');
-        line.mark = ['身份标签1', '身份标签2'];
-        line.inver = list[idx].split('/')[0];
         line.word = list[idx].replace(/ /g, '/');
         line.wordOrg = line.word;
         line.wordTgt = line.word.replace(/\//g, '');
@@ -154,12 +154,12 @@ function creatInveBody(content, data, x) {
 
 function initLineData(line, dot, isGrab) {
     line.row = parseInt(line.ladd / 5 - 0.2);
-    line.priceAllList = [];    
-    line.pieceAllList = [];
-    line.timesAllList = [];
     line.priceAll = 0;
     line.pieceAll = 0;
     line.timesAll = 0;
+    line.priceAllList = [];    
+    line.pieceAllList = [];
+    line.timesAllList = [];
     for (var z = 0; z < line.ladd; z++) {
         line.priceAllList[z] = Math.pow(2, z);
         line.pieceAllList[z] = Math.pow(2, line.ladd - z - 1) * line.multi;
@@ -182,13 +182,13 @@ function initLineData(line, dot, isGrab) {
     }
     if (!isGrab) 
         return line;
-
-    line.priceCurList = [];
-    line.pieceCurList = [];
-    line.timesCurList = [];
+    
     line.priceCur = 0;
     line.pieceCur = 0;
     line.timesCur = 0;
+    line.priceCurList = [];
+    line.pieceCurList = [];
+    line.timesCurList = [];
     for (var z = 0; z < line.ladd; z++) {
         var rand = Math.random() / 4 + 0.25;
         line.priceCurList[z] = line.priceAllList[z];
@@ -293,69 +293,203 @@ function setPuzzleAlert() {
     title.innerHTML = config.puzzleText;
     block.innerHTML = '';
     config.wordCur = '';
+    if (config.innerIdx == 1)
+        creatPuzzle(block);
+    if (config.innerIdx == 2)
+        creatJigsaw(block);
+    showAlert('puzzle-bg');
+}
 
-
+function creatPuzzle(block) {
     var line = document.body.line;
-    line.mix = Parse.mix(line.word, 1);
     var cellText = Elem.creat('div', block, 'cell-tips');
     cellText.innerHTML = config.cellText;
-    setPuzzleCell(line, block, 0);
+    var cellBlock = Elem.creat('div', block, 'cell-block');
+    creatCell(line, cellBlock, 0);
 
     var cellTips = Elem.creat('div', block, 'cell-tips');
     cellTips.style.marginTop = '5px';
     cellTips.innerHTML = config.cellTips;
-    setPuzzleCell(line, block, 1);
-    showAlert('puzzle-bg');
-}
+    var cellBlock = Elem.creat('div', block, 'cell-block');
+    creatCell(line, cellBlock, 1);
+    Elem.get('btn-start').onclick = function() {
+        mixCell();
+    }
+    Elem.get('btn-redo').onclick = function() {
+        mixCell();
+    }
+
+    function mixCell() {
+        config.mixClock = setInterval(function() {
+            if (config.mixLoop > 0) {
+                creatCell(line, cellBlock, 1);
+                config.mixLoop--;
+            } else {
+                clearInterval(config.mixClock);
+                config.mixLoop = config.constant.mixLoop;
+            }
+        }, 100);   
+    }
 
 
-//解密字块
-function setPuzzleCell(line, block, mix) {
-    var str = mix ? line.mix : line.word;
-    var space = Elem.creat('div', block, 'space20');
-    var flex = Elem.creat('div', block, 'cell-flex');
-    for(let idx in line.word) {
-        if (line.word[idx] == '/') 
-            flex = Elem.creat('div', block, 'cell-flex');
 
-        if (str[idx] == '/') 
-            continue;
-        var textCell = Elem.creat('div', flex, 'cell-text');
-        textCell.able = true;
-        textCell.innerHTML = str[idx];
-        textCell.style.borderColor = getColorType();
-        textCell.style.backgroundColor = mix ? 'white' : getColorLight();
-        textCell.onclick = function() {
-            if (mix && this.able) {
-                var color = config.curColor;
-                var wordTgt = document.body.line.wordTgt;
-                var wordCur = config.wordCur || '';
-                wordCur += this.innerHTML;
-                config.wordCur = wordCur;
-                console.log('tgt:' + wordTgt + ' cur:' + wordCur);
-                var redo = Elem.get('btn-redo');
-                if (wordTgt.replace(wordCur, '') == wordTgt || wordTgt[0] != wordCur[0]) {
-                    Elem.color(this, 'white', config.wrongColor);
-                    Elem.style(this, 'borderColor', config.wrongColor);
-                    Elem.togType(redo, 'permit');
-                } else {
-                    Elem.color(this, 'white', config.rightColor);
-                    Elem.style(this, 'borderColor', config.rightColor);
-                    Elem.togType(redo, 'danger');
-                }
-                if (wordTgt == wordCur) {
-                    Style.display('btn-open', 'inline');
-                    Style.display('btn-redo', 'none');
-                    Style.display('btn-abon', 'none');
-                } else {
+    //解密字块
+    function creatCell(line, block, mix) {
+        block.innerHTML = '';
+        line.mix = Parse.mix(line.word);
+        var str = mix ? line.mix : line.word;
+        var space = Elem.creat('div', block, 'space20');
+        var flex = Elem.creat('div', block, 'cell-flex');
+        for(let idx in line.word) {
+            if (line.word[idx] == '/') 
+                flex = Elem.creat('div', block, 'cell-flex');
 
-                }
-                this.able = false;
+            if (str[idx] == '/') 
+                continue;
+            var cell = Elem.creat('div', flex, 'cell-text');
+            cell.mix = mix;
+            cell.able = true;
+            cell.innerHTML = str[idx];
+            cell.style.borderColor = getColorType();
+            cell.style.backgroundColor = mix ? 'white' : getColorLight();
+            cell.onclick = function() {
+                clickCell(this);
             }
         }
+        var space = Elem.creat('div', block, 'space20');
     }
-    var space = Elem.creat('div', block, 'space20');
+
+    function clickCell(cell) {
+        if (cell.mix && cell.able) {
+            var color = config.curColor;
+            var wordTgt = document.body.line.wordTgt;
+            var wordCur = config.wordCur || '';
+            wordCur += cell.innerHTML;
+            config.wordCur = wordCur;
+            console.log('tgt:' + wordTgt + ' cur:' + wordCur);
+            var redo = Elem.get('btn-redo');
+            if (wordTgt.replace(wordCur, '') == wordTgt || wordTgt[0] != wordCur[0]) {
+                Elem.color(cell, 'white', config.wrongColor);
+                Elem.style(cell, 'borderColor', config.wrongColor);
+                Elem.togType(redo, 'permit');
+            } else {
+                Elem.color(cell, 'white', config.rightColor);
+                Elem.style(cell, 'borderColor', config.rightColor);
+                Elem.togType(redo, 'danger');
+            }
+            if (wordTgt == wordCur) {
+                Style.display('btn-open', 'inline');
+                Style.display('btn-redo', 'none');
+                Style.display('btn-abon', 'none');
+            } else {
+
+            }
+            cell.able = false;
+        }
+    }
 }
+
+function creatJigsaw(block, data) {
+    var flex, clock;
+    var blockWidth, cellWidth;
+    var cellLen = 3;
+    var cells = [];
+    var light = 4;
+    var border = 10;
+    var loop = 10;
+    initCell(block, data);
+
+    function initCell(block, data) {
+        var clientWidth = document.body.clientWidth - 80;
+        blockWidth = clientWidth * config.zoom;
+        block.style.width = blockWidth + 'px';
+        block.style.margin = '0px auto';
+        cellWidth = Math.floor((blockWidth - cellLen*border*2) / cellLen);
+        for (var i=0;i<cellLen;i++) {
+            for (var j=0;j<cellLen;j++) {
+                var idx = i*cellLen + j;
+                var posY = -cellWidth * i;
+                var posX = -cellWidth * j;
+                cells[idx] = {
+                    idx: idx,
+                    posX: posX,
+                    posY: posY,
+                }
+            }
+        }
+        console.log(cells);
+        creatCell(block, cells, 0);
+        Style.display('btn-redo', 'none');
+        Elem.get('btn-start').onclick = function() {
+            mixCell();
+        }
+        Elem.get('btn-redo').onclick = function() {
+            mixCell();
+        }
+    }
+
+    function mixCell() {
+        Style.display('btn-start', 'none');
+        Style.display('btn-redo', 'inline');
+        var redo = Elem.get('btn-redo');
+        Elem.togType(redo, 'danger');
+        clock = setInterval(function() {
+            if (loop > 0) {
+                creatCell(block, cells, 1);
+                loop--;
+            } else {
+                clearInterval(clock);
+                loop = 10;
+            }
+        }, 100); 
+    }
+
+    function creatCell(block, cells, mix) {
+        block.innerHTML = '';
+        cells = mix ? Parse.mix(cells) : cells;
+        flex = Elem.creat('div', block, 'flex');
+        flex.style.flexWrap = 'wrap';
+        for (var i=0;i<cellLen;i++) {
+            for (var j=0;j<cellLen;j++) {
+                var idx = i*cellLen + j;
+                var cell = Elem.creat('div', flex, 'cell-jigsaw', idx);
+                cell.idx = cells[idx].idx;
+                cell.style.width = cellWidth + 'px';
+                cell.style.height = cellWidth + 'px';
+                cell.style.backgroundSize = blockWidth + 'px ' + blockWidth + 'px';
+                cell.style.backgroundPosition = cells[idx].posX + 'px ' + cells[idx].posY + 'px';
+                cell.addEventListener('click', function(event) {
+                    clickCell(event);
+                });
+                cells[idx].cell = cell;
+            }
+        }
+        setHighLight();
+    }
+
+    function clickCell(event) {
+        console.log(event);
+        var org = flex.children[light];
+        var tgt = event.target;
+        if (org === tgt) return;
+        var orgNext = org.nextSibling;
+        var tgtNext = tgt.nextSibling;
+        org.parentNode.insertBefore(tgt, orgNext);
+        tgt.parentNode.insertBefore(org, tgtNext);
+        setHighLight();
+    }
+
+    function setHighLight() {
+        for (var i=0;i<cells.length;i++) {
+            var cell = cells[i].cell;
+            cell.style.borderWidth = border + 'px';
+            cell.style.borderColor = getColorLight();
+        }
+        var org = flex.children[light];
+        org.style.borderColor = getColorType();
+    }
+}
+
 
 
 function setResultAlert() {

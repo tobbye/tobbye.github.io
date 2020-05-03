@@ -71,18 +71,18 @@ function setLine(content, data) {
 
 function initTempLine(data) {
 	var lines = [];
-	var str = industry.replace(/\n/g, '');
-    var list = Parse.mix(str.split(','));
+    var list = Parse.mix(sponer);
 	for (let z in list) {
 		if (z >= config.rankCount) break;
 		var unit = tempData.unitData;
+		var text = list[z].split('-');
 		var line = {
 			uid: unit.uid,
-			tag: unit.tag,
-			mark: unit.mark,
-			desc: unit.desc,
-			name: list[z],
 			group: data.group,
+			name: text[0],
+			mark: [text[1], text[2]],
+			tag: unit.tag,
+			desc: unit.desc,
 		};
 
 		line.order = parseInt(z) + 1 + 'th';

@@ -519,6 +519,7 @@ var getAgent = function() {
         },
         isInto: false,
         isOnline: false,
+        mixLoop: 10,
         dataIdx: 'default',
         initType: 'get',
         modeType: 'digger',
@@ -542,6 +543,7 @@ var getAgent = function() {
     setDefult(cfg, 'fade');
     setDefult(cfg, 'isInto');
     setDefult(cfg, 'isOnline');
+    setDefult(cfg, 'mixLoop');
     setDefult(cfg, 'dataIdx');
     setDefult(cfg, 'initType');
     setDefult(cfg, 'modeType');
