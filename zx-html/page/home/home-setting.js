@@ -25,8 +25,7 @@ function setContent(inner, x) {
         setTitle(content, data);
 		if (config.modeType == 'ghost' && data.isDepot)
 			Depot(content, data);
-        if (config.modeType == 'digger')
-            Jigsaw(content, data);
+
     }
 }
 
@@ -41,90 +40,6 @@ function setTitle(content, data) {
 	}
 }
 
-function Jigsaw(content, data) {
-    var flex, clock;
-    var blockWidth, cellWidth;
-    var cellLen = 3;
-    var cells = [];
-    var light = [4];
-    var border = 10;
-    var loop = 10;
-    creatCell(content, data);
-
-    function creatCell(content, data) {
-        var block = Elem.creat('div', content, 'block');
-        blockWidth = block.clientWidth * config.zoom;
-        block.style.width = blockWidth + 'px';
-        block.style.margin = '0px auto';
-        cellWidth = Math.floor((blockWidth - cellLen*border*2) / cellLen);
-        for (var i=0;i<cellLen;i++) {
-            for (var j=0;j<cellLen;j++) {
-                var idx = i*cellLen + j;
-                var posY = -cellWidth * i;
-                var posX = -cellWidth * j;
-                cells[idx] = {
-                    idx: idx,
-                    posX: posX,
-                    posY: posY,
-                }
-            }
-        }
-        console.log(cells);
-        clock = setInterval(function() {
-            if (loop > 0) {
-                cells = Parse.mix(cells);
-                mixCell(block, cells);
-                loop--;
-            } else {
-                clearInterval(clock);
-            }
-        }, 100);
-    }
-
-    function mixCell(block, cells) {
-        block.innerHTML = '';
-        flex = Elem.creat('div', block, 'flex');
-        flex.style.flexWrap = 'wrap';
-        for (var i=0;i<cellLen;i++) {
-            for (var j=0;j<cellLen;j++) {
-                var idx = i*cellLen + j;
-                var cell = Elem.creat('div', flex, 'cell', idx);
-                cell.idx = cells[idx].idx;
-                cell.style.width = cellWidth + 'px';
-                cell.style.height = cellWidth + 'px';
-                cell.style.backgroundSize = blockWidth + 'px ' + blockWidth + 'px';
-                cell.style.backgroundPosition = cells[idx].posX + 'px ' + cells[idx].posY + 'px';
-                cell.addEventListener('click', function(event) {
-                    clickCell(event);
-                });
-                cells[idx].cell = cell;
-            }
-        }
-        setHighLight();
-    }
-
-    function clickCell(event) {
-        console.log(event);
-        var org = flex.children[4];
-        var tgt = event.target;
-        if (org === tgt) return;
-        var orgNext = org.nextSibling;
-        var tgtNext = tgt.nextSibling;
-        org.parentNode.insertBefore(tgt, orgNext);
-        tgt.parentNode.insertBefore(org, tgtNext);
-        setHighLight();
-    }
-
-    function setHighLight() {
-        for (var i=0;i<cells.length;i++) {
-            var cell = cells[i].cell;
-            cell.style.borderWidth = border + 'px';
-            cell.style.borderColor = getColorLight();
-        }
-        var org = flex.children[4];
-        org.style.borderColor = getColorType();
-    }
-}
 
 function Depot(content, data) {
     var cap = 8888;

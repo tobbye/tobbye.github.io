@@ -301,28 +301,29 @@ function setPuzzleAlert() {
 }
 
 function creatPuzzle(block) {
-    var line = document.body.line;
-    var cellText = Elem.creat('div', block, 'cell-tips');
-    cellText.innerHTML = config.cellText;
-    var cellBlock = Elem.creat('div', block, 'cell-block');
-    creatCell(line, cellBlock, 0);
+    var line, blockOrg, blockTgt;
+    initCell(block);
 
-    var cellTips = Elem.creat('div', block, 'cell-tips');
-    cellTips.style.marginTop = '5px';
-    cellTips.innerHTML = config.cellTips;
-    var cellBlock = Elem.creat('div', block, 'cell-block');
-    creatCell(line, cellBlock, 1);
-    Elem.get('btn-start').onclick = function() {
-        mixCell();
-    }
-    Elem.get('btn-redo').onclick = function() {
-        mixCell();
+    function initCell(block) {
+        line = document.body.line;
+        blockOrg = Elem.creat('div', block, 'cell-block');
+        creatCell(line, blockOrg, 0);
+
+        blockTgt = Elem.creat('div', block, 'cell-block');
+        creatCell(line, blockTgt, 1);
+        Elem.get('btn-start').onclick = function() {
+            mixCell();
+        }
+        Elem.get('btn-redo').onclick = function() {
+            mixCell();
+        }
     }
 
     function mixCell() {
         config.mixClock = setInterval(function() {
             if (config.mixLoop > 0) {
-                creatCell(line, cellBlock, 1);
+                var line = document.body.line;
+                creatCell(line, blockTgt, 1);
                 config.mixLoop--;
             } else {
                 clearInterval(config.mixClock);
@@ -337,19 +338,22 @@ function creatPuzzle(block) {
     function creatCell(line, block, mix) {
         block.innerHTML = '';
         line.mix = Parse.mix(line.word);
-        var str = mix ? line.mix : line.word;
+        var word = mix ? line.mix : line.word;
+
+        var tips = Elem.creat('div', block, 'cell-tips');
+        tips.innerHTML = mix ? config.cellTips : config.cellText;
         var space = Elem.creat('div', block, 'space20');
         var flex = Elem.creat('div', block, 'cell-flex');
         for(let idx in line.word) {
             if (line.word[idx] == '/') 
                 flex = Elem.creat('div', block, 'cell-flex');
 
-            if (str[idx] == '/') 
+            if (word[idx] == '/') 
                 continue;
             var cell = Elem.creat('div', flex, 'cell-text');
             cell.mix = mix;
             cell.able = true;
-            cell.innerHTML = str[idx];
+            cell.innerHTML = word[idx];
             cell.style.borderColor = getColorType();
             cell.style.backgroundColor = mix ? 'white' : getColorLight();
             cell.onclick = function() {
@@ -389,74 +393,87 @@ function creatPuzzle(block) {
     }
 }
 
-function creatJigsaw(block, data) {
-    var flex, clock;
-    var blockWidth, cellWidth;
+function creatJigsaw(block) {
+    var tips, flex, blockOrg, blockTgt;
+    var src = '../../picture/head/3.jpeg';
+    var cellWidth, cellHight;
+    var blockWidth, blockHeight;
+    var hpw = 1.0;
     var cellLen = 3;
     var cells = [];
     var light = 4;
     var border = 10;
     var loop = 10;
-    initCell(block, data);
+    initCell(block);
 
-    function initCell(block, data) {
-        var clientWidth = document.body.clientWidth - 80;
-        blockWidth = clientWidth * config.zoom;
-        block.style.width = blockWidth + 'px';
-        block.style.margin = '0px auto';
-        cellWidth = Math.floor((blockWidth - cellLen*border*2) / cellLen);
-        for (var i=0;i<cellLen;i++) {
-            for (var j=0;j<cellLen;j++) {
-                var idx = i*cellLen + j;
-                var posY = -cellWidth * i;
-                var posX = -cellWidth * j;
-                cells[idx] = {
-                    idx: idx,
-                    posX: posX,
-                    posY: posY,
+    function initCell(block) {
+        var img = new Image();
+        img.src = src;
+        img.onload = function() {
+            hpw = this.height / this.width;
+            var clientWidth = document.body.clientWidth - 76;
+            blockWidth = clientWidth * config.zoom;
+            blockHeight = blockWidth * hpw;
+            block.style.width = blockWidth + 'px';
+            block.style.margin = '0px auto';
+            cellWidth = Math.floor((blockWidth - cellLen*border*2) / cellLen);
+            cellHight = cellWidth * hpw;
+            for (var i=0;i<cellLen;i++) {
+                for (var j=0;j<cellLen;j++) {
+                    var idx = i*cellLen + j;
+                    var posY = -cellHight * i;
+                    var posX = -cellWidth * j;
+                    cells[idx] = {
+                        idx: idx,
+                        posX: posX,
+                        posY: posY,
+                    }
                 }
             }
-        }
-        console.log(cells);
-        creatCell(block, cells, 0);
-        Style.display('btn-redo', 'none');
-        Elem.get('btn-start').onclick = function() {
-            mixCell();
-        }
-        Elem.get('btn-redo').onclick = function() {
-            mixCell();
+            console.log(cells);
+            blockOrg = Elem.creat('div', block, 'cell-block');
+            creatCell(blockOrg, cells, 0);
+            Style.display('btn-redo', 'none');
+            Elem.get('btn-start').onclick = function() {
+                mixCell();
+            }
+            Elem.get('btn-redo').onclick = function() {
+                mixCell();
+            }
         }
     }
 
     function mixCell() {
         Style.display('btn-start', 'none');
         Style.display('btn-redo', 'inline');
-        var redo = Elem.get('btn-redo');
-        Elem.togType(redo, 'danger');
-        clock = setInterval(function() {
-            if (loop > 0) {
+        Elem.togType(Elem.get('btn-redo'), 'danger');
+        config.mixClock = setInterval(function() {
+            if (config.mixLoop > 0) {
+                var line = document.body.line;
                 creatCell(block, cells, 1);
-                loop--;
+                config.mixLoop--;
             } else {
-                clearInterval(clock);
-                loop = 10;
+                clearInterval(config.mixClock);
+                config.mixLoop = config.constant.mixLoop;
             }
-        }, 100); 
+        }, 100);   
     }
 
     function creatCell(block, cells, mix) {
         block.innerHTML = '';
         cells = mix ? Parse.mix(cells) : cells;
-        flex = Elem.creat('div', block, 'flex');
+        tips = Elem.creat('div', block, 'cell-tips');
+        flex = Elem.creat('div', block, 'cell-flex');
         flex.style.flexWrap = 'wrap';
+        tips.innerHTML = mix ? config.cellTips : config.cellText;
         for (var i=0;i<cellLen;i++) {
             for (var j=0;j<cellLen;j++) {
                 var idx = i*cellLen + j;
                 var cell = Elem.creat('div', flex, 'cell-jigsaw', idx);
                 cell.idx = cells[idx].idx;
                 cell.style.width = cellWidth + 'px';
-                cell.style.height = cellWidth + 'px';
-                cell.style.backgroundSize = blockWidth + 'px ' + blockWidth + 'px';
+                cell.style.height = cellHight + 'px';
+                cell.style.backgroundSize = blockWidth + 'px ' + blockHeight + 'px';
                 cell.style.backgroundPosition = cells[idx].posX + 'px ' + cells[idx].posY + 'px';
                 cell.addEventListener('click', function(event) {
                     clickCell(event);
@@ -482,11 +499,10 @@ function creatJigsaw(block, data) {
     function setHighLight() {
         for (var i=0;i<cells.length;i++) {
             var cell = cells[i].cell;
-            cell.style.borderWidth = border + 'px';
-            cell.style.borderColor = getColorLight();
+            cell.style.border = `solid ${border}px white`;
         }
         var org = flex.children[light];
-        org.style.borderColor = getColorType();
+        org.style.border = `solid ${border}px ${getColorType()}`;
     }
 }
 

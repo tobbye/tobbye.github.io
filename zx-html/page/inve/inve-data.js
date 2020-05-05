@@ -73,7 +73,7 @@ lines: []},
 list: [
 {title: '红包池', vice: '抢夺投放的红包来获取收益',
 dot: 100, isGrab: 1, group: '赞助商', instance: "car",
-puzzleText: "发现一个红包", resultText:"阶红包", cellText: "口令", cellTips:"输入正确口令打开红包",
+puzzleText: "发现一个红包", resultText:"阶红包", cellText: "目标图片", cellTips:"拼出目标图片打开红包",
 inverStr: "投放者: ", flexStr: "#0的投放",
 laddStr: "阶梯<br/><h3>#0阶</h3>",
 pieceStr: "剩余份数<br/><h3>#0份</h3>",
