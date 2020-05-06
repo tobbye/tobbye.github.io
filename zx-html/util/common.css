@@ -398,10 +398,16 @@ div[fade=over] {
 	display: block;
 	position: absolute;
     top: 220px;
-    left: 20px;
-    right: 20px;
 	border: solid 8px #fff;
 	border-radius: 30px;
+}
+#alert-box[agent=mobile] {
+    left: 20px;
+    right: 20px;
+}
+#alert-box[agent=computer] {
+    left: 33%;
+    right: 33%;
 }
 
 .alert-flex {
@@ -429,9 +435,9 @@ div[fade=over] {
 
 .alert-block {
     overflow: auto;
-    padding: 0px 10px 5px 10px;
+    margin: 0px 10px 5px 10px;
     /*min-height: 500px;*/
-    max-height: 1234px;
+    max-height: 1270px;
     font-size: 1em;
 }
 

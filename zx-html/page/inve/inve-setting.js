@@ -395,7 +395,7 @@ function creatPuzzle(block) {
 
 function creatJigsaw(block) {
     var tips, flex, blockOrg, blockTgt;
-    var src = '../../picture/head/3.jpeg';
+    var path = '../../picture/mikao/';
     var cellWidth, cellHight;
     var blockWidth, blockHeight;
     var hpw = 1.0;
@@ -408,14 +408,19 @@ function creatJigsaw(block) {
 
     function initCell(block) {
         var img = new Image();
-        img.src = src;
+        var rand = Math.floor(Math.random() * 60 + 1);
+        path += Parse.fillZero(rand, 3);
+        if (config.modeType == 'digger')
+            path = '../../picture/head/3.jpeg';
+        img.src = path;
         img.onload = function() {
             hpw = this.height / this.width;
-            var clientWidth = document.body.clientWidth - 76;
-            blockWidth = clientWidth * config.zoom;
+            var clientWidth = block.clientWidth;
+            console.log(clientWidth);
+            blockWidth = clientWidth;
             blockHeight = blockWidth * hpw;
             block.style.width = blockWidth + 'px';
-            block.style.margin = '0px auto';
+            // block.style.margin = '0px auto';
             cellWidth = Math.floor((blockWidth - cellLen*border*2) / cellLen);
             cellHight = cellWidth * hpw;
             for (var i=0;i<cellLen;i++) {
@@ -475,6 +480,7 @@ function creatJigsaw(block) {
                 cell.style.height = cellHight + 'px';
                 cell.style.backgroundSize = blockWidth + 'px ' + blockHeight + 'px';
                 cell.style.backgroundPosition = cells[idx].posX + 'px ' + cells[idx].posY + 'px';
+                cell.style.backgroundImage = `url(${path})`
                 cell.addEventListener('click', function(event) {
                     clickCell(event);
                 });
@@ -485,7 +491,6 @@ function creatJigsaw(block) {
     }
 
     function clickCell(event) {
-        console.log(event);
         var org = flex.children[light];
         var tgt = event.target;
         if (org === tgt) return;
@@ -494,6 +499,24 @@ function creatJigsaw(block) {
         org.parentNode.insertBefore(tgt, orgNext);
         tgt.parentNode.insertBefore(org, tgtNext);
         setHighLight();
+        checkOrder();
+    }
+
+    function checkOrder() {
+        for (var i=0;i<flex.children.length;i++) {
+            if (flex.children[i].idx != i) {
+                config.isOrder = false;
+                break;
+            } else {
+                config.isOrder = true;
+            }
+        }
+        if (config.isOrder) {
+            Style.display('btn-open', 'inline'); 
+            Style.display('btn-redo', 'none');
+            Style.display('btn-abon', 'none');
+            showLog('<h4>拼图成功</h4>惊喜红包送给您！');
+        }
     }
 
     function setHighLight() {

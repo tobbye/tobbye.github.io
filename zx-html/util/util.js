@@ -285,8 +285,12 @@ Elem.attr = function(elem, key, value) {
 
 //设置元素高度自适应
 Elem.autosize = function(elem, offset) {
+    var windWidth = config.windWidth;
     var windHeight = config.windHeight;
-    if (!elem) elem = Elem.get('outer-center');
+    var box = Elem.get('alert-box');
+    var agent = config.isMobile ? 'mobile' : 'computer';
+    Elem.attr(box, 'agent', agent);
+    elem = elem || Elem.get('outer-center');
     elem.style.height = windHeight - offset + 'px';
     elem.style.maxHeight = windHeight - offset + 'px';
     //alert(windHeight);

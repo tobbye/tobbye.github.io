@@ -247,7 +247,7 @@ function refresh() {
 		str += line[0] + ' += ' + val + ' | ';
 	}
 	// values.R = Math.floor(values.Q / 100);
-	showLog('<h4>操作成功!</h4>' + input.data.title + ' ￥' +  input.value);
+	showLog('<h4>操作成功</h4>' + input.data.title + ' ￥' +  input.value);
 	console.log(str);
 	// input.value = 0;
 	localData.save();
