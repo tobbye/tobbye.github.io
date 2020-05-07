@@ -242,12 +242,8 @@ function setDetailAlert(body) {
     var data = body.data;
     var line = body.line;
     document.body.line = line;
+    document.body.data = data;
     config.wordCur = '';
-    config.puzzleText = data.puzzleText;
-    config.resultText = data.resultText;
-    config.cellText = data.cellText;
-    config.cellTips = data.cellTips;
-    config.inverStr = data.inverStr;
 
     var box = Elem.get('alert-box');
     var title = Elem.get('detail-title');
@@ -291,7 +287,7 @@ function setPuzzleAlert() {
     Elem.togType(Elem.get('btn-redo'), 'danger');
     var title = Elem.get('puzzle-title');
     var block = Elem.get('puzzle-block');
-    title.innerHTML = config.puzzleText;
+    title.innerHTML = document.body.data.puzzleText;
     block.innerHTML = '';
     config.wordCur = '';
     if (config.innerIdx == 1)
@@ -309,13 +305,14 @@ function setResultAlert() {
     var block = Elem.get('result-block');
     block.innerHTML = '';
     var line = document.body.line;
+    var data = document.body.data;
     rollLadd = 1;
     var allCount = Math.pow(2, line.ladd);
     var rollCount = Math.floor(Math.random() * allCount);
     getRoll(allCount, rollCount);
 
     var ladd = Elem.creat('div', block, 'line');
-    ladd.innerHTML = line.inver + '的' + rollLadd + config.resultText;
+    ladd.innerHTML = line.inver + '的' + rollLadd + data.resultText;
     var pic = Elem.creat('img', block, 'img');
     pic.src = config.laddSrc + rollLadd + '.png';
     var price = Elem.creat('div', block, 'line');

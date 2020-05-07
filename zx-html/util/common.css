@@ -406,8 +406,8 @@ div[fade=over] {
     right: 20px;
 }
 #alert-box[agent=computer] {
-    left: 33%;
-    right: 33%;
+    left: 36%;
+    right: 36%;
 }
 
 .alert-flex {
@@ -439,6 +439,11 @@ div[fade=over] {
     /*min-height: 500px;*/
     /*max-height: 1300px;*/
     font-size: 1em;
+}
+
+.alert-block::-webkit-scrollbar{
+
+    display:none
 }
 
 .chat-flex {

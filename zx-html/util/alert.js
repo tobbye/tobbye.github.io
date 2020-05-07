@@ -253,8 +253,9 @@ function onChatFocus() {
 
 
 function creatPuzzle(block) {
-    var line = document.body.line;
     var blockOrg, blockTgt;
+    var line = document.body.line;
+    var data = document.body.data;
     initCell(block);
 
     function initCell(block) {
@@ -282,6 +283,7 @@ function creatPuzzle(block) {
                 config.mixLoop = config.constant.mixLoop;
             }
         }, 100);   
+        showLog(data.logText);
     }
 
 
@@ -293,7 +295,7 @@ function creatPuzzle(block) {
         var word = mix ? line.mix : line.word;
 
         var tips = Elem.creat('div', block, 'cell-tips');
-        tips.innerHTML = mix ? config.cellTips : config.cellText;
+        tips.innerHTML = mix ? data.cellTips : data.cellText;
         var space = Elem.creat('div', block, 'space20');
         var flex = Elem.creat('div', block, 'cell-flex');
         for(let idx in line.word) {
@@ -357,6 +359,7 @@ function creatJigsaw(block) {
     var border = 10;
     var loop = 10;
     var line = document.body.line;
+    var data = document.body.data;
     initCell(block);
 
 
@@ -368,7 +371,7 @@ function creatJigsaw(block) {
             path = '../../picture/head/3.jpeg';
         img.src = path;
         img.onload = function() {
-            hpw = this.height / this.width;
+            hpw = Math.floor(this.height / this.width * 100) / 100;
             var clientWidth = block.clientWidth;
             blockWidth = Math.floor(clientWidth);
             blockHeight = Math.floor(blockWidth * hpw);
@@ -425,14 +428,15 @@ function creatJigsaw(block) {
                 clearInterval(config.mixClock);
                 config.mixLoop = config.constant.mixLoop;
             }
-        }, 100);   
+        }, 120);   
+        showLog(data.logText);
     }
 
     function creatCell(block, cells, mix) {
         block.innerHTML = '';
         cells = mix ? Parse.mix(cells) : cells;
         var tips = Elem.creat('div', block, 'cell-tips');
-        tips.innerHTML = mix ? config.cellTips : config.cellText;
+        tips.innerHTML = mix ? data.cellTips : data.cellText;
         flex = Elem.creat('div', block, 'cell-flex');
         flex.style.flexWrap = 'wrap';
         for (var i=0;i<cellLen;i++) {
@@ -451,7 +455,7 @@ function creatJigsaw(block) {
                 cells[idx].cell = cell;
             }
         }
-        setHighLight();
+        checkOrder(mix);
     }
 
     function clickCell(event) {
@@ -462,37 +466,34 @@ function creatJigsaw(block) {
         var tgtNext = tgt.nextSibling;
         org.parentNode.insertBefore(tgt, orgNext);
         tgt.parentNode.insertBefore(org, tgtNext);
-        setHighLight();
-        checkOrder();
+        checkOrder(1);
     }
 
-    function checkOrder() {
-        for (var i=0;i<cells.length;i++) {
-            var cell = cells[i].cell;
-            cell.style.border = `solid ${border}px white`;
-        }
+    function checkOrder(mix) {
+ 
+        if (mix) {
+            config.isOrder = true;
+            for (var i=0;i<flex.children.length;i++) {
+                var child = flex.children[i];
+                child.style.border = `solid ${border}px white`;
+                if (child.idx == i) {
+                    // child.style.border = `solid ${border}px ${getColorBgd()}`;
+                } else {
+                    config.isOrder = false;
+                }
+            }
 
-
-        config.isOrder = true;
-        for (var i=0;i<flex.children.length;i++) {
-            var child = flex.children[i];
-            if (child.idx == i) {
-                child.style.border = `solid ${border}px ${getColorBgd()}`;
-            } else {
-                config.isOrder = false;
+            if (config.isOrder) {
+                Style.display('btn-open', 'inline'); 
+                Style.display('btn-redo', 'none');
+                Style.display('btn-abon', 'none');
+                showLog('<h4>拼图成功</h4>惊喜红包送给您！');
             }
         }
+
         var org = flex.children[light];
         org.style.border = `solid ${border}px ${getColorType()}`;
-        if (config.isOrder) {
-            Style.display('btn-open', 'inline'); 
-            Style.display('btn-redo', 'none');
-            Style.display('btn-abon', 'none');
-            showLog('<h4>拼图成功</h4>惊喜红包送给您！');
-        }
-    }
 
-    function setHighLight() {
 
     }
 }
