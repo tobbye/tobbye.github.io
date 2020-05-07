@@ -460,7 +460,6 @@ var setInner = function(innerIdx) {
         Storage.set('config', config);
         jsonToTable(items[idx]); 
     }
-
 }
 
 var getColorBgd = function() {

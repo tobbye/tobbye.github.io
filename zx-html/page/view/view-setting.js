@@ -160,7 +160,7 @@ function toReplace(outer, data, title, layer) {
     // console.log(data);
     var str = JSON.stringify(data);
     str = str.replace(/\\n/g, "<br/>").replace(/\\/g, "");
-    str = str.replace(/{"originalStyleAttribute":"[^"]*"}/g, `["originalStyleAttribute"]`);
+    str = str.replace(/{"originalStyleAttribute":"[^"]*"}/g, `["po"]`);
     //[,,]转换成[;;]
 	str = str.replace(/(\[[^\[\]\{\}]*\])/g, function($1) {return $1.replace(/,/g, ";")});
     //拆分 && 合并
