@@ -82,6 +82,19 @@ function setFeed(content, data) {
     var textarea = Elem.creat('textarea', block, 'textarea');
     textarea.innerHTML = data.tips;
     var button = Elem.creat('div', block, 'button');
+    button.textarea = textarea;
     button.innerHTML = data.btnText;
     button.setAttribute('btype', 'permit');
+    button.onclick = function() {
+        if (this.textarea.value == 'hide') {
+            config.modeType = 'hide';
+            Storage.set('config', config);
+            showLog('<h4>特别提醒</h4>隐藏模式开启！')
+        }
+        if (this.textarea.value == 'ghost') {
+            config.modeType = 'ghost';
+            Storage.set('config', config);
+            showLog('<h4>特别提醒</h4>修仙模式开启！')
+        }
+    }
 }

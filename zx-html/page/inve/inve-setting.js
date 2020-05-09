@@ -74,9 +74,9 @@ function initTempLine(data) {
         line.word = str[1];
         line.wordOrg = str[1].replace(/ /g, '/');
         line.wordTgt = str[1].replace(/[\/ ]/g, '');
-        line.imgPath = config.jigsaw.imgPath;
-        line.imgSrc = str[2] || config.jigsaw.imgNone;
-        line.imgSrc = line.imgPath + line.imgSrc;
+        line.imgSrc = str[2];
+        line.imgPath = config.jigsaw.imgPath + line.imgSrc;
+        line.imgPath = line.imgSrc ? line.imgPath : config.jigsaw.imgNone;
         lines[idx] = line;
     }
     return lines;

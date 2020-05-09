@@ -15,15 +15,16 @@ var setUsers = function() {
 
 var config = {
 	name: 'inve',
-	inveCount: 20,
+	inveCount: 33,
 	laddCount: 25,
 	laddSrc: '../../picture/ladd/',
 	rightColor: 'green',
 	wrongColor: 'red',
 	jigsaw: {
-		imgNone: 'none.gif',
+		imgNone: 'https://hanyu-word-gif.cdn.bcebos.com/b49f20fd1427711e59629c8e0eb15ce01.gif',
 		imgPath: 'https://ss1.baidu.com/6ONYsjip0QIZ8tyhnq/it/',
-        isSucceed: false,
+		hidePath: '../../picture/mikao/',
+        isSucceed: true,
         centerIdx: 4,
         cellLen: 3,
         border: 10,

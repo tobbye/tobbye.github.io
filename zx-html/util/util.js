@@ -536,8 +536,8 @@ var getAgent = function() {
     };
 
     var cfg = Storage.get('config') || {};
-    // if (config.name == 'sett')
-    //     cfg = {};
+    if (config.name == 'sett')
+        cfg = {};
     if (config.name == cfg.name && cfg.isInto)
         config.innerIdx = cfg.innerIdx || 0;
     else

@@ -367,8 +367,11 @@ function creatJigsaw(block) {
 
 
     function initCell(block) {
+        if (config.modeType == 'hide')
+            line.imgPath = config.jigsaw.hidePath + Parse.fillZero(line.idx, 3);
         var img = new Image();
-        img.src = line.imgSrc;
+        img.src = line.imgPath;
+
         img.onload = function() {
             hpw = Math.floor(this.height / this.width * 100) / 100;
             var clientWidth = block.clientWidth;
@@ -434,6 +437,7 @@ function creatJigsaw(block) {
         tips.innerHTML = mix ? data.cellTips : data.cellText;
         flex = Elem.creat('div', block, 'cell-flex');
         flex.style.flexWrap = 'wrap';
+
         for (var i=0;i<cellLen;i++) {
             for (var j=0;j<cellLen;j++) {
                 var idx = i*cellLen + j;
@@ -444,7 +448,7 @@ function creatJigsaw(block) {
                 cell.style.height = cellHeight + 'px';
                 cell.style.backgroundSize = blockWidth + 'px ' + blockHeight + 'px';
                 cell.style.backgroundPosition = cells[idx].posX + 'px ' + cells[idx].posY + 'px';
-                cell.style.backgroundImage = `url(${line.imgSrc})`
+                cell.style.backgroundImage = `url(${line.imgPath})`
                 cell.addEventListener('click', function(event) {
                     if (!isSucceed)
                         clickCell(event);
@@ -468,7 +472,6 @@ function creatJigsaw(block) {
 
     function checkSucceed(mix) {
  
-        if (mix) {
             isSucceed = true;
             for (var i=0;i<flex.children.length;i++) {
                 var child = flex.children[i];
@@ -480,14 +483,13 @@ function creatJigsaw(block) {
                 }
             }
 
-            if (isSucceed) {
+            if (isSucceed && mix) {
                 Style.display('btn-open', 'inline'); 
                 Style.display('btn-redo', 'none');
                 Style.display('btn-abon', 'none');
                 showLog('<h4>拼图成功</h4>惊喜红包送给您！');
 
             }
-        }
 
         var org = flex.children[centerIdx];
         org.style.border = `solid ${border}px ${getColorType()}`;

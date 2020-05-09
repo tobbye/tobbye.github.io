@@ -13,7 +13,7 @@ function setOuterCenter() {
     var outerCenter = Elem.get('outer-center');
     for (let x in items) {
         var inner = Elem.creat('div', outerCenter, 'inner', x);
-        setContent(inner, x);
+        // setContent(inner, x);
     }
 }
 
