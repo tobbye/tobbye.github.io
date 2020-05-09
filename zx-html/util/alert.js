@@ -69,8 +69,8 @@ var tempData = {
     ],
 }
 
-function setUserFlex(user, line, isOrder) {
-    if (config.isRank || isOrder) {
+function setUserFlex(user, line, isSucceed) {
+    if (config.isRank || isSucceed) {
         var top = Elem.creat('div', user, 'user-top');
         var order = Elem.creat('div', top, 'user-order');
         var value = Elem.creat('div', top, 'user-value');
@@ -291,15 +291,15 @@ function creatPuzzle(block) {
     //解密字块
     function creatCell(line, block, mix) {
         block.innerHTML = '';
-        line.mix = Parse.mix(line.word);
-        var word = mix ? line.mix : line.word;
+        line.wordMix = Parse.mix(line.wordOrg);
+        var word = mix ? line.wordMix : line.wordOrg;
 
         var tips = Elem.creat('div', block, 'cell-tips');
         tips.innerHTML = mix ? data.cellTips : data.cellText;
         var space = Elem.creat('div', block, 'space20');
         var flex = Elem.creat('div', block, 'cell-flex');
-        for(let idx in line.word) {
-            if (line.word[idx] == '/') 
+        for(let idx in line.wordOrg) {
+            if (line.wordOrg[idx] == '/') 
                 flex = Elem.creat('div', block, 'cell-flex');
 
             if (word[idx] == '/') 
@@ -349,27 +349,26 @@ function creatPuzzle(block) {
 
 function creatJigsaw(block) {
     var flex, blockOrg, blockTgt;
-    var path = '../../picture/mikao/';
-    var cellWidth, cellHight;
+    var cellWidth, cellHeight;
     var blockWidth, blockHeight;
-    var hpw = 1.0;
-    var cellLen = 3;
-    var cells = [];
-    var light = 4;
-    var border = 10;
-    var loop = 10;
+    var isSucceed = getData('isSucceed');
+    var centerIdx = getData('centerIdx');
+    var cellLen = getData('cellLen');
+    var cells = getData('cells');
+    var hpw = getData('hpw');
+    var border = getData('border');
     var line = document.body.line;
     var data = document.body.data;
     initCell(block);
 
+    function getData(key) {
+        return config.jigsaw[key];
+    }
+
 
     function initCell(block) {
         var img = new Image();
-        var rand = Math.floor(Math.random() * line.idx + 1);
-        path += Parse.fillZero(line.idx, 3);
-        if (config.modeType == 'digger')
-            path = '../../picture/head/3.jpeg';
-        img.src = path;
+        img.src = line.imgSrc;
         img.onload = function() {
             hpw = Math.floor(this.height / this.width * 100) / 100;
             var clientWidth = block.clientWidth;
@@ -378,11 +377,11 @@ function creatJigsaw(block) {
             block.style.width = blockWidth + 'px';
             // block.style.margin = '0px auto';
             cellWidth = Math.floor((blockWidth - cellLen*border*2) / cellLen);
-            cellHight = Math.floor(cellWidth * hpw);
+            cellHeight = Math.floor(cellWidth * hpw);
             for (var i=0;i<cellLen;i++) {
                 for (var j=0;j<cellLen;j++) {
                     var idx = i*cellLen + j;
-                    var posY = -cellHight * i;
+                    var posY = -cellHeight * i;
                     var posX = -cellWidth * j;
                     cells[idx] = {
                         idx: idx,
@@ -401,17 +400,12 @@ function creatJigsaw(block) {
             Elem.get('btn-redo').onclick = function() {
                 mixCell();
             }
-            config.jigsaw = {
-                cellWidth: cellWidth,
-                cellHight: cellHight,
-                blockWidth: blockWidth,
-                blockHeight: blockHeight,
-                hpw: hpw,
-                cellLen: cellLen,
-                loop: loop,
-                light: light,
-                border: border,
-            }
+            config.jigsaw.hpw = hpw;
+            config.jigsaw.isSucceed = isSucceed;
+            config.jigsaw.cellWidth = cellWidth;
+            config.jigsaw.cellHeight = cellHeight;
+            config.jigsaw.blockWidth = blockWidth;
+            config.jigsaw.blockHeight = blockHeight;
         }
     }
 
@@ -433,6 +427,7 @@ function creatJigsaw(block) {
     }
 
     function creatCell(block, cells, mix) {
+        isSucceed = !mix;
         block.innerHTML = '';
         cells = mix ? Parse.mix(cells) : cells;
         var tips = Elem.creat('div', block, 'cell-tips');
@@ -443,55 +438,58 @@ function creatJigsaw(block) {
             for (var j=0;j<cellLen;j++) {
                 var idx = i*cellLen + j;
                 var cell = Elem.creat('div', flex, 'cell-jigsaw', idx);
+                cell.mix = mix;
                 cell.idx = cells[idx].idx;
                 cell.style.width = cellWidth + 'px';
-                cell.style.height = cellHight + 'px';
+                cell.style.height = cellHeight + 'px';
                 cell.style.backgroundSize = blockWidth + 'px ' + blockHeight + 'px';
                 cell.style.backgroundPosition = cells[idx].posX + 'px ' + cells[idx].posY + 'px';
-                cell.style.backgroundImage = `url(${path})`
+                cell.style.backgroundImage = `url(${line.imgSrc})`
                 cell.addEventListener('click', function(event) {
-                    clickCell(event);
+                    if (!isSucceed)
+                        clickCell(event);
                 });
                 cells[idx].cell = cell;
             }
         }
-        checkOrder(mix);
+        checkSucceed(mix);
     }
 
     function clickCell(event) {
-        var org = flex.children[light];
+        var org = flex.children[centerIdx];
         var tgt = event.target;
         if (org === tgt) return;
         var orgNext = org.nextSibling;
         var tgtNext = tgt.nextSibling;
         org.parentNode.insertBefore(tgt, orgNext);
         tgt.parentNode.insertBefore(org, tgtNext);
-        checkOrder(1);
+        checkSucceed(1);
     }
 
-    function checkOrder(mix) {
+    function checkSucceed(mix) {
  
         if (mix) {
-            config.isOrder = true;
+            isSucceed = true;
             for (var i=0;i<flex.children.length;i++) {
                 var child = flex.children[i];
                 child.style.border = `solid ${border}px white`;
                 if (child.idx == i) {
                     // child.style.border = `solid ${border}px ${getColorBgd()}`;
                 } else {
-                    config.isOrder = false;
+                    isSucceed = false;
                 }
             }
 
-            if (config.isOrder) {
+            if (isSucceed) {
                 Style.display('btn-open', 'inline'); 
                 Style.display('btn-redo', 'none');
                 Style.display('btn-abon', 'none');
                 showLog('<h4>拼图成功</h4>惊喜红包送给您！');
+
             }
         }
 
-        var org = flex.children[light];
+        var org = flex.children[centerIdx];
         org.style.border = `solid ${border}px ${getColorType()}`;
 
 
