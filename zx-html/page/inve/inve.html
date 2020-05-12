@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="../../util/common.css" type="text/css" />
     <script src="../../util/util.js"> </script>
     <script src="../../util/alert.js"> </script>
+    <script src="../task/task-data.js"> </script>
+    <script src="../task/task-setting.js"> </script>
     <script src="inve-data.js"> </script>
     <script src="inve-setting.js"> </script>
 </head>
@@ -128,19 +130,27 @@
                 <div class="alert-title" id="detail-title">查看详情</div>
                 <div class="alert-block" id="detail-block"></div>
                 <div class="alert-button" id="detail-button">
-                    <div class="button" btype="permit" id="btn-next">下一个</div>
                     <div class="button" btype="permit" id="btn-doit">确认</div>
                     <div class="button" btype="danger" id="btn-quit">关闭</div>
                 </div>
             </div>
-            <div class="alert-bg" id="puzzle-bg">
-                <div class="alert-title" id="puzzle-title">发现一个红包</div>
-                <div class="alert-block" id="puzzle-block"></div>
-                <div class="alert-button" id="puzzle-button">
+            <div class="alert-bg" id="pack-bg">
+                <div class="alert-title" id="pack-title">发现一个红包</div>
+                <div class="alert-block" id="pack-block"></div>
+                <div class="alert-button" id="pack-button">
                     <div class="button" btype="permit" id="btn-start">开始</div>
+                    <div class="button" btype="danger" id="btn-throw">丢弃</div>
+                </div>
+            </div>
+
+            <div class="alert-bg" id="task-bg">
+                <div class="alert-title" id="task-title">任务1-解密</div>
+                <div class="alert-block" id="task-block"></div>
+                <div class="alert-button" id="task-button">
                     <div class="button" btype="permit" id="btn-open">打开</div>
                     <div class="button" btype="danger" id="btn-redo">重置</div>
-                    <div class="button" btype="danger" id="btn-abon">丢弃</div>
+                    <div class="button" btype="danger" id="btn-abon">放弃</div>
+                    <div class="button" btype="permit" id="btn-next">下一个</div>
                 </div>
             </div>
 

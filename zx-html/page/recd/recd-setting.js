@@ -104,11 +104,12 @@ function pushdata(json, sort, y) {
         left: json.value * sort[y].left,
         right: json.value * sort[y].right
     };
-    var order = [];
+    var order = config.order;
     var idx = sort[y].idx;
     var list = items[idx].list[0];
-    if (items[idx].list.length == 1)
+    if (items[idx].list.length == 1) {
         order[idx] = list;
+    }
     if (!order[idx].day || order[idx].day == json.date) {
         order[idx].vice = json.date;
         order[idx].lines.push(data);

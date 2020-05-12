@@ -552,8 +552,6 @@ var getAgent = function() {
     setDefult(cfg, 'modeType');
     setDefult(cfg, 'colorType');
     setDefult(cfg, 'debugType');
-
-    console.log(config);
     window.onresize();
 }
 

@@ -82,6 +82,7 @@ function setFeed(content, data) {
     var textarea = Elem.creat('textarea', block, 'textarea');
     textarea.innerHTML = data.tips;
     var button = Elem.creat('div', block, 'button');
+    button.data = data;
     button.textarea = textarea;
     button.innerHTML = data.btnText;
     button.setAttribute('btype', 'permit');
@@ -89,12 +90,13 @@ function setFeed(content, data) {
         if (this.textarea.value == 'hide') {
             config.modeType = 'hide';
             Storage.set('config', config);
-            showLog('<h4>特别提醒</h4>隐藏模式开启！')
-        }
-        if (this.textarea.value == 'ghost') {
+            showLog('<h4>特别提醒</h4>隐藏模式开启！');
+        } else if (this.textarea.value == 'ghost') {
             config.modeType = 'ghost';
             Storage.set('config', config);
-            showLog('<h4>特别提醒</h4>修仙模式开启！')
+            showLog('<h4>特别提醒</h4>修仙模式开启！');
+        } else {
+            showLog('<h4>反馈成功</h4>' + this.data.vice);
         }
     }
 }

@@ -72,11 +72,7 @@ function initTempLine(data) {
         line.index = Math.floor((1547 + Math.random()) * 1e9);
         line.stamp = Parse.formatTime(line.index).replace(' ', '<h3>');
         line.word = str[1];
-        line.wordOrg = str[1].replace(/ /g, '/');
-        line.wordTgt = str[1].replace(/[\/ ]/g, '');
-        line.imgSrc = str[2];
-        line.imgPath = config.jigsaw.imgPath + line.imgSrc;
-        line.imgPath = line.imgSrc ? line.imgPath : config.jigsaw.imgNone;
+        line.src = str[2];
         lines[idx] = line;
     }
     return lines;
@@ -246,7 +242,6 @@ function setDetailAlert(body) {
     var line = body.line;
     document.body.line = line;
     document.body.data = data;
-    config.wordCur = '';
 
     var box = Elem.get('alert-box');
     var title = Elem.get('detail-title');
@@ -282,28 +277,57 @@ function setDetailAlert(body) {
     showAlertButton(data);
 }
 
-
-function setPuzzleAlert() {
+function setPackAlert() {
     hideAlert('detail-bg');
-    Style.display('btn-open', 'none');
-    Style.display('btn-redo', 'block');
-    Elem.togType(Elem.get('btn-redo'), 'danger');
-    var title = Elem.get('puzzle-title');
-    var block = Elem.get('puzzle-block');
-    title.innerHTML = document.body.data.puzzleText;
+    var title = Elem.get('pack-title');
+    var block = Elem.get('pack-block');
+    title.innerHTML = document.body.data.packTitle;
     block.innerHTML = '';
-    config.wordCur = '';
-    if (config.innerIdx == 1)
-        creatPuzzle(block);
-    if (config.innerIdx == 2)
-        creatJigsaw(block);
-    showAlert('puzzle-bg');
+    var data = document.body.data;
+    task.idx = 0;
+    task.pack = data.packType;
+    task.types = data.taskType;
+    initTask();
+    for (let idx in data.taskType) {
+        var flex = Elem.creat('div', block, 'user-flex');
+        var line = Elem.creat('div', flex, 'line');
+        line.setAttribute('btype', 'A');
+        line.innerHTML = '<h3>任务' + (parseInt(idx)+1);
+        var line = Elem.creat('div', flex, 'line');
+        line.setAttribute('btype', 'B');
+        line.innerHTML = '<h3>' + data.taskType[idx] + ' Task';
+    }
+    showAlert('pack-bg');
 }
 
 
+function setTaskAlert() {
+    hideAlert('pack-bg');
+    var title = Elem.get('task-title');
+    var block = Elem.get('task-block');
+    title.innerHTML = task.name;
+    block.innerHTML = '';
+    creatTask(block);
+    checkAction('redo');
+    Elem.togType(Elem.get('btn-redo'), 'danger');
+    showAlert('task-bg');
+}
+
+function creatTask(block) {
+    var data = document.body.data;
+    var line = document.body.line;
+    var taskType = data.taskType[task.idx];
+    if (taskType == 'puzzle') {
+        creatPuzzle(block, line.word);
+    }
+    if (taskType == 'jigsaw') {
+        creatJigsaw(block, line.src, line.idx);
+    }
+}
+
 
 function setResultAlert() {
-    hideAlert('puzzle-bg');
+    hideAlert('task-bg');
     var bg = Elem.get('result-bg');
     var block = Elem.get('result-block');
     block.innerHTML = '';
@@ -315,7 +339,7 @@ function setResultAlert() {
     getRoll(allCount, rollCount);
 
     var ladd = Elem.creat('div', block, 'line');
-    ladd.innerHTML = line.inver + '的' + rollLadd + data.resultText;
+    ladd.innerHTML = line.inver + '的' + rollLadd + '阶' + data.packType;
     var pic = Elem.creat('img', block, 'img');
     pic.src = config.laddSrc + rollLadd + '.png';
     var price = Elem.creat('div', block, 'line');
@@ -347,8 +371,11 @@ function setButton(inner, x) {
 
 
 function setAlert() {
-    setClick('btn-next', setPuzzleAlert);
-    setClick('btn-redo', setPuzzleAlert);
+    setClick('btn-doit', setPackAlert);
+    setClick('btn-abon', hideAlert);
+    setClick('btn-start', setTaskAlert);
+    setClick('btn-throw', hideAlert);
+    setClick('btn-next', setTaskAlert);
     setClick('btn-open', setResultAlert);
 }
 
