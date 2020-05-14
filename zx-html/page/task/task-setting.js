@@ -64,7 +64,6 @@ function creatPuzzle(block, word) {
     var blockOrg, blockTgt;
     var cfg = taskCfg.puzzle;
     cfg.word = word;
-    cfg.wordCur = '';
     cfg.wordOrg = word.replace(/ /g, '/');
     cfg.wordTgt = word.replace(/[\/ ]/g, '');
     initCell(block);
@@ -80,6 +79,8 @@ function creatPuzzle(block, word) {
 
     function mixCell() {
         checkAction('redo');
+        var redo = Elem.get('btn-redo');
+        Elem.togType(redo, 'danger');
         config.mixClock = setInterval(function() {
             if (config.mixLoop > 0) {
                 creatCell(blockTgt, true);
@@ -96,6 +97,7 @@ function creatPuzzle(block, word) {
     //解密字块
     function creatCell(block, state) {
         task.isStart = state;
+        cfg.wordCur = '';
         cfg.wordMix = Parse.mix(cfg.wordOrg);
         var wordMix = state ? cfg.wordMix : cfg.wordOrg;
 
@@ -159,7 +161,7 @@ function creatPuzzle(block, word) {
 
 
 function creatJigsaw(block, src, idx) {
-    var flex, blockOrg, blockTgt;
+    var img, tips, flex, blockOrg, blockTgt;
     var cfg = taskCfg.jigsaw;
     cfg.src = src;
     if (src && src.indexOf('/') > -1) {
@@ -180,7 +182,7 @@ function creatJigsaw(block, src, idx) {
     function initCell(block) {
         if (config.modeType == 'hide')
             cfg.fullPath = cfg.hidePath + Parse.fillZero(cfg.hideIdx, 3);
-        var img = new Image();
+        img = Elem.creat('img', block, 'image');
         img.src = cfg.fullPath;
 
 
@@ -189,6 +191,8 @@ function creatJigsaw(block, src, idx) {
             var clientWidth = block.clientWidth;
             cfg.blockWidth = Math.floor(clientWidth);
             cfg.blockHeight = Math.floor(cfg.blockWidth * cfg.hpw);
+            this.style.width = cfg.blockWidth + 'px';
+            this.style.height = cfg.blockHeight + 'px';
             block.style.width = cfg.blockWidth + 'px';
             // block.style.margin = '0px auto';
             cfg.cellWidth = Math.floor((cfg.blockWidth - cfg.cellLen*cfg.border*2) / cfg.cellLen);
@@ -207,7 +211,12 @@ function creatJigsaw(block, src, idx) {
             }
             console.log(cfg.cells);
             blockOrg = Elem.creat('div', block, 'cell-block');
-            creatCell(blockOrg, false);
+            img = Elem.creat('img', block, 'image');
+            img.src = cfg.fullPath;
+            setTimeout(function() {
+                Elem.display(img, 'none');
+                creatCell(blockOrg, false);
+            },1000);
             setClick('btn-redo', mixCell);
         }
     }
@@ -216,7 +225,7 @@ function creatJigsaw(block, src, idx) {
         checkAction('redo');
         config.mixClock = setInterval(function() {
             if (config.mixLoop > 0) {
-                creatCell(block, true);
+                creatCell(blockOrg, true);
                 config.mixLoop--;
             } else {
                 clearInterval(config.mixClock);
@@ -230,7 +239,7 @@ function creatJigsaw(block, src, idx) {
         task.isNext = !task.isStart;
         block.innerHTML = '';
         cfg.cells = state ? Parse.mix(cfg.cells) : cfg.cells;
-        var tips = Elem.creat('div', block, 'cell-tips');
+        tips = Elem.creat('div', block, 'cell-tips');
         tips.innerHTML = state ? task.cellTips : task.cellText;
         flex = Elem.creat('div', block, 'cell-flex');
         flex.style.flexWrap = 'wrap';
@@ -279,14 +288,15 @@ function creatJigsaw(block, src, idx) {
                 }
             }
 
+            var org = flex.children[cfg.centerIdx];
+            org.style.border = `solid ${cfg.border}px ${getColorType()}`;
             if (task.isNext && task.isStart) {
                 checkOpen();
+                setTimeout(function() {
+                    flex.innerHTML = '';
+                    Elem.display(img, 'inline');
+                }, 1000);
             }
-
-        var org = flex.children[cfg.centerIdx];
-        org.style.border = `solid ${cfg.border}px ${getColorType()}`;
-
-
     }
 }
 

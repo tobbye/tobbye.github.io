@@ -183,11 +183,11 @@ function setButton(content, data) {
 				title.innerHTML = data.title;
 				limit.innerHTML = '(范围：0-' + input.max + ')';
 				if (config.isOnline) {
-					var tran = Elem.get('fund-tran');
+					var tran = Elem.get('fundtran');
 					var ref = tran.getAttribute('ref');
 					var uid = Parse.getDate(null, '');
 					console.log(uid);
-					tran.action = ref.replace('#uid', uid).replace('#idx', data.idx);
+					tran.action = ref.replace('#uid', 'i').replace('#idx', data.idx);
 				}
 			}
 		}

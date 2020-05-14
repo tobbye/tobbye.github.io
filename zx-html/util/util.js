@@ -474,10 +474,10 @@ var getColorLight = function() {
     return config.color.light;
 }
 
-var addScript = function() {
+var addScript = function(src) {
     var script = document.createElement('script');
     script.type = 'text/javascript';
-    script.src = '../../util/temp.js';
+    script.src = src;
     document.head.appendChild(script);
 }
 
@@ -503,7 +503,11 @@ window.onresize = function() {
 
 //获取浏览器是否是移动端
 var getAgent = function() {
-    // addScript();
+    addScript('http://pv.sohu.com/cityjson?ie=utf-8');
+    setTimeout(function() {
+        config.ip = returnCitySN["cip"];
+        config.city = returnCitySN["cname"];
+    },500);
     config.constant = {
         color: {
             font: '#333',
@@ -521,7 +525,7 @@ var getAgent = function() {
             timeTog: 1000,
         },
         isInto: false,
-        isOnline: false,
+        isOnline: true,
         mixLoop: 10,
         dataIdx: 'default',
         initType: 'get',
