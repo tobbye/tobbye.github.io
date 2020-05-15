@@ -180,6 +180,7 @@ function setChatAlert() {
     var input = Elem.get("chat-textarea");
     Elem.color(box, "", getColorLight());
     Elem.color(input, getColorLight(), "");
+    input.placeholder = "输入内容";
     title.innerHTML = document.body.line.name;
     box.style.maxHeight = (config.windHeight - 440) + "px";
     block.style.maxHeight = (config.windHeight - 703) + "px";
@@ -194,7 +195,7 @@ function setChatAlert() {
     send.onclick = function() {
         var input = Elem.get("chat-textarea");
         setChatText(this.block, "right", input.value);
-        if (input.value != "" && input.value != "输入内容")
+        if (input.value != "")
             tempData.chatData.push({
                 text: input.value,
                 date: Parse.getDate(),
@@ -202,7 +203,8 @@ function setChatAlert() {
                 isMine: 1,
             });
         Elem.color(input, getColorLight(), "");
-        input.value = "输入内容";
+        input.placeholder = "输入内容";
+        input.value = "";
     }
     
     block.lastChild.scrollIntoView();
@@ -211,7 +213,7 @@ function setChatAlert() {
 
 
 function setChatText(block, ctype, value) {
-    if (value == "" || value == "输入内容") {
+    if (value == "") {
         hideAlert();
         return;
     }

@@ -525,7 +525,7 @@ var getAgent = function() {
             timeTog: 1000,
         },
         isInto: false,
-        isOnline: true,
+        isOnline: !true,
         mixLoop: 10,
         dataIdx: 'default',
         initType: 'get',
