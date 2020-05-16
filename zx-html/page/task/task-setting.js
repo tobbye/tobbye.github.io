@@ -182,7 +182,7 @@ function creatJigsaw(block, src, idx) {
     function initCell(block) {
         if (config.modeType == 'hide')
             cfg.fullPath = cfg.hidePath + Parse.fillZero(cfg.hideIdx, 3);
-        img = new Image();
+        img = Elem.creat('img', block, 'image');
         img.src = cfg.fullPath;
 
 
@@ -211,7 +211,12 @@ function creatJigsaw(block, src, idx) {
             }
             console.log(cfg.cells);
             blockOrg = Elem.creat('div', block, 'cell-block');
-            creatCell(blockOrg, false);
+            img = Elem.creat('img', block, 'image');
+            img.src = cfg.fullPath;
+            setTimeout(function() {
+                Elem.display(img, 'none');
+                creatCell(blockOrg, false);
+            },1000);
             setClick('btn-redo', mixCell);
         }
     }
@@ -272,45 +277,26 @@ function creatJigsaw(block, src, idx) {
 
     function checkNext() {
  
-        task.isNext = true;
-        for (var i=0;i<flex.children.length;i++) {
-            var child = flex.children[i];
-            child.style.border = `solid ${cfg.border}px white`;
-            if (child.idx == i) {
-                // child.style.border = `solid ${cfg.border}px ${getColorBgd()}`;
-            } else {
-                task.isNext = false;
+            task.isNext = true;
+            for (var i=0;i<flex.children.length;i++) {
+                var child = flex.children[i];
+                child.style.border = `solid ${cfg.border}px white`;
+                if (child.idx == i) {
+                    // child.style.border = `solid ${cfg.border}px ${getColorBgd()}`;
+                } else {
+                    task.isNext = false;
+                }
             }
-        }
 
-        var org = flex.children[cfg.centerIdx];
-        org.style.border = `solid ${cfg.border}px ${getColorType()}`;
-        if (task.isNext && task.isStart) {
-        }
-
-        if (task.isNext) {
-            img = Elem.creat('img', blockOrg, 'image');
-            img.style.width = cfg.blockWidth - 2*cfg.border + 'px';
-            img.style.height = cfg.blockHeight - 2*cfg.border + 'px';
-            img.style.border = `solid ${cfg.border}px white`;
-            img.src = cfg.fullPath;
-            if (task.isStart) {
+            var org = flex.children[cfg.centerIdx];
+            org.style.border = `solid ${cfg.border}px ${getColorType()}`;
+            if (task.isNext && task.isStart) {
                 checkOpen();
-                Elem.display(flex, 'flex');
-                Elem.display(img, 'none');
                 setTimeout(function() {
-                    Elem.display(flex, 'none');
+                    flex.innerHTML = '';
                     Elem.display(img, 'inline');
                 }, 1000);
-            } else {
-                Elem.display(flex, 'none');
-                Elem.display(img, 'inline');
-                setTimeout(function() {
-                    Elem.display(flex, 'flex');
-                    Elem.display(img, 'none');
-                }, 1000);
             }
-        }
     }
 }
 

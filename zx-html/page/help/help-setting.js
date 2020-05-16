@@ -88,7 +88,7 @@ function setFeed(content, data) {
     var textarea = Elem.creat('textarea', form, 'textarea');
     textarea.name = 'feed';
     textarea.placeholder = data.remind;
-    textarea.style.color = getColorType();
+        textarea.style.color = getColorType();
 
     var flex = Elem.creat('div', form, 'flex');
     var button = Elem.creat('input', flex, 'button');

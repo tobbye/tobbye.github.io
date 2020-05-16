@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8"/>
@@ -18,6 +18,20 @@
         text-align: center;
     }
 
+    #chat-textarea {
+        margin: 10px;
+        flex: 50;
+        height: auto;
+        font-size: 1em;
+        font-weight: normal;
+        font-family: "Times New Roman";
+        border: 8px solid #fff;
+    }
+
+    #chat-block {
+        margin: 10px;
+        background-color: white;
+    }
 
 
 </style>
@@ -56,7 +70,7 @@
                 <div class="alert-block" id="chat-block"></div>
                 <div class="alert-button" id="chat-button">
                     <div class="button-micro" id="btn-vocie" btype="permit">语音</div>
-                    <textarea id="chat-textarea" onfocus="onChatFocus()"></textarea>
+                    <textarea id="chat-textarea" onfocus="onChatFocus()">输入内容</textarea>
                     <div class="button-micro" id="btn-send" btype="permit">发送</div>
                 </div>
             </div>
