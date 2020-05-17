@@ -81,7 +81,7 @@ function getjson() {
 
 function pushdata(json, sort, y) {
     var data = {
-        stamp: '<h4>' + json.date.split('年')[1] + '</h4>' + json.time,
+        stamp: json.date.split('年')[1] + '<h3>' + json.time,
         left: json.value * sort[y].left,
         right: json.value * sort[y].right
     };
