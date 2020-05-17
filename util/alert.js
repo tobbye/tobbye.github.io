@@ -96,6 +96,7 @@ function setOuterTop() {
 }
 
 function setOuterCenter() {
+    window.onresize();
     var outerCenter = Elem.get('outer-center');
     outerCenter.innerHTML = '';
     for (let x in items) {

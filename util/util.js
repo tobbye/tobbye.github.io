@@ -484,8 +484,8 @@ var getAgent = function() {
     config.ip = {};
     config.constant = {
         action: {
-            host: 'localhost:8888',
-            // host: 'tobbye.top',
+            // host: 'localhost:8888',
+            host: 'tobbye.top',
             ref: 'http://#host/#uid/#act/#idx',
         },
         color: {

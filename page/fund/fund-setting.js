@@ -57,7 +57,7 @@ function setLine(content, data) {
 			var key = tds[z].text.split('.')[0];
 			var size = col > 1 ? '<h2>' : '<h3>';
 			tds[z].value = values[key];
-			text = tds[z].text + '<br/>' + size + formatKey(key);
+			text = tds[z].text + '<br/>' + size + formatKey(key, 0);
 			td.innerHTML = text;
 
 			var border = config.border[tds[z].border];
@@ -91,7 +91,7 @@ function setBlock(content, data) {
 			var key = text.split('.')[0];
 			tds[z].value = values[key];
 			text = '<h2>' + text.replace('.', '</h2>');
-			text += '<br/>' + formatKey(key);
+			text += '<h4>' + formatKey(key, 1) + '</h4>';
 			td.innerHTML = text;
 		}
 	}
@@ -256,6 +256,9 @@ function getLineValue(data, i, values) {
 }
 
 
-function formatKey(key) {
-	return '￥' + Parse.addSplit(Math.abs(values[key]));
+function formatKey(key, idx) {
+	if (idx == 0)
+		return '￥' + Parse.addSplit(Math.abs(values[key]));
+	else
+		return '￥' + Parse.sub4Num(Math.abs(values[key]));
 }
