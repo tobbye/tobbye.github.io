@@ -1,0 +1,114 @@
+<!-- <!DOCTYPE html -->
+<html>
+<head>
+	<meta charset="UTF-8"/>
+	<title>资金</title>
+	<link href="../../util/common.css" rel="stylesheet" type="text/css" />
+	<script src="../../util/util.js"> </script>
+    <script src="../../util/alert.js"> </script>
+	<script src="fund-data.js"> </script>
+	<script src="fund-setting.js"> </script>
+
+</head>
+<style type="text/css"> 
+
+	h2 {
+		margin: 10px;
+		font-size: 1.5em;
+	}
+
+	h3 {
+		margin: 0px;
+		font-size: 1.3em;
+	}
+
+
+	table {
+		margin-bottom: 20px;
+		padding: 0px 10px;
+		font-size: 1.2em;
+	}
+
+
+	td {
+		text-align: center;
+		font-weight: bold;
+		border: solid 2px #eee;
+		background-color: white;
+	}
+
+
+	.iblock {
+		display: block;
+		margin: 20px 20px;
+	}
+
+	.line {
+		flex: 100;
+		margin: 3px;
+		background-color: white;
+	}
+
+
+	#alert-box {
+		top: 30%;
+		left: calc(50% - 450px);
+		right: calc(50% - 450px);
+	}
+
+	.alert-input {
+		margin: 20px;
+		width: 50%;
+		font-size: 1.8em;
+		font-weight: bold;
+		font-family: "Aril";
+		border: 8px solid #fff;
+	}
+
+	
+	.alert-limit {
+		padding: 10px;
+		font-size: 1.2em;
+	}
+
+
+	.alert-block {
+		margin: 0px 10px;
+		margin-bottom: 5px;
+		background-color: white;
+	}
+
+</style>
+
+<body>
+	<div id="outer-top"></div>
+	<div id="outer-center"></div>
+	<div id="outer-bot"></div>
+
+	<div id="alert">
+		<div id="alert-mask" onclick="hideAlert()"></div>
+		<div id="alert-box">
+		    <div class="alert-bg" id="edit-bg">
+
+				<form id="fundtran" ref="http://#host/#uid/fundtran/#idx" method="POST">
+					<div class="alert-title" id="edit-title">标题名称</div>
+	        		<div class="alert-block" id="edit-block">
+						<div class="alert-limit" id="edit-limit"></div>
+						<div class="alert-flex">
+							<text class="alert-text" id="edit-text">￥</text>
+							<input class="alert-input" id="edit-input" name="tran" type="number" oninput="onInput()"/>
+						</div>
+					</div>
+
+
+					<div class="alert-button">
+						<input class="button" btype="permit" id="button-confirm" type="submit" value="确定"></input>
+						<input class="button" btype="danger" id="button-cancel" type="reset" value="取消"></input>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

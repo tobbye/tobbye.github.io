@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>关系</title>
+    <link href="../../util/common.css" rel="stylesheet" type="text/css" />
+    <script src="../../util/util.js"> </script>
+    <script src="../../util/alert.js"> </script>
+    <script src="farm-data.js"> </script>
+    <script src="farm-setting.js"> </script>
+</head>
+
+<body>
+    <style type="text/css"> 
+
+        h3 {
+            margin: 15px;
+            font-size: 1.3em;
+            text-align: center;
+        }
+
+
+        #chat-textarea {
+            margin: 10px;
+            flex: 50;
+            height: auto;
+            font-size: 3.3em;
+            font-weight: normal;
+            font-family: "Times New Roman";
+            border: 8px solid #fff;
+        }
+
+        #chat-block {
+            margin: 10px;
+            background-color: white;
+        }
+
+
+    </style>
+
+    <div id="outer-top"></div>
+    <div id="outer-center"></div>
+    <div id="outer-bot"></div>
+    <div id="alert">
+        <div id="alert-mask" onclick="hideAlert()"></div>
+        <div id="alert-box">
+
+            <div class="alert-bg" id="detail-bg">
+                <div class="alert-title" id="detail-title">个人资料</div>
+                <div class="alert-block" id="detail-block"></div>
+                <div class="alert-button" id="detail-button"></div>
+            </div>
+
+            <div class="alert-bg" id="search-bg">
+                <div class="alert-title" id="search-title">搜索结果</div>
+                <div class="alert-block" id="search-block"></div>
+                <div class="alert-button" id="search-button">
+                    <div class="button" btype="danger" id="btn-close">关闭</div>
+                </div>
+            </div>
+            
+            <div class="alert-bg" id="chat-bg">
+                <div class="alert-title" id="chat-title">查看详情</div>
+                <div class="alert-block" id="chat-block"></div>
+                <div class="alert-button" id="chat-button">
+                    <div class="button-micro" id="btn-vocie" btype="permit">语音</div>
+                    <textarea id="chat-textarea" onfocus="onChatFocus()">输入内容</textarea>
+                    <div class="button-micro" id="btn-send" btype="permit">发送</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
