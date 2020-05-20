@@ -56,19 +56,27 @@ function setLine(content, data) {
 			}
 			var value = Storage.get(optName);
 			if (this.key == 'hostType') {
-				config.sett.isOnline = optName != 'github';
 				var host = config.constant.host[optName];
+				config.sett.isOnline = !(optName == 'html' || optName == 'github');
+				config.sett.isLocal = optName == 'html' || optName == 'local';
+					if (config.sett.isLocal && config.sett.isMobile) {
+						showLog('<h4>无法连接到' + this.optText + '!</h4>' + host);
+						return;
+					} else {
+						showLog('<h4>连接到' + this.optText + '成功!</h4>' + host);
+
+					}
 				if (config.sett.hostType != optName) {
+					config.sett.hostType = optName;
 					config.action.host = host;
-					config.sett.hostType = this.optName;
-					showLog('<h4>连接到' + this.optText + '</h4>' + host);
+
 					setTimeout(function() {
-						window.location.href = host + "/page/sett/sett.html";
-					}, 500);
+						window.location.href = config.action.host + "/page/sett/sett.html";
+					}, 2000);
 				}
 			}
-			if (this.key == 'colorType') {
-				// togStyle(this);
+			if (this.key == 'dataType') {
+				localData.init('clear');
 			}
 			if (this.key == 'debugType' && this.optName == 'test') {
 				config.sett.debugType = 'close';

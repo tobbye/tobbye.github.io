@@ -52,6 +52,7 @@ var config = {
             modeType: 'digger',
             colorType: 'text',
             debugType: 'close', 
+            dataType: 'clear', 
         },
         fade: {
             isLog: true,
@@ -61,10 +62,10 @@ var config = {
             timeTog: 1000,
         },
         host: {
-            html: 'file:///C:/Users/ZHANGJIALIANG/Documents/GitHub/tobbye.github.io',
+            html: 'file:///C:/Users/ZHANGJIALIANG/<br/>Documents/GitHub/tobbye.github.io',
             github: 'http://tobbye.github.io',
             local: 'http://localhost:8888',
-            http: 'http://tobbye.top:80',
+            http: 'http://tobbye.top',
         },
         page: {
             alertOffset: 716,

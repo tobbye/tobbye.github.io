@@ -49,5 +49,9 @@ optName: ['Digger', 'Ghost'],
 optText: ['众鑫淘金', '凡人修仙'],
 },
 
+{title: '数据', vice: '清空所有数据', default: 0, key: 'dataType',
+optName: ['Clear'],
+optText: ['清空'],
+},
 ]},
 ];
