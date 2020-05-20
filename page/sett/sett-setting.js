@@ -44,21 +44,18 @@ function setLine(content, data) {
 		option.optText = data.optText[z];
 		option.innerHTML = option.optText;
 		option.onclick = function() {
-			setOption(this, true);
+			setOption(this);
 		}
 	}
 	for (var i=0; i < select.children.length; i++) {
 		var child = select.children[i];
 		if (child.optName == config.sett[child.key])
-			setOption(child, false);
+			setOptDefault(child);
 	}
 	// var child = select.children[data.default];
 	// if (child) child.onclick();
 }
-
-function setOption(opt, isInto) {
-	var optName = opt.optName;
-    Storage.set('config', config);
+function setOptDefault(opt) {
 	var childs = opt.parentNode.children;
 	for (var i=0; i<childs.length; i++) {
 		if (opt.innerHTML == childs[i].innerHTML)  {
@@ -67,7 +64,23 @@ function setOption(opt, isInto) {
             childs[i].setAttribute('btype', 'dead');
         }				
 	}
-	var value = Storage.get(optName);
+	var optName = opt.optName;
+	if (opt.key == 'hostType') {
+		var host = config.constant.host[optName];
+		showLog('<h4>成功连接到' + opt.optText + '!</h4>' + host);
+	}
+}
+
+function setOption(opt) {
+	var childs = opt.parentNode.children;
+	for (var i=0; i<childs.length; i++) {
+		if (opt.innerHTML == childs[i].innerHTML)  {
+            childs[i].setAttribute('btype', 'live');
+        } else {
+            childs[i].setAttribute('btype', 'dead');
+        }				
+	}
+	var optName = opt.optName;
 	if (opt.key == 'hostType') {
 		var host = config.constant.host[optName];
 		config.sett.isOnline = !(optName == 'html' || optName == 'github');
@@ -76,14 +89,14 @@ function setOption(opt, isInto) {
 
 			if (config.sett.isHtmlAll || config.sett.isLocalMob) {
 				showLog('<h4>无法连接到' + opt.optText + '!</h4>' + host);
-			} else if (isInto && config.sett.hostType != optName) {
-			showLog('<h4>准备连接到' + opt.optText + '</h4>' + host);
-					config.sett.hostType = optName;
-					config.action.host = host;
+			} else if (config.sett.hostType != optName) {
+				showLog('<h4>准备连接到' + opt.optText + '</h4>' + host);
+				config.sett.hostType = optName;
+				config.action.host = host;
 
-					setTimeout(function() {
-						window.location.href = config.action.host + "/page/sett/sett.html";
-					}, 2000);
+				setTimeout(function() {
+					window.location.href = config.action.host + "/page/sett/sett.html";
+				}, 2000);
 			} else {
 				showLog('<h4>成功连接到' + opt.optText + '!</h4>' + host);
 
@@ -98,6 +111,7 @@ function setOption(opt, isInto) {
         jsonToTable(items[0]); 
 	}
 	config.sett[opt.key] = optName;
+    Storage.set('config', config);
 }
 
 function setStyle(content, data) {

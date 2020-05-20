@@ -80,11 +80,11 @@ function setFeed(content, data) {
     button.onclick = function() {
         var value = this.textarea.value;
         if (value == 'hide') {
-            config.modeType = 'hide';
+            config.sett.modeType = 'hide';
             Storage.set('config', config);
             showLog('<h4>特别提醒</h4>隐藏模式开启！');
         } else if (value == 'ghost') {
-            config.modeType = 'ghost';
+            config.sett.modeType = 'ghost';
             Storage.set('config', config);
             showLog('<h4>特别提醒</h4>修仙模式开启！');
         } else if (!value || value == this.data.remind) {

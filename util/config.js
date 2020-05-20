@@ -73,7 +73,7 @@ var config = {
             innerOffset: 770, 
             minHeight: 700,
             zoomMobile: 1.00,
-            zoomWechat: 0.90,
+            zoomWechat: 1.00,
             zoomComput: 0.40,
         }, 
         color: {
