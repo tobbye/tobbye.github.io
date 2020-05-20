@@ -41,7 +41,7 @@ function setTitle(content, data) {
 function setLine(content, data) {
 	var trs = data.lines;
 	var table = Elem.creat('table', content, 'table-line');
-	Elem.height(table, config.flowHeight + 'px');
+	Elem.height(table, config.page.flowHeight + 'px');
 	Elem.display(table, 'none');
 	for (let y in trs) {
 		var tds = trs[y];
@@ -60,10 +60,10 @@ function setLine(content, data) {
 			text = tds[z].text + '<br/>' + size + formatKey(key, 0);
 			td.innerHTML = text;
 
-			var border = config.border[tds[z].border];
+			var border = cfg.border[tds[z].border];
 			for(let i in border) {
 				var radius = 'border' + border[i] + 'Radius';
-				td.style[radius] = config.radius;
+				td.style[radius] = cfg.radius;
 			}
 		}
 	}
@@ -74,7 +74,7 @@ function setLine(content, data) {
 function setBlock(content, data) {
 	var trs = data.blocks;
 	var table = Elem.creat('table', content, 'table-block');
-	Elem.height(table, config.flowHeight + 'px');
+	Elem.height(table, config.page.flowHeight + 'px');
 	Elem.display(table, 'table');
 	for (let y in trs) {
 		var tr = Elem.creat('tr', table, 'tr-row', y);
@@ -161,7 +161,7 @@ function setButton(content, data) {
 				input.dataready = data;
 				title.innerHTML = data.title;
 				limit.innerHTML = '(范围：0-' + input.max + ')';
-				if (config.isOnline) {
+				if (config.page.isOnline) {
 					var tran = Elem.get('fundtran');
 					var ref = tran.getAttribute('ref');
 					var uid = Parse.getDate(null, '');
@@ -231,7 +231,7 @@ function refresh() {
 	// input.value = 0;
 	localData.save();
 	setOuterCenter();
-	config.isInto = true;
+	config.page.isInto = true;
 	setInner(idx);
 }
 

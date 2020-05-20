@@ -53,7 +53,7 @@ function initTempLine(data) {
 	var lines = [];
     var list = Parse.mix(sponer);
 	for (let z in list) {
-		if (z >= config.rankCount) break;
+		if (z >= cfg.rankCount) break;
 		var unit = tempData.unitData;
 		var text = list[z].split('-');
 		var line = {

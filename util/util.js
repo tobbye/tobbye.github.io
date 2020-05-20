@@ -285,10 +285,10 @@ Elem.attr = function(elem, key, value) {
 
 //设置元素高度自适应
 Elem.autosize = function(elem, offset) {
-    var windWidth = config.windWidth;
-    var windHeight = config.windHeight;
+    var windWidth = config.page.windWidth;
+    var windHeight = config.page.windHeight;
     var box = Elem.get('alert-box');
-    var agent = config.isMobile ? 'mobile' : 'computer';
+    var agent = config.page.isMobile ? 'mobile' : 'computer';
     Elem.attr(box, 'agent', agent);
     elem = elem || Elem.get('outer-center');
     elem.style.height = windHeight - offset + 'px';
@@ -440,35 +440,42 @@ var addScript = function(src) {
     document.head.appendChild(script);
 }
 
+var setPage = function() {
+    var page = setDefult([], 'page');
+    var sett = config.sett;
+    sett.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
+    sett.isWechat = (/micromessenger|MicroMessenger/i.test(navigator.userAgent));
+    page.zoom = sett.isMobile ? page.zoomMobile : page.zoomComput;
+    page.zoom = sett.isWechat ? page.zoomWechat : page.zoom;
+    page.windWidth = Math.floor(window.innerWidth / page.zoom);
+    page.windHeight = Math.floor(window.innerHeight / page.zoom);
+    page.alertHeight = page.windHeight - page.alertOffset;
+    page.outerHeight = page.windHeight - page.outerOffset;
+    page.innerHeight = page.windHeight - page.innerOffset;
+    page.flowHeight = Math.max(page.innerHeight, page.minHeight);
+    sett.isWidth = page.windWidth > page.windHeight;
+    sett.isFlow = page.innerHeight > page.minHeight;
+    document.body.style.zoom = page.zoom;
+    var box = Elem.get('alert-box');
+    var agent = sett.isMobile ? 'mobile' : 'computer';
+    Elem.attr(box, 'agent', agent);
+    var center = Elem.get('outer-center');
+    center.style.height = page.outerHeight + 'px';
+    center.style.maxHeight = page.outerHeight + 'px';
+    config.page = page;
+}
+
 window.onresize = function() {
-    var constant = config.constant;
-    if (!constant) return;
-    config.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
-    config.isWechat = (/micromessenger|MicroMessenger/i.test(navigator.userAgent));
-    config.zoom = config.isMobile ? constant.zoomMobile : constant.zoomComput;
-    config.zoom = config.isWechat ? constant.zoomWechat : config.zoom;
-    config.windWidth = Math.floor(window.innerWidth / config.zoom);
-    config.windHeight = Math.floor(window.innerHeight / config.zoom);
-    config.alertHeight = config.windHeight - constant.alertOffset;
-    config.outerHeight = config.windHeight - constant.outerOffset;
-    config.innerHeight = config.windHeight - config.innerOffset;
-    config.isWidth = config.windWidth > config.windHeight;
-    config.isFlow = config.innerHeight > config.minHeight;
-    config.flowHeight = Math.max(config.innerHeight, config.minHeight);
-    document.body.style.zoom = config.zoom;
-    Elem.autosize(null, constant.outerOffset);
+    setPage();
 }
 
 var setAction = function(act, idx) {
     var uid = 'i';
-    config.action = {
-        uid: uid,
-        act: act,
-        idx: idx,
-    }
-    var conact = config.constant.action;
-    var ref = conact.ref.replace('#host', conact.host);
-    ref = ref.replace('#uid', uid).replace('#act', act).replace('#idx', idx);
+    var action = config.action;
+    var ref = action.ref.replace('#uid', uid).replace('#act', act).replace('#idx', idx);
+    action.router = ref.replace('#host', '');
+    console.log(config);
+    ref = ref.replace('#host', action.host);
     return ref;
 }
 
@@ -476,85 +483,55 @@ var setAction = function(act, idx) {
 var getAgent = function() {
     addScript('http://pv.sohu.com/cityjson?ie=utf-8');
     setTimeout(function() {
-        config.ip = {
-            addres: returnCitySN["cip"],
+        config.agent = {
+            ip: returnCitySN["cip"],
             city: returnCitySN["cname"],
         };
     },500);
-    config.ip = {};
-    config.constant = {
-        action: {
-            // host: 'localhost:8888',
-            host: 'tobbye.top',
-            ref: 'http://#host/#uid/#act/#idx',
-        },
-        color: {
-            font: '#333',
-            light: '#ccc',
-            bgd: '#eee',
-            text: '深黑',
-            type: 'black',
-            style: 'dark',
-        },
-        fade: {
-            isLog: true,
-            timeIn: 1000,
-            timeOn: 3000,
-            timeOut: 1000,
-            timeTog: 1000,
-        },
-        isInto: false,
-        isOnline: true,
-        mixLoop: 10,
-        sett: {
-            dataIdx: 'default',
-            initType: 'get',
-            modeType: 'digger',
-            colorType: 'text',
-            debugType: 'close',   
-        },
+    config.cfg = cfg;
+    config.name = cfg.name;
 
-        outerOffset: 220,
-        alertOffset: 716,
-        zoomMobile: 1.00,
-        zoomWechat: 0.90,
-        zoomComput: 0.40,
-    };
-    config.hrefTop = [
-        {name:'sett', href:'../sett/sett.html', text:'设置'},
-        {name:'rank', href:'../rank/rank.html', text:'榜单'},
-        {name:'stat', href:'../stat/stat.html', text:'记录'},
-        {name:'help', href:'../help/help.html', text:'帮助'},
-    ];
-
-    config.hrefBot = [
-        {name:'user', href:'../user/user.html', text:'个人'},
-        {name:'nexu', href:'../nexu/nexu.html', text:'关系'},
-        {name:'home', href:'../home/home.html', text:'主页'},
-        {name:'fund', href:'../fund/fund.html', text:'资金'},
-        {name:'inve', href:'../inve/inve.html', text:'市场'},
-    ];
-
-    var cfg = Storage.get('config') || {};
-    if (config.name == 'sett')
-        cfg = {};
-    if (config.name == cfg.name && cfg.isInto)
-        config.innerIdx = cfg.innerIdx || 0;
+    var temp = Storage.get('config') || {};
+    // if (config.name == 'sett')
+    //     temp = {};
+    if (config.name == temp.name && temp.sett.isInto)
+        config.innerIdx = temp.innerIdx || 0;
     else
         config.innerIdx = 0;
-    setDefult(cfg, 'color');
-    setDefult(cfg, 'fade');
-    setDefult(cfg, 'sett');
-    setDefult(cfg, 'isInto');
-    setDefult(cfg, 'isOnline');
-    setDefult(cfg, 'mixLoop');
+    setDefult(temp, 'sett');
+    setDefult(temp, 'fade');
+    setDefult(temp, 'page');
+    setDefult(temp, 'color');
+    setDefult(temp, 'clock');
+    getHost();
     window.onresize();
 }
 
-var setDefult = function(cfg, key) {
-    config[key] = cfg[key] || config.constant[key];
+var setDefult = function(temp, key) {
+    config[key] = temp[key] || config.constant[key];
     if (typeof(config[key]) === 'object')
         config[key] = JSON.parse(JSON.stringify(config[key]));
+    return config[key];
+}
+
+var getHost = function() {
+    var action = config.action;
+    var path = window.document.location.href;
+    var page = window.document.location.pathname;
+    var pos = path.indexOf(page);
+    var host = path.substring(0, pos);
+    action.host = host;
+    action.page = page;
+    getHostType(host);
+}
+
+var getHostType = function(host) {
+    for (let key in config.constant.host) {
+        if (config.constant.host[key] == host) {
+            config.sett.hostType = key;
+            return;
+        }
+    }
 }
 
 //设置浏览器
@@ -625,7 +602,7 @@ var getFadeElem = function(elem) {
             elem.id = 'log';
             elem.setAttribute('fade', 'over');
         }
-        if (config.colorType == 'page')
+        if (config.sett.colorType == 'page')
             Elem.color(elem, getColorBgd(), getColorType());
         else
             Elem.color(elem, 'white', 'dodgerblue');

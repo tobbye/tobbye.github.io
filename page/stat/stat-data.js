@@ -4,7 +4,7 @@ window.onload = function() {
 	setAgent();
 }
 
-var config = {
+var cfg = {
 	name: "stat",
 	list: ["-cur", "-rec"],
 };

@@ -5,7 +5,7 @@ window.onload = function() {
 	setAgent();
 }
 
-var config = {
+var cfg = {
 	name: "recd",
 	sort: [
 	    {type:201, idx:0, left:1, right:0},

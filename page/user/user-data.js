@@ -4,7 +4,7 @@ window.onload = function() {
 	setAgent();
 }
 
-var config = {
+var cfg = {
 	name: "user",
     titleStr: "搜索:#0",
 

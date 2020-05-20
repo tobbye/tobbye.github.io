@@ -20,21 +20,21 @@ var tempData = {
         mark4: ["排名标签1", "排名标签2"],
         mark5: ["评价标签1", "评价标签2"],
         desc: `<h3>谁能告诉我花儿为什么那么红？</h3>花儿为什么这样红？
-为什么这样红？
-哎红得好像，
-红得好像燃烧的火，
-它象征着纯洁的友谊和爱情。
-花儿为什么这样鲜？
-为什么这样鲜？
-哎鲜得使人，
-鲜得使人不忍离去，
-它是用了青春的血液来浇灌。
-哎鲜得使人，
-鲜得使人不忍离去，
-它是用了青春的血液来浇灌。
-哎红得好像，
-红得好像燃烧的火，
-它象征着纯洁的友谊和爱情。`
+            为什么这样红？
+            哎红得好像，
+            红得好像燃烧的火，
+            它象征着纯洁的友谊和爱情。
+            花儿为什么这样鲜？
+            为什么这样鲜？
+            哎鲜得使人，
+            鲜得使人不忍离去，
+            它是用了青春的血液来浇灌。
+            哎鲜得使人，
+            鲜得使人不忍离去，
+            它是用了青春的血液来浇灌。
+            哎红得好像，
+            红得好像燃烧的火，
+            它象征着纯洁的友谊和爱情。`
         // `陈晴晴2009，叶梦梦2009，王嫚嫚2010，胡泱秧2013，邓小丽2016，赵素华2016，黎桂清2017，章威威2018，
         // 崔慧珍2019，鲍青青2019，汤小英2019，张沙沙2019觉得很赞！`,
 
@@ -46,22 +46,22 @@ var tempData = {
     {text:"如何一块变两块？", time:"11：25", isMine:0},
     {text:`今天一块变两块，
         明天两块变四块，
-后天四块变八块，
-大后天一十六块，
-十天二零四八块，
-一月二十一亿块。`, time:"11：27", isMine:0},
+        后天四块变八块，
+        大后天一十六块，
+        十天二零四八块，
+        一月二十一亿块。`, time:"11：27", isMine:0},
     {text:`方法：
-1).培养一种繁殖周期是1天的生物体
-2).剪下蚂蚁的寻路基因植入此生物体内
-3).剪下蜜蜂的采集基因进行改造
-4).在采集基因上镶嵌3.66毫克黄金（价值1元，金价273/克）
-5).把采集基因植入此生物体内
-6).把此生物体投放到非洲金矿
-7).在31天后把蚁后投放到金矿上
-8).在蚁后的吸引下这些生物体聚集到一起，数一数，有21.47亿个
-9).关键时刻到了，一把火（3000度以上）烧死这么多的生物体
-10).等冷却凝固后，地上一堆黄色金属，称重约7.866吨，价值估算21.47亿元
-如此目标实现！`, time:"11：27", isMine:0},
+        1).培养一种繁殖周期是1天的生物体
+        2).剪下蚂蚁的寻路基因植入此生物体内
+        3).剪下蜜蜂的采集基因进行改造
+        4).在采集基因上镶嵌3.66毫克黄金（价值1元，金价273/克）
+        5).把采集基因植入此生物体内
+        6).把此生物体投放到非洲金矿
+        7).在31天后把蚁后投放到金矿上
+        8).在蚁后的吸引下这些生物体聚集到一起，数一数，有21.47亿个
+        9).关键时刻到了，一把火（3000度以上）烧死这么多的生物体
+        10).等冷却凝固后，地上一堆黄色金属，称重约7.866吨，价值估算21.47亿元
+        如此目标实现！`, time:"11：27", isMine:0},
 
     {text:`二狗子，你这个项目我很有兴趣，你先去市场调研一下，出个详细的策划案出来，把步骤和细节都罗列出来，最好到非洲金矿实地考察一下。`, time:"11：30", isMine:1},
     {text:`另外PPT也是必不可少的，一定要做的美观一点，你上次那个「母猪如何择优配种」项目就是栽在PPT上，做的像狗屎一样，这次可不能再像上次那样瞎搞了。`, time:"11：30", isMine:1},
@@ -69,20 +69,24 @@ var tempData = {
     ],
 }
 
+function setHref(outer, href) {
+    for (let x in href) {
+        var data = href[x];
+        var a = Elem.creat('a', outer, 'button-bot');
+        a.innerHTML = data.text;
+        a.href = data.href;
+        if (config.name == data.name) 
+            a.setAttribute('btype', 'live');
+        else
+            a.setAttribute('btype', 'dead');
+    }
+}
+
 
 function setOuterTop() {
     var outerTop = Elem.get('outer-top');
     if (items.length == 1) {
-        for (let x in config.hrefTop) {
-            var data = config.hrefTop[x];
-            var a = Elem.creat('a', outerTop, 'button-bot');
-            a.innerHTML = data.text;
-            a.href = data.href;
-            if (config.name == data.name) 
-                a.setAttribute('btype', 'live');
-            else
-                a.setAttribute('btype', 'dead');
-        }
+        setHref(outerTop, config.hrefTop);
         return;
     }
     for (let x in items) {
@@ -107,26 +111,17 @@ function setOuterCenter() {
 
 function setOuterBot() {
     var outerBot = Elem.get('outer-bot');
-    for (let x in config.hrefBot) {
-        var data = config.hrefBot[x];
-        var a = Elem.creat('a', outerBot, 'button-bot');
-        a.innerHTML = data.text;
-        a.href = data.href;
-        if (config.name == data.name) 
-            a.setAttribute('btype', 'live');
-        else
-            a.setAttribute('btype', 'dead');
-    }
+    setHref(outerBot, config.hrefBot);
 }
 
 //显示内页
 function setInner(innerIdx) {
     var page = Storage.get('page');
-    var idx = config.isInto ? config.innerIdx : innerIdx || 0;
+    var idx = config.sett.isInto ? config.innerIdx : innerIdx || 0;
     var outerTop = Elem.get('outer-top').children;
     var outerCenter = Elem.get('outer-center').children;
-    var isText = config.colorType == 'text';
-    var isPage = config.colorType == 'page';
+    var isText = config.sett.colorType == 'text';
+    var isPage = config.sett.colorType == 'page';
     for (var i = 0; i < outerTop.length; i++) {
         var childTop = outerTop[i];
         var childCenter = outerCenter[i];
@@ -151,19 +146,19 @@ function setInner(innerIdx) {
     else
         Elem.color(document.body, getColorType(), getColorBgd());
     config.innerIdx = idx;
-    if (config.isInto || innerIdx == null || config.sett.debugType == 'close') {
-        config.isInto = false;
+    if (config.sett.isInto || innerIdx == null || config.sett.debugType == 'close') {
+        config.sett.isInto = false;
         Storage.set('config', config);
         console.log(config);
     } else if (config.sett.debugType == 'open') {
-        config.isInto = true;
+        config.sett.isInto = true;
         Storage.set('config', config);
         jsonToTable(items[idx]); 
     }
 }
 
 function setUserFlex(user, line, isNext) {
-    if (config.isRank || isNext) {
+    if (cfg.isRank || isNext) {
         var top = Elem.creat('div', user, 'user-top');
         var order = Elem.creat('div', top, 'user-order');
         var value = Elem.creat('div', top, 'user-value');
@@ -226,7 +221,7 @@ function setUserAlert(user) {
     button.innerHTML = '';
     for (let k in data.buttonIdx) {
         var _idx = data.buttonIdx[k];
-        var _data = config.buttons[_idx];
+        var _data = cfg.buttons[_idx];
         //BUTTON
         var btn = Elem.creat('div', button, 'button');
         btn.setAttribute('btype', _data.btype);
@@ -247,8 +242,8 @@ function setSearchAlert(button) {
     var block = Elem.get("search-block");
     Elem.color(box, "", getColorLight());
     block.innerHTML = "";
-    block.style.maxHeight = config.alertHeight + "px";
-    title.innerHTML = config.titleStr.replace("#0", button.innerHTML);
+    block.style.maxHeight = config.page.alertHeight + "px";
+    title.innerHTML = cfg.titleStr.replace("#0", button.innerHTML);
     for (let z in tempData.searchData) {
 
         var user = Elem.creat("div", block, "user-block", z);
@@ -275,8 +270,8 @@ function setChatAlert() {
     Elem.color(input, getColorLight(), "");
     input.placeholder = "输入内容";
     title.innerHTML = document.body.line.name;
-    box.style.maxHeight = (config.windHeight - 440) + "px";
-    block.style.maxHeight = (config.windHeight - 703) + "px";
+    box.style.maxHeight = (config.page.windHeight - 440) + "px";
+    block.style.maxHeight = (config.page.windHeight - 703) + "px";
     block.innerHTML = "";
     for (let i in tempData.chatData) {
         var data = tempData.chatData[i];
@@ -334,9 +329,9 @@ function getChatLength(value) {
 function onChatFocus() {
     var box = Elem.get("alert-box");
     var block = Elem.get("detail-block");
-    if (config.isMobile && !config.isWechat) {
-        box.style.maxHeight = (config.windHeight - 940) + "px";
-        block.style.maxHeight = (config.windHeight - 1203) + "px";
+    if (config.page.isMobile && !config.page.isWechat) {
+        box.style.maxHeight = (config.page.windHeight - 940) + "px";
+        block.style.maxHeight = (config.page.windHeight - 1203) + "px";
     }
     block.lastChild.scrollIntoView();
     var input = Elem.get("chat-textarea");

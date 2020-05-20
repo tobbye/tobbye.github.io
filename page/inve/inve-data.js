@@ -6,14 +6,14 @@ window.onload = function() {
 }
 
 var setUsers = function() {
-	if (config.modeType == 'sponer') {
+	if (config.sett.modeType == 'sponer') {
 		items = items_sponer;
-	} else if (config.modeType == 'ghost') {
+	} else if (config.sett.modeType == 'ghost') {
 		items = items_ghost;
 	}
 }
 
-var config = {
+var cfg = {
 	name: 'inve',
 	inveCount: 33,
 	laddCount: 25,

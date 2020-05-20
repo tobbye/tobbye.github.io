@@ -134,8 +134,8 @@ function setTags(content, data) {
 		edit.data = _data;
 		edit.idx = y;
 		edit.onclick = function() {
-			config.tagData = this.data;
-			config.tagIdx = this.idx;
+			cfg.tagData = this.data;
+			cfg.tagIdx = this.idx;
 			setEditAlert(this);
 		}
 	}
@@ -152,7 +152,7 @@ function setTags(content, data) {
 
 function setEditAlert(button) {
 	hideAlert();
-	var data = config.tagData;
+	var data = cfg.tagData;
 	var box = Elem.get('alert-box');
     var title = Elem.get('edit-title');
     var block = Elem.get('edit-block');
@@ -214,7 +214,7 @@ function setAlert() {
 
 function refresh() {
 	var data = items[0].list[0];
-	var idx = config.tagIdx;
+	var idx = cfg.tagIdx;
 	var tag = Elem.get('input-tag');
 	var value = Elem.get('input-value');
 	var allot = Elem.get('input-allot');

@@ -9,15 +9,14 @@ function setConfig() {
 	localData.init("init");
 }
 
-var config = {
+var cfg = {
 	name: "fund",
-	outerOffset: 230,
-	innerOffset: 770, 
-	minHeight: 700,
+
 	showType: "block",
 	radius: "30px",
 	border: [[""],["TopLeft", "TopRight"],["BottomLeft"],["BottomRight"]],
-	dict: "HIJKLMNOPQRSTUV",
+	dict: "HIJKLMNOPQRSTUV",	
+
 };
 
 var items = [

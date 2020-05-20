@@ -40,7 +40,7 @@ function initTempLine(data) {
         return lines;
     var list = Parse.mix(instance[data.instance]);
     for (let idx in list) {
-        if (idx >= config.inveCount) break;
+        if (idx >= cfg.inveCount) break;
         var str = list[idx].split('|');
         var line = {};
         line.idx = idx;
@@ -104,7 +104,7 @@ function creatInveBody(content, data, x) {
         return;
     var lines = data.lines;
     var block = Elem.creat('div', content, 'block');
-    for (var z = 0; z < config.laddCount; z++) {
+    for (var z = 0; z < cfg.laddCount; z++) {
         var line = {ladd: z+1, multi: 1}; 
         line = initLineData(line, data.dot, data.isGrab);
         lines.push(line);
@@ -229,7 +229,7 @@ function setDetailAlert(body) {
     var block = Elem.get('detail-block');
     Elem.color(box, '', getColorLight());
     title.innerHTML = data.flexStr.replace('#0',line.inver);
-    block.style.maxHeight = config.alertHeight + 'px';
+    block.style.maxHeight = config.page.alertHeight + 'px';
     block.innerHTML = '';
 
 
@@ -322,7 +322,7 @@ function setResultAlert() {
     var ladd = Elem.creat('div', block, 'line');
     ladd.innerHTML = line.inver + '的' + rollLadd + '阶' + data.packType;
     var pic = Elem.creat('img', block, 'img');
-    pic.src = config.laddSrc + rollLadd + '.png';
+    pic.src = cfg.laddSrc + rollLadd + '.png';
     var price = Elem.creat('div', block, 'line');
     price.innerHTML = '<h2>￥' +  Parse.addSplit(line.priceAllList[rollLadd - 1]);
     showLog('<h4>恭喜您获得了</h4>' + ladd.innerText);
@@ -362,8 +362,8 @@ function setAlert() {
 
 
 function showAlertButton(data) {
-    for (let idx in config.btnName) {
-        var name = config.btnName[idx];
+    for (let idx in cfg.btnName) {
+        var name = cfg.btnName[idx];
         var btn = Elem.get('btn-' + name);
         if (!btn) continue;
         Elem.display(btn, 'none');

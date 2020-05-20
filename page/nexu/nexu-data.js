@@ -4,7 +4,7 @@ window.onload = function() {
     setAgent();
 }
 
-var config = {
+var cfg = {
     name: "nexu",
     isRank: false,
     titleStr: "搜索:#0",

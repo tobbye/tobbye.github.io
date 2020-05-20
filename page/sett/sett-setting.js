@@ -16,10 +16,6 @@ function setContent(inner, x) {
 		if (data.key == 'colorType') {
 			setStyle(content, data);
 		}
-		if (data.key == 'dataIdx') {
-			var box = Elem.creat('div', content, 'text');
-			box.id = 'data-box';
-		}
 	}
 }
 
@@ -49,7 +45,6 @@ function setLine(content, data) {
 		option.innerHTML = option.optText;
 		option.onclick = function() {
 			var optName = this.optName;
-			config.sett[this.key] = optName;
 		    Storage.set('config', config);
 			var childs = this.parentNode.children;
 			for (var i=0; i<childs.length; i++) {
@@ -59,20 +54,28 @@ function setLine(content, data) {
 		            childs[i].setAttribute('btype', 'dead');
 		        }				
 			}
-			optName = optName.replace('default', 'values');
 			var value = Storage.get(optName);
+			if (this.key == 'hostType') {
+				config.sett.isOnline = optName != 'github';
+				var host = config.constant.host[optName];
+				if (config.sett.hostType != optName) {
+					config.action.host = host;
+					config.sett.hostType = this.optName;
+					showLog('<h4>连接到' + this.optText + '</h4>' + host);
+					setTimeout(function() {
+						window.location.href = host + "/page/sett/sett.html";
+					}, 500);
+				}
+			}
 			if (this.key == 'colorType') {
 				// togStyle(this);
 			}
-			if (this.key == 'initType')
-				value = localData.init(optName);
-			if (Elem.get('data-box'))
-				Elem.get('data-box').innerHTML = JSON.stringify(value);
 			if (this.key == 'debugType' && this.optName == 'test') {
 				config.sett.debugType = 'close';
 		        Storage.set('config', config);
 		        jsonToTable(items[0]); 
 			}
+			config.sett[this.key] = optName;
 		}
 	}
 	for (var i=0; i < select.children.length; i++) {
@@ -86,31 +89,29 @@ function setLine(content, data) {
 
 function setStyle(content, data) {
 	var table = Elem.creat('table', content, 'table', 'style');
-
-	for (var x=0; x<config.typeIdx.length; x++) {
+	for (var x=0; x<cfg.typeIdx.length; x++) {
 		var	tr = Elem.creat('tr', table, 'row', x);
-		for (var y=0; y<config.styleName.length; y++) {
-			var typeIdx = config.typeIdx[x];
-			var typeText = config.typeText[x];
-			var styleName = config.styleName[y];
-			var styleText = config.styleText[y];
+		for (var y=0; y<cfg.styleName.length; y++) {
+			var typeIdx = cfg.typeIdx[x];
+			var typeText = cfg.typeText[x];
+			var styleName = cfg.styleName[y];
+			var styleText = cfg.styleText[y];
 			var td = Elem.creat('td', tr, 'col');
 			var color = {
 				font: colors[typeIdx][styleName],
 				light: colors[typeIdx].light,
 				bgd: colors[typeIdx].bgd,
-				text: styleText.replace('色', typeText),
-				type: colors[typeIdx].standard,
 				style: styleName,
+				type: colors[typeIdx].standard,
+				text: styleText.replace('色', typeText),
 			}
-			console.log(color);
 			td.color = color;
 			td.innerHTML = color.text;
 			Elem.color(td, '', color.font);
 			td.onclick = function() {
 				config.color = this.color;
     			Storage.set('config', config);
-    			if (config.colorType == 'text')
+    			if (config.sett.colorType == 'text')
 					Elem.color(document.body, this.color.font, '#eee');
 				else
 					Elem.color(document.body, this.color.font, this.color.bgd);
@@ -132,18 +133,18 @@ function togStyle(option) {
             font: '#333',
             light: '#ccc',
             bgd: '#eee',
-            text: '黑色',
-            type: 'black',
             style: 'standard',
+            type: 'black',
+            text: '黑色',
         };
 	} else if (option.optName == 'white') {
 		color = {
             font: '#111',
             light: '#666',
             bgd: '#999',
-            text: '白色',
-            type: 'white',
             style: 'standard',
+            type: 'white',
+            text: '白色',
         };
 	}
 	config.color = color;

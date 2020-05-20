@@ -4,12 +4,12 @@ window.onload = function() {
 	setAgent();
 }
 
-var config = {
+var cfg = {
 	name: 'sett',
 	styleName: ['dark', 'bright', 'standard'],
 	styleText: ['暗色', '亮色', '标准色'],
 	typeIdx: '0123456',
-	typeText: '黑红橙蓝紫青绿',
+	typeText: '黑红橙蓝紫青绿',	
 };
 
 var colors = [
@@ -28,20 +28,16 @@ var colors = [
 var items = [
 {title: '设置', 
 list: [
+{title: '连接', vice: '请选择一个连接', default: 0, key: 'hostType',
+optName: ['Html', 'Github', 'Local', 'Http'],
+optText: ['本地','Github', '内网','外网'],
+},
+
 {title: '色彩', vice: '选择一个色彩样式和应用方式', default: 0, key: 'colorType',
 optName: ['Text', 'Bgd', 'Page'],
 optText: ['文字', '背景','标签页'],
 },
 
-{title: '数据', vice: '选择一个数据初始化', default: 0, key: 'dataIdx',
-optName: ['Default', 'Data1', 'Data2', 'Data3'],
-optText: ['默认', '数据1', '数据2', '数据3'],
-},
-
-{title: '初始化', vice: '获取，写入或者清空数据', default: 0, key: 'initType',
-optName: ['Get', 'Set', 'Clear'],
-optText: ['获取', '写入', '清空'],
-},
 
 {title: '调试', vice: '是否开启调试功能', default: 0, key: 'debugType',
 optName: ['Close', 'Test', 'Open'],

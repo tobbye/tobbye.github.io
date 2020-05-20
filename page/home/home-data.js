@@ -5,7 +5,7 @@ window.onload = function() {
 }
 
 
-var config = {
+var cfg = {
 	name: "home",
 };
 

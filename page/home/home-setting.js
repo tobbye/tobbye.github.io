@@ -11,7 +11,7 @@ function setContent(inner, x) {
         var content = Elem.creat('div', inner, 'content', y);
         var data = list[y];
         setTitle(content, data);
-		if (config.modeType == 'ghost' && data.isDepot)
+		if (config.sett.modeType == 'ghost' && data.isDepot)
 			Depot(content, data);
 
     }
