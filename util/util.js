@@ -481,13 +481,6 @@ var setAction = function(act, idx) {
 
 //获取浏览器是否是移动端
 var getAgent = function() {
-    addScript('http://pv.sohu.com/cityjson?ie=utf-8');
-    setTimeout(function() {
-        config.agent = {
-            ip: returnCitySN["cip"],
-            city: returnCitySN["cname"],
-        };
-    },500);
     config.cfg = cfg;
     config.name = cfg.name;
 
@@ -529,6 +522,7 @@ var getHostType = function(host) {
     for (let key in config.constant.host) {
         if (config.constant.host[key] == host) {
             config.sett.hostType = key;
+            console.log(key);
             return;
         }
     }

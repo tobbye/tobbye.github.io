@@ -44,55 +44,60 @@ function setLine(content, data) {
 		option.optText = data.optText[z];
 		option.innerHTML = option.optText;
 		option.onclick = function() {
-			var optName = this.optName;
-		    Storage.set('config', config);
-			var childs = this.parentNode.children;
-			for (var i=0; i<childs.length; i++) {
-				if (this.innerHTML == childs[i].innerHTML)  {
-		            childs[i].setAttribute('btype', 'live');
-		        } else {
-		            childs[i].setAttribute('btype', 'dead');
-		        }				
-			}
-			var value = Storage.get(optName);
-			if (this.key == 'hostType') {
-				var host = config.constant.host[optName];
-				config.sett.isOnline = !(optName == 'html' || optName == 'github');
-				config.sett.isLocal = optName == 'html' || optName == 'local';
-					if (config.sett.isLocal && config.sett.isMobile) {
-						showLog('<h4>无法连接到' + this.optText + '!</h4>' + host);
-						return;
-					} else {
-						showLog('<h4>连接到' + this.optText + '成功!</h4>' + host);
+			setOption(this, true);
+		}
+	}
+	for (var i=0; i < select.children.length; i++) {
+		var child = select.children[i];
+		if (child.optName == config.sett[child.key])
+			setOption(child, false);
+	}
+	// var child = select.children[data.default];
+	// if (child) child.onclick();
+}
 
-					}
-				if (config.sett.hostType != optName) {
+function setOption(opt, isInto) {
+	var optName = opt.optName;
+    Storage.set('config', config);
+	var childs = opt.parentNode.children;
+	for (var i=0; i<childs.length; i++) {
+		if (opt.innerHTML == childs[i].innerHTML)  {
+            childs[i].setAttribute('btype', 'live');
+        } else {
+            childs[i].setAttribute('btype', 'dead');
+        }				
+	}
+	var value = Storage.get(optName);
+	if (opt.key == 'hostType') {
+		var host = config.constant.host[optName];
+		config.sett.isOnline = !(optName == 'html' || optName == 'github');
+		config.sett.isHtmlAll = optName == 'html';
+		config.sett.isLocalMob = optName == 'local' && config.sett.isMobile;
+
+			if (config.sett.isHtmlAll || config.sett.isLocalMob) {
+				showLog('<h4>无法连接到' + opt.optText + '!</h4>' + host);
+			} else if (isInto && config.sett.hostType != optName) {
+			showLog('<h4>准备连接到' + opt.optText + '</h4>' + host);
 					config.sett.hostType = optName;
 					config.action.host = host;
 
 					setTimeout(function() {
 						window.location.href = config.action.host + "/page/sett/sett.html";
 					}, 2000);
-				}
+			} else {
+				showLog('<h4>成功连接到' + opt.optText + '!</h4>' + host);
+
 			}
-			if (this.key == 'dataType') {
-				localData.init('clear');
-			}
-			if (this.key == 'debugType' && this.optName == 'test') {
-				config.sett.debugType = 'close';
-		        Storage.set('config', config);
-		        jsonToTable(items[0]); 
-			}
-			config.sett[this.key] = optName;
-		}
 	}
-	for (var i=0; i < select.children.length; i++) {
-		var child = select.children[i];
-		if (child.optName == config.sett[child.key])
-			child.onclick();
+	if (opt.key == 'dataType') {
+		localData.init('clear');
 	}
-	// var child = select.children[data.default];
-	// if (child) child.onclick();
+	if (opt.key == 'debugType' && opt.optName == 'test') {
+		config.sett.debugType = 'close';
+        Storage.set('config', config);
+        jsonToTable(items[0]); 
+	}
+	config.sett[opt.key] = optName;
 }
 
 function setStyle(content, data) {
