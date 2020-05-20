@@ -165,24 +165,16 @@ function creatJigsaw(block, src, idx) {
     var img, tips, flex, blockOrg, blockTgt;
     var __cfg = taskCfg.jigsaw;
     __cfg.src = src;
-    if (src && src.indexOf('/') > -1) {
-        var full = src.split('=');
-        var part = full[1].split('/');
-        var x = Math.floor(Math.random()*part.length);
-        var path = full[0] + part[x] + '.jpg';
-        src = path.replace('.gif.jpg', '.jpg');
-    }
     __cfg.imgSrc = src;
     __cfg.funIdx = idx;
-    __cfg.fullPath = __cfg.imgPath + __cfg.imgSrc;
-    __cfg.fullPath = __cfg.imgSrc ? __cfg.fullPath : __cfg.imgNone;
+    __cfg.fullPath = __cfg.imgSrc ? __cfg.imgSrc : __cfg.imgNone;
     __cfg.cellTips = __cfg.cellTips.replace('#pack', task.pack);
     initCell(block, src);
 
 
     function initCell(block) {
         if (config.sett.isFun)
-            __cfg.fullPath = __cfg.fullPath + Parse.fillZero(__cfg.funIdx, 3);
+            __cfg.fullPath = __cfg.funPath + Parse.fillZero(__cfg.funIdx, 3);
         img = new Image();
         img.src = __cfg.fullPath;
 

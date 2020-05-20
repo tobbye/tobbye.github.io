@@ -41,10 +41,9 @@ function initTempLine(data) {
     var list = Parse.mix(instance[data.instance]);
     for (let idx in list) {
         if (idx >= cfg.inveCount) break;
-        var str = list[idx].split('|');
         var line = {};
         line.idx = idx;
-        line.inver = str[0];
+        line.inver = list[idx].name;
         line.group = data.group;
         line.ladder = Math.floor(20 * Math.random() * Math.random()) + 6;
         line.ladd = line.ladder - Math.floor(5 * Math.random());
@@ -52,8 +51,8 @@ function initTempLine(data) {
         line.mark = ['身份标签1', '身份标签2'];
         line.index = Math.floor((1547 + Math.random()) * 1e9);
         line.stamp = Parse.formatTime(line.index).replace(' ', '<h3>');
-        line.word = str[1];
-        line.src = str[2];
+        line.word = list[idx].word;
+        line.src = list[idx].pic[0];
         lines[idx] = line;
     }
     return lines;

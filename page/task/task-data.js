@@ -46,7 +46,7 @@ var taskCfg_ghost = {
 		logText: '<h4>点击周围格子与中心格子交换</h4>拼出魔王画像封印魔王',
 		imgNone: 'https://hanyu-word-gif.cdn.bcebos.com/b49f20fd1427711e59629c8e0eb15ce01.gif',
 		imgPath: 'https://ss1.baidu.com/6ONYsjip0QIZ8tyhnq/it/',
-		hidePath: '../../picture/mikao/',
+		funPath: '../../picture/mikao/',
         isNext: true,
         centerIdx: 4,
         cellLen: 3,
