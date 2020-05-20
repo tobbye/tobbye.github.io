@@ -21,7 +21,7 @@ var taskCfg = {
 		logText: '<h4>点击周围格子与中心格子交换</h4>拼出目标图片打开#pack',
 		imgNone: '../../picture/head/3.jpeg',
 		imgPath: '../../picture/mo/',
-		hidePath: '../../picture/mikao/',
+		funPath: '../../picture/mikao/',
         centerIdx: 4,
         cellLen: 3,
         border: 10,

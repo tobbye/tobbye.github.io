@@ -173,7 +173,7 @@ function creatJigsaw(block, src, idx) {
         src = path.replace('.gif.jpg', '.jpg');
     }
     __cfg.imgSrc = src;
-    __cfg.hideIdx = idx;
+    __cfg.funIdx = idx;
     __cfg.fullPath = __cfg.imgPath + __cfg.imgSrc;
     __cfg.fullPath = __cfg.imgSrc ? __cfg.fullPath : __cfg.imgNone;
     __cfg.cellTips = __cfg.cellTips.replace('#pack', task.pack);
@@ -181,8 +181,8 @@ function creatJigsaw(block, src, idx) {
 
 
     function initCell(block) {
-        if (config.sett.modeType == 'hide')
-            __cfg.fullPath = __cfg.hidePath + Parse.fillZero(__cfg.hideIdx, 3);
+        if (config.sett.isFun)
+            __cfg.fullPath = __cfg.fullPath + Parse.fillZero(__cfg.funIdx, 3);
         img = new Image();
         img.src = __cfg.fullPath;
 

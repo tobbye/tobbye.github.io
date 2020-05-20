@@ -369,29 +369,6 @@ localData.save = function() {
 //初始化本地数据
 localData.init = function(state) {
     var setting = Storage.get('setting') || {};
-    var dataIdx = setting.dataIdx || 'values';
-    dataIdx = dataIdx.replace('default', 'values');
-
-    if (state == 'set') {
-        values = Storage.get('values');
-        Storage.set(dataIdx, values);
-        console.log(contentText('SET', dataIdx, 'succeed!'));
-        console.log(values);
-        return values;
-    }
-
-    if (state == 'get') {
-        if (Storage.get(dataIdx)) {
-            values = Storage.get(dataIdx);
-            Storage.set('values', values);
-            console.log(contentText('GET', dataIdx, 'succeed!'));
-            console.log(values);
-        } else {
-            console.log(contentText('GET', dataIdx, 'fail!!!'));
-            return 'no data';
-        }
-        return values;
-    }
 
     if (state == 'clear') {
         Storage.clear();
@@ -399,24 +376,23 @@ localData.init = function(state) {
         for (let idx in dict)
             values[dict[idx]] = 0;
         values.h = 50000;
-        Storage.set(dataIdx, values);
         Storage.set('values', values);
-        console.log(contentText('CLEAR', dataIdx, 'succeed!'));
+        console.log(contentText('CLEAR values succeed!'));
         console.log(values);
         return values;
     }
 
     if (state == 'init') {
         values = Storage.get('values') || localData.init('clear');
-        console.log(contentText('INIT', dataIdx, 'succeed!'));
+        console.log(contentText('INIT values succeed!'));
         console.log(values);
         return values;
     }
 }
 
-var contentText = function(a, b, c) {
+var contentText = function(str) {
     var line = ' —————————— ';
-    return line + ' ' + a + ' ' + b + ' ' + c + ' ' + line; 
+    return line + ' ' + str + ' ' + line; 
 }
 
 
@@ -485,8 +461,8 @@ var getAgent = function() {
     config.name = cfg.name;
 
     var temp = Storage.get('config') || {};
-    // if (config.name == 'sett')
-    //     temp = {};
+    if (config.name == 'sett')
+        temp = {};
     if (config.name == temp.name && temp.sett.isInto)
         config.innerIdx = temp.innerIdx || 0;
     else

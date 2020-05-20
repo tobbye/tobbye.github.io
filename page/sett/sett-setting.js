@@ -50,7 +50,7 @@ function setLine(content, data) {
 	for (var i=0; i < select.children.length; i++) {
 		var child = select.children[i];
 		if (child.optName == config.sett[child.key])
-			setOptDefault(child);
+			setOption(child);
 	}
 	// var child = select.children[data.default];
 	// if (child) child.onclick();
@@ -87,20 +87,22 @@ function setOption(opt) {
 		config.sett.isHtmlAll = optName == 'html';
 		config.sett.isLocalMob = optName == 'local' && config.sett.isMobile;
 
-			if (config.sett.isHtmlAll || config.sett.isLocalMob) {
-				showLog('<h4>无法连接到' + opt.optText + '!</h4>' + host);
-			} else if (config.sett.hostType != optName) {
-				showLog('<h4>准备连接到' + opt.optText + '</h4>' + host);
-				config.sett.hostType = optName;
-				config.action.host = host;
+		if (config.sett.isHtmlAll || config.sett.isLocalMob) {
+			showLog('<h4>无法连接到' + opt.optText + '!</h4>' + host);
+		} else if (config.sett.hostType != optName) {
+			showLog('<h4>准备连接到' + opt.optText + '</h4>' + host);
+			config.sett.hostType = optName;
+			config.action.host = host;
 
-				setTimeout(function() {
-					window.location.href = config.action.host + "/page/sett/sett.html";
-				}, 2000);
-			} else {
-				showLog('<h4>成功连接到' + opt.optText + '!</h4>' + host);
-
-			}
+			setTimeout(function() {
+				window.location.href = config.action.host + "/page/sett/sett.html";
+			}, 2000);
+		} else {
+			showLog('<h4>成功连接到' + opt.optText + '!</h4>' + host);
+			config.sett[opt.key] = optName;
+		}
+	} else {
+		config.sett[opt.key] = optName;
 	}
 	if (opt.key == 'dataType') {
 		localData.init('clear');
@@ -110,7 +112,6 @@ function setOption(opt) {
         Storage.set('config', config);
         jsonToTable(items[0]); 
 	}
-	config.sett[opt.key] = optName;
     Storage.set('config', config);
 }
 
