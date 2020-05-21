@@ -145,12 +145,13 @@ function setInner(innerIdx) {
         Elem.color(document.body, getColorType(), '');
     else
         Elem.color(document.body, getColorType(), getColorBgd());
+    config.sett.isInto = config.innerIdx != innerIdx;
     config.innerIdx = idx;
     if (config.sett.isInto || innerIdx == null || config.sett.debugType == 'close') {
         config.sett.isInto = false;
         Storage.set('config', config);
         console.log(config);
-    } else if (config.sett.debugType == 'open') {
+    } else if (config.sett.debugType != 'close') {
         config.sett.isInto = true;
         Storage.set('config', config);
         jsonToTable(items[idx]); 

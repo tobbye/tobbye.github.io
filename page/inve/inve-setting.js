@@ -264,9 +264,9 @@ function setPackAlert() {
     title.innerHTML = document.body.data.packTitle;
     block.innerHTML = '';
     var data = document.body.data;
-    task.idx = 0;
-    task.pack = data.packType;
-    task.types = data.taskType;
+    taskData.idx = 0;
+    taskData.pack = data.packType;
+    taskData.types = data.taskType;
     initTask();
     for (let idx in data.taskType) {
         var flex = Elem.creat('div', block, 'user-flex');
@@ -285,7 +285,7 @@ function setTaskAlert() {
     hideAlert('pack-bg');
     var title = Elem.get('task-title');
     var block = Elem.get('task-block');
-    title.innerHTML = task.name;
+    title.innerHTML = taskData.name;
     block.innerHTML = '';
     creatTask(block);
     checkAction('redo');
@@ -296,7 +296,10 @@ function setTaskAlert() {
 function creatTask(block) {
     var data = document.body.data;
     var line = document.body.line;
-    var taskType = data.taskType[task.idx];
+    var taskType = data.taskType[taskData.idx];
+    if (taskType == 'snake') {
+        creatSnake(block, line.word);
+    }
     if (taskType == 'puzzle') {
         creatPuzzle(block, line.word);
     }

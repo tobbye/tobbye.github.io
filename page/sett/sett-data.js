@@ -29,8 +29,8 @@ var items = [
 {title: '设置', 
 list: [
 {title: '连接', vice: '请选择一个连接', default: 0, key: 'hostType',
-optName: ['Html', 'Github', 'Local', 'Http'],
-optText: ['本地','Github', '内网','外网'],
+optName: ['Github', 'Local', 'Http'],
+optText: ['Github', '内网','外网'],
 },
 
 {title: '色彩', vice: '选择一个色彩样式和应用方式', default: 0, key: 'colorType',
@@ -47,11 +47,6 @@ optText: ['关闭', '试一试', '开启'],
 {title: '模式', vice: '请选择一个模式', default: 0, key: 'modeType',
 optName: ['Digger', 'Ghost'],
 optText: ['众鑫淘金', '凡人修仙'],
-},
-
-{title: '数据', vice: '清空所有数据', default: 0, key: 'dataType',
-optName: ['Clear'],
-optText: ['清空'],
 },
 ]},
 ];

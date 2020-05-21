@@ -1,34 +1,4 @@
-const NAME = 'home';
-const INNERIDX = 0;
-const AGENT = {};
-const ACTION = {
-    ref: '#host/#uid/#act/#idx',
-    host:'http://tobbye.github.io',
-    page:'/page/home/home.html',
-    router:'/#uid/#act/#idx',
-};
 
-const SETT = {
-    hostType: 'github',   
-    modeType: 'digger',
-    colorType: 'text',
-    debugType: 'close', 
-}
-
-const FADE = {
-    isLog: true,
-    timeIn: 1000,
-    timeOn: 3000,
-    timeOut: 1000,
-    timeTog: 1000,
-}
-
-const HOST = {
-    html: 'file:///C:/Users/ZHANGJIALIANG/Documents/GitHub/tobbye.github.io',
-    github: 'http://tobbye.github.io',
-    local: 'http://localhost:8888',
-    http: 'http://tobbye.top:80',
-}
 
 var config = {
     name: 'home',
@@ -48,11 +18,10 @@ var config = {
     clock: {},
     constant: {
         sett: {
-            hostType: 'html',   
+            hostType: 'github',   
             modeType: 'digger',
             colorType: 'text',
             debugType: 'close', 
-            dataType: 'clear', 
         },
         fade: {
             isLog: true,

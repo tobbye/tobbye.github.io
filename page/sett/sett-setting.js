@@ -72,6 +72,7 @@ function setOptDefault(opt) {
 }
 
 function setOption(opt) {
+	var isSave = true;
 	var childs = opt.parentNode.children;
 	for (var i=0; i<childs.length; i++) {
 		if (opt.innerHTML == childs[i].innerHTML)  {
@@ -88,30 +89,26 @@ function setOption(opt) {
 		config.sett.isLocalMob = optName == 'local' && config.sett.isMobile;
 
 		if (config.sett.isHtmlAll || config.sett.isLocalMob) {
+			isSave = false;
 			showLog('<h4>无法连接到' + opt.optText + '!</h4>' + host);
 		} else if (config.sett.hostType != optName) {
 			showLog('<h4>准备连接到' + opt.optText + '</h4>' + host);
-			config.sett.hostType = optName;
 			config.action.host = host;
-
+			isSave = false;
 			setTimeout(function() {
 				window.location.href = config.action.host + "/page/sett/sett.html";
 			}, 2000);
 		} else {
 			showLog('<h4>成功连接到' + opt.optText + '!</h4>' + host);
-			config.sett[opt.key] = optName;
 		}
-	} else {
-		config.sett[opt.key] = optName;
 	}
-	if (opt.key == 'dataType') {
-		localData.init('clear');
-	}
+
 	if (opt.key == 'debugType' && opt.optName == 'test') {
-		config.sett.debugType = 'close';
         Storage.set('config', config);
         jsonToTable(items[0]); 
 	}
+	if (isSave)
+		config.sett[opt.key] = optName;
     Storage.set('config', config);
 }
 

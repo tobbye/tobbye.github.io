@@ -1,11 +1,12 @@
-var task = {
+var taskData = {
 	idx: 0,
 	isNext: false,
 	isStart: false,
 
 };
 
-var taskCfg = {
+var taskConfig = {
+	logFail:'<h4>任务#idx失败</h4>请打开#pack',
 	logNext:'<h4>任务#idx完成</h4>请进行下一任务',
 	logOpen:'<h4>任务全部完成</h4>您可以打开#pack啦!',
 	puzzle: {
@@ -28,9 +29,18 @@ var taskCfg = {
         hpw: 1,
         cells: [],
 	},	
+	snake: {
+		name:'任务#idx-贪吃蛇',
+		cellText: '口令', 
+		cellTips:'正确输入口令打开#pack',
+		logText: '<h4>点击按钮控制方向</h4>吃掉文字输入口令',
+		cellLen: 10,
+		cellSize: 20,
+	},
 }
 
-var taskCfg_ghost = {
+var taskConfig_ghost = {
+	logFail:'<h4>任务#0失败</h4>请打开#0',
 	logNext:'<h4>任务#0完成</h4>请进行下一任务',
 	logOpen:'<h4>任务全部完成</h4>请打开#0',
 	puzzle: {

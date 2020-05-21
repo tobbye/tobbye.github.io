@@ -68,7 +68,7 @@ group: '淘金者',
 instance: 'grab',
 packTitle: '发现一个福袋', 
 taskTitle:'任务#0-#1', 
-taskType:['puzzle', 'jigsaw'], 
+taskType:['snake', 'puzzle', 'jigsaw'], 
 resultTitle:'恭喜您获得了', 
 packType:'福袋', 
 
