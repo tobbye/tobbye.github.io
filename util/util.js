@@ -285,10 +285,10 @@ Elem.attr = function(elem, key, value) {
 
 //设置元素高度自适应
 Elem.autosize = function(elem, offset) {
-    var windWidth = config.page.windWidth;
-    var windHeight = config.page.windHeight;
+    var windWidth = config.this.windWidth;
+    var windHeight = config.this.windHeight;
     var box = Elem.get('alert-box');
-    var agent = config.page.isMobile ? 'mobile' : 'computer';
+    var agent = config.this.isMobile ? 'mobile' : 'computer';
     Elem.attr(box, 'agent', agent);
     elem = elem || Elem.get('outer-center');
     elem.style.height = windHeight - offset + 'px';
@@ -416,33 +416,47 @@ var addScript = function(src) {
     document.head.appendChild(script);
 }
 
-var setPage = function() {
+var Page = function() {
     var page = setDefult([], 'page');
+    for (let x in page) {
+        this[x] = page[x];
+    }
     var sett = config.sett;
     sett.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
     sett.isWechat = (/micromessenger|MicroMessenger/i.test(navigator.userAgent));
-    page.zoom = sett.isMobile ? page.zoomMobile : page.zoomComput;
-    page.zoom = sett.isWechat ? page.zoomWechat : page.zoom;
-    page.windWidth = Math.floor(window.innerWidth / page.zoom);
-    page.windHeight = Math.floor(window.innerHeight / page.zoom);
-    page.alertHeight = page.windHeight - page.alertOffset;
-    page.outerHeight = page.windHeight - page.outerOffset;
-    page.innerHeight = page.windHeight - page.innerOffset;
-    page.flowHeight = Math.max(page.innerHeight, page.minHeight);
-    sett.isWidth = page.windWidth > page.windHeight;
-    sett.isFlow = page.innerHeight > page.minHeight;
-    document.body.style.zoom = page.zoom;
+    this.zoom = sett.isMobile ? this.zoomMobile : this.zoomComput;
+    this.zoom = sett.isWechat ? this.zoomWechat : this.zoom;
+    this.windWidth = Math.floor(window.innerWidth / this.zoom);
+    this.windHeight = Math.floor(window.innerHeight / this.zoom);
+    this.alertHeight = this.windHeight - this.alertOffset;
+    this.outerHeight = this.windHeight - this.outerOffset;
+    this.innerHeight = this.windHeight - this.innerOffset;
+    this.flowHeight = Math.max(this.innerHeight, this.minHeight);
+    this.alertMargin = this.windWidth - this.alertMaxWidth;
+    this.alertMargin = Math.max(this.alertMargin / 2, this.alertMinMargin);
+    this.alertWidth = this.windWidth - this.alertMargin * 2 -36;
+    sett.isWidth = this.windWidth > this.windHeight;
+    sett.isFlow = this.innerHeight > this.minHeight;
     var box = Elem.get('alert-box');
-    var agent = sett.isMobile ? 'mobile' : 'computer';
-    Elem.attr(box, 'agent', agent);
+    if (box) {
+        box.style.left = this.alertMargin + 'px';
+        box.style.right = this.alertMargin + 'px';
+    }
+
+    document.body.style.zoom = this.zoom;
     var center = Elem.get('outer-center');
-    center.style.height = page.outerHeight + 'px';
-    center.style.maxHeight = page.outerHeight + 'px';
-    config.page = page;
+    center.style.height = this.outerHeight + 'px';
+    center.style.maxHeight = this.outerHeight + 'px';
 }
 
 window.onresize = function() {
-    setPage();
+    if (config.sett.isAlert) {
+        Style.display('alert', 'none');
+        config.page = new Page();
+        Style.display('alert', 'block'); 
+    } else {
+        config.page = new Page();
+    }
 }
 
 var setAction = function(act, idx) {
@@ -469,7 +483,7 @@ var getAgent = function() {
         config.innerIdx = 0;
     setDefult(temp, 'sett');
     setDefult(temp, 'fade');
-    setDefult(temp, 'page');
+    setDefult(temp, 'this');
     setDefult(temp, 'color');
     setDefult(temp, 'clock');
     getHost();
@@ -490,7 +504,7 @@ var getHost = function() {
     var pos = path.indexOf(page);
     var host = path.substring(0, pos);
     action.host = host;
-    action.page = page;
+    action.this = page;
     getHostType(host);
 }
 
@@ -510,11 +524,6 @@ var setAgent = function() {
     setClick('btn-quit', hideAlert);
     setClick('btn-abon', hideAlert);
     setClick('btn-close', hideAlert);
-    setWhite('user-top');
-    setWhite('user-flex');
-    setWhite('user-line');
-    setWhite('user-body');
-    setWhite('user-block');
     window.onresize();
 }
 
@@ -527,13 +536,6 @@ var setClick = function(name, func) {
     }
 }
 
-var setWhite = function(cls) {
-    return;
-    var childs = document.getElementsByClassName(cls);
-    for (var i=0; i<childs.length; i++) {
-        Elem.color(childs[i], '', getColorBgd());
-    }
-}
 
 var setFullScreen = function() {
     if (config.isMobile) {
@@ -572,7 +574,7 @@ var getFadeElem = function(elem) {
             elem.id = 'log';
             elem.setAttribute('fade', 'over');
         }
-        if (config.sett.colorType == 'page')
+        if (config.sett.colorType == 'this')
             Elem.color(elem, getColorBgd(), getColorType());
         else
             Elem.color(elem, 'white', 'dodgerblue');
@@ -643,6 +645,7 @@ var setFadeOver = function() {
 //显示弹窗
 var showAlert = function(name) {
     Style.display('alert', 'block');
+    config.sett.isAlert = true;
     if (name) {
         Style.display(name, 'block');
     }
@@ -652,6 +655,7 @@ var showAlert = function(name) {
 //隐藏弹窗
 var hideAlert = function(name) {
     Style.display('alert', 'none');
+    config.sett.isAlert = false;
     if (name) {
         Style.display(name, 'none');
         return;

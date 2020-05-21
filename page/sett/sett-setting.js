@@ -91,15 +91,15 @@ function setOption(opt) {
 		if (config.sett.isHtmlAll || config.sett.isLocalMob) {
 			isSave = false;
 			showLog('<h4>无法连接到' + opt.optText + '!</h4>' + host);
-		} else if (config.sett.hostType != optName) {
+		} else if (config.sett.hostType == optName) {
+			showLog('<h4>成功连接到' + opt.optText + '!</h4>' + host);
+		} else {
 			showLog('<h4>准备连接到' + opt.optText + '</h4>' + host);
 			config.action.host = host;
 			isSave = false;
 			setTimeout(function() {
 				window.location.href = config.action.host + "/page/sett/sett.html";
 			}, 2000);
-		} else {
-			showLog('<h4>成功连接到' + opt.optText + '!</h4>' + host);
 		}
 	}
 

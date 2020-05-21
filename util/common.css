@@ -361,8 +361,8 @@ div[fade=over] {
     right: 20px;
 }
 #alert-box[agent=computer] {
-    left: 36%;
-    right: 36%;
+    left: 0;
+    right: 0;
 }
 
 .alert-flex {

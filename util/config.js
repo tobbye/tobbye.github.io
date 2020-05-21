@@ -37,6 +37,8 @@ var config = {
             http: 'http://tobbye.top',
         },
         page: {
+            alertMaxWidth: 1000,
+            alertMinMargin: 20,
             alertOffset: 716,
             outerOffset: 220,
             innerOffset: 770, 
