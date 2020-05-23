@@ -9,10 +9,10 @@ var cfg = {
     isRank: false,
     titleStr: "搜索:#0",
     buttons:[
-        { idx:0, text: '发消息', btype: 'permit'},
-        { idx:1, text: '添加关注', btype: 'permit'},
-        { idx:2, text: '取消关注', btype: 'danger'},
-        { idx:3, text: '查看主页', btype: 'defult'},
+        { idx:0, text: '发消息', state: 'permit'},
+        { idx:1, text: '添加关注', state: 'permit'},
+        { idx:2, text: '取消关注', state: 'danger'},
+        { idx:3, text: '查看主页', state: 'defult'},
     ],
 
 };
@@ -23,7 +23,7 @@ var cfg = {
 var items = [
 {title: '消息', 
 list: [
-{title: '', vice:'', btype: 'warn', buttonIdx: [0,3],
+{title: '', vice:'', state: 'warn', buttonIdx: [0,3],
 lines: [
 {uid: 'd310003', name: '青青', ladd: 13, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['阶层展示1', '阶层展示2']},
 {uid: 'd310002', name: '倩倩', ladd: 7, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['称号标签1', '称号标签2']},

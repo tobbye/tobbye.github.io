@@ -69,16 +69,16 @@ var tempData = {
     ],
 }
 
-function setHref(outer, href) {
+function setLink(outer, href) {
     for (let x in href) {
         var data = href[x];
-        var a = Elem.creat('a', outer, 'button-bot');
-        a.innerHTML = data.text;
-        a.href = data.href;
+        var link = Elem.creat('a', outer, 'button-bot');
+        link.innerHTML = data.text;
+        link.href = data.href;
         if (config.name == data.name) 
-            a.setAttribute('btype', 'live');
+            link.setAttribute('state', 'live');
         else
-            a.setAttribute('btype', 'dead');
+            link.setAttribute('state', 'dead');
     }
 }
 
@@ -86,7 +86,7 @@ function setHref(outer, href) {
 function setOuterTop() {
     var outerTop = Elem.get('outer-top');
     if (items.length == 1) {
-        setHref(outerTop, config.hrefTop);
+        setLink(outerTop, config.hrefTop);
         return;
     }
     for (let x in items) {
@@ -111,7 +111,7 @@ function setOuterCenter() {
 
 function setOuterBot() {
     var outerBot = Elem.get('outer-bot');
-    setHref(outerBot, config.hrefBot);
+    setLink(outerBot, config.hrefBot);
 }
 
 //显示内页
@@ -131,13 +131,13 @@ function setInner(innerIdx) {
             if (isPage)
                 Elem.color(childTop, getColorBgd(), getColorType());
             else
-                Elem.togType(childTop, 'live');
+                Elem.attr(childTop, 'state', 'live');
             Elem.display(childCenter, 'block');
         } else {
             if (isPage)
                 Elem.color(childTop, getColorType(), getColorBgd());
             else
-                Elem.togType(childTop, 'dead');
+                Elem.attr(childTop, 'state', 'dead');
             Elem.display(childCenter, 'none');
         }
     }
@@ -225,7 +225,7 @@ function setUserAlert(user) {
         var _data = cfg.buttons[_idx];
         //BUTTON
         var btn = Elem.creat('div', button, 'button');
-        btn.setAttribute('btype', _data.btype);
+        btn.setAttribute('state', _data.state);
         btn.innerHTML = _data.text;
         btn.data = _data;
         btn.user = user;

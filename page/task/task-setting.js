@@ -1,7 +1,17 @@
+
+function preset(that) {
+    var taskCfg = taskConfig[config.sett.taskType];
+    for (let x in taskCfg) {
+        that[x] = JSON.parse(JSON.stringify(taskCfg[x]));
+    }
+    config.taskCfg = that;
+    console.log(that);
+}
+
 function initTask() {
 
     taskData.type = taskData.types[taskData.idx];
-    taskData.name = taskConfig[taskData.type].name.replace('#idx', taskData.idx+1);
+    taskData.title = taskConfig[taskData.type].title.replace('#idx', taskData.idx+1);
     var taskCfg = taskConfig[taskData.type];
 
     taskData.logText = taskCfg.logText.replace('#pack', taskData.pack);
@@ -15,12 +25,15 @@ function initTask() {
 function checkState(state) {
     taskData.state = state;
     taskData.idx++;
-    taskData.logFail = taskConfig.logFail.replace('#idx', taskData.idx).replace('#pack', taskData.pack);;
+    taskData.logFail = taskConfig.logFail.replace('#idx', taskData.idx);
+    taskData.logStop = taskConfig.logFail.replace('#idx', taskData.idx).replace('#pack', taskData.pack);
     taskData.logNext = taskConfig.logNext.replace('#idx', taskData.idx);
     taskData.logOpen = taskConfig.logOpen.replace('#pack', taskData.pack);
     if (state == 'stop') {
-        if (taskData.idx > 0)
+        if (taskData.idx > 1)
             checkAction('stop');
+        else
+            checkAction('fail');
     } else {
         if (taskData.idx < taskData.types.length) {
             initTask();  
@@ -55,51 +68,62 @@ function checkAction(action) {
         Style.display('btn-abon', 'inline');
     }
     if (action == 'stop') {
-        showLog(taskData.logFail);
+        showLog(taskData.logStop);
         Style.display('btn-open', 'inline');
         Style.display('btn-next', 'none');
         Style.display('btn-redo', 'none');
         Style.display('btn-abon', 'none');
     }
+    if (action == 'fail') {
+        showLog(taskData.logFail);
+        Style.display('btn-open', 'none');
+        Style.display('btn-next', 'none');
+        Style.display('btn-redo', 'none');
+        Style.display('btn-abon', 'inline');
+    }
     console.log(taskData);
 }
 
+
 function creatSnake(block, word) {
+    var tips = Elem.creat('div', block, 'cell-tips');
+    tips.innerHTML = word;
+    var body = Elem.creat('div', block, 'cell-tips');
+    tips.innerHTML = word;
     var snake = new Snake();
-    snake.init(block, word);
+    snake.init(body, word);
     config.taskCfg = snake;
     console.log(snake);
 }
 
 function Snake() {
+    preset(this);
     var that = this;
     var canvas, ctx;
 
     this.init = function(block, word) {
-        this.direction = 1;  
-        this.state = 'going';
-        this.body = [41, 40];  
-        this.food = 43;   
-        this.len = 10;
-        this.size = Math.floor(config.page.alertWidth / this.len);
+        this.size = Math.floor(config.page.alertWidth / this.width);
         this.word = word.replace(/\//g,'');
-        var tips = Elem.creat('div', block, 'cell-tips');
-        tips.innerHTML = this.word;
+        this.nextList = [-1, -this.width, 1, this.width];
+        this.arrowList = ['left', 'up', 'right', 'down'];
+        this.initCanvas(block);
+        this.draw(this.food, "darkred", this.body.length);
+        this.refresh(true);
+    };
+
+    this.initCanvas = function(block) {
         canvas = Elem.creat('canvas', block);
-        canvas.width = this.len*this.size;
-        canvas.height = this.len*this.size;
+        canvas.width = this.width*this.size;
+        canvas.height = this.height*this.size;
         ctx = canvas.getContext('2d');
-        ctx.fillStyle = 'white';
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.font = this.size - 20 + "px bold sans-serif";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        this.refresh();
     };
 
     this.draw = function(pos, color, idx) {
-        var x = pos % this.len *this.size + 1;
-        var y = ~~(pos / this.len) * this.size + 1;
+        var x = pos % this.width *this.size + 1;
+        var y = ~~(pos / this.width) * this.size + 1;
         ctx.fillStyle = color;
         ctx.fillRect(x, y, this.size-2, this.size-2);
         if (idx != null) {
@@ -108,20 +132,31 @@ function Snake() {
         }
     };
     
-    this.refresh = function() {
-        this.body.unshift(this.next = this.body[0] + this.direction); 
-        if (this.body.indexOf(this.next, 1) > 0 ||this.next< 0 ||this.next> this.len*this.len-1 || this.direction == 1 && this.next % this.len == 0 || this.direction == -1 && this.next % this.len == this.len-1) {
-            this.state = 'fail';
-            checkState('stop');
-            return;
+    this.refresh = function(loop) {
+        if (config.touch.direction) {
+            this.arrow = config.touch.direction;
+            this.arrowIdx = this.arrowList.indexOf(this.arrow);
+            if (this.arrowIdx >= 0)
+                this.next = this.nextList[this.arrowIdx]; 
+            if (this.body[1] - this.body[0] != this.next)
+                this.direction =  this.next; 
+        }
+
+        this.body.unshift(this.next = this.body[0] + this.direction);
+        if (this.body.indexOf(this.next, 1) > 0) {
+            return checkState('stop');
+        }
+        if (this.next < 0 || this.next> this.width*this.height-1 || this.direction == 1 && this.next % this.width == 0 || this.direction == -1 && this.next % this.width == this.width-1) {
+            return checkState('stop');
         }
         if (this.next == this.food) {
-            this.state = this.body.length == this.word.length ? 'succeed':'going';
-            if (this.state == 'going') {
-            while (this.body.indexOf(this.food = ~~(Math.random() * this.len*this.len)) > 0);
-                this.draw(this.food, "darkred", this.body.length);
+            if (this.body.length == this.word.length) {
+                this.state = 'succeed';
+                return checkState('next');
+            } else {
+                while (this.body.indexOf(this.food = ~~(Math.random() * this.width*this.height)) > 0);
+                    this.draw(this.food, "darkred", this.body.length);
             }
-
         } else {    
             this.draw(this.body.pop(), "white");
         }
@@ -130,15 +165,24 @@ function Snake() {
             this.draw(this.body[x], "darkgreen", this.body.length-1-x);
         }
 
-        if (this.state == 'going')
-            setTimeout(function() {that.refresh()}, 300);  
-        else
-            checkState('next');
+        if (this.state == 'going' && loop)
+            setTimeout(function() {that.refresh(true)}, 200);  
+    };
 
+    this.control = function(evt) {
+        if (evt.keyCode < 0 || evt.keyCode - 37 > 3) return;
+        this.next = this.nextList[evt.keyCode - 37];
+        this.arrow = this.arrowList[evt.keyCode - 37];
+        if (this.body[1] - this.body[0] != this.next)
+            this.direction =  this.next;
+    };
+
+    this.alert = function(msg) {
+        setTimeout(function() {alert(msg)}, 200);
     };
 
     document.onkeydown = function(evt) { 
-        that.direction = that.body[1] - that.body[0] == (that.next = [-1, -that.len, 1, that.len][(evt || event).keyCode - 37] || that.direction) ? that.direction : that.next;
+        that.control(evt);
     };
 }
 
@@ -146,37 +190,37 @@ function Snake() {
 function creatPuzzle(block, word) {
     var puzzle = new Puzzle();
     puzzle.init(block, word);
-    config.taskCfg = puzzle;
-    console.log(puzzle);
+
 }
 
 function Puzzle() {
+    preset(this);
     var that = this;
+    var blockOrg, blockTgt;
 
     this.init = function(block, word) {
-        var taskCfg = taskConfig.puzzle;
-        for (let x in taskCfg) {
-            this[x] = taskCfg[x];
-        }
         this.word = word;
         this.wordOrg = word.replace(/ /g, '/');
         this.wordTgt = word.replace(/[\/ ]/g, '');
-        this.blockOrg = Elem.creat('div', block, 'cell-block');
-        this.creat(this.blockOrg, 'ready');
+        blockOrg = Elem.creat('div', block, 'cell-block');
+        this.creat(blockOrg, 'ready');
 
-        this.blockTgt = Elem.creat('div', block, 'cell-block');
-        this.creat(this.blockTgt, 'going');
+        blockTgt = Elem.creat('div', block, 'cell-block');
+        this.creat(blockTgt, 'going');
         setClick('btn-redo', that.mix);
     }
 
     this.mix = function() {
         checkAction('redo');
         var redo = Elem.get('btn-redo');
-        Elem.togType(redo, 'danger');
+        redo.setAttribute('state', 'danger');
         var clock = config.clock;
+        clearInterval(clock.mixClock);
+        clock.mixLoop = config.constant.clock.mixLoop;
         clock.mixClock = setInterval(function() {
+            var clock = config.clock;
             if (clock.mixLoop > 0) {
-                that.creat(that.blockTgt, 'going');
+                that.creat(blockTgt, 'going');
                 clock.mixLoop--;
             } else {
                 clearInterval(clock.mixClock);
@@ -197,7 +241,7 @@ function Puzzle() {
         block.innerHTML = '';
         var tips = Elem.creat('div', block, 'cell-tips');
         tips.innerHTML = state == 'going' ? taskData.cellTips : taskData.cellText;
-        var space = Elem.creat('div', block, 'space20');
+        Elem.creat('div', block, 'space20');
         var flex = Elem.creat('div', block, 'cell-flex');
         for(let idx in this.wordOrg) {
             if (this.wordOrg[idx] == '/') 
@@ -205,7 +249,7 @@ function Puzzle() {
 
             if (this.wordMix[idx] == '/') 
                 continue;
-            let cell = Elem.creat('div', flex, 'cell-text');
+            var cell = Elem.creat('div', flex, 'cell-text');
             cell.able = true;
             cell.state = state;
             cell.innerHTML = this.wordMix[idx];
@@ -215,7 +259,7 @@ function Puzzle() {
                 that.click(this);
             }
         }
-        var space = Elem.creat('div', block, 'space20');
+        Elem.creat('div', block, 'space20');
     }
 
     this.click = function(cell) {
@@ -224,13 +268,15 @@ function Puzzle() {
             console.log('tgt:' + this.wordTgt + ' cur:' + this.wordCur);
             var redo = Elem.get('btn-redo');
             if (this.wordTgt.replace(this.wordCur, '') == this.wordTgt || this.wordTgt[0] != this.wordCur[0]) {
-                Elem.color(cell, 'white', cfg.wrongColor);
-                Elem.style(cell, 'borderColor', cfg.wrongColor);
-                Elem.togType(redo, 'permit');
+                cell.style.color = 'white';
+                cell.style.backgroundColor = cfg.wrongColor;
+                cell.style.borderColor = cfg.wrongColor;
+                redo.setAttribute('state', 'permit');
             } else {
-                Elem.color(cell, 'white', cfg.rightColor);
-                Elem.style(cell, 'borderColor', cfg.rightColor);
-                Elem.togType(redo, 'danger');
+                cell.style.color = 'white';
+                cell.style.backgroundColor = cfg.rightColor;
+                cell.style.borderColor = cfg.rightColor;
+                redo.setAttribute('state', 'danger');
             }
             if (this.wordTgt == this.wordCur) {
                 checkState('next');
@@ -256,7 +302,7 @@ function Jigsaw() {
     var that = this;
     var img, tips, flex, blockOrg, blockTgt;
 
-    this.init = async function(block, src, idx) {
+    this.init = function(block, src, idx) {
         var taskCfg = taskConfig.jigsaw;
         for (let x in taskCfg) {
             this[x] = taskCfg[x];
@@ -285,11 +331,11 @@ function Jigsaw() {
         img.style.height = this.blockHeight + 'px';
         block.style.width = this.blockWidth + 'px';
         // block.style.margin = '0px auto';
-        this.cellWidth = Math.floor((this.blockWidth - this.cellLen*this.border*2) / this.cellLen);
+        this.cellWidth = Math.floor((this.blockWidth - this.len*this.border*2) / this.len);
         this.cellHeight = Math.floor(this.cellWidth * this.hpw);
-        for (var i=0;i<this.cellLen;i++) {
-            for (var j=0;j<this.cellLen;j++) {
-                var idx = i*this.cellLen + j;
+        for (var i=0;i<this.len;i++) {
+            for (var j=0;j<this.len;j++) {
+                var idx = i*this.len + j;
                 var posY = (-2*this.border-this.cellHeight) * i;
                 var posX = (-2*this.border-this.cellWidth) * j;
                 this.cells[idx] = {
@@ -307,6 +353,8 @@ function Jigsaw() {
     this.mix = function() {
         checkAction('redo');
         var clock = config.clock;
+        clearInterval(clock.mixClock);
+        clock.mixLoop = config.constant.clock.mixLoop;
         clock.mixClock = setInterval(function() {
             if (clock.mixLoop > 0) {
                 that.creat(blockOrg, 'going');
@@ -327,9 +375,9 @@ function Jigsaw() {
         flex = Elem.creat('div', block, 'cell-flex');
         flex.style.flexWrap = 'wrap';
 
-        for (var i=0;i<this.cellLen;i++) {
-            for (var j=0;j<this.cellLen;j++) {
-                var idx = i*this.cellLen + j;
+        for (var i=0;i<this.len;i++) {
+            for (var j=0;j<this.len;j++) {
+                var idx = i*this.len + j;
                 var cell = Elem.creat('div', flex, 'cell-jigsaw', idx);
                 cell.idx = this.cells[idx].idx;
                 cell.style.width = this.cellWidth + 'px';
@@ -339,7 +387,7 @@ function Jigsaw() {
                 cell.style.backgroundImage = `url(${this.fullPath})`
                 cell.addEventListener('click', function(event) {
                     if (state == 'going')
-                        clickCell(event);
+                        that.click(event);
                 });
                 this.cells[idx].cellId = cell.id;
             }
@@ -348,7 +396,7 @@ function Jigsaw() {
     }
 
     this.click = function(event) {
-        var org = flex.children[this.centerIdx];
+        var org = flex.children[this.center];
         var tgt = event.target;
         if (org === tgt) return;
         var orgNext = org.nextSibling;
@@ -371,7 +419,7 @@ function Jigsaw() {
             }
         }
 
-        var org = flex.children[this.centerIdx];
+        var org = flex.children[this.center];
         org.style.border = `solid ${this.border}px ${getColorType()}`;
 
         if (this.state == 'ready' || this.state == 'succeed' ) {
@@ -381,7 +429,7 @@ function Jigsaw() {
             img.style.border = `solid ${this.border}px white`;
             img.src = this.fullPath;
             if (this.state == 'succeed') {
-                this.check('next');
+                checkState('next');
                 Elem.display(flex, 'flex');
                 Elem.display(img, 'none');
                 setTimeout(function() {

@@ -11,6 +11,7 @@ var config = {
         page:'/page/home/home.html',
         router:'/#uid/#act/#idx',
     },
+
     sett: {},
     fade: {},
     page: {},
@@ -72,5 +73,11 @@ var config = {
         {name:'home', href:'../home/home.html', text:'主页'},
         {name:'fund', href:'../fund/fund.html', text:'资金'},
         {name:'inve', href:'../inve/inve.html', text:'市场'},
+    ],
+    arrow: [
+        {top: '35%', left: '10px', right: '70%', bottom: '35%'},
+        {top: '15%', left: '30%', right: '30%', bottom: '60%'},
+        {top: '35%', left: '70%', right: '10px', bottom: '35%'},
+        {top: '60%', left: '30%', right: '30%', bottom: '12%'},
     ],
 };

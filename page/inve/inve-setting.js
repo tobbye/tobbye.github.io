@@ -14,7 +14,6 @@ function setContent(inner, x) {
         var data = list[y];
         var content = Elem.creat('div', inner, 'content', y);
         setTitle(content, data);
-        setNotLine(content, data);
         if (data.isGrab == 0)
             creatInveBody(content, data, x);
         if (data.isGrab == 1)
@@ -196,7 +195,7 @@ function initLineData(line, dot, isGrab) {
 
 function setLineText(flex, attr, text) {
     var line = Elem.creat('text', flex, 'line');
-    line.setAttribute('btype', attr);
+    line.setAttribute('state', attr);
     line.innerHTML = text;
     return line;
 }
@@ -271,10 +270,10 @@ function setPackAlert() {
     for (let idx in data.taskType) {
         var flex = Elem.creat('div', block, 'user-flex');
         var line = Elem.creat('div', flex, 'line');
-        line.setAttribute('btype', 'A');
+        line.setAttribute('state', 'A');
         line.innerHTML = '<h3>任务' + (parseInt(idx)+1);
         var line = Elem.creat('div', flex, 'line');
-        line.setAttribute('btype', 'B');
+        line.setAttribute('state', 'B');
         line.innerHTML = '<h3>' + data.taskType[idx] + ' Task';
     }
     showAlert('pack-bg');
@@ -283,13 +282,14 @@ function setPackAlert() {
 
 function setTaskAlert() {
     hideAlert('pack-bg');
+    var redo = Elem.get('btn-redo');
     var title = Elem.get('task-title');
     var block = Elem.get('task-block');
-    title.innerHTML = taskData.name;
+    redo.setAttribute('state', 'danger');
+    title.innerHTML = taskData.title;
     block.innerHTML = '';
     creatTask(block);
     checkAction('redo');
-    Elem.togType(Elem.get('btn-redo'), 'danger');
     showAlert('task-bg');
 }
 
@@ -297,14 +297,18 @@ function creatTask(block) {
     var data = document.body.data;
     var line = document.body.line;
     var taskType = data.taskType[taskData.idx];
+    config.sett.taskType = taskType;
     if (taskType == 'snake') {
         creatSnake(block, line.word);
+        return;
     }
     if (taskType == 'puzzle') {
         creatPuzzle(block, line.word);
+        return;
     }
     if (taskType == 'jigsaw') {
         creatJigsaw(block, line.src, line.idx);
+        return;
     }
 }
 

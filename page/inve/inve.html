@@ -48,9 +48,9 @@
         flex: 10;
         padding: 10px 10px;
         font-size: 0.9em; 
-    }.line[btype=A] {
+    }.line[state=A] {
         flex: 12;
-    }.line[btype=B] {
+    }.line[state=B] {
         flex: 20;
     }
 
@@ -108,14 +108,6 @@
         background-repeat: no-repeat;
     }
 
-    .cell-snake {
-        border: 5px;
-        height: 60px;
-        line-height: 60px;
-        font-size: 1.2em;
-        position: absolute;
-    }
-
     .img {
         height: 500px;
     }
@@ -134,16 +126,16 @@
                 <div class="alert-title" id="detail-title">查看详情</div>
                 <div class="alert-block" id="detail-block"></div>
                 <div class="alert-button" id="detail-button">
-                    <div class="button" btype="permit" id="btn-doit">确认</div>
-                    <div class="button" btype="danger" id="btn-quit">关闭</div>
+                    <div class="button" state="permit" id="btn-doit">确认</div>
+                    <div class="button" state="danger" id="btn-quit">关闭</div>
                 </div>
             </div>
             <div class="alert-bg" id="pack-bg">
                 <div class="alert-title" id="pack-title">发现一个红包</div>
                 <div class="alert-block" id="pack-block"></div>
                 <div class="alert-button" id="pack-button">
-                    <div class="button" btype="permit" id="btn-start">开始</div>
-                    <div class="button" btype="danger" id="btn-throw">丢弃</div>
+                    <div class="button" state="permit" id="btn-start">开始</div>
+                    <div class="button" state="danger" id="btn-throw">丢弃</div>
                 </div>
             </div>
 
@@ -151,10 +143,10 @@
                 <div class="alert-title" id="task-title">任务1-解密</div>
                 <div class="alert-block" id="task-block"></div>
                 <div class="alert-button" id="task-button">
-                    <div class="button" btype="permit" id="btn-open">打开</div>
-                    <div class="button" btype="danger" id="btn-redo">重置</div>
-                    <div class="button" btype="danger" id="btn-abon">放弃</div>
-                    <div class="button" btype="permit" id="btn-next">下一个任务</div>
+                    <div class="button" state="permit" id="btn-open">打开</div>
+                    <div class="button" state="danger" id="btn-redo">重置</div>
+                    <div class="button" state="danger" id="btn-abon">放弃</div>
+                    <div class="button" state="permit" id="btn-next">下一个任务</div>
                 </div>
             </div>
 
@@ -162,9 +154,9 @@
                 <div class="alert-title" id="result-title">恭喜您获得了</div>
                 <div class="alert-block" id="result-block"></div>
                 <div class="alert-button" id="result-button">
-                    <div class="button" btype="permit" id="btn-follow">关注</div>
-                    <div class="button" btype="defult" id="btn-home">查看主页</div>
-                    <div class="button" btype="danger" id="btn-close">关闭</div>
+                    <div class="button" state="permit" id="btn-follow">关注</div>
+                    <div class="button" state="defult" id="btn-home">查看主页</div>
+                    <div class="button" state="danger" id="btn-close">关闭</div>
                 </div>
             </div>
         </div>

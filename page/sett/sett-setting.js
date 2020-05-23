@@ -59,9 +59,9 @@ function setOptDefault(opt) {
 	var childs = opt.parentNode.children;
 	for (var i=0; i<childs.length; i++) {
 		if (opt.innerHTML == childs[i].innerHTML)  {
-            childs[i].setAttribute('btype', 'live');
+            childs[i].setAttribute('state', 'live');
         } else {
-            childs[i].setAttribute('btype', 'dead');
+            childs[i].setAttribute('state', 'dead');
         }				
 	}
 	var optName = opt.optName;
@@ -76,9 +76,9 @@ function setOption(opt) {
 	var childs = opt.parentNode.children;
 	for (var i=0; i<childs.length; i++) {
 		if (opt.innerHTML == childs[i].innerHTML)  {
-            childs[i].setAttribute('btype', 'live');
+            childs[i].setAttribute('state', 'live');
         } else {
-            childs[i].setAttribute('btype', 'dead');
+            childs[i].setAttribute('state', 'dead');
         }				
 	}
 	var optName = opt.optName;

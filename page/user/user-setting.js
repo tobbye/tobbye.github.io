@@ -89,9 +89,9 @@ function setRank(content, data) {
 	var all = Elem.creat('div', flex, 'value');
 	var used = Elem.creat('div', flex, 'value');
 	var surplus = Elem.creat('div', flex, 'value');
-	all.innerHTML = '总权值<br/><h2>' + data.valueAll;
-	used.innerHTML = '已分配<br/><h2>' + data.valueUsed;
-	surplus.innerHTML = '未分配<br/><h2>' + data.valueSurplus;
+	all.innerHTML = '总权值<br/><h3>' + data.valueAll;
+	used.innerHTML = '已分配<br/><h3>' + data.valueUsed;
+	surplus.innerHTML = '未分配<br/><h3>' + data.valueSurplus;
 }
 
 
@@ -129,7 +129,7 @@ function setTags(content, data) {
 
 		//EDIT
 		var edit = Elem.creat('div', flex4, 'button-min', y);
-		edit.setAttribute('btype', 'permit');
+		edit.setAttribute('state', 'permit');
 		edit.innerHTML = '编辑标签';
 		edit.data = _data;
 		edit.idx = y;
@@ -142,7 +142,7 @@ function setTags(content, data) {
 
 	//EDIT_DETAIL
 	var edit = Elem.creat('div', flex5, 'button');
-	edit.setAttribute('btype', 'permit');
+	edit.setAttribute('state', 'permit');
 	edit.innerHTML = '编辑资料';
 	flex4.style.padding = '5px';
 	flex5.style.padding = '10px 5px';

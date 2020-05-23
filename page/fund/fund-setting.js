@@ -100,7 +100,7 @@ function setBlock(content, data) {
 
 //切换视图 Line和Block
 function togItem(item) {
-	var btype, view;
+	var state, view;
 	var data = item.data;
 	if (data.idx % 100 == 4) {
 		Storage.set('recd-innerIdx', values.innerIdx);
@@ -113,7 +113,7 @@ function togItem(item) {
 	if (data.idx % 100 == 5) {
 		view = ['table', 'none'];
 	}
-	if (item.getAttribute('btype') == 'danger')
+	if (item.getAttribute('state') == 'danger')
 		return;
 	var lines = Elem.getClass('table-line');
 	var blocks = Elem.getClass('table-block');
@@ -138,7 +138,7 @@ function setButton(content, data) {
 			var button = Elem.creat('div', flex, 'button');
 			button.data = data;
 			button.innerHTML = data.text;
-			button.setAttribute('btype', data.btype);
+			button.setAttribute('state', data.state);
 			var tableBlock = Elem.get('table-block');
 			if (!data.limit)
 				button.className = 'button-min';

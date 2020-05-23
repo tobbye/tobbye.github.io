@@ -260,12 +260,6 @@ Elem.toggle = function(elem, display) {
     Elem.attr(elem, 'display', display);
 }
 
-Elem.togType = function(elem, btype) {
-    if (!elem || !elem.style) return;
-    var attr = elem.getAttribute('btype') || 'default';
-    btype = btype || Parse.swape(attr, 'permit', 'danger');
-    elem.setAttribute('btype', btype);
-}
 
 
 //设置元素样式
@@ -285,10 +279,10 @@ Elem.attr = function(elem, key, value) {
 
 //设置元素高度自适应
 Elem.autosize = function(elem, offset) {
-    var windWidth = config.this.windWidth;
-    var windHeight = config.this.windHeight;
+    var windWidth = config.page.windWidth;
+    var windHeight = config.page.windHeight;
     var box = Elem.get('alert-box');
-    var agent = config.this.isMobile ? 'mobile' : 'computer';
+    var agent = config.page.isMobile ? 'mobile' : 'computer';
     Elem.attr(box, 'agent', agent);
     elem = elem || Elem.get('outer-center');
     elem.style.height = windHeight - offset + 'px';
@@ -434,7 +428,7 @@ var Page = function() {
     this.flowHeight = Math.max(this.innerHeight, this.minHeight);
     this.alertMargin = this.windWidth - this.alertMaxWidth;
     this.alertMargin = Math.max(this.alertMargin / 2, this.alertMinMargin);
-    this.alertWidth = this.windWidth - this.alertMargin * 2 -36;
+    this.alertWidth = this.windWidth - this.alertMargin * 2 -52;
     sett.isWidth = this.windWidth > this.windHeight;
     sett.isFlow = this.innerHeight > this.minHeight;
     var box = Elem.get('alert-box');
@@ -504,7 +498,7 @@ var getHost = function() {
     var pos = path.indexOf(page);
     var host = path.substring(0, pos);
     action.host = host;
-    action.this = page;
+    action.page = page;
     getHostType(host);
 }
 
@@ -524,6 +518,7 @@ var setAgent = function() {
     setClick('btn-quit', hideAlert);
     setClick('btn-abon', hideAlert);
     setClick('btn-close', hideAlert);
+    setTouch();
     window.onresize();
 }
 
@@ -545,16 +540,6 @@ var setFullScreen = function() {
         if (body.mozRequestFullScreen) body.mozRequestFullScreen(); //FireFox
         if (body.webkitRequestFullScreen) body.webkitRequestFullScreen(); //Chrome
     }
-}
-
-
-
-var setNotLine = function(content, data) {
-    if (data.lines) 
-        return;
-    var block = Elem.creat('div', content, 'block');
-    var hide = Elem.creat('div', block, 'hide');
-    hide.innerHTML = '此处为空';
 }
 
 
@@ -678,6 +663,34 @@ var jsonToTable = function(item) {
     Storage.set('config', config);
     window.location.href = '../view/view.html';
 }
+
+var setTouch = function() {
+    var touch = {};
+    document.body.addEventListener('touchstart',function(e) {
+        touch.startX = e.changedTouches[0].pageX;
+        touch.startY = e.changedTouches[0].pageY; 
+    }, false);
+
+    document.body.addEventListener('touchmove', function(e) {
+        touch.moveEndX = e.changedTouches[0].pageX; 　　　　
+        touch.moveEndY = e.changedTouches[0].pageY; 　　　　
+        var diffX = touch.moveEndX - touch.startX; 　　　　
+        var diffY = touch.moveEndY - touch.startY;
+        if ( Math.abs(diffX) > Math.abs(diffY) && diffX > 0 ) {
+            touch.direction = 'right';　　　　　
+        } else if ( Math.abs(diffX) > Math.abs(diffY) && diffX < 0 ) {　　　　　　
+            touch.direction = 'left';　　　　　
+        } else if ( Math.abs(diffY) > Math.abs(diffX) && diffY > 0) {　　　　　　
+            touch.direction = 'down';　　　　　
+        } else if ( Math.abs(diffY) > Math.abs(diffX) && diffY < 0 ) {　　　　　　
+            touch.direction = 'up';　　　　　
+        } else{　　　　　　
+            touch.direction = 'none';　　　　　
+        } 
+    }, false);
+    config.touch = touch;
+}
+
 
 
 

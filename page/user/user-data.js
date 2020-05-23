@@ -31,7 +31,7 @@ valueUsed: 251700,
 valueSurplus: 5250,
 tipsRank: "根据所在区域进行总权值的排名",
 tipsTag: "点击标签搜索赞助商和淘金者<br/>搜索结果按照标签分配的权值排序",
-valueStr: "分配权值<h2>#1</h2>",
+valueStr: "分配权值<h3>#1</h3>",
 allotStr: "分配策略<h2>#2%</h2>",
 editDetail: {
 	text: "编辑资料", btype:"permit"},

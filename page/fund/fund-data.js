@@ -35,9 +35,9 @@ blocks:[
 [{}, {row:1, text:"K.可以投入"}]
 ],
 buttons:[
-[{idx:201, text:"充值", title:"本金充值", tran:"H*1|I*1|K*1|L*1", limit: "h", btype: "permit"}],
-[{idx:202, text:"提现", title:"本金提现", tran:"H*-1|I*-1|K*-1|L*-1", limit:"I", btype: "danger"}],
-[{idx:203, text:"方格视图", btype: 'danger'}, {idx:204, text:"查看记录", btype: 'defult'}, {idx:205, text:"列表视图", btype: 'permit'}],
+[{idx:201, text:"充值", title:"本金充值", tran:"H*1|I*1|K*1|L*1", limit: "h", state: "permit"}],
+[{idx:202, text:"提现", title:"本金提现", tran:"H*-1|I*-1|K*-1|L*-1", limit:"I", state: "danger"}],
+[{idx:203, text:"方格视图", state: 'danger'}, {idx:204, text:"查看记录", state: 'defult'}, {idx:205, text:"列表视图", state: 'permit'}],
 ]},
 ]},
 
@@ -56,9 +56,9 @@ blocks: [
 [{}, {row:1, text:"P.累计抢夺"}],
 ],
 buttons:[
-[{idx:301, text:"投入", title:"投入资金", tran:"M*1|Q*1|O*1|J*1|I*-1|K*-1|R*0.01|S*0.01", limit:"K", btype: "permit"}],
-[{idx:302, text:"抢夺", title:"抢夺资金", tran:"N*1|P*1|I*1|K*1|O*-1|J*-1", limit:"O", btype: "danger"}],
-[{idx:303, text:"方格视图", btype: 'danger'}, {idx:304, text:"查看记录", btype: 'defult'}, {idx:305, text:"列表视图", btype: 'permit'}],
+[{idx:301, text:"投入", title:"投入资金", tran:"M*1|Q*1|O*1|J*1|I*-1|K*-1|R*0.01|S*0.01", limit:"K", state: "permit"}],
+[{idx:302, text:"抢夺", title:"抢夺资金", tran:"N*1|P*1|I*1|K*1|O*-1|J*-1", limit:"O", state: "danger"}],
+[{idx:303, text:"方格视图", state: 'danger'}, {idx:304, text:"查看记录", state: 'defult'}, {idx:305, text:"列表视图", state: 'permit'}],
 ]},
 ]},
 
@@ -77,9 +77,9 @@ blocks:[
 [{row:1, text:"V.已经提现"}],
 ],
 buttons:[
-[{idx:401, text:"获取", title:"收益获取", tran:"T*1|U*1|S*-1", limit:"S", btype: "permit"}],
-[{idx:402, text:"提现", title:"收益提现", tran:"V*1|U*-1", limit:"U", btype: "danger"}],
-[{idx:403, text:"方格视图", btype: 'danger'}, {idx:404, text:"查看记录", btype: 'defult'}, {idx:405, text:"列表视图", btype: 'permit'}],
+[{idx:401, text:"获取", title:"收益获取", tran:"T*1|U*1|S*-1", limit:"S", state: "permit"}],
+[{idx:402, text:"提现", title:"收益提现", tran:"V*1|U*-1", limit:"U", state: "danger"}],
+[{idx:403, text:"方格视图", state: 'danger'}, {idx:404, text:"查看记录", state: 'defult'}, {idx:405, text:"列表视图", state: 'permit'}],
 ]},
 ]},
 ];
