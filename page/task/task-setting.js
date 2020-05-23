@@ -86,14 +86,8 @@ function checkAction(action) {
 
 
 function creatSnake(block, word) {
-    var tips = Elem.creat('div', block, 'cell-tips');
-    tips.innerHTML = word;
-    var body = Elem.creat('div', block, 'cell-tips');
-    tips.innerHTML = word;
     var snake = new Snake();
     snake.init(body, word);
-    config.taskCfg = snake;
-    console.log(snake);
 }
 
 function Snake() {
@@ -102,7 +96,7 @@ function Snake() {
     var canvas, ctx;
 
     this.init = function(block, word) {
-        this.size = Math.floor(config.page.alertWidth / this.width);
+        this.size = ~~(config.page.alertWidth / this.width);
         this.word = word.replace(/\//g,'');
         this.nextList = [-1, -this.width, 1, this.width];
         this.arrowList = ['left', 'up', 'right', 'down'];
@@ -112,7 +106,11 @@ function Snake() {
     };
 
     this.initCanvas = function(block) {
-        canvas = Elem.creat('canvas', block);
+        var tips = Elem.creat('div', block, 'cell-tips');
+        tips.innerHTML = word;
+        var body = Elem.creat('div', block, 'cell-tips');
+        tips.innerHTML = word;
+        canvas = Elem.creat('canvas', body);
         canvas.width = this.width*this.size;
         canvas.height = this.height*this.size;
         ctx = canvas.getContext('2d');
@@ -450,4 +448,182 @@ function Jigsaw() {
         }
     }
 }
+
+
+
+function creatLabyrinth(block) {
+
+
+    var laby = new Labyrinth();
+    laby.init(block);
+    console.log(laby);
+}
+
+function Labyrinth() {
+    var that = this;
+    var canvas, ctx;
+
+    this.init = function(block) {
+
+        this.col = 15;
+        this.row = 20;
+        this.map = [];
+        this.cur = [0, 1];
+        this.next = [];
+        this.arrow = [];
+        this.accessed = [];
+        this.notAccessed = [];
+        this.color = ['#eee', 'black', 'dodgerblue', 'red', 'darkorange'];
+        this.arrowList = ['left', 'up', 'right', 'down'];
+        this.nextList = [[0, -1], [-1, 0], [0, 1], [1, 0]];
+        this.tranList = [-1, -this.col, 1, this.col];
+        this.width = 2*this.col+1;
+        this.height = 2*this.row+1;
+        this.scale = ~~(config.page.alertWidth / this.width);
+        this.initCanvas(block);
+        this.initMap();
+        this.fillMap();
+        this.drawMap(); 
+    };
+
+    this.initCanvas = function(block) {
+        canvas = Elem.creat('canvas', block);
+        canvas.width = this.width*this.scale;
+        canvas.height = this.height*this.scale;
+        canvas.onclick = function (){
+            that.downLoad();
+        }
+        ctx = canvas.getContext('2d');
+        ctx.fillStyle = this.color[0];
+        ctx.fillRect(0, 0, canvas.width, canvas.height); 
+    };
+
+
+
+    this.initMap = function() {
+        for(let i = 0; i < 2 * this.row + 1; ++i) {
+            this.map[i] = [];
+            for(let j = 0; j < 2 * this.col + 1; ++j) {
+                if((j ^ (j - 1)) === 1 && (i ^ (i - 1)) === 1) {
+                    this.map[i][j] = 0;                   // 0 表示路
+                    this.notAccessed.push(0);
+                }else {
+                    this.map[i][j] = 1;                   // 1 表示墙
+                }
+            }
+        }
+        this.map[0][1] = 2;
+        this.map[this.map.length - 1][this.map[0].length - 2] = 4;
+    };
+
+    this.fillMap = function() {
+        let count = this.row * this.col;
+        let cur = Math.floor(Math.random()*count);
+        this.accessed.push(cur);
+        this.notAccessed[cur] = 1;
+
+        while(this.accessed.length < count) {
+            let rowIdx = Math.floor(cur / this.col),
+                colIdx = cur % this.col;
+            let num = 0,
+                tgt = -1,
+                rowNum, colNum;
+
+            // 遍历上下左右顶点
+            while(++num < 5) {
+                let org = Math.floor(Math.random()*4);
+                rowNum = rowIdx + this.nextList[org][0];
+                colNum = colIdx + this.nextList[org][1];
+                if(rowNum >= 0 && colNum >= 0 && rowNum < this.row && colNum < this.col && this.notAccessed[cur + this.tranList[org]] === 0) {
+                    tgt = org;
+                    break;
+                }
+            }
+            // 四周顶点均被访问，则从已访问的顶点中随机抽取一个为cur
+            if(tgt < 0) {
+                cur = this.accessed[Math.floor(Math.random()*this.accessed.length)];
+            }else {
+                rowIdx = 2 * rowIdx + 1;
+                colIdx = 2 * colIdx + 1;
+                rowNum = rowIdx + this.nextList[tgt][0];
+                colNum = colIdx + this.nextList[tgt][1];
+                this.map[rowNum][colNum] = 0;
+                cur = cur + this.tranList[tgt];
+                this.notAccessed[cur] = 1;
+                this.accessed.push(cur);
+            }
+        }
+        this.accessed = null;
+        this.notAccessed = null;
+    };
+
+    this.drawMap = function() {
+        for (let i = 0; i < this.map.length; i++) {
+            for (let j = 0; j < this.map[0].length; j++) {
+                if (this.map[i][j]) {
+
+                    ctx.fillStyle = this.color[this.map[i][j]];
+                    ctx.fillRect(j * this.scale, i * this.scale, this.scale, this.scale); 
+                }
+            }
+        }
+    };
+
+
+
+
+
+    this.control = function(evt) {
+        let i = this.cur[0] + this.next[0];
+        let j = this.cur[1] + this.next[1];
+        if (this.map[i][j] == 0) {
+            this.map[i][j] = 2;
+            this.arrow = [i, j];
+            this.cur = this.arrow;
+            ctx.fillStyle = this.color[2];
+            ctx.fillRect(j * this.scale, i * this.scale, this.scale, this.scale); 
+        } else if (this.map[i][j] == 1) {
+            ctx.fillStyle = this.color[3];
+            ctx.fillRect(j * this.scale, i * this.scale, this.scale, this.scale); 
+            this.check();
+        } else if (this.map[i][j] == 4) {
+            return this.alert('而今迈步从头越!')
+        }
+    };
+
+
+    this.check = function() {
+        this.wall = [];
+        for (let idx in this.nextList) {
+            let i = this.cur[0] + this.nextList[idx][0];
+            let j = this.cur[1] + this.nextList[idx][1];
+            if (i < 0 || i > this.height || j < 0 || j > this.width)
+                this.wall.push(this.arrowList[idx]);
+            if (this.map[i][j] > 0 && this.map[i][j] < 4)
+                this.wall.push(this.arrowList[idx]);
+        }
+        if (this.wall.length == 4)
+            return this.alert('雄关漫道真如铁!')
+    };
+
+    document.onkeydown = function(evt) { 
+        if (evt.keyCode < 0 || evt.keyCode - 37 > 3) return;
+        that.next = that.nextList[evt.keyCode - 37];
+        that.arrow = that.arrowList[evt.keyCode - 37];
+        that.control(evt);
+    };
+
+    this.alert = function(msg) {
+        setTimeout(function() {alert(msg)}, 200);
+    };
+
+    this.downLoad = function (){
+        var oA = document.createElement("a");
+        oA.download = 'labyrinth_' + new Date().getTime();
+        oA.href = canvas.toDataURL("image/png");;
+        document.body.appendChild(oA);
+        oA.click();
+        oA.remove(); // 下载之后把创建的元素删除
+    }
+};
 

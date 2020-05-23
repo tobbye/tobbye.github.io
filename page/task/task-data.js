@@ -34,7 +34,7 @@ var taskConfig = {
 		title:'任务#idx-贪吃蛇',
 		cellText: '口令', 
 		cellTips:'正确输入口令打开#pack',
-		logText: '<h4>点击按钮控制方向</h4>吃掉文字输入口令',
+		logText: '<h4>滑动屏幕控制方向</h4>吃掉文字输入口令',
         state: 'going',
         direction: 1,
         next: 1,
@@ -42,6 +42,14 @@ var taskConfig = {
         food: 45,
         width: 10,
         height: 10,
+	},
+
+	labyrinth: {
+		title:'任务#idx-迷宫',
+		cellText: '口令', 
+		cellTips:'探索迷宫打开#pack',
+		logText: '<h4>滑动屏幕控制方向</h4>吃掉文字输入口令',
+        state: 'going',
 	},
 }
 

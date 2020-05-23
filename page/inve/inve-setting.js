@@ -310,6 +310,11 @@ function creatTask(block) {
         creatJigsaw(block, line.src, line.idx);
         return;
     }
+
+    if (taskType == 'labyrinth') {
+        creatLabyrinth(block);
+        return;
+    }
 }
 
 

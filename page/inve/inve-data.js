@@ -93,7 +93,7 @@ group: '赞助商',
 instance: 'grab',
 packTitle: '发现一个红包', 
 taskTitle:'任务#0-#1', 
-taskType:['puzzle', 'jigsaw'], 
+taskType:['labyrinth', 'snake', 'puzzle', 'jigsaw'], 
 resultTitle:'恭喜您获得了', 
 packType:'红包', 
 
