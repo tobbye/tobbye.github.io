@@ -184,8 +184,12 @@ Elem.creat = function(type, parent, className, id) {
 }
 
 //获取当个元素
-Elem.get = function (name) {
-    return document.getElementById(name);
+Elem.get = function (e) {
+    if (typeof(e) === 'string')
+        return Elem.get(document.getElementById(e));
+    if (e &&  e.style)
+        return e;
+    return null;
 }
 
 //获取类的所有元素
@@ -252,27 +256,16 @@ Elem.display = function(elem, display) {
     Elem.style(elem, 'display', display);
 }
 
-//切换元素显示
-Elem.toggle = function(elem, display) {
-    if (!elem || !elem.style) return;
-    var attr = elem.getAttribute('display') || 'block';
-    display = display || Parse.swape(attr, 'attr', 'none');
-    Elem.attr(elem, 'display', display);
-}
-
-
 
 //设置元素样式
 Elem.style = function(elem, key, value) {
-    if (!elem || !elem.style) return;
-    if (key && value) {
+    if (elem && elem.style && key && value) {
         elem.style[key] = value;
     }
 }
 
 Elem.attr = function(elem, key, value) {
-    if (!elem || !elem.style) return;
-    if (key && value) {
+    if (elem && elem.style && key && value) {
         elem.setAttribute(key, value);
     }
 }
@@ -403,12 +396,6 @@ var getColorLight = function() {
     return config.color.light;
 }
 
-var addScript = function(src) {
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = src;
-    document.head.appendChild(script);
-}
 
 var Page = function() {
     var page = setDefult([], 'page');
@@ -428,7 +415,7 @@ var Page = function() {
     this.flowHeight = Math.max(this.innerHeight, this.minHeight);
     this.alertMargin = this.windWidth - this.alertMaxWidth;
     this.alertMargin = Math.max(this.alertMargin / 2, this.alertMinMargin);
-    this.alertWidth = this.windWidth - this.alertMargin * 2 -52;
+    this.alertWidth = this.windWidth - this.alertMargin * 2 - 36;
     sett.isWidth = this.windWidth > this.windHeight;
     sett.isFlow = this.innerHeight > this.minHeight;
     var box = Elem.get('alert-box');
@@ -515,21 +502,12 @@ var getHostType = function(host) {
 //设置浏览器
 var setAgent = function() {
     hideAlert();
-    setClick('btn-quit', hideAlert);
-    setClick('btn-abon', hideAlert);
-    setClick('btn-close', hideAlert);
-    setTouch();
+    btnClick('btn-quit', hideAlert);
+    btnClick('btn-abon', hideAlert);
+    btnClick('btn-close', hideAlert);
     window.onresize();
 }
 
-
-var setClick = function(name, func) {
-    if (Elem.get(name)) {
-        Elem.get(name).onclick = function() {
-            func();
-        }
-    }
-}
 
 
 var setFullScreen = function() {
@@ -625,6 +603,27 @@ var setFadeOver = function() {
 }
 
 
+var btnClick = function(name, func) {
+    if (Elem.get(name)) {
+        Elem.get(name).onclick = function() {
+            func();
+        }
+    }
+}
+
+var btnState = function(name, state) {
+    if (Elem.get(name)) {
+        Elem.get(name).setAttribute('state', state);
+    }
+}
+
+
+var addScript = function(src) {
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = src;
+    document.head.appendChild(script);
+}
 
 
 //显示弹窗
@@ -664,32 +663,6 @@ var jsonToTable = function(item) {
     window.location.href = '../view/view.html';
 }
 
-var setTouch = function() {
-    var touch = {};
-    document.body.addEventListener('touchstart',function(e) {
-        touch.startX = e.changedTouches[0].pageX;
-        touch.startY = e.changedTouches[0].pageY; 
-    }, false);
-
-    document.body.addEventListener('touchmove', function(e) {
-        touch.moveEndX = e.changedTouches[0].pageX; 　　　　
-        touch.moveEndY = e.changedTouches[0].pageY; 　　　　
-        var diffX = touch.moveEndX - touch.startX; 　　　　
-        var diffY = touch.moveEndY - touch.startY;
-        if ( Math.abs(diffX) > Math.abs(diffY) && diffX > 0 ) {
-            touch.direction = 'right';　　　　　
-        } else if ( Math.abs(diffX) > Math.abs(diffY) && diffX < 0 ) {　　　　　　
-            touch.direction = 'left';　　　　　
-        } else if ( Math.abs(diffY) > Math.abs(diffX) && diffY > 0) {　　　　　　
-            touch.direction = 'down';　　　　　
-        } else if ( Math.abs(diffY) > Math.abs(diffX) && diffY < 0 ) {　　　　　　
-            touch.direction = 'up';　　　　　
-        } else{　　　　　　
-            touch.direction = 'none';　　　　　
-        } 
-    }, false);
-    config.touch = touch;
-}
 
 
 

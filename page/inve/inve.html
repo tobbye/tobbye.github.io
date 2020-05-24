@@ -9,8 +9,13 @@
     <script src="../../util/config.js"> </script>
     <script src="inve-data.js"> </script>
     <script src="inve-setting.js"> </script>
+
     <script src="../task/task-data.js"> </script>
     <script src="../task/task-setting.js"> </script>
+    <script src="../task/jigsaw.js"> </script>
+    <script src="../task/labyrinth.js"> </script>
+    <script src="../task/puzzle.js"> </script>
+    <script src="../task/snake.js"> </script>
 </head>
 
 
@@ -145,8 +150,14 @@
                 <div class="alert-button" id="task-button">
                     <div class="button" state="permit" id="btn-open">打开</div>
                     <div class="button" state="danger" id="btn-redo">重置</div>
+                    <div class="button" state="defult" id="btn-up">↑</div>
                     <div class="button" state="danger" id="btn-abon">放弃</div>
                     <div class="button" state="permit" id="btn-next">下一个任务</div>
+                </div>
+                <div class="alert-button" id="task-arrow">
+                    <div class="button" state="defult" id="btn-left">←</div>
+                    <div class="button" state="defult" id="btn-down">↓</div>
+                    <div class="button" state="defult" id="btn-right">→</div>
                 </div>
             </div>
 

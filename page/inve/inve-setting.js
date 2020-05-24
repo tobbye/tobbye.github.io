@@ -257,65 +257,42 @@ function setDetailAlert(body) {
 }
 
 function setPackAlert() {
+    let title, block, data;
     hideAlert('detail-bg');
-    var title = Elem.get('pack-title');
-    var block = Elem.get('pack-block');
+    title = Elem.get('pack-title');
+    block = Elem.get('pack-block');
     title.innerHTML = document.body.data.packTitle;
     block.innerHTML = '';
-    var data = document.body.data;
-    taskData.idx = 0;
-    taskData.pack = data.packType;
-    taskData.types = data.taskType;
-    initTask();
+    data = document.body.data;
+    Task.cfg.idx = 0;
+    Task.cfg.pack = data.packType;
+    Task.cfg.types = data.taskType;
     for (let idx in data.taskType) {
-        var flex = Elem.creat('div', block, 'user-flex');
-        var line = Elem.creat('div', flex, 'line');
+        let line, flex;
+        flex = Elem.creat('div', block, 'user-flex');
+        line = Elem.creat('div', flex, 'line');
         line.setAttribute('state', 'A');
         line.innerHTML = '<h3>任务' + (parseInt(idx)+1);
-        var line = Elem.creat('div', flex, 'line');
+        line = Elem.creat('div', flex, 'line');
         line.setAttribute('state', 'B');
-        line.innerHTML = '<h3>' + data.taskType[idx] + ' Task';
+        line.innerHTML = '<h3>' + Task.cfg.types[idx].toUpperCase() + ' TASK';
     }
     showAlert('pack-bg');
 }
 
 
 function setTaskAlert() {
+    let redo, title, block;
     hideAlert('pack-bg');
-    var redo = Elem.get('btn-redo');
-    var title = Elem.get('task-title');
-    var block = Elem.get('task-block');
+    redo = Elem.get('btn-redo');
+    block = Elem.get('task-block');
     redo.setAttribute('state', 'danger');
-    title.innerHTML = taskData.title;
     block.innerHTML = '';
-    creatTask(block);
-    checkAction('redo');
+    Task.creatTask(block);
     showAlert('task-bg');
 }
 
-function creatTask(block) {
-    var data = document.body.data;
-    var line = document.body.line;
-    var taskType = data.taskType[taskData.idx];
-    config.sett.taskType = taskType;
-    if (taskType == 'snake') {
-        creatSnake(block, line.word);
-        return;
-    }
-    if (taskType == 'puzzle') {
-        creatPuzzle(block, line.word);
-        return;
-    }
-    if (taskType == 'jigsaw') {
-        creatJigsaw(block, line.src, line.idx);
-        return;
-    }
 
-    if (taskType == 'labyrinth') {
-        creatLabyrinth(block);
-        return;
-    }
-}
 
 
 function setResultAlert() {
@@ -325,29 +302,29 @@ function setResultAlert() {
     block.innerHTML = '';
     var line = document.body.line;
     var data = document.body.data;
-    rollLadd = 1;
+    Task.cfg.roll = 1;
+    Task.cfg.ladd = Math.min(line.ladd, Task.cfg.ladd);
     var allCount = Math.pow(2, line.ladd);
     var rollCount = Math.floor(Math.random() * allCount);
     getRoll(allCount, rollCount);
 
     var ladd = Elem.creat('div', block, 'line');
-    ladd.innerHTML = line.inver + '的' + rollLadd + '阶' + data.packType;
+    ladd.innerHTML = line.inver + '的' + Task.cfg.ladd + '阶' + Task.cfg.pack;
     var pic = Elem.creat('img', block, 'img');
-    pic.src = cfg.laddSrc + rollLadd + '.png';
+    pic.src = cfg.laddSrc + Task.cfg.ladd + '.png';
     var price = Elem.creat('div', block, 'line');
-    price.innerHTML = '<h2>￥' +  Parse.addSplit(line.priceAllList[rollLadd - 1]);
+    price.innerHTML = '<h2>￥' +  Parse.addSplit(line.priceAllList[Task.cfg.ladd - 1]);
     showLog('<h4>恭喜您获得了</h4>' + ladd.innerText);
     showAlert('result-bg');
 }
 
-var rollLadd;
 function getRoll(all, roll) {
     all = all / 2;
     if (roll > all) {
-        rollLadd += 1;
+        Task.cfg.roll += 1;
         getRoll(all, roll - all);
     } else{
-        return rollLadd;
+        return Task.cfg.roll;
     }
 }
 
@@ -363,12 +340,12 @@ function setButton(inner, x) {
 
 
 function setAlert() {
-    setClick('btn-doit', setPackAlert);
-    setClick('btn-abon', hideAlert);
-    setClick('btn-start', setTaskAlert);
-    setClick('btn-throw', hideAlert);
-    setClick('btn-next', setTaskAlert);
-    setClick('btn-open', setResultAlert);
+    btnClick('btn-doit', setPackAlert);
+    btnClick('btn-abon', hideAlert);
+    btnClick('btn-start', setTaskAlert);
+    btnClick('btn-throw', hideAlert);
+    btnClick('btn-next', setTaskAlert);
+    btnClick('btn-open', setResultAlert);
 }
 
 
