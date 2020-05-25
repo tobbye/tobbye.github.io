@@ -418,7 +418,7 @@ function togButtonHide(btn, hide, display) {
 
 
 function back() {
-    var config = getJson("config");
+    var config = getJson("Config");
     var href = config ? config.name : "home";
     window.location.href = "../#1/#1.html".replace(/#1/g, href);
 }

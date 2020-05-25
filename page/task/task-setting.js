@@ -1,24 +1,29 @@
 
-var Task = {};
+var Task = {
+    idx: 0,
+    ladd: 1, 
+    roll: 1,
+};
 
 Task.cfg = {
-    idx: 0,
-    ladd: 0,
     logFail:'<h4>任务#idx失败</h4>请重置后再次尝试!',
     logStop:'<h4>任务#idx中止</h4>请打开#pack',
     logNext:'<h4>任务#idx完成</h4>请进行下一任务',
     logOpen:'<h4>任务全部完成</h4>您可以打开#pack啦!',
-    logText:'logText',
 };
 
 Task.creatTask = function(block, mix) {
     document.block = block;
     let data = document.body.data;
     let line = document.body.line;
-    Task.taskType = data.taskType[Task.cfg.idx];
-    config.sett.taskType = Task.taskType;
-    config.taskData = Task.cfg;
-    switch (Task.taskType) {
+    if (Task.index != line.index)
+        Task.idx = 0;
+    Task.index = line.index;
+    Task.pack = data.packType;
+    Task.types = data.taskTypes;
+    Task.type = Task.types[Task.idx];
+    Config.task = Task;
+    switch (Task.type) {
 
         case 'snake':
             Task.creatSnake(block, line.word);
@@ -32,9 +37,9 @@ Task.creatTask = function(block, mix) {
         case 'labyrinth':
             Task.creatLabyrinth(block, line.word);
             break;
-        }
+    }
 
-    if (!mix) {
+    if (Task.game && !mix) {
         Elem.get('btn-redo').onclick = function() {
             Task.mixAnim();
         }
@@ -45,9 +50,9 @@ Task.creatTask = function(block, mix) {
 }
 
 Task.mixAnim = function(block) {
-    var clock = config.clock;
+    var clock = Config.clock;
     clearInterval(clock.mixClock);
-    clock.mixLoop = config.constant.clock.mixLoop;
+    clock.mixLoop = Config.constant.clock.mixLoop;
     clock.mixClock = setInterval(function() {
         block = block || document.block;
         if (clock.mixLoop > 0) {
@@ -61,46 +66,48 @@ Task.mixAnim = function(block) {
             clock.mixLoop--;
         } else {
             clearInterval(clock.mixClock);
-            clock.mixLoop = config.constant.clock.mixLoop;
+            clock.mixLoop = Config.constant.clock.mixLoop;
         }
     }, 120);  
     if (!Task.game.mixAnim) {
         Task.initTask();
+        Task.checkAction('redo');
         console.log(Task); 
     }
 }
 
 
 Task.initTask = function() {
-    Task.cfg.type = Task.cfg.types[Task.cfg.idx];
-    Task.cfg.ladd = Task.cfg.idx + 1;
-    Task.cfg.title = Task.game.title.replace('#idx', Task.cfg.ladd);
-    Task.cfg.logText = Task.game.logText.replace('#pack', Task.cfg.pack);
-    Task.cfg.orgTips = Task.game.orgTips.replace('#pack', Task.cfg.pack); 
-    Task.cfg.tgtTips = Task.game.tgtTips.replace('#pack', Task.cfg.pack);
-    Elem.get('task-title').innerHTML = Task.cfg.title;
+    Task.type = Task.types[Task.idx];
+    Task.ladd = Task.idx + 1;
+    console.log(Task.game)
+    Task.title = Task.game.title.replace('#idx', Task.ladd);
+    Task.cfg.logText = Task.game.logText.replace('#pack', Task.pack);
+    Task.cfg.orgTips = Task.game.orgTips.replace('#pack', Task.pack); 
+    Task.cfg.tgtTips = Task.game.tgtTips.replace('#pack', Task.pack);
+    Elem.get('task-title').innerHTML = Task.title;
 }
 
 Task.checkState = function(state) {
-    Task.cfg.state = state;
+    Task.state = state;
     if (state == 'stop') {
-        if (Task.cfg.idx > 1)
+        if (Task.idx > 1)
             Task.checkAction('stop');
         else
             Task.checkAction('fail');
     } else {
-        if (Task.cfg.idx < Task.cfg.types.length) {
+        if (Task.ladd < Task.types.length) {
             Task.initTask();  
             Task.checkAction('next');
         } else {
             Task.checkAction('open');
         }
-        Task.cfg.idx++;
+        Task.idx ++;
     }
 }
 
 Task.checkAction = function(action) {
-    Task.cfg.action = action;
+    Task.action = action;
     Style.display('btn-open', 'none');
     Style.display('btn-next', 'none');
     Style.display('btn-redo', 'none');
@@ -143,7 +150,7 @@ Task.checkAction = function(action) {
 
 
 Task.logFade = function(log) {
-    Task.cfg.logFade = log.replace('#idx', Task.cfg.ladd).replace('#pack', Task.cfg.pack);
+    Task.cfg.logFade = log.replace('#idx', Task.ladd).replace('#pack', Task.pack);
     showLog(Task.cfg.logFade);
 }
 

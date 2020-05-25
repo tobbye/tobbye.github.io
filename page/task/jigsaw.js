@@ -26,7 +26,7 @@ Task.Jigsaw = function() {
         this.funIdx = idx;
         this.fullPath = this.imgSrc ? this.imgSrc : this.imgNone;
         this.center = ~~((this.col*this.row-1) / 2);
-        if (config.sett.isFun)
+        if (Config.sett.isFun)
             this.fullPath = this.funPath + Parse.fillZero(this.funIdx, 3);
         img = new Image();
         img.src = this.fullPath;

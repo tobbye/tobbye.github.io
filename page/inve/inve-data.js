@@ -6,9 +6,9 @@ window.onload = function() {
 }
 
 var setUsers = function() {
-	if (config.sett.modeType == 'sponer') {
+	if (Config.sett.modeType == 'sponer') {
 		items = items_sponer;
-	} else if (config.sett.modeType == 'ghost') {
+	} else if (Config.sett.modeType == 'ghost') {
 		items = items_ghost;
 	}
 }
@@ -32,6 +32,7 @@ list: [
 dot: 1, 
 isGrab: 1, 
 group: '淘金者',
+instance: 'mine',
 inverStr: '投入者: ', 
 flexStr: '#0的投入',
 laddStr: '阶梯<br/><h3>#0阶</h3>',
@@ -66,11 +67,11 @@ dot: 1,
 isGrab: 1, 
 group: '淘金者', 
 instance: 'grab',
+packType:'福袋', 
 packTitle: '发现一个福袋', 
 taskTitle:'任务#0-#1', 
-taskType:['snake', 'puzzle', 'jigsaw'], 
+taskTypes:['snake', 'puzzle', 'jigsaw'], 
 resultTitle:'恭喜您获得了', 
-packType:'福袋', 
 
 inverStr: '投入者: ', 
 flexStr: '#0的投入',
@@ -91,11 +92,11 @@ dot: 100,
 isGrab: 1, 
 group: '赞助商', 
 instance: 'grab',
+packType:'红包', 
 packTitle: '发现一个红包', 
 taskTitle:'任务#0-#1', 
-taskType:['labyrinth', 'snake', 'puzzle', 'jigsaw'], 
+taskTypes:['labyrinth', 'snake', 'puzzle', 'jigsaw'], 
 resultTitle:'恭喜您获得了', 
-packType:'红包', 
 
 inverStr: '投放者: ', flexStr: '#0的投放',
 laddStr: '阶梯<br/><h3>#0阶</h3>',
@@ -115,9 +116,10 @@ list: [
 dot: 1, 
 isGrab: 1, 
 group: '赞助商',
+packType:'红包', 
 packTitle: '发现一个红包', 
 taskTitle:'任务#0-#1', 
-taskType:['puzzle', 'jigsaw'], 
+taskTypes:['puzzle', 'jigsaw'], 
 
 inverStr: '投放者: ', 
 flexStr: '#0的投放',
@@ -147,6 +149,10 @@ lines: []},
 ];
 
 var instance = {
+	mine: [
+		{name:'我', word:'', pic:['']},
+		{name:'我', word:'', pic:['']},
+	],
 	user: [
 '李刚猛',
 '章威武',

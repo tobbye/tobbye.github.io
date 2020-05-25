@@ -49,7 +49,7 @@ function setLine(content, data) {
 	}
 	for (var i=0; i < select.children.length; i++) {
 		var child = select.children[i];
-		if (child.optName == config.sett[child.key])
+		if (child.optName == Config.sett[child.key])
 			setOption(child);
 	}
 	// var child = select.children[data.default];
@@ -66,7 +66,7 @@ function setOptDefault(opt) {
 	}
 	var optName = opt.optName;
 	if (opt.key == 'hostType') {
-		var host = config.constant.host[optName];
+		var host = Config.constant.host[optName];
 		showLog('<h4>成功连接到' + opt.optText + '!</h4>' + host);
 	}
 }
@@ -83,33 +83,33 @@ function setOption(opt) {
 	}
 	var optName = opt.optName;
 	if (opt.key == 'hostType') {
-		var host = config.constant.host[optName];
-		config.sett.isOnline = !(optName == 'html' || optName == 'github');
-		config.sett.isHtmlAll = optName == 'html';
-		config.sett.isLocalMob = optName == 'local' && config.sett.isMobile;
+		var host = Config.constant.host[optName];
+		Config.sett.isOnline = !(optName == 'html' || optName == 'github');
+		Config.sett.isHtmlAll = optName == 'html';
+		Config.sett.isLocalMob = optName == 'local' && Config.sett.isMobile;
 
-		if (config.sett.isHtmlAll || config.sett.isLocalMob) {
+		if (Config.sett.isHtmlAll || Config.sett.isLocalMob) {
 			isSave = false;
 			showLog('<h4>无法连接到' + opt.optText + '!</h4>' + host);
-		} else if (config.sett.hostType == optName) {
+		} else if (Config.sett.hostType == optName) {
 			showLog('<h4>成功连接到' + opt.optText + '!</h4>' + host);
 		} else {
 			showLog('<h4>准备连接到' + opt.optText + '</h4>' + host);
-			config.action.host = host;
+			Config.action.host = host;
 			isSave = false;
 			setTimeout(function() {
-				window.location.href = config.action.host + "/page/sett/sett.html";
+				window.location.href = Config.action.host + "/page/sett/sett.html";
 			}, 2000);
 		}
 	}
 
 	if (opt.key == 'debugType' && opt.optName == 'test') {
-        Storage.set('config', config);
+        Storage.set('Config', Config);
         jsonToTable(items[0]); 
 	}
 	if (isSave)
-		config.sett[opt.key] = optName;
-    Storage.set('config', config);
+		Config.sett[opt.key] = optName;
+    Storage.set('Config', Config);
 }
 
 function setStyle(content, data) {
@@ -134,9 +134,9 @@ function setStyle(content, data) {
 			td.innerHTML = color.text;
 			Elem.color(td, '', color.font);
 			td.onclick = function() {
-				config.color = this.color;
-    			Storage.set('config', config);
-    			if (config.sett.colorType == 'text')
+				Config.color = this.color;
+    			Storage.set('Config', Config);
+    			if (Config.sett.colorType == 'text')
 					Elem.color(document.body, this.color.font, '#eee');
 				else
 					Elem.color(document.body, this.color.font, this.color.bgd);
@@ -172,8 +172,8 @@ function togStyle(option) {
             text: '白色',
         };
 	}
-	config.color = color;
-	Storage.set('config', config);
+	Config.color = color;
+	Storage.set('Config', Config);
 	Elem.color(document.body, color.font, color.bgd);
 }
 

@@ -157,7 +157,7 @@ function setEditAlert(button) {
     var title = Elem.get('edit-title');
     var block = Elem.get('edit-block');
     block.innerHTML = block.innerHTML.replace('#0', data.tag).replace('#1', data.value).replace('#2', data.allot);
-    block.style.maxHeight = config.alertHeight + 'px';
+    block.style.maxHeight = Config.page.alertHeight + 'px';
     Elem.color(box, '', getColorLight());
     showAlert('edit-bg');
 }

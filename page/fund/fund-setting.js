@@ -41,7 +41,7 @@ function setTitle(content, data) {
 function setLine(content, data) {
 	var trs = data.lines;
 	var table = Elem.creat('table', content, 'table-line');
-	Elem.height(table, config.page.flowHeight + 'px');
+	Elem.height(table, Config.page.flowHeight + 'px');
 	Elem.display(table, 'none');
 	for (let y in trs) {
 		var tds = trs[y];
@@ -74,7 +74,7 @@ function setLine(content, data) {
 function setBlock(content, data) {
 	var trs = data.blocks;
 	var table = Elem.creat('table', content, 'table-block');
-	Elem.height(table, config.page.flowHeight + 'px');
+	Elem.height(table, Config.page.flowHeight + 'px');
 	Elem.display(table, 'table');
 	for (let y in trs) {
 		var tr = Elem.creat('tr', table, 'tr-row', y);
@@ -123,7 +123,7 @@ function togItem(item) {
 	for (let y in blocks)
 		Elem.display(blocks[y], view[1]);
 	for (let z in buttons) {
-		Elem.togType(buttons[z]);
+		Elem.togState(buttons[z]);
 	}
 }
 
@@ -161,7 +161,7 @@ function setButton(content, data) {
 				input.dataready = data;
 				title.innerHTML = data.title;
 				limit.innerHTML = '(范围：0-' + input.max + ')';
-				if (config.page.isOnline) {
+				if (Config.page.isOnline) {
 					var tran = Elem.get('fundtran');
 					var ref = tran.getAttribute('ref');
 					var uid = Parse.getDate(null, '');
@@ -215,7 +215,7 @@ function refresh() {
 	var limit = Elem.get('edit-limit');
 	var list = input.data.tran.split('|');
 	var str = '';
-	var idx = config.innerIdx;
+	var idx = Config.innerIdx;
 	for (let i in list) {
 		var line = list[i].split('*');
 		var val = parseInt(input.value) * parseFloat(line[1]);
@@ -231,7 +231,7 @@ function refresh() {
 	// input.value = 0;
 	localData.save();
 	setOuterCenter();
-	config.page.isInto = true;
+	Config.page.isInto = true;
 	setInner(idx);
 }
 

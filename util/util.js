@@ -1,5 +1,4 @@
 
-var fade = {};
 var values = {};
 
 // 0 1 2 3 4 5 
@@ -272,10 +271,10 @@ Elem.attr = function(elem, key, value) {
 
 //设置元素高度自适应
 Elem.autosize = function(elem, offset) {
-    var windWidth = config.page.windWidth;
-    var windHeight = config.page.windHeight;
+    var windWidth = Config.page.windWidth;
+    var windHeight = Config.page.windHeight;
     var box = Elem.get('alert-box');
-    var agent = config.page.isMobile ? 'mobile' : 'computer';
+    var agent = Config.page.isMobile ? 'mobile' : 'computer';
     Elem.attr(box, 'agent', agent);
     elem = elem || Elem.get('outer-center');
     elem.style.height = windHeight - offset + 'px';
@@ -291,7 +290,12 @@ Elem.clone = function(elem, parent){
     return copy;
 }
 
-
+Elem.togState = function(elem, state) {
+    if (!elem || !elem.style) return;
+    var attr = elem.getAttribute('state') || 'default';
+    state = state || Parse.swape(attr, 'permit', 'danger');
+    elem.setAttribute('state', state);
+}
 
 //样式
 var Style = {};
@@ -385,28 +389,26 @@ var contentText = function(str) {
 
 
 var getColorBgd = function() {
-    return config.color.bgd;
+    return Config.color.bgd;
 }
 
 var getColorType = function() {
-    return config.color.font;
+    return Config.color.font;
 }
 
 var getColorLight = function() {
-    return config.color.light;
+    return Config.color.light;
 }
 
 
 var Page = function() {
-    var page = setDefult([], 'page');
-    for (let x in page) {
-        this[x] = page[x];
-    }
-    var sett = config.sett;
-    sett.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
-    sett.isWechat = (/micromessenger|MicroMessenger/i.test(navigator.userAgent));
-    this.zoom = sett.isMobile ? this.zoomMobile : this.zoomComput;
-    this.zoom = sett.isWechat ? this.zoomWechat : this.zoom;
+    var that = this;
+
+    getDefult(this, 'page');
+    this.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
+    this.isWechat = (/micromessenger|MicroMessenger/i.test(navigator.userAgent));
+    this.zoom = this.isMobile ? this.zoomMobile : this.zoomComput;
+    this.zoom = this.isWechat ? this.zoomWechat : this.zoom;
     this.windWidth = Math.floor(window.innerWidth / this.zoom);
     this.windHeight = Math.floor(window.innerHeight / this.zoom);
     this.alertHeight = this.windHeight - this.alertOffset;
@@ -416,8 +418,8 @@ var Page = function() {
     this.alertMargin = this.windWidth - this.alertMaxWidth;
     this.alertMargin = Math.max(this.alertMargin / 2, this.alertMinMargin);
     this.alertWidth = this.windWidth - this.alertMargin * 2 - 36;
-    sett.isWidth = this.windWidth > this.windHeight;
-    sett.isFlow = this.innerHeight > this.minHeight;
+    this.isWidth = this.windWidth > this.windHeight;
+    this.isFlow = this.innerHeight > this.minHeight;
     var box = Elem.get('alert-box');
     if (box) {
         box.style.left = this.alertMargin + 'px';
@@ -431,40 +433,39 @@ var Page = function() {
 }
 
 window.onresize = function() {
-    if (config.sett.isAlert) {
+    if (Config.sett.isAlert) {
         Style.display('alert', 'none');
-        config.page = new Page();
+        Config.page = new Page();
         Style.display('alert', 'block'); 
     } else {
-        config.page = new Page();
+        Config.page = new Page();
     }
 }
 
 var setAction = function(act, idx) {
     var uid = 'i';
-    var action = config.action;
+    var action = Config.action;
     var ref = action.ref.replace('#uid', uid).replace('#act', act).replace('#idx', idx);
     action.router = ref.replace('#host', '');
-    console.log(config);
+    console.log(Config);
     ref = ref.replace('#host', action.host);
     return ref;
 }
 
 //获取浏览器是否是移动端
 var getAgent = function() {
-    config.cfg = cfg;
-    config.name = cfg.name;
+    Config.cfg = cfg;
+    Config.name = cfg.name;
+    Config.fade = new Fade();
 
-    var temp = Storage.get('config') || {};
-    if (config.name == 'sett')
+    var temp = Storage.get('Config') || {};
+    if (Config.name == 'sett')
         temp = {};
-    if (config.name == temp.name && temp.sett.isInto)
-        config.innerIdx = temp.innerIdx || 0;
+    if (Config.name == temp.name && temp.sett.isInto)
+        Config.innerIdx = temp.innerIdx || 0;
     else
-        config.innerIdx = 0;
+        Config.innerIdx = 0;
     setDefult(temp, 'sett');
-    setDefult(temp, 'fade');
-    setDefult(temp, 'this');
     setDefult(temp, 'color');
     setDefult(temp, 'clock');
     getHost();
@@ -472,14 +473,20 @@ var getAgent = function() {
 }
 
 var setDefult = function(temp, key) {
-    config[key] = temp[key] || config.constant[key];
-    if (typeof(config[key]) === 'object')
-        config[key] = JSON.parse(JSON.stringify(config[key]));
-    return config[key];
+    Config[key] = temp[key] || Config.constant[key];
+    if (typeof(Config[key]) === 'object')
+        Config[key] = JSON.parse(JSON.stringify(Config[key]));
+}
+
+var getDefult = function(that, key) {
+    var defult = Config.constant[key];
+    for (let x in defult) {
+        that[x] = defult[x];
+    }
 }
 
 var getHost = function() {
-    var action = config.action;
+    var action = Config.action;
     var path = window.document.location.href;
     var page = window.document.location.pathname;
     var pos = path.indexOf(page);
@@ -490,9 +497,9 @@ var getHost = function() {
 }
 
 var getHostType = function(host) {
-    for (let key in config.constant.host) {
-        if (config.constant.host[key] == host) {
-            config.sett.hostType = key;
+    for (let key in Config.constant.host) {
+        if (Config.constant.host[key] == host) {
+            Config.sett.hostType = key;
             console.log(key);
             return;
         }
@@ -511,7 +518,7 @@ var setAgent = function() {
 
 
 var setFullScreen = function() {
-    if (config.isMobile) {
+    if (Config.isMobile) {
         var body = document.body;
         if (body.requestFullScreen) body.requestFullScreen(); //W3C
         if (body.msRequestFullScreen) body.msRequestFullScreen();  //IE11
@@ -522,85 +529,86 @@ var setFullScreen = function() {
 
 
 var showLog = function(text) {
-    fadeAnim(text);
+    Config.fade.setAnim(text);
 }
 
 //显示提醒信息
-var fade = {};
-
-var getFadeElem = function(elem) {
-    fade = config.fade;
-    if (!elem) {
-        elem = Elem.get('log');
+function Fade() {
+    var that = this;
+    getDefult(this, 'fade');
+    
+    this.getElem = function(elem) {
+        elem = elem || Elem.get('log');
         if (!elem) {
             elem = Elem.creat('div', document.body, 'log');
-            elem.id = 'log';
             elem.setAttribute('fade', 'over');
-        }
-        if (config.sett.colorType == 'this')
+            elem.id = 'log';
+        } 
+        if (Config.sett.colorType == 'page')
             Elem.color(elem, getColorBgd(), getColorType());
         else
             Elem.color(elem, 'white', 'dodgerblue');
+        return elem;
     }
-    return elem;
-}
 
-var fadeAnim = function(text, elem, timeOn) {
-    fade = config.fade;
-    fade.elem = getFadeElem(elem);
-    fade.text = text;
-    fade.timeOn = timeOn || fade.timeOn;
-    if (fade.elem.getAttribute('fade') != 'over') {
-        window.clearTimeout(fade.fadeIn);
-        window.clearTimeout(fade.fadeOn);
-        window.clearTimeout(fade.fadeOut);
-        window.clearTimeout(fade.fadeTog);
-        fade.elem.setAttribute('fade', 'on');
-        setFadeTog();
-    } else {
-        setFadeIn();
+    this.setAnim = function(text, elem, timeOn) {
+        this.text = text;
+        this.elem = this.getElem(elem);
+        this.timeOn = timeOn || this.timeOn;
+        if (this.elem.getAttribute('fade') != 'over') {
+            window.clearTimeout(this.fadeIn);
+            window.clearTimeout(this.fadeOn);
+            window.clearTimeout(this.fadeOut);
+            window.clearTimeout(this.fadeTog);
+            this.elem.setAttribute('fade', 'on');
+            this.animTog();
+        } else {
+            this.animIn();
+        }
     }
+
+    this.animIn = function() {
+        if (this.text)
+            this.elem.innerHTML = this.text;
+        this.elem.setAttribute('fade', 'in');
+        this.fadeIn = setTimeout(function() {
+            that.fadeIn = null;
+            that.animOn();
+        }, this.timeIn);  
+    }
+
+    this.animOn = function() {
+        this.elem.setAttribute('fade', 'on');
+        this.fadeOn = setTimeout(function() {
+            that.fadeOn = null;    
+            that.animOut();
+        }, this.timeOn); 
+    }
+
+    this.animTog = function() {
+        if (this.text)
+            this.elem.innerHTML = this.text;
+        this.elem.setAttribute('fade', 'tog');
+        this.fadeTog = setTimeout(function() {
+            that.fadeTog = null;
+            that.animOn();
+        }, this.timeTog);  
+    }
+
+    this.animOut = function() {
+        this.elem.setAttribute('fade', 'out');
+        this.fadeOut = setTimeout(function() {
+            that.fadeOut = null;
+            that.animOver();
+        }, this.timeOut);  
+    }
+
+    this.animOver = function() {
+        this.elem.setAttribute('fade', 'over');
+    }  
 }
 
-var setFadeIn = function() {
-    if (fade.text)
-        fade.elem.innerHTML = fade.text;
-    fade.elem.setAttribute('fade', 'in');
-    fade.fadeIn = setTimeout(function() {
-        fade.fadeIn = null;
-        setFadeOn();
-    }, fade.timeIn);  
-}
 
-var setFadeOn = function() {
-    fade.elem.setAttribute('fade', 'on');
-    fade.fadeOn = setTimeout(function() {
-        fade.fadeOn = null;    
-        setFadeOut();
-    }, fade.timeOn); 
-}
-
-var setFadeTog = function() {
-    if (fade.text)
-        fade.elem.innerHTML = fade.text;
-    fade.elem.setAttribute('fade', 'tog');
-    fade.fadeTog = setTimeout(function() {
-        fade.fadeTog = null;
-        setFadeOn();
-    }, fade.timeTog);  
-}
-
-var setFadeOut = function() {
-    fade.elem.setAttribute('fade', 'out');
-    fade.fadeOut = setTimeout(function() {
-        fade.fadeOut = null;
-        setFadeOver();
-    }, fade.timeOut);  
-}
-
-var setFadeOver = function() {
-    fade.elem.setAttribute('fade', 'over');
-}
 
 
 var btnClick = function(name, func) {
@@ -629,7 +637,7 @@ var addScript = function(src) {
 //显示弹窗
 var showAlert = function(name) {
     Style.display('alert', 'block');
-    config.sett.isAlert = true;
+    Config.sett.isAlert = true;
     if (name) {
         Style.display(name, 'block');
     }
@@ -639,7 +647,7 @@ var showAlert = function(name) {
 //隐藏弹窗
 var hideAlert = function(name) {
     Style.display('alert', 'none');
-    config.sett.isAlert = false;
+    Config.sett.isAlert = false;
     if (name) {
         Style.display(name, 'none');
         return;
@@ -657,9 +665,9 @@ var jsonToAlert = function(data) {
 
 
 var jsonToTable = function(item) {
-    if (config.name == 'home') return;
+    if (Config.name == 'home') return;
     Storage.set('item', item);
-    Storage.set('config', config);
+    Storage.set('Config', Config);
     window.location.href = '../view/view.html';
 }
 

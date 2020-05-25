@@ -11,7 +11,7 @@ function setContent(inner, x) {
         var content = Elem.creat('div', inner, 'content', y);
         var data = list[y];
         setTitle(content, data);
-		if (config.sett.modeType == 'ghost' && data.isDepot)
+		if (Config.sett.modeType == 'ghost' && data.isDepot)
 			Depot(content, data);
 
     }
@@ -46,8 +46,8 @@ function Depot(content, data) {
     function init(content, data) {
         // var cap = Math.pow(25,5);
         // var idx = getScale(cap, []);
-        // config.mapScale = Parse.reverse(idx);
-        // config.mapTgt = Parse.reverse(idx);
+        // Config.mapScale = Parse.reverse(idx);
+        // Config.mapTgt = Parse.reverse(idx);
         // idx = Parse.reverse(idx);
         // console.log(idx);
         var flex = Elem.creat('div', content, 'flex');

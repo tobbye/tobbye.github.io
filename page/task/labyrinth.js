@@ -18,7 +18,7 @@ Task.Labyrinth = function() {
         this.isArrow = true;
         this.isLoop = false;
         this.col = 8;
-        this.row = 10;
+        this.row = 8;
         this.map = [];
         this.cur = [0, 1];
         this.next = [0, 0];
@@ -31,7 +31,7 @@ Task.Labyrinth = function() {
         this.arrowList = ['left', 'up', 'right', 'down'];
         this.colorList = ['white', 'black', 'dodgerblue', 'red', 'green', 'green'];
         this.roadType = {ROAD:0, WALL:1, PAST:2, COLL:3, START:4, END:5};
-        this.scale = ~~(config.page.alertWidth / (2*this.col+1));
+        this.scale = ~~(Config.page.alertWidth / (2*this.col+1));
         this.word = word.replace(/\//g,'');
         this.initCanvas(block, word);
         this.initMap();
@@ -48,7 +48,7 @@ Task.Labyrinth = function() {
         canvas.width = (2*this.col+1)*this.scale;
         canvas.height = (2*this.row+1)*this.scale;
         canvas.onclick = function (){
-            if (!config.sett.isMobile)
+            if (!Config.sett.isMobile)
                 that.downLoad();
         }
         ctx = canvas.getContext('2d');
@@ -165,7 +165,6 @@ Task.Labyrinth = function() {
         this.arrow = this.arrowList[idx];
         let i = this.cur[0] + this.next[0];
         let j = this.cur[1] + this.next[1];
-        console.log(i+'-'+j)
         if (this.map[i][j] == this.roadType.ROAD) {
             this.map[i][j] = this.roadType.PAST;
             this.distance ++;
@@ -179,7 +178,8 @@ Task.Labyrinth = function() {
             this.fillText('墙', i, j); 
             this.check();
         } else if (this.map[i][j] == this.roadType.END) {
-            Task.checkState('succeed');
+            if (Task.state != 'succeed');
+                Task.checkState('succeed');
         }
     };
 

@@ -53,9 +53,9 @@ function setFeed(content, data) {
             var childs = this.parentNode.children;
             for (var i=0; i<childs.length; i++) {
                 if (this.innerHTML == childs[i].innerHTML)  {
-                    childs[i].setAttribute('btype', 'live');
+                    childs[i].setAttribute('state', 'live');
                 } else {
-                    childs[i].setAttribute('btype', 'dead');
+                    childs[i].setAttribute('state', 'dead');
                 }               
             }
         }
@@ -76,7 +76,7 @@ function setFeed(content, data) {
     button.textarea = textarea;
     button.value = data.btnText;
     button.innerHTML = data.btnText;
-    button.setAttribute('btype', 'permit');
+    button.setAttribute('state', 'permit');
     button.onclick = function() {
         var value = this.textarea.value;
         if (value == 'fun' || value == 'funny') {

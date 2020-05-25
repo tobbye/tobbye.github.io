@@ -1,6 +1,6 @@
 
 
-var config = {
+var Config = {
     name: 'home',
     innerIdx: 0,
     cfg: {},

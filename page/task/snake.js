@@ -24,7 +24,7 @@ Task.Snake = function() {
         this.next = 1;
         this.direction = 1;
         this.body = [41, 40];  
-        this.size = ~~(config.page.alertWidth / this.col);
+        this.size = ~~(Config.page.alertWidth / this.col);
         this.word = word.replace(/\//g,'');
         this.nextList = [-1, -this.col, 1, this.col];
         this.initCanvas(block, word);

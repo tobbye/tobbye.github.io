@@ -69,13 +69,14 @@ var tempData = {
     ],
 }
 
+
 function setLink(outer, href) {
     for (let x in href) {
         var data = href[x];
         var link = Elem.creat('a', outer, 'button-bot');
         link.innerHTML = data.text;
         link.href = data.href;
-        if (config.name == data.name) 
+        if (Config.name == data.name) 
             link.setAttribute('state', 'live');
         else
             link.setAttribute('state', 'dead');
@@ -86,7 +87,7 @@ function setLink(outer, href) {
 function setOuterTop() {
     var outerTop = Elem.get('outer-top');
     if (items.length == 1) {
-        setLink(outerTop, config.hrefTop);
+        setLink(outerTop, Config.hrefTop);
         return;
     }
     for (let x in items) {
@@ -111,17 +112,17 @@ function setOuterCenter() {
 
 function setOuterBot() {
     var outerBot = Elem.get('outer-bot');
-    setLink(outerBot, config.hrefBot);
+    setLink(outerBot, Config.hrefBot);
 }
 
 //显示内页
 function setInner(innerIdx) {
     var page = Storage.get('page');
-    var idx = config.sett.isInto ? config.innerIdx : innerIdx || 0;
+    var idx = Config.sett.isInto ? Config.innerIdx : innerIdx || 0;
     var outerTop = Elem.get('outer-top').children;
     var outerCenter = Elem.get('outer-center').children;
-    var isText = config.sett.colorType == 'text';
-    var isPage = config.sett.colorType == 'page';
+    var isText = Config.sett.colorType == 'text';
+    var isPage = Config.sett.colorType == 'page';
     for (var i = 0; i < outerTop.length; i++) {
         var childTop = outerTop[i];
         var childCenter = outerCenter[i];
@@ -145,15 +146,15 @@ function setInner(innerIdx) {
         Elem.color(document.body, getColorType(), '');
     else
         Elem.color(document.body, getColorType(), getColorBgd());
-    config.sett.isInto = config.innerIdx != innerIdx;
-    config.innerIdx = idx;
-    if (config.sett.isInto || innerIdx == null || config.sett.debugType == 'close') {
-        config.sett.isInto = false;
-        Storage.set('config', config);
-        console.log(config);
-    } else if (config.sett.debugType != 'close') {
-        config.sett.isInto = true;
-        Storage.set('config', config);
+    Config.sett.isInto = Config.innerIdx != innerIdx;
+    Config.innerIdx = idx;
+    if (Config.sett.isInto || innerIdx == null || Config.sett.debugType == 'close') {
+        Config.sett.isInto = false;
+        Storage.set('Config', Config);
+        console.log(Config);
+    } else if (Config.sett.debugType != 'close') {
+        Config.sett.isInto = true;
+        Storage.set('Config', Config);
         jsonToTable(items[idx]); 
     }
 }
@@ -243,7 +244,7 @@ function setSearchAlert(button) {
     var block = Elem.get("search-block");
     Elem.color(box, "", getColorLight());
     block.innerHTML = "";
-    block.style.maxHeight = config.page.alertHeight + "px";
+    block.style.maxHeight = Config.page.alertHeight + "px";
     title.innerHTML = cfg.titleStr.replace("#0", button.innerHTML);
     for (let z in tempData.searchData) {
 
@@ -271,8 +272,8 @@ function setChatAlert() {
     Elem.color(input, getColorLight(), "");
     input.placeholder = "输入内容";
     title.innerHTML = document.body.line.name;
-    box.style.maxHeight = (config.page.windHeight - 440) + "px";
-    block.style.maxHeight = (config.page.windHeight - 703) + "px";
+    box.style.maxHeight = (Config.page.windHeight - 440) + "px";
+    block.style.maxHeight = (Config.page.windHeight - 703) + "px";
     block.innerHTML = "";
     for (let i in tempData.chatData) {
         var data = tempData.chatData[i];
@@ -330,9 +331,9 @@ function getChatLength(value) {
 function onChatFocus() {
     var box = Elem.get("alert-box");
     var block = Elem.get("detail-block");
-    if (config.page.isMobile && !config.page.isWechat) {
-        box.style.maxHeight = (config.page.windHeight - 940) + "px";
-        block.style.maxHeight = (config.page.windHeight - 1203) + "px";
+    if (Config.page.isMobile && !Config.page.isWechat) {
+        box.style.maxHeight = (Config.page.windHeight - 940) + "px";
+        block.style.maxHeight = (Config.page.windHeight - 1203) + "px";
     }
     block.lastChild.scrollIntoView();
     var input = Elem.get("chat-textarea");
