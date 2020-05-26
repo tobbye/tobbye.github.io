@@ -1,96 +1,102 @@
-function setElems() {
-    setOuterTop();
-    setOuterCenter();
-    setOuterBot();
-    setInner();
-}
+var Help = new __Help();
+
+function __Help() {
 
 
-function setContent(inner, x) {
-    var list = items[x].list;
-    for (let y in list) {
-        var content = Elem.creat('div', inner, 'content', y);
-        var data = list[y];
-        setTitle(content, data);
-        setHelp(content, data);
-        setFeed(content, data);
+    this.init = function() {
+        this.creatElems();
+        console.log(this);
     }
-}
 
-function setTitle(content, data) {
-    if (data.title) {
-        var title = Elem.creat('div', content, 'title');
-        title.innerHTML = data.title;
+
+    this.creatElems = function() {
+        Alert.creatOuterTop(this);
+        Alert.creatOuterCenter(this);
+        Alert.creatOuterBot(this);
+        Alert.showInner();
     }
-    if (data.vice) {
-        var vice = Elem.creat('div', content, 'vice');
-        vice.innerHTML = data.vice;
-    }
-}
 
-function setHelp(content, data) {
-    if (!data.summary) return; 
-    var details = Elem.creat('details', content);
-    var summary = Elem.creat('summary', details);
-    var detail = Elem.creat('div', details);
-    summary.innerHTML = data.summary;
-    detail.innerHTML = data.detail;
-}
-
-function setSlect() {
-
-}
-
-function setFeed(content, data) {
-    if (!data.opts) return; 
-    var block = Elem.creat('div', content, 'block');
-    var select = Elem.creat('div', block, 'alert-flex');
-    for (let x in data.opts) {
-        var option = Elem.creat('div', select, 'option');
-        // button.value = data.opts[x];
-        option.innerHTML = data.opts[x];
-        option.onclick = function() {
-            var childs = this.parentNode.children;
-            for (var i=0; i<childs.length; i++) {
-                if (this.innerHTML == childs[i].innerHTML)  {
-                    childs[i].setAttribute('state', 'live');
-                } else {
-                    childs[i].setAttribute('state', 'dead');
-                }               
-            }
+    this.setContent = function(inner, x) {
+        let list = items[x].list;
+        for (let y in list) {
+            let content = Elem.creat('div', inner, 'content', y);
+            let data = list[y];
+            Alert.creatTitle(content, data);
+            this.setHelp(content, data);
+            this.setFeed(content, data);
         }
     }
-    select.children[0].onclick();
-    var form = Elem.creat('form', block, 'feedback');
-    form.action = setAction('feedback', data.type);
-    form.method = "POST";
-    var textarea = Elem.creat('textarea', form, 'textarea');
-    textarea.name = 'feed';
-    textarea.placeholder = data.remind;
-    textarea.style.color = getColorType();
 
-    var flex = Elem.creat('div', form, 'flex');
-    var button = Elem.creat('input', flex, 'button');
-    button.data = data;
-    button.type = 'submit';
-    button.textarea = textarea;
-    button.value = data.btnText;
-    button.innerHTML = data.btnText;
-    button.setAttribute('state', 'permit');
-    button.onclick = function() {
-        var value = this.textarea.value;
+
+    this.setHelp = function(content, data) {
+        if (!data.summary) return; 
+        let details = Elem.creat('details', content);
+        let summary = Elem.creat('summary', details);
+        let detail = Elem.creat('div', details);
+        summary.innerHTML = data.summary;
+        detail.innerHTML = data.detail;
+    }
+
+    this.setSlect = function() {
+
+    }
+
+    this.setFeed = function(content, data) {
+        if (!data.opts) return; 
+        let block = Elem.creat('div', content, 'block');
+        let select = Elem.creat('div', block, 'alert-flex');
+        for (let x in data.opts) {
+            let option = Elem.creat('div', select, 'option');
+            // button.value = data.opts[x];
+            option.innerHTML = data.opts[x];
+            option.onclick = function() {
+                let childs = this.parentNode.children;
+                for (let i=0; i<childs.length; i++) {
+                    if (this.innerHTML == childs[i].innerHTML)  {
+                        childs[i].setAttribute('state', 'live');
+                    } else {
+                        childs[i].setAttribute('state', 'dead');
+                    }               
+                }
+            }
+        }
+        select.children[0].onclick();
+        let form = Elem.creat('form', block, 'feedback');
+        form.action = Config.setAction('feedback', data.type);
+        form.method = "POST";
+        let textarea = Elem.creat('textarea', form, 'textarea');
+        textarea.name = 'feed';
+        textarea.placeholder = data.remind;
+        textarea.style.color = getColorType();
+
+        let flex = Elem.creat('div', form, 'flex');
+        let button = Elem.creat('input', flex, 'button');
+        button.data = data;
+        button.type = 'submit';
+        button.textarea = textarea;
+        button.value = data.btnText;
+        button.innerHTML = data.btnText;
+        button.setAttribute('state', 'permit');
+        button.onclick = function() {
+            Help.setSend(this);
+        }
+    }
+
+    this.setSend = function(btn) {
+        let value = btn.textarea.value;
         if (value == 'fun' || value == 'funny') {
             config.sett.isFun = true;
             Storage.set('config', config);
-            showLog('<h4>特别提醒</h4>隐藏模式开启！');
+            Alert.log('<h4>特别提醒</h4>隐藏模式开启！');
         } else if (value == 'ghost') {
             config.sett.modeType = 'ghost';
             Storage.set('config', config);
-            showLog('<h4>特别提醒</h4>修仙模式开启！');
-        } else if (!value || value == this.data.remind) {
-            showLog('<h4>反馈失败</h4>' + this.data.remind);
+            Alert.log('<h4>特别提醒</h4>修仙模式开启！');
+        } else if (!value || value == btn.data.remind) {
+            Alert.log('<h4>反馈失败</h4>' + btn.data.remind);
         } else {
-            showLog('<h4>反馈成功</h4>' + this.data.vice);
-        }
+            Alert.log('<h4>反馈成功</h4>' + btn.data.vice);
+        }  
     }
+
 }

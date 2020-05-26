@@ -1,17 +1,10 @@
 window.onload = function() {
-	getAgent();
-	setUsers();
-	setElems();
-	setAgent();
+    Config.init();
+    Alert.init();
+    Tran.init();
 }
 
-var setUsers = function() {
-	if (Config.sett.modeType == 'sponer') {
-		items = items_sponer;
-	} else if (Config.sett.modeType == 'ghost') {
-		items = items_ghost;
-	}
-}
+
 
 var cfg = {
 	name: 'inve',
@@ -20,7 +13,6 @@ var cfg = {
 	laddSrc: '../../picture/ladd/',
 	rightColor: 'green',
 	wrongColor: 'red',
-	btnName: ['next',  'doit', 'quit', 'redo', 'abon', 'open', 'start', 'throw', 'home', 'follow', 'close'],
 };
 
 
@@ -30,9 +22,8 @@ var items = [
 list: [
 {title: '我的投入', vice: '投入的资金可被淘金者抢夺', 
 dot: 1, 
-isGrab: 1, 
+type: 'mine', 
 group: '淘金者',
-instance: 'mine',
 inverStr: '投入者: ', 
 flexStr: '#0的投入',
 laddStr: '阶梯<br/><h3>#0阶</h3>',
@@ -41,13 +32,10 @@ priceStr: '单个金额<br/><h3>#0元</h3>',
 timesStr: '已传播<br/><h3>#0次</h3>',
 btnName: ['quit'],
 btnText: ['关闭'],
-lines: [
-{index: '1548342507258', stamp: '2019-01-24 23:08:27', ladder: 12, ladd: 8, multi: 3, inver: '我', tag: ['众鑫淘金', '海量红包', '等你发掘']},
-{index: '1548342507258', stamp: '2019-01-23 12:18:10', ladder: 9, ladd: 5, multi: 15, inver: '我', tag: ['众鑫淘金', '海量红包', '等你发掘']},
-]},
+lines: []},
 {title: '选择投入', vice: '投入资金后可以抢夺等量的资金', 
 dot: 1, 
-isGrab: 0, 
+type:'inve',
 inverStr: '投入者: ', 
 flexStr: '投入预览',
 laddStr: '阶梯<br/><h3>#0阶</h3>',
@@ -64,9 +52,8 @@ lines: []},
 list: [
 {title: '资金池', vice: '抢夺资金以提高可获收益上限',
 dot: 1, 
-isGrab: 1, 
+type:'grab',
 group: '淘金者', 
-instance: 'grab',
 packType:'福袋', 
 packTitle: '发现一个福袋', 
 taskTitle:'任务#0-#1', 
@@ -89,12 +76,11 @@ lines: []},
 list: [
 {title: '红包池', vice: '抢夺投放的红包来获取收益',
 dot: 100, 
-isGrab: 1, 
+type:'grab',
 group: '赞助商', 
-instance: 'grab',
 packType:'红包', 
 packTitle: '发现一个红包', 
-taskTitle:'任务#0-#1', 
+taskTitle:'任务#idx-#type', 
 taskTypes:['labyrinth', 'snake', 'puzzle', 'jigsaw'], 
 resultTitle:'恭喜您获得了', 
 
@@ -114,7 +100,7 @@ var items_sponer = [
 list: [
 {title: '我的投放', vice: '投放的红包可被淘金者抢夺', 
 dot: 1, 
-isGrab: 1, 
+type:'mine',
 group: '赞助商',
 packType:'红包', 
 packTitle: '发现一个红包', 
@@ -135,7 +121,7 @@ lines: [
 ]},
 {title: '选择阶梯', vice: '投入资金后可以抢夺等量的资金', 
 dot: 1, 
-isGrab: 0, 
+type:'inve',
 inverStr: '投放者: ', 
 flexStr: '投放预览',
 laddStr: '阶梯<br/><h3>#0阶</h3>',

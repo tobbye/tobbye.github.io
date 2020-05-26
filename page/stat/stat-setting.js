@@ -1,61 +1,59 @@
-function setElems() {
-	setOuterTop();
-	setOuterCenter();
-	setOuterBot();
-	setInner();
-}
+var Stat = new __Stat();
 
+function __Stat() {
 
-function setContent(inner, x) {
-    var list = items[x].list;
-    for (let y in list) {
-        var content = Elem.creat('div', inner, 'content', y);
-        var data = list[y];
-        setTitle(content, data, x);
-        setLine(content, data, x, y);
+    this.init = function() {
+        this.creatElems();
+        console.log(this);
     }
-}
 
 
-function setTitle(content, data, x) {
-    if (data.title) {
-	    var title = Elem.creat('div', content, 'title');
-	    title.innerHTML = data.title;
+    this.creatElems = function() {
+        Alert.creatOuterTop(this);
+        Alert.creatOuterCenter(this);
+        Alert.creatOuterBot(this);
+        Alert.showInner();
     }
-    if (data.vice) {
-	    var vice = Elem.creat('div', content, 'vice');
-	    vice.innerHTML = data.vice;
+
+	this.setContent = function(inner, x) {
+	    let list = items[x].list;
+	    for (let y in list) {
+	        let content = Elem.creat('div', inner, 'content', y);
+	        let data = list[y];
+	        Alert.creatTitle(content, data, x);
+	        this.creatLine(content, data, x, y);
+	    }
 	}
-}
 
 
-function setLine(content, data, x, y) {
-	if (!data.lines) return;
-	var block = Elem.creat('table', content, 'block', x);
-	for (let z in data.lines) {
-		var _data = data.lines[z];
-		_data.seed = items[x].seed;
+	this.creatLine = function(content, data, x, y) {
+		if (!data.lines) return;
+		let block = Elem.creat('table', content, 'block', x);
+		for (let z in data.lines) {
+			let _data = data.lines[z];
+			_data.seed = items[x].seed;
 
-		//BLOCK
-		var flex = Elem.creat('tr', block, 'flex', z);
-		var date = setCell(flex, _data, 'date', 'A', 0, 0);
-		var inve = setCell(flex, _data, 'inve', 'B', 1e3, 1e4);
-		var grab = setCell(flex, _data, 'grab', 'B', 1e3, 1e4);
-		var gain = setCell(flex, _data, 'gain', 'B', 1e1, 1e2);
+			//BLOCK
+			let flex = Elem.creat('tr', block, 'flex', z);
+			let date = this.setCell(flex, _data, 'date', 'A', 0, 0);
+			let inve = this.setCell(flex, _data, 'inve', 'B', 1e3, 1e4);
+			let grab = this.setCell(flex, _data, 'grab', 'B', 1e3, 1e4);
+			let gain = this.setCell(flex, _data, 'gain', 'B', 1e1, 1e2);
+		}
 	}
+
+	this.setCell = function(flex, data, k, idx, a, b) {
+		let cell = Elem.creat('td', flex, 'cell'+idx);
+		let value = Math.floor(a + b* (Math.random() * 0.33 + 0.33) * data.seed * 5);
+		data[k] = data[k] || '￥' + Parse.sub4Num(value);
+		cell.innerHTML = data[k];
+		if (cell.innerHTML.replace('年', '') != cell.innerHTML)
+			cell.innerHTML = '<h4>' + cell.innerHTML.replace('年', '年</h4>');
+		return cell;
+	}
+
+
 }
-
-function setCell(flex, data, k, idx, a, b) {
-	var cell = Elem.creat('td', flex, 'cell'+idx);
-	var value = Math.floor(a + b* (Math.random() * 0.33 + 0.33) * data.seed * 5);
-	data[k] = data[k] || '￥' + Parse.sub4Num(value);
-	cell.innerHTML = data[k];
-	if (cell.innerHTML.replace('年', '') != cell.innerHTML)
-		cell.innerHTML = '<h4>' + cell.innerHTML.replace('年', '年</h4>');
-	return cell;
-}
-
-
 
 
 

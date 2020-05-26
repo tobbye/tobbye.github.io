@@ -1,7 +1,7 @@
 window.onload = function() {
-	getAgent();
-	setElems();
-	setAgent();
+    Config.init();
+    Alert.init();
+    User.init();
 }
 
 var cfg = {

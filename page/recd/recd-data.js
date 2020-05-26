@@ -1,8 +1,7 @@
 window.onload = function() {
-    getAgent();
-    getjson();
-	setElems();
-	setAgent();
+    Config.init();
+    Alert.init();
+    Recd.init();
 }
 
 var cfg = {

@@ -1,290 +1,372 @@
-var tempData = {
-	searchData: [
-		{order: 1, val: 948670, uid: 'd110001', name: '李刚猛', ladd: 18, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['身份标签1', '身份标签2']},
-		{order: 2, val: 690663, uid: 'd110002', name: '张雄壮', ladd: 17, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['阶层标签1', '阶层标签2']},
-		{order: 3, val: 582830, uid: 'd110004', name: '章威武', ladd: 12, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['成就标签1', '成就标签2']},
-        {order: 4, val: 699972, uid: 'd110002', name: '王坚强', ladd: 20, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['排名标签1', '排名标签2']},
-		{order: 5, val: 414480, uid: 'd110005', name: '徐福贵', ladd: 17, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['评价标签1', '评价标签2']},
-		{order: 6, val: 341222, uid: 's110006', name: '赵铁柱', ladd: 15, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['理财专家', '投资顾问']},
-		{order: 7, val: 202098, uid: 's110007', name: '赵铁牛', ladd: 15, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['理财专家', '投资顾问']},
-        {order: 8, val: 182256, uid: 's110008', name: '赵铁蛋', ladd: 15, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['理财专家', '投资顾问']},
-	],
-    unitData: {
-        uid: 'uid001', 
-        name: 'The Sponsor', 
-        ladd: 17, 
-        tag: ['自定义标签1', '自定义标签2', '自定义标签3'], 
-        mark: ["身份标签1", "身份标签2"],
-        mark2: ["阶层标签1", "阶层标签2"],
-        mark3: ["成就标签1", "成就标签2"],
-        mark4: ["排名标签1", "排名标签2"],
-        mark5: ["评价标签1", "评价标签2"],
-        desc: `<h3>谁能告诉我花儿为什么那么红？</h3>花儿为什么这样红？
-            为什么这样红？
-            哎红得好像，
-            红得好像燃烧的火，
-            它象征着纯洁的友谊和爱情。
-            花儿为什么这样鲜？
-            为什么这样鲜？
-            哎鲜得使人，
-            鲜得使人不忍离去，
-            它是用了青春的血液来浇灌。
-            哎鲜得使人，
-            鲜得使人不忍离去，
-            它是用了青春的血液来浇灌。
-            哎红得好像，
-            红得好像燃烧的火，
-            它象征着纯洁的友谊和爱情。`
-        // `陈晴晴2009，叶梦梦2009，王嫚嫚2010，胡泱秧2013，邓小丽2016，赵素华2016，黎桂清2017，章威威2018，
-        // 崔慧珍2019，鲍青青2019，汤小英2019，张沙沙2019觉得很赞！`,
 
-    },
-
-	chatData: [
-    {text:"大佬您好，我有个价值20亿的项目，前无古人后无来者！", time:"11：25", isMine:0},
-    {text:"静静的听你装完这个逼。", time:"11：25", isMine:1},
-    {text:"如何一块变两块？", time:"11：25", isMine:0},
-    {text:`今天一块变两块，
-        明天两块变四块，
-        后天四块变八块，
-        大后天一十六块，
-        十天二零四八块，
-        一月二十一亿块。`, time:"11：27", isMine:0},
-    {text:`方法：
-        1).培养一种繁殖周期是1天的生物体
-        2).剪下蚂蚁的寻路基因植入此生物体内
-        3).剪下蜜蜂的采集基因进行改造
-        4).在采集基因上镶嵌3.66毫克黄金（价值1元，金价273/克）
-        5).把采集基因植入此生物体内
-        6).把此生物体投放到非洲金矿
-        7).在31天后把蚁后投放到金矿上
-        8).在蚁后的吸引下这些生物体聚集到一起，数一数，有21.47亿个
-        9).关键时刻到了，一把火（3000度以上）烧死这么多的生物体
-        10).等冷却凝固后，地上一堆黄色金属，称重约7.866吨，价值估算21.47亿元
-        如此目标实现！`, time:"11：27", isMine:0},
-
-    {text:`二狗子，你这个项目我很有兴趣，你先去市场调研一下，出个详细的策划案出来，把步骤和细节都罗列出来，最好到非洲金矿实地考察一下。`, time:"11：30", isMine:1},
-    {text:`另外PPT也是必不可少的，一定要做的美观一点，你上次那个「母猪如何择优配种」项目就是栽在PPT上，做的像狗屎一样，这次可不能再像上次那样瞎搞了。`, time:"11：30", isMine:1},
-    {text:`启动资金的问题你不用担心，我大力支持。加油干！二狗子！`, time:"11：30", isMine:1},
-    ],
-}
-
-
-function setLink(outer, href) {
-    for (let x in href) {
-        var data = href[x];
-        var link = Elem.creat('a', outer, 'button-bot');
-        link.innerHTML = data.text;
-        link.href = data.href;
-        if (Config.name == data.name) 
-            link.setAttribute('state', 'live');
-        else
-            link.setAttribute('state', 'dead');
+window.onresize = function() {
+    if (this.isAlert) {
+        Style.display('alert', 'none');
+        Config.page = new Page();
+        Style.display('alert'); 
+    } else {
+        Config.page = new Page();
     }
 }
 
 
-function setOuterTop() {
-    var outerTop = Elem.get('outer-top');
-    if (items.length == 1) {
-        setLink(outerTop, Config.hrefTop);
-        return;
+var Panel = function() {
+    this.init = function(panel, name) {
+        this.name  = name;
+        this.panel = panel;
+        this.title = panel.querySelector('.alert-title');
+        this.block = panel.querySelector('.alert-block');
+        this.buttons = panel.querySelectorAll('.button');
+        if (!this.title || !this.block) 
+            return;
+        if (name == 'edit') {
+            this.input = panel.querySelector('.alert-input');
+            this.limit = panel.querySelector('.alert-limit');
+        }
+        if (name == 'chat') {
+            this.input = panel.querySelector('textarea');
+        }
+        Alert.panels[name] = this;
     }
-    for (let x in items) {
-        var btn = Elem.creat('div', outerTop, 'button-top');
-        btn.innerHTML = items[x].title;
-        btn.idx = x;
-        btn.onclick = function() {
-            setInner(this.idx);
+}
+
+var Alert = new __Alert();
+
+// this.page = {
+//     nexu: Nexu,
+//     tran: Tran,
+//     fund: Fund,
+// }
+
+function __Alert() {
+//初始化Alert
+    this.init = function() {
+        this.name = Config.cfg.name;
+        this.initAlert();
+        this.btnClick('btn-quit', this.hidePanel);
+        this.btnClick('btn-abon', this.hidePanel);
+        this.btnClick('btn-close', this.hidePanel);
+        this.hidePanel();
+        console.log(Alert);
+    }
+
+
+    this.creatTitle = function(content, data) {
+        if (data.title) {
+            let title = Elem.creat('div', content, 'title');
+            title.innerHTML = data.title;
+        }
+
+        if (data.vice) {
+            let vice = Elem.creat('div', content, 'vice');
+            vice.innerHTML = data.viceStr || data.vice;
         }
     }
-}
 
-function setOuterCenter() {
-    window.onresize();
-    var outerCenter = Elem.get('outer-center');
-    outerCenter.innerHTML = '';
-    for (let x in items) {
-        var inner = Elem.creat('div', outerCenter, 'inner', x);
-        setContent(inner, x);
-    }
-}
-
-function setOuterBot() {
-    var outerBot = Elem.get('outer-bot');
-    setLink(outerBot, Config.hrefBot);
-}
-
-//显示内页
-function setInner(innerIdx) {
-    var page = Storage.get('page');
-    var idx = Config.sett.isInto ? Config.innerIdx : innerIdx || 0;
-    var outerTop = Elem.get('outer-top').children;
-    var outerCenter = Elem.get('outer-center').children;
-    var isText = Config.sett.colorType == 'text';
-    var isPage = Config.sett.colorType == 'page';
-    for (var i = 0; i < outerTop.length; i++) {
-        var childTop = outerTop[i];
-        var childCenter = outerCenter[i];
-        if (childTop.className != 'button-top')
-            break;
-        if (i == idx) {
-            if (isPage)
-                Elem.color(childTop, getColorBgd(), getColorType());
+    this.creatLink = function(outer, href) {
+        for (let x in href) {
+            let data = href[x];
+            let link = Elem.creat('a', outer, 'button-bot');
+            link.innerHTML = data.text;
+            link.href = data.href;
+            if (Config.name == data.name) 
+                link.setAttribute('state', 'live');
             else
-                Elem.attr(childTop, 'state', 'live');
-            Elem.display(childCenter, 'block');
-        } else {
-            if (isPage)
-                Elem.color(childTop, getColorType(), getColorBgd());
-            else
-                Elem.attr(childTop, 'state', 'dead');
-            Elem.display(childCenter, 'none');
+                link.setAttribute('state', 'dead');
         }
     }
-    if (isText)
-        Elem.color(document.body, getColorType(), '');
-    else
-        Elem.color(document.body, getColorType(), getColorBgd());
-    Config.sett.isInto = Config.innerIdx != innerIdx;
-    Config.innerIdx = idx;
-    if (Config.sett.isInto || innerIdx == null || Config.sett.debugType == 'close') {
-        Config.sett.isInto = false;
-        Storage.set('Config', Config);
-        console.log(Config);
-    } else if (Config.sett.debugType != 'close') {
-        Config.sett.isInto = true;
-        Storage.set('Config', Config);
-        jsonToTable(items[idx]); 
-    }
-}
-
-function setUserFlex(user, line, isNext) {
-    if (cfg.isRank || isNext) {
-        var top = Elem.creat('div', user, 'user-top');
-        var order = Elem.creat('div', top, 'user-order');
-        var value = Elem.creat('div', top, 'user-value');
-
-        order.innerHTML = line.order;
-        value.innerHTML = line.value;  
-    }
-
-    var flex = Elem.creat('div', user, 'user-flex');
-    var head = Elem.creat('img', flex, 'user-head');
-    var left = Elem.creat('div', flex, 'user-left');
-    var right = Elem.creat('div', flex, 'user-right');
-    var name = Elem.creat('div', left, 'user-name');
-    var marks = Elem.creat('div', left, 'user-flex');
-    var ladd = Elem.creat('div', right, 'user-ladd');
-    var group = Elem.creat('div', right, 'user-group');
-    line.mark = line.mark || ["身份标签1", "身份标签2"];
-    for (let i in line.mark) {
-        var mark = Elem.creat('div', marks, 'user-mark');
-        mark.innerHTML = line.mark[i];
-        mark.style.borderColor = getColorType();
-    }
-    Elem.color(head, '', getColorLight());
-    Elem.color(group, 'white', getColorType());
-    Elem.style(group, 'borderColor', getColorType());
-
-    name.innerHTML = line.name || line.inver;
-    ladd.innerHTML = line.ladd + '阶' || '??阶';
-    group.innerHTML = line.group || '未知';
-    return flex;
-}
 
 
-function setUserAlert(user) {
-    var box = Elem.get('alert-box');
-    var block = Elem.get('detail-block');
-    Elem.color(box, '', getColorLight());
-    block.innerHTML = '';
-
-    var x = user.x;
-    var data = user.data;
-    var line = user.line;
-    var body = Elem.creat('div', block, 'user-body');
-    var flex = setUserFlex(body, line, x);
-    var tags = Elem.creat('div', body, 'user-tags');
-    var desc = Elem.creat('div', body, 'user-desc');
-    if (line.tag) {
-        for (let i in line.tag) {
-            var tag = Elem.creat('div',tags, 'user-tag');
-            tag.innerHTML = line.tag[i];
-            tag.onclick = function() {
-                setSearchAlert(this);
+    this.creatOuterTop = function(that) {
+        let outerTop = Elem.get('outer-top');
+        if (items.length == 1) {
+            this.creatLink(outerTop, Constant.hrefTop);
+            return;
+        }
+        for (let x in items) {
+            let btn = Elem.creat('div', outerTop, 'button-top');
+            btn.innerHTML = items[x].title;
+            btn.idx = x;
+            btn.onclick = function() {
+                Alert.showInner(this.idx);
             }
         }
     }
 
-    desc.innerHTML = line.desc.replace(/\n/g, '<br/>');;
-    
-    var button = Elem.get('detail-button');
-    button.innerHTML = '';
-    for (let k in data.buttonIdx) {
-        var _idx = data.buttonIdx[k];
-        var _data = cfg.buttons[_idx];
-        //BUTTON
-        var btn = Elem.creat('div', button, 'button');
-        btn.setAttribute('state', _data.state);
-        btn.innerHTML = _data.text;
-        btn.data = _data;
-        btn.user = user;
-        btn.onclick = function () {
-            setNexu(this);
+    this.creatOuterCenter = function(that) {
+        window.onresize();
+        let outerCenter = Elem.get('outer-center');
+        outerCenter.innerHTML = '';
+        for (let x in items) {
+            let inner = Elem.creat('div', outerCenter, 'inner', x);
+            that.setContent(inner, x);
         }
     }
-    showAlert('detail-bg');
-}
 
-function setSearchAlert(button) {
-    hideAlert('detail-bg');
-    var box = Elem.get("alert-box");
-    var title = Elem.get("search-title");
-    var block = Elem.get("search-block");
-    Elem.color(box, "", getColorLight());
-    block.innerHTML = "";
-    block.style.maxHeight = Config.page.alertHeight + "px";
-    title.innerHTML = cfg.titleStr.replace("#0", button.innerHTML);
-    for (let z in tempData.searchData) {
-
-        var user = Elem.creat("div", block, "user-block", z);
-        var line = tempData.searchData[z];
-        var order = line.order + "th";
-        if (order.length == 3)
-            line.order = order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
-        line.group = line.uid[0].replace('s','赞助商').replace('d','淘金者');
-        line.value = "权值: " + Parse.sub4Num(line.val);
-        setUserFlex(user, line, true);
+    this.creatOuterBot = function(that) {
+        let outerBot = Elem.get('outer-bot');
+        this.creatLink(outerBot, Constant.hrefBot);
     }
-    showLog('搜索成功!');
-    showAlert("search-bg");
-}
 
-
-function setChatAlert() {
-    hideAlert("detail-bg");
-    var box = Elem.get("alert-box");
-    var title = Elem.get("chat-title");
-    var block = Elem.get("chat-block");
-    var input = Elem.get("chat-textarea");
-    Elem.color(box, "", getColorLight());
-    Elem.color(input, getColorLight(), "");
-    input.placeholder = "输入内容";
-    title.innerHTML = document.body.line.name;
-    box.style.maxHeight = (Config.page.windHeight - 440) + "px";
-    block.style.maxHeight = (Config.page.windHeight - 703) + "px";
-    block.innerHTML = "";
-    for (let i in tempData.chatData) {
-        var data = tempData.chatData[i];
-        var ctype = data.isMine ? "right" : "left";
-        setChatText(block, ctype, data.text);
+    //显示内页
+    this.showInner = function(innerIdx) {
+        let idx = Config.sett.isInto ? Config.innerIdx : innerIdx || 0;
+        let outerTop = Elem.get('outer-top').children;
+        let outerCenter = Elem.get('outer-center').children;
+        let isPage = Config.sett.colorType == 'page';
+        for (let i = 0; i < outerTop.length; i++) {
+            let childTop = outerTop[i];
+            let childCenter = outerCenter[i];
+            if (childTop.className != 'button-top')
+                break;
+            if (i == idx) {
+                if (isPage)
+                    Elem.color(childTop, getColorBgd(), getColorType());
+                else
+                    Elem.attr(childTop, 'state', 'live');
+                Elem.show(childCenter);
+            } else {
+                if (isPage)
+                    Elem.color(childTop, getColorType(), getColorBgd());
+                else
+                    Elem.attr(childTop, 'state', 'dead');
+                Elem.show(childCenter, 'none');
+            }
+        }
+        Config.innerIdx = idx;
+        this.setInner(innerIdx, idx);
     }
-    var send = Elem.get("btn-send");
-    send.block = block;
-    send.onclick = function() {
-        var input = Elem.get("chat-textarea");
-        setChatText(this.block, "right", input.value);
+
+    this.setInner = function(innerIdx, idx) {
+        let isText = Config.sett.colorType == 'text';
+        if (isText)
+            Elem.color(document.body, getColorType(), '');
+        else
+            Elem.color(document.body, getColorType(), getColorBgd());
+        Config.sett.isInto = Config.innerIdx != innerIdx;
+        if (Config.sett.isInto || innerIdx == null || Config.sett.debugType == 'close') {
+            Config.sett.isInto = false;
+            Storage.set('Config', Config);
+        } else if (Config.sett.debugType != 'close') {
+            Config.sett.isInto = true;
+            Storage.set('Config', Config);
+            jsonToTable(items[idx]); 
+        }
+    }
+
+
+    this.initAlert = function() {
+        this.panels = {};
+        this.buttons = {};
+        this.self = document.querySelector('#alert');
+        this.box = document.querySelector('#alert-box');
+        if (!this.self || !this.box) return;
+        let panels = this.box.querySelectorAll('.alert-panel');
+        for (var i=0; i<panels.length; i++) {
+            let name = panels[i].getAttribute('name');
+            let panel = new Panel();
+            panel.init(panels[i], name);
+        }
+        let buttons = this.box.querySelectorAll('.button');
+            for (var i=0; i<buttons.length; i++) {
+            let name = buttons[i].getAttribute('name');
+            this.buttons[name] = buttons[i];
+        }
+    }
+
+
+
+    this.showButton = function(data) {
+        let buttons = this.curPanel.buttons;
+        if (data.buttonIdx) {
+            for (var i=0;i<buttons.length;i++) {
+                let name = buttons[i].getAttribute('name');
+                if (data.buttonIdx.indexOf(i) > -1)
+                    Elem.show(buttons[i]);
+                else
+                    Elem.hide(buttons[i]);
+            } 
+        }
+        if (data.btnName) {
+
+        }
+    }
+
+
+    //显示弹窗
+    this.showPanel = function(name, save) {
+        this.hidePanel();
+        this.setBox();
+        this.isAlert = true;
+        this.curPanel = this.panels[name];
+        console.log(this.curPanel);
+        if (!this.curPanel) return;
+        Elem.show(this.self);
+        Elem.show(this.curPanel.panel);
+        if (!save)
+            Elem.text(this.curPanel.block, '');
+    }
+
+
+    //隐藏弹窗
+    this.hidePanel = function(name) {
+        this.isAlert = false;
+        Elem.hide(this.self);
+        if (!this.self || !this.box) return;
+        for (var i=0; i<this.box.children.length; i++) {
+            let panel = this.box.children[i];
+            Elem.hide(panel);
+        }
+    }
+
+
+    this.log = function(text) {
+        Config.fade.setAnim(text);
+    }
+
+    this.setBox = function() {
+        Elem.color(this.box, '', getColorLight());
+    }
+
+
+    this.btnClick = function(name, func) {
+        if (Elem.get(name)) {
+            Elem.get(name).onclick = function() {
+                func();
+            }
+        }
+    }
+
+    this.btnState = function(name, state) {
+        if (Elem.get(name)) {
+            Elem.get(name).setAttribute('state', state);
+        }
+    }
+
+    this.User = function() {
+
+    }
+
+    this.setUserFlex = function(user, line, isNext) {
+        if (cfg.isRank || isNext) {
+            let top = Elem.creat('div', user, 'user-top');
+            let order = Elem.creat('div', top, 'user-order');
+            let value = Elem.creat('div', top, 'user-value');
+
+            order.innerHTML = line.order;
+            value.innerHTML = line.value;  
+        }
+
+        let flex = Elem.creat('div', user, 'user-flex');
+        let head = Elem.creat('img', flex, 'user-head');
+        let left = Elem.creat('div', flex, 'user-left');
+        let right = Elem.creat('div', flex, 'user-right');
+        let name = Elem.creat('div', left, 'user-name');
+        let marks = Elem.creat('div', left, 'user-flex');
+        let ladd = Elem.creat('div', right, 'user-ladd');
+        let group = Elem.creat('div', right, 'user-group');
+        line.mark = line.mark || ["身份标签1", "身份标签2"];
+        for (let i in line.mark) {
+            let mark = Elem.creat('div', marks, 'user-mark');
+            mark.innerHTML = line.mark[i];
+            mark.style.borderColor = getColorType();
+        }
+        Elem.color(head, '', getColorLight());
+        Elem.color(group, 'white', getColorType());
+        Elem.css(group, 'borderColor', getColorType());
+
+        name.innerHTML = line.name || line.inver;
+        ladd.innerHTML = line.ladd + '阶' || '??阶';
+        group.innerHTML = line.group || '未知';
+        return flex;
+    }
+
+
+    this.showUser = function(user) {
+
+        this.hidePanel();
+        this.showPanel('detail');
+        user = user || document.body.user;
+        let x = user.x;
+        let data = user.data;
+        let line = user.line;
+        let title = this.curPanel.title;
+        let block = this.curPanel.block;
+        let body = Elem.creat('div', block, 'user-body');
+        let flex = this.setUserFlex(body, line, x);
+        let tags = Elem.creat('div', body, 'user-tags');
+        let desc = Elem.creat('div', body, 'user-desc');
+        if (line.tag) {
+            for (let i in line.tag) {
+                let tag = Elem.creat('div',tags, 'user-tag');
+                tag.innerHTML = line.tag[i];
+                tag.onclick = function() {
+                    Alert.showSearch(this);
+                }
+            }
+        }
+        desc.innerHTML = line.desc.replace(/\n/g, '<br/>');
+        this.showButton(data);
+    }
+
+    this.showSearch = function(button) {
+        this.hidePanel();
+        this.showPanel("search");
+        let title = this.curPanel.title;
+        let block = this.curPanel.block;
+        block.innerHTML = "";
+        block.style.maxHeight = Config.page.alertHeight + "px";
+        title.innerHTML = cfg.titleStr.replace("#0", button.innerHTML);
+        for (let z in tempData.searchData) {
+
+            let user = Elem.creat("div", block, "user-block", z);
+            let line = tempData.searchData[z];
+            let order = line.order + "th";
+            if (order.length == 3)
+                line.order = order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
+            line.group = line.uid[0].replace('s','赞助商').replace('d','淘金者');
+            line.value = "权值: " + Parse.sub4Num(line.val);
+            this.setUserFlex(user, line, true);
+        }
+        this.log('搜索成功!');
+    }
+
+    this.showNexu = function() {
+        this.hidePanel();
+        Elem.remove(document.body.user);
+        Parse.remove(document.body.lines, document.body.line);  
+    }
+
+
+    this.showChat = function() {
+        this.hidePanel();
+        this.showPanel("chat");
+        let title = this.curPanel.title;
+        let block = this.curPanel.block;
+        let input = this.curPanel.input;
+        Elem.color(input, getColorLight(), "");
+        input.placeholder = "输入内容";
+        title.innerHTML = document.body.line.name;
+        this.box.style.maxHeight = (Config.page.windHeight - 440) + "px";
+        block.style.maxHeight = (Config.page.windHeight - 703) + "px";
+        block.innerHTML = "";
+        for (let i in tempData.chatData) {
+            let data = tempData.chatData[i];
+            let ctype = data.isMine ? "right" : "left";
+            this.setChatText(block, ctype, data.text);
+        }
+        let send = Elem.get("btn-send");
+        send.block = block;
+        send.onclick = function() {
+            Alert.setChatSend();
+        }
+        
+        block.lastChild.scrollIntoView();
+    }
+
+    this.setChatSend = function(send){
+        let input = this.curPanel.input;
+        this.setChatText(send.block, "right", input.value);
         if (input.value != "")
             tempData.chatData.push({
                 text: input.value,
@@ -296,51 +378,44 @@ function setChatAlert() {
         input.placeholder = "输入内容";
         input.value = "";
     }
-    
-    block.lastChild.scrollIntoView();
-    showAlert("chat-bg");
-}
 
 
-function setChatText(block, ctype, value) {
-    if (value == "") {
-        hideAlert();
-        return;
+    this.setChatText = function(block, ctype, value) {
+        if (value == "") {
+            this.hidePanel();
+            return;
+        }
+        let flex = Elem.creat("div", block, "chat-flex");
+        let text = Elem.creat("div", flex, "chat-text");
+        Elem.attr(flex, "ctype", ctype);
+        Elem.attr(text, "ctype", ctype);
+        text.innerHTML = value.replace(/\n/g, "<br/>");
+        if (this.getChatLength(value) < 17)
+            text.style.wordBreak = "keep-all";
+        text.scrollIntoView();
     }
-    var flex = Elem.creat("div", block, "chat-flex");
-    var text = Elem.creat("div", flex, "chat-text");
-    Elem.attr(flex, "ctype", ctype);
-    Elem.attr(text, "ctype", ctype);
-    text.innerHTML = value.replace(/\n/g, "<br/>");
-    if (getChatLength(value) < 17)
-        text.style.wordBreak = "keep-all";
-    text.scrollIntoView();
-}
 
-function getChatLength(value) {
-    var len = 0;
-    var list = value.split('\n');
-    for (let idx in list) {
-        if (list[idx].length > len)
-            len = list[idx].length;
+    this.getChatLength = function(value) {
+        let len = 0;
+        let list = value.split('\n');
+        for (let idx in list) {
+            if (list[idx].length > len)
+                len = list[idx].length;
+        }
+        return len;
     }
-    return len;
-}
 
 
-function onChatFocus() {
-    var box = Elem.get("alert-box");
-    var block = Elem.get("detail-block");
-    if (Config.page.isMobile && !Config.page.isWechat) {
-        box.style.maxHeight = (Config.page.windHeight - 940) + "px";
-        block.style.maxHeight = (Config.page.windHeight - 1203) + "px";
+    this.onChatFocus = function() {
+        let block = this.curPanel.block;
+        let input = this.curPanel.input;
+        block.lastChild.scrollIntoView();
+        Elem.color(input, getColorType(), "");
+        input.value = "";
+
+        // Style.height("detail-block", "550px");
     }
-    block.lastChild.scrollIntoView();
-    var input = Elem.get("chat-textarea");
-    Elem.color(input, getColorType(), "");
-    input.value = "";
 
-    // Style.height("detail-block", "550px");
 }
 
 

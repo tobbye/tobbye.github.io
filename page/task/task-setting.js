@@ -40,9 +40,6 @@ Task.creatTask = function(block, mix) {
     }
 
     if (Task.game && !mix) {
-        Elem.get('btn-redo').onclick = function() {
-            Task.mixAnim();
-        }
         Task.initTask();
         Task.checkAction('redo');
         console.log(Task);
@@ -85,7 +82,7 @@ Task.initTask = function() {
     Task.cfg.logText = Task.game.logText.replace('#pack', Task.pack);
     Task.cfg.orgTips = Task.game.orgTips.replace('#pack', Task.pack); 
     Task.cfg.tgtTips = Task.game.tgtTips.replace('#pack', Task.pack);
-    Elem.get('task-title').innerHTML = Task.title;
+    Elem.text(Alert.panels.task.title, Task.title);
 }
 
 Task.checkState = function(state) {
@@ -108,67 +105,79 @@ Task.checkState = function(state) {
 
 Task.checkAction = function(action) {
     Task.action = action;
-    Style.display('btn-open', 'none');
-    Style.display('btn-next', 'none');
-    Style.display('btn-redo', 'none');
-    Style.display('btn-abon', 'none'); 
+    Elem.hide(Alert.buttons.open);
+    Elem.hide(Alert.buttons.next);
+    Elem.hide(Alert.buttons.redo);
+    Elem.hide(Alert.buttons.abon);
+ 
     if (action == 'open') {
-        Task.logFade(Task.cfg.logOpen);
-        Style.display('btn-open', 'inline');
+        Task.fade(Task.cfg.logOpen);
+        Elem.show(Alert.buttons.open);
     }
     if (action == 'next') {
-        Task.logFade(Task.cfg.logNext);
-        Style.display('btn-next', 'inline');
+        Task.fade(Task.cfg.logNext);
+        Elem.show(Alert.buttons.next);
      }
     if (action == 'redo') {
-        Task.logFade(Task.cfg.logText);
-        Style.display('btn-redo', 'inline');
-        Style.display('btn-abon', 'inline');
+        Task.fade(Task.cfg.logText);
+        Elem.show(Alert.buttons.redo);
+        Elem.show(Alert.buttons.abon);
     }
     if (action == 'stop') {
-        Task.logFade(Task.cfg.logStop);
-        Style.display('btn-open', 'inline');
+        Task.fade(Task.cfg.logStop);
+        Elem.show(Alert.buttons.open);
     }
     if (action == 'fail') {
-        Task.logFade(Task.cfg.logFail);
-        Style.display('btn-redo', 'inline');
-        Style.display('btn-abon', 'inline');
+        Task.fade(Task.cfg.logFail);
+        Elem.show(Alert.buttons.redo);
+        Elem.show(Alert.buttons.abon);
     }
 
     if (action == 'redo' || action == 'fail' && Task.game.isArrow) { 
-        Style.display('btn-up', 'inline');
-        Style.display('btn-down', 'inline');
-        Style.display('btn-left', 'inline');
-        Style.display('btn-right', 'inline');
+        Elem.show(Alert.buttons.up);
+        Elem.show(Alert.buttons.down);
+        Elem.show(Alert.buttons.left);
+        Elem.show(Alert.buttons.right);
     } else {
-        Style.display('btn-up', 'none');
-        Style.display('btn-down', 'none');
-        Style.display('btn-left', 'none');
-        Style.display('btn-right', 'none');
+        Elem.hide(Alert.buttons.up);
+        Elem.hide(Alert.buttons.down);
+        Elem.hide(Alert.buttons.left);
+        Elem.hide(Alert.buttons.right);
     }
 }
 
 
-Task.logFade = function(log) {
-    Task.cfg.logFade = log.replace('#idx', Task.ladd).replace('#pack', Task.pack);
-    showLog(Task.cfg.logFade);
+Task.initRoll = function(line) {
+    Task.roll = 1;
+    Task.rollMax = Math.pow(2, line.ladd);
+    Task.rollNum = Math.floor(Math.random() * Task.rollMax);
+    Task.getRoll(Task.rollMax, Task.rollNum); 
 }
 
-Task.logAlert = function(log) {
+Task.getRoll = function(all, roll) {
+    all = all / 2;
+    if (roll > all) {
+        Task.roll += 1;
+        Task.getRoll(all, roll - all);
+    } else{
+        return Task.roll;
+    }
+}
+
+Task.fade = function(log) {
+    Task.cfg.fade = log.replace('#idx', Task.ladd).replace('#pack', Task.pack);
+    Alert.log(Task.cfg.fade);
+}
+
+Task.alert = function(log) {
     setTimeout(function() {alert(log)}, 200);
 }
 
 
-Task.setTouch = function(btn) {
+Task.setArrow = function(idx) {
     if (!Task.game) return;
     if (!Task.game.control) return;
-    let list = Task.game.arrowList;
-    for (let i in list) {
-        Elem.get('btn-' + list[i]).onclick = function() {
-            let idx = list.indexOf(this.id.split('-')[1]);
-            Task.game.control(idx);
-        }
-    }
+    Task.game.control(idx);
 };
 
 document.onkeydown = function(evt) { 

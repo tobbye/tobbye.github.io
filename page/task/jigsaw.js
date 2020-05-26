@@ -132,18 +132,18 @@ Task.Jigsaw = function() {
             img.src = this.fullPath;
             if (this.state == 'succeed') {
                 Task.checkState('next');
-                Elem.display(flex, 'flex');
-                Elem.display(img, 'none');
+                Elem.show(flex, 'flex');
+                Elem.show(img, 'none');
                 setTimeout(function() {
-                    Elem.display(flex, 'none');
-                    Elem.display(img, 'inline');
+                    Elem.show(flex, 'none');
+                    Elem.show(img, 'inline');
                 },1000);
             } else {
-                Elem.display(flex, 'none');
-                Elem.display(img, 'inline');
+                Elem.show(flex, 'none');
+                Elem.show(img, 'inline');
                 setTimeout(function() {
-                    Elem.display(flex, 'flex');
-                    Elem.display(img, 'none');
+                    Elem.show(flex, 'flex');
+                    Elem.show(img, 'none');
                     setTimeout(function() {
                         Task.mixAnim();
                     },2000);

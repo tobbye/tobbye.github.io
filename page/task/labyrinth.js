@@ -2,7 +2,6 @@
 Task.creatLabyrinth = function(block, word) {
     Task.game = new Task.Labyrinth();
     Task.game.init(block, word);
-    Task.setTouch();
 }
 
 Task.Labyrinth = function() {

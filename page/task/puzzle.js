@@ -65,12 +65,12 @@ Task.Puzzle = function() {
                 cell.style.color = 'white';
                 cell.style.backgroundColor = cfg.wrongColor;
                 cell.style.borderColor = cfg.wrongColor;
-                btnState('btn-redo', 'permit');
+                Elem.btnPermit('redo');
             } else {
                 cell.style.color = 'white';
                 cell.style.backgroundColor = cfg.rightColor;
                 cell.style.borderColor = cfg.rightColor;
-                btnState('btn-redo', 'danger');
+                Elem.btnDanger('redo');
             }
             if (this.wordTgt == this.wordCur) {
                 Task.checkState('next');

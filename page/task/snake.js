@@ -1,7 +1,6 @@
 Task.creatSnake = function(block, word) {
     Task.game = new Task.Snake();
     Task.game.init(block, word);
-    Task.setTouch();
 }
 
 Task.Snake = function() {

@@ -1,12 +1,7 @@
 window.onload = function() {
-	getAgent();
-	setConfig();
-	setElems();
-	setAgent();
-}
-
-function setConfig() {
-	localData.init("init");
+	Config.init();
+	Alert.init();
+	Fund.init();
 }
 
 var cfg = {

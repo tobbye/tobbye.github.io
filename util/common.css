@@ -144,7 +144,7 @@ div[fade=over] {
 }
 
 .button {
-	font-size: 1.3em;
+	font-size: 1.4em;
 }
 
 .button-min {
@@ -152,11 +152,7 @@ div[fade=over] {
 }
 
 .button-micro {
-    margin: 20px 10px;
-    padding: 10px;
     font-size: 1em;
-    height: 60px;
-    background-color: green;
 }
 
 
@@ -371,16 +367,21 @@ div[fade=over] {
 	margin: 5px 0px;
 }
 
-.alert-button {
-	display: flex;
-	margin: 5px 0px;
+.alert-title {
+	margin: 10px;
+	flex: 40;
+	height: 80px;
+	line-height: 80px;
+	font-size: 1.5em;
+	overflow: hidden;
 }
 
-.alert-title {
-	margin: 10px 100px;
-	font-size: 1.5em;
+.alert-button {
+	margin: 10px 20px;
+	flex: 10;
 	height: 80px;
-	overflow: hidden;
+	line-height: 80px;
+	font-size: 1.1em;
 }
 
 .alert-text {
@@ -392,8 +393,14 @@ div[fade=over] {
 .alert-block {
     overflow: auto;
     margin: 0px 10px 5px 10px;
-    /*min-height: 500px;*/
-    /*max-height: 1300px;*/
+    font-size: 1em;
+}
+
+
+.alert-body {
+    overflow: auto;
+    margin: 0px 10px 5px 10px;
+    background-color: white;
     font-size: 1em;
 }
 

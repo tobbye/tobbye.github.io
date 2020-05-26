@@ -6,6 +6,7 @@ var values = {};
 // 0 1 2 3 4 5 6 7 8
 // 0 f e d c b a 9 8
 
+var Line = {};
 var Parse = {}; 
 
 Parse.addSplit = function addSplit(num) {
@@ -172,14 +173,14 @@ var  Elem = {};
 
 //创建一个元素
 Elem.creat = function(type, parent, className, id) {
-	var elem = document.createElement(type);
+	var e = document.createElement(type);
 	if (parent)
-		parent.appendChild(elem);
+		parent.appendChild(e);
 	if (className)
-		elem.className = className;
+		e.className = className;
 	if (id != null)
-		elem.id = className + '_' + id;
-	return elem;
+		e.id = className + '_' + id;
+	return e;
 }
 
 //获取当个元素
@@ -191,129 +192,113 @@ Elem.get = function (e) {
     return null;
 }
 
-//获取类的所有元素
-Elem.getClass = function (className) {
-    return document.getElementsByClassName(className);
+Elem.getClass = function (cls) {
+    return document.getElementsByClassName(cls); 
 }
 
-//删除元素
-Elem.remove = function (elem) {
-    if(elem)
-        elem.parentNode.removeChild(elem);
+Elem.remove = function (e) {
+    if(e) e.parentNode.removeChild(e); 
 }
 
-//清空元素子节点
-Elem.empty = function (elem) {
-    while(elem.hasChildNodes())
-        elem.removeChild(elem.firstChild);
+Elem.empty = function (e) {
+    while(e.hasChildNodes()) 
+        e.removeChild(e.firstChild); 
 }
 
-Elem.removeClass = function(elem,text){
-    var str =  elem.className,
-        index = str.indexOf(text);
-    if(index > -1) {
-        elem.className = str.replace(text,'');
-    }
+Elem.removeClass = function(e, cls) {
+    var str =  e.className; 
+    if(index = str.indexOf(cls) > -1) {
+        e.className = str.replace(cls,''); 
+    } 
 }
 
-Elem.addClass = function(elem,text){
-    elem.className += text;
+Elem.addClass = function(e, cls) {
+    e.className += cls; 
 }
 
-
-//设置元素对齐方式
-Elem.align = function(elem, align) {
-    Elem.style(elem, 'textAlign', align);
+Elem.text = function(e, text) {
+    e.innerHTML = text; 
 }
 
-//设置元素字体颜色和背景颜色
-Elem.color = function(elem, color, bgcolor) {
-    Elem.style(elem, 'color', color);
-    Elem.style(elem, 'backgroundColor', bgcolor);
+Elem.align = function(e, a) {
+    Elem.css(e, 'textAlign', a); 
 }
 
-//设置元素flex权重
-Elem.flex = function(elem, align, flex) {
-    Elem.style(elem, 'textAlign', align);
-    Elem.style(elem, 'flex', flex);
+Elem.color = function(e, c, bg) {
+    Elem.css(e, 'color', c); 
+    Elem.css(e, 'backgroundColor', bg); 
 }
 
-//设置元素宽度
-Elem.width = function(elem, align, width) {
-    Elem.style(elem, 'textAlign', align);
-    Elem.style(elem, 'width', width);
+Elem.flex = function(e, a, f) {
+    Elem.css(e, 'textAlign', a); 
+    Elem.css(e, 'flex', f); 
 }
 
-//设置元素高度
-Elem.height = function(elem, height) {
-    Elem.style(elem, 'height', height);
-    Elem.style(elem, 'maxHeight', height);
+Elem.width = function(e, a, w) {
+    Elem.css(e, 'textAlign', a); 
+    Elem.css(e, 'width', w); 
 }
 
-//设置元素显示
-Elem.display = function(elem, display) {
-    Elem.style(elem, 'display', display);
+Elem.height = function(e, height) {
+    Elem.css(e, 'height', height); 
+    Elem.css(e, 'maxHeight', height); 
 }
 
-
-//设置元素样式
-Elem.style = function(elem, key, value) {
-    if (elem && elem.style && key && value) {
-        elem.style[key] = value;
-    }
+Elem.show = function(e, attr) {
+    Elem.css(e, 'display', attr || 'block'); 
 }
 
-Elem.attr = function(elem, key, value) {
-    if (elem && elem.style && key && value) {
-        elem.setAttribute(key, value);
-    }
+Elem.hide = function(e) {
+    Elem.css(e, 'display', 'none'); 
 }
+
+Elem.css = function(e, k, v) {
+    if (e && e.style && k && v) {
+        e.style[k] = v; 
+    } 
+}
+
+Elem.attr = function(e, k, v) {
+    if (e && e.style && k && v) {
+        e.setAttribute(k, v); 
+    } 
+}
+
+Elem.state = function(e, v) {
+    Elem.attr(e, 'state', v);
+}
+
+Elem.btnPermit = function(k) {Elem.attr(Alert.buttons[k], 'state', 'permit'); } 
+Elem.btnDefult = function(k) {Elem.attr(Alert.buttons[k], 'state', 'defult'); }
+Elem.btnDanger = function(k) {Elem.attr(Alert.buttons[k], 'state', 'danger'); }
+//克隆元素
+Elem.clone = function(e, parent){
+    var copy = Object.assign({}, e);
+    parent.appendChild(copy);
+    return copy;
+}
+
 
 //设置元素高度自适应
-Elem.autosize = function(elem, offset) {
+Elem.autosize = function(e, off) {
     var windWidth = Config.page.windWidth;
     var windHeight = Config.page.windHeight;
     var box = Elem.get('alert-box');
     var agent = Config.page.isMobile ? 'mobile' : 'computer';
     Elem.attr(box, 'agent', agent);
-    elem = elem || Elem.get('outer-center');
-    elem.style.height = windHeight - offset + 'px';
-    elem.style.maxHeight = windHeight - offset + 'px';
+    e = e || Elem.get('outer-center');
+    e.style.height = windHeight - off + 'px';
+    e.style.maxHeight = windHeight - off + 'px';
     //alert(windHeight);
 }
 
-//克隆元素
-Elem.clone = function(elem, parent){
-    var copy = Object.assign({}, elem);
-    console.log(copy);
-    parent.appendChild(copy);
-    return copy;
-}
-
-Elem.togState = function(elem, state) {
-    if (!elem || !elem.style) return;
-    var attr = elem.getAttribute('state') || 'default';
+Elem.togState = function(e, state) {
+    if (!e || !e.style) return;
+    var attr = e.getAttribute('state') || 'default';
     state = state || Parse.swape(attr, 'permit', 'danger');
-    elem.setAttribute('state', state);
+    e.setAttribute('state', state);
 }
 
-//样式
-var Style = {};
-
-Style.color = function(id, color, bgcolor) {
-    var elem = Elem.get(id);
-    Elem.color(elem, color, bgcolor);
-}
-
-Style.display = function(id, display) {
-    var elem = Elem.get(id);
-    Elem.display(elem, display);
-}
-
-Style.toggle = function(id, display) {
-    var elem = Elem.get(id);
-    Elem.toggle(elem, display);
-}
 
 //数据存储
 var Storage = {};
@@ -404,7 +389,7 @@ var getColorLight = function() {
 var Page = function() {
     var that = this;
 
-    getDefult(this, 'page');
+    Config.getDefult(this, 'page');
     this.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
     this.isWechat = (/micromessenger|MicroMessenger/i.test(navigator.userAgent));
     this.zoom = this.isMobile ? this.zoomMobile : this.zoomComput;
@@ -432,88 +417,11 @@ var Page = function() {
     center.style.maxHeight = this.outerHeight + 'px';
 }
 
-window.onresize = function() {
-    if (Config.sett.isAlert) {
-        Style.display('alert', 'none');
-        Config.page = new Page();
-        Style.display('alert', 'block'); 
-    } else {
-        Config.page = new Page();
-    }
-}
 
-var setAction = function(act, idx) {
-    var uid = 'i';
-    var action = Config.action;
-    var ref = action.ref.replace('#uid', uid).replace('#act', act).replace('#idx', idx);
-    action.router = ref.replace('#host', '');
-    console.log(Config);
-    ref = ref.replace('#host', action.host);
-    return ref;
-}
 
-//获取浏览器是否是移动端
-var getAgent = function() {
-    Config.cfg = cfg;
-    Config.name = cfg.name;
-    Config.fade = new Fade();
 
-    var temp = Storage.get('Config') || {};
-    if (Config.name == 'sett')
-        temp = {};
-    if (Config.name == temp.name && temp.sett.isInto)
-        Config.innerIdx = temp.innerIdx || 0;
-    else
-        Config.innerIdx = 0;
-    setDefult(temp, 'sett');
-    setDefult(temp, 'color');
-    setDefult(temp, 'clock');
-    getHost();
-    window.onresize();
-}
 
-var setDefult = function(temp, key) {
-    Config[key] = temp[key] || Config.constant[key];
-    if (typeof(Config[key]) === 'object')
-        Config[key] = JSON.parse(JSON.stringify(Config[key]));
-}
 
-var getDefult = function(that, key) {
-    var defult = Config.constant[key];
-    for (let x in defult) {
-        that[x] = defult[x];
-    }
-}
-
-var getHost = function() {
-    var action = Config.action;
-    var path = window.document.location.href;
-    var page = window.document.location.pathname;
-    var pos = path.indexOf(page);
-    var host = path.substring(0, pos);
-    action.host = host;
-    action.page = page;
-    getHostType(host);
-}
-
-var getHostType = function(host) {
-    for (let key in Config.constant.host) {
-        if (Config.constant.host[key] == host) {
-            Config.sett.hostType = key;
-            console.log(key);
-            return;
-        }
-    }
-}
-
-//设置浏览器
-var setAgent = function() {
-    hideAlert();
-    btnClick('btn-quit', hideAlert);
-    btnClick('btn-abon', hideAlert);
-    btnClick('btn-close', hideAlert);
-    window.onresize();
-}
 
 
 
@@ -528,39 +436,36 @@ var setFullScreen = function() {
 }
 
 
-var showLog = function(text) {
-    Config.fade.setAnim(text);
-}
 
 //显示提醒信息
 function Fade() {
     var that = this;
-    getDefult(this, 'fade');
+    Config.getDefult(this, 'fade');
     
-    this.getElem = function(elem) {
-        elem = elem || Elem.get('log');
-        if (!elem) {
-            elem = Elem.creat('div', document.body, 'log');
-            elem.setAttribute('fade', 'over');
-            elem.id = 'log';
+    this.getElem = function(e) {
+        e = e || Elem.get('log');
+        if (!e) {
+            e = Elem.creat('div', document.body, 'log');
+            e.setAttribute('fade', 'over');
+            e.id = 'log';
         } 
         if (Config.sett.colorType == 'page')
-            Elem.color(elem, getColorBgd(), getColorType());
+            Elem.color(e, getColorBgd(), getColorType());
         else
-            Elem.color(elem, 'white', 'dodgerblue');
-        return elem;
+            Elem.color(e, 'white', 'dodgerblue');
+        return e;
     }
 
-    this.setAnim = function(text, elem, timeOn) {
+    this.setAnim = function(text, e, timeOn) {
         this.text = text;
-        this.elem = this.getElem(elem);
+        this.e = this.getElem(e);
         this.timeOn = timeOn || this.timeOn;
-        if (this.elem.getAttribute('fade') != 'over') {
+        if (this.e.getAttribute('fade') != 'over') {
             window.clearTimeout(this.fadeIn);
             window.clearTimeout(this.fadeOn);
             window.clearTimeout(this.fadeOut);
             window.clearTimeout(this.fadeTog);
-            this.elem.setAttribute('fade', 'on');
+            this.e.setAttribute('fade', 'on');
             this.animTog();
         } else {
             this.animIn();
@@ -569,8 +474,8 @@ function Fade() {
 
     this.animIn = function() {
         if (this.text)
-            this.elem.innerHTML = this.text;
-        this.elem.setAttribute('fade', 'in');
+            this.e.innerHTML = this.text;
+        this.e.setAttribute('fade', 'in');
         this.fadeIn = setTimeout(function() {
             that.fadeIn = null;
             that.animOn();
@@ -578,7 +483,7 @@ function Fade() {
     }
 
     this.animOn = function() {
-        this.elem.setAttribute('fade', 'on');
+        this.e.setAttribute('fade', 'on');
         this.fadeOn = setTimeout(function() {
             that.fadeOn = null;    
             that.animOut();
@@ -587,8 +492,8 @@ function Fade() {
 
     this.animTog = function() {
         if (this.text)
-            this.elem.innerHTML = this.text;
-        this.elem.setAttribute('fade', 'tog');
+            this.e.innerHTML = this.text;
+        this.e.setAttribute('fade', 'tog');
         this.fadeTog = setTimeout(function() {
             that.fadeTog = null;
             that.animOn();
@@ -596,7 +501,7 @@ function Fade() {
     }
 
     this.animOut = function() {
-        this.elem.setAttribute('fade', 'out');
+        this.e.setAttribute('fade', 'out');
         this.fadeOut = setTimeout(function() {
             that.fadeOut = null;
             that.animOver();
@@ -604,26 +509,12 @@ function Fade() {
     }
 
     this.animOver = function() {
-        this.elem.setAttribute('fade', 'over');
+        this.e.setAttribute('fade', 'over');
     }  
 }
 
 
 
-
-var btnClick = function(name, func) {
-    if (Elem.get(name)) {
-        Elem.get(name).onclick = function() {
-            func();
-        }
-    }
-}
-
-var btnState = function(name, state) {
-    if (Elem.get(name)) {
-        Elem.get(name).setAttribute('state', state);
-    }
-}
 
 
 var addScript = function(src) {
@@ -634,29 +525,7 @@ var addScript = function(src) {
 }
 
 
-//显示弹窗
-var showAlert = function(name) {
-    Style.display('alert', 'block');
-    Config.sett.isAlert = true;
-    if (name) {
-        Style.display(name, 'block');
-    }
-}
 
-
-//隐藏弹窗
-var hideAlert = function(name) {
-    Style.display('alert', 'none');
-    Config.sett.isAlert = false;
-    if (name) {
-        Style.display(name, 'none');
-        return;
-    }
-    var bgs = Elem.getClass('alert-bg');
-    for (let x in bgs) {
-        Elem.display(bgs[x], 'none');
-    }
-}
 
 
 var jsonToAlert = function(data) {
@@ -664,10 +533,12 @@ var jsonToAlert = function(data) {
 }
 
 
-var jsonToTable = function(item) {
+var jsonToTable = function(Item) {
     if (Config.name == 'home') return;
-    Storage.set('item', item);
+    Storage.set('Item', Item);
+    Storage.set('Alert', Alert);
     Storage.set('Config', Config);
+    Storage.set('Constant', Constant);
     window.location.href = '../view/view.html';
 }
 

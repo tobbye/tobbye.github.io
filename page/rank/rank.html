@@ -29,29 +29,42 @@
     <div id="outer-bot"></div>
 
     <div id="alert">
-        <div id="alert-mask" onclick="hideAlert()"></div>
+        <div id="alert-mask"></div>
         <div id="alert-box">
 
-            <div class="alert-bg" id="detail-bg">
-                <div class="alert-title" id="detail-title">个人资料</div>
-                <div class="alert-block" id="detail-block"></div>
-                <div class="alert-button" id="detail-button"></div>
+            <div class="alert-panel" name="detail">
+                <div class="alert-flex">
+                    <div class="alert-button" onclick="Alert.hidePanel()">返回</div>
+                    <div class="alert-title">个人资料</div>
+                    <div class="alert-button" onclick="Alert.hidePanel()">关闭</div>
+                </div>
+                <div class="alert-block"></div>
+                <div class="alert-flex">
+                    <div class="button" state="permit" onclick="Alert.showChat()">发消息</div>
+                    <div class="button" state="danger" onclick="Alert.showNexu(1)">添加关注</div>
+                    <div class="button" state="permit" onclick="Alert.showNexu(0)">取消关注</div>
+                    <div class="button" state="defult" onclick="Alert.showChat()">查看主页</div>
+                </div>
             </div>
 
-            <div class="alert-bg" id="search-bg">
-                <div class="alert-title" id="search-title">搜索结果</div>
-                <div class="alert-block" id="search-block"></div>
-                <div class="alert-button" id="search-button">
-                    <div class="button" state="danger" id="btn-close">关闭</div>
+            <div class="alert-panel"  name="search">
+                <div class="alert-title">搜索结果</div>
+                <div class="alert-block"></div>
+                <div class="alert-flex">
+                    <div class="button" state="danger" onclick="Alert.hidePanel()">关闭</div>
                 </div>
             </div>
             
-            <div class="alert-bg" id="chat-bg" id="chat-button">
-                <div class="alert-title" id="chat-title">查看详情</div>
-                <div class="alert-block" id="chat-block"></div>
-                <div class="alert-button" id="chat-button">
+            <div class="alert-panel"  name="chat">
+                <div class="alert-flex">
+                    <div class="alert-button" onclick="Alert.showUser()">返回</div>
+                    <div class="alert-title">查看详情</div>
+                    <div class="alert-button" onclick="Alert.hidePanel()">关闭</div>
+                </div>
+                <div class="alert-block"></div>
+                <div class="alert-flex">
                     <div class="button-micro" id="btn-vocie" state="permit">语音</div>
-                    <textarea id="chat-textarea" onfocus="onChatFocus()"></textarea>
+                    <textarea id="chat-textarea" onfocus="Alert.onChatFocus()"></textarea>
                     <div class="button-micro" id="btn-send" state="permit">发送</div>
                 </div>
             </div>
