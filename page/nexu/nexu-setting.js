@@ -6,7 +6,7 @@ function __Nexu() {
 
 	this.init = function() {
 		this.creatElems();
-		console.log(this);
+        Container(this);
 	}
 
 
@@ -17,7 +17,7 @@ function __Nexu() {
 		Alert.showInner();
 	}
 
-	this.setContent = function(inner, x) {
+	this.creatContent = function(inner, x) {
 		let list = items[x].list;
 		for (let y in list) {
 			let content = Elem.creat('div', inner, 'content', y);
@@ -35,15 +35,17 @@ function __Nexu() {
 		let block = Elem.creat('div', content, 'block');
 		for (let z in lines) {
 			let line = this.initTempLine(lines[z]);
-			let user = Elem.creat('div', block, 'user-block');
-			user.flex = Alert.setUserFlex(user, line);
-			user.data = data;
-			user.line = line;
-			user.onclick = function() {
+			let body = Elem.creat('div', block, 'user-block');
+			body.user = new Alert.UserFlex();
+            body.user.init(body, line);
+			body.data = data;
+			body.line = line;
+			body.onclick = function() {
 				document.body.user = this;
 				document.body.line = this.line;
 				document.body.lines = this.data.lines;
 				console.log(this.line);
+				console.log(this.user);
 				Alert.showUser(this);
 			}
 		}

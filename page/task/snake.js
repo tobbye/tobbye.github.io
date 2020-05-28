@@ -1,17 +1,26 @@
-Task.creatSnake = function(block, word) {
+Task.creatSnake = function(line) {
     Task.game = new Task.Snake();
-    Task.game.init(block, word);
+    Task.game.init(line.word);
 }
 
 Task.Snake = function() {
-    var that = this;
-    var canvas, ctx;
+    let that = this;
+    let canvas, ctx;
 
-    this.init = function(block, word) {
+    this.init = function(word) {
+
+        this.word = word.replace(/\//g,'');
+        this.initCfg();
+        this.initBody();
+        this.refresh(true);
+        this.drawFood();
+    };
+
+    this.initCfg = function() {
         this.title = '任务#idx-贪吃蛇';
         this.orgTips = '口令'; 
         this.tgtTips = '正确输入口令打开#pack';
-        this.logText = '<h4>滑动屏幕控制方向</h4>吃掉文字输入口令';
+        this.logTips = '<h4>滑动屏幕控制方向</h4>吃掉文字输入口令';
         this.arrowList = ['left', 'up', 'right', 'down'];
         this.state = 'going';
         this.isArrow = true;
@@ -22,19 +31,15 @@ Task.Snake = function() {
         this.food = 45;
         this.next = 1;
         this.direction = 1;
-        this.body = [41, 40];  
+        this.body = [41, 40]; 
         this.size = ~~(Config.page.alertWidth / this.col);
-        this.word = word.replace(/\//g,'');
-        this.nextList = [-1, -this.col, 1, this.col];
-        this.initCanvas(block, word);
-        this.refresh(true);
-        this.drawFood();
-    };
+        this.nextList = [-1, -this.col, 1, this.col]; 
+    }
 
-    this.initCanvas = function(block, word) {
-        var tips = Elem.creat('div', block, 'cell-tips');
-        tips.innerHTML = word;
-        var body = Elem.creat('div', block, 'cell-tips');
+    this.initBody = function(word) {
+        let tips = Elem.creat('div', Task.block, 'cell-tips');
+        tips.innerHTML = this.word;
+        let body = Elem.creat('div', Task.block, 'cell-tips');
         canvas = Elem.creat('canvas', body);
         canvas.width = this.col*this.size;
         canvas.height = this.row*this.size;
@@ -45,8 +50,8 @@ Task.Snake = function() {
     };
 
     this.draw = function(pos, color, idx) {
-        var x = pos % this.col *this.size + 1;
-        var y = ~~(pos / this.col) * this.size + 1;
+        let x = pos % this.col *this.size + 1;
+        let y = ~~(pos / this.col) * this.size + 1;
         ctx.fillStyle = color;
         ctx.fillRect(x, y, this.size-2, this.size-2);
         if (idx != null) {
@@ -58,15 +63,14 @@ Task.Snake = function() {
     this.refresh = function(loop) {
         this.body.unshift(this.next = this.body[0] + this.direction);
         if (this.body.indexOf(this.next, 1) > 0) {
-            return Task.checkState('stop');
+            return Task.checkState('ending');
         }
         if (this.next < 0 || this.next> this.col*this.row-1 || this.direction == 1 && this.next % this.col == 0 || this.direction == -1 && this.next % this.col == this.col-1) {
-            return Task.checkState('stop');
+            return Task.checkState('ending');
         }
         if (this.next == this.food) {
             if (this.body.length == this.word.length) {
-                this.state = 'succeed';
-                return Task.checkState('next');
+                return Task.checkState('succeed');
             } else {
                 this.drawFood();
             }
@@ -78,7 +82,7 @@ Task.Snake = function() {
             this.draw(this.body[x], "darkgreen", this.body.length-1-x);
         }
 
-        if (this.state == 'going' && this.isLoop)
+        if (this.state == 'going')
             setTimeout(function() {that.refresh(true)}, this.gap);  
     };
 

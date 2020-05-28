@@ -1,17 +1,25 @@
-Task.creatJigsaw = function(block, src, idx) {
+Task.creatJigsaw = function(line) {
     Task.game = new Task.Jigsaw();
-    Task.game.init(block, src, idx);
+    Task.game.init(line.src, line.idx);
 }
 
 Task.Jigsaw = function() {
-    var that = this;
-    var img, tips, flex, blockOrg, blockTgt;
+    let that = this;
+    let img, tips, flex, blockOrg, blockTgt;
 
-    this.init = function(block, src, idx) {
+    this.init = function(src, idx) {
+        this.src = src;
+        this.imgSrc = src;
+        this.funIdx = idx;
+        this.initCfg();
+        this.initBody();
+    }
+
+    this.initCfg = function() {
         this.title = '任务#idx-拼图';
         this.orgTips = '目标图片'; 
         this.tgtTips = '拼出目标图片打开#pack';
-        this.logText = '<h4>点击周围格子与中心格子交换</h4>拼出目标图片打开#pack';
+        this.logTips = '<h4>点击周围格子与中心格子交换</h4>拼出目标图片打开#pack';
         this.imgNone = '../../picture/head/3.jpeg';
         this.imgPath = '../../picture/mo/';
         this.funPath = '../../picture/mikao/';
@@ -21,9 +29,9 @@ Task.Jigsaw = function() {
         this.row = 3;
         this.border = 10;
         this.cells = [];
-        this.src = src;
-        this.imgSrc = src;
-        this.funIdx = idx;
+    }
+
+    this.initBody = function() {
         this.fullPath = this.imgSrc ? this.imgSrc : this.imgNone;
         this.center = ~~((this.col*this.row-1) / 2);
         if (Config.sett.isFun)
@@ -31,27 +39,25 @@ Task.Jigsaw = function() {
         img = new Image();
         img.src = this.fullPath;
         img.onload = function() {
-            that.load(block, this);
+            that.loadImg(this);
         }
     }
 
 
-    this.load = function(block, img) {
+    this.loadImg = function(img) {
         this.hpw = ~~(img.height / img.width * 100) / 100;
-        var clientWidth = block.clientWidth;
-        this.blockWidth = ~~(clientWidth);
-        this.blockHeight = ~~(this.blockWidth * this.hpw);
-        img.style.width = this.blockWidth + 'px';
-        img.style.height = this.blockHeight + 'px';
-        block.style.width = this.blockWidth + 'px';
-        // block.style.margin = '0px auto';
-        this.cellWidth = ~~((this.blockWidth - this.col*this.border*2) / this.col);
-        this.cellHeight = ~~((this.blockHeight - this.row*this.border*2) / this.row);
-        for (var i=0;i<this.row;i++) {
-            for (var j=0;j<this.col;j++) {
-                var idx = i*this.col + j;
-                var posY = (-2*this.border-this.cellHeight) * i;
-                var posX = (-2*this.border-this.cellWidth) * j;
+        let cWidth = Task.block.clientWidth;
+        this.blkWidth = ~~(cWidth);
+        this.blkHeight = ~~(this.blkWidth * this.hpw);
+        img.style.width = this.blkWidth + 'px';
+        img.style.height = this.blkHeight + 'px';
+        this.cellWidth = ~~((this.blkWidth - this.col*this.border*2) / this.col);
+        this.cellHeight = ~~((this.blkHeight - this.row*this.border*2) / this.row);
+        for (let i=0;i<this.row;i++) {
+            for (let j=0;j<this.col;j++) {
+                let idx = i*this.col + j;
+                let posY = (-2*this.border-this.cellHeight) * i;
+                let posX = (-2*this.border-this.cellWidth) * j;
                 this.cells[idx] = {
                     idx: idx,
                     posX: posX,
@@ -59,32 +65,32 @@ Task.Jigsaw = function() {
                 }
             }
         }
-        blockOrg = Elem.creat('div', block, 'cell-block');
-        this.creat(blockOrg, 'ready');
+        blkOrg = Elem.creat('div', Task.block, 'cell-block');
+        this.creatBody(blkOrg, 'ready');
     };
 
 
-    this.creat = function(block, state) {
-        this.state = state;
+    this.creatBody = function(block, state) {
+        Task.checkState(state)
         block.innerHTML = '';
         tips = Elem.creat('div', block, 'cell-tips');
         flex = Elem.creat('div', block, 'cell-flex');
         flex.style.flexWrap = 'wrap';
         if (state == 'going') {
             this.cells = Parse.mix(this.cells);
-            tips.innerHTML =  Task.cfg.tgtTips;
+            tips.innerHTML =  Task.text(this.tgtTips);
         } else {
-            tips.innerHTML =  Task.cfg.orgTips;
+            tips.innerHTML =  Task.text(this.orgTips);
         }
 
-        for (var i=0;i<this.row;i++) {
-            for (var j=0;j<this.col;j++) {
-                var idx = i*this.col + j;
-                var cell = Elem.creat('div', flex, 'cell-jigsaw', idx);
+        for (let i=0;i<this.row;i++) {
+            for (let j=0;j<this.col;j++) {
+                let idx = i*this.col + j;
+                let cell = Elem.creat('div', flex, 'cell-jigsaw', idx);
                 cell.idx = this.cells[idx].idx;
                 cell.style.width = this.cellWidth + 'px';
                 cell.style.height = this.cellHeight + 'px';
-                cell.style.backgroundSize = this.blockWidth + 'px ' + this.blockHeight + 'px';
+                cell.style.backgroundSize = this.blkWidth + 'px ' + this.blkHeight + 'px';
                 cell.style.backgroundPosition = this.cells[idx].posX + 'px ' + this.cells[idx].posY + 'px';
                 cell.style.backgroundImage = `url(${this.fullPath})`
                 cell.addEventListener('click', function(event) {
@@ -98,11 +104,11 @@ Task.Jigsaw = function() {
     }
 
     this.click = function(event) {
-        var org = flex.children[this.center];
-        var tgt = event.target;
+        let org = flex.children[this.center];
+        let tgt = event.target;
         if (org === tgt) return;
-        var orgNext = org.nextSibling;
-        var tgtNext = tgt.nextSibling;
+        let orgNext = org.nextSibling;
+        let tgtNext = tgt.nextSibling;
         org.parentNode.insertBefore(tgt, orgNext);
         tgt.parentNode.insertBefore(org, tgtNext);
         this.check(1);
@@ -111,8 +117,8 @@ Task.Jigsaw = function() {
     this.check = function() {
         if (this.state == 'going')
             this.state = 'succeed';
-        for (var i=0;i<flex.children.length;i++) {
-            var child = flex.children[i];
+        for (let i=0;i<flex.children.length;i++) {
+            let child = flex.children[i];
             child.style.border = `solid ${this.border}px white`;
             if (child.idx == i) {
                 // child.style.border = `solid ${this.border}px ${getColorBgd()}`;
@@ -121,17 +127,17 @@ Task.Jigsaw = function() {
             }
         }
 
-        var org = flex.children[this.center];
+        let org = flex.children[this.center];
         org.style.border = `solid ${this.border}px ${getColorType()}`;
 
         if (this.state == 'ready' || this.state == 'succeed' ) {
-            img = Elem.creat('img', blockOrg, 'image');
-            img.style.width = this.blockWidth - 2*this.border + 'px';
-            img.style.height = this.blockHeight - 2*this.border + 'px';
+            img = Elem.creat('img', blkOrg, 'image');
+            img.style.width = this.blkWidth - 2*this.border + 'px';
+            img.style.height = this.blkHeight - 2*this.border + 'px';
             img.style.border = `solid ${this.border}px white`;
             img.src = this.fullPath;
             if (this.state == 'succeed') {
-                Task.checkState('next');
+                Task.checkState('succeed');
                 Elem.show(flex, 'flex');
                 Elem.show(img, 'none');
                 setTimeout(function() {
@@ -153,7 +159,7 @@ Task.Jigsaw = function() {
     };
 
     this.mixAnim = function() {
-        this.creat(blockOrg, 'going');
+        this.creatBody(blkOrg, 'going');
     }
 }
 

@@ -3,8 +3,8 @@ var Home = new __Home();
 function __Home() {
 
     this.init = function() {
-       this.creatElems(); 
-       console.log(this);
+        this.creatElems(); 
+        Container(this);
     }
 
     this.creatElems = function() {
@@ -14,7 +14,7 @@ function __Home() {
         Alert.showInner();
     }
 
-    this.setContent = function(inner, x) {
+    this.creatContent = function(inner, x) {
     	let list = items[x].list;
         for (let y in list) {
             let content = Elem.creat('div', inner, 'content', y);

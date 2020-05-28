@@ -1,10 +1,10 @@
 
 var data, name;
 
-var setting = {
+var Setting = {
     mix: 0.9,
     leng: 100,
-    name: "item",
+    name: "Item",
     mode: "initSplit",
     view: "isFlex",
     btnKey: ["isFlex", "isFlow", "isCenter", "isAlign"],
@@ -22,7 +22,7 @@ var setting = {
     isText: false,
     isSplit: true,
     isMobile: false,
-    isElement: false,
+    isElement: !true,
     zoom: 1.00,
     zoomMobile: 2.00,
     zoomComputer: 0.70,
@@ -54,12 +54,12 @@ var setting = {
 
 
 window.onload = function() {
-    if (localStorage.getItem("item")) {
-        name = "item";
+    if (localStorage.getItem("Item")) {
+        name = "Item";
         data = getJson(name);  
     } else {
-        name = "setting";
-        data = setting;
+        name = "Setting";
+        data = Setting;
     }
 
     setButton();
@@ -82,14 +82,14 @@ function initEdit() {
 }
 
 function initSave() {
-    setting.mode = "initText";
+    Setting.mode = "initText";
     var textarea = Elem.get("textarea");
-    var str = "var custom = #0;"
+    var str = "var Custom = #0;"
     var val = textarea ? textarea.value : JSON.stringify(data);
     console.log(val);
     str = str.replace("#0", val).replace(/[\t\n\s]/g, "");
     data = eval(str);
-    if (name == "custom")
+    if (name == "Custom")
         localStorage.setItem(name, JSON.stringify(data));
     initText();
 }
@@ -127,7 +127,7 @@ function loopSplit(outer, list, path, layer) {
     for (let y in list) {
         if (list[y] == null) continue;
         var length = JSON.stringify(list[y]).length;
-        if (typeof (list[y]) == "object" && (length > setting.leng * setting.mix)) {
+        if (typeof (list[y]) == "object" && (length > Setting.leng * Setting.mix)) {
             lines[y] = copyJson(list[y]);
             list[y] = [y];
         }
@@ -149,7 +149,7 @@ function loopSplit(outer, list, path, layer) {
 
 
 function jsonToView(outer, data, title, layer) {
-    if (setting.isElement)
+    if (Setting.isElement)
         toElement(outer, data, title, layer);
     else
         toReplace(outer, data, title, layer);
@@ -164,8 +164,8 @@ function toReplace(outer, data, title, layer) {
     //[,,]转换成[;;]
 	str = str.replace(/(\[[^\[\]\{\}]*\])/g, function($1) {return $1.replace(/,/g, ";")});
     //拆分 && 合并
-    if (setting.isSplit) {
-        if (!setting.isFlex) 
+    if (Setting.isSplit) {
+        if (!Setting.isFlex) 
             str = str.replace(/\[{/g, "{").replace(/}]/g, "}");
         str = str.replace(/\{/g, "[<h1>").replace(/}/g, "]");
     } else {
@@ -177,11 +177,11 @@ function toReplace(outer, data, title, layer) {
     // {}转换成tr, []转换成table
     str = str.replace(/\{/g, "<tr><td><h1>").replace(/}/g, "</td></tr>");
     str = str.replace(/\[/g, "<table><tr><td>").replace(/]/g, "</td></tr></table>");
-    if (setting.isPile) {
+    if (Setting.isPile) {
         //平铺 && 堆叠
         str = str.replace(/,/g, "</td><td><h1>");
         str = str.replace(/;/g, "</td><td>");
-        if (setting.isFlex) 
+        if (Setting.isFlex) 
             str = str.replace(/":/g, "</h1>");
         else
             str = str.replace(/":/g, "</h1>"); 
@@ -191,7 +191,7 @@ function toReplace(outer, data, title, layer) {
         //直流 && 分流
         str = str.replace(/,/g, "</td></tr><tr><td><h1>");
         str = str.replace(/;/g, "</td></tr><tr><td>");
-        if (setting.isFlow)
+        if (Setting.isFlow)
             str = str.replace(/":/g, "</h1>");
         else 
             str = str.replace(/":/g, "</h1></td><td>"); 
@@ -210,7 +210,7 @@ function toElement(outer, data, title, layer) {
     var inner = Elem.creat("div", outer, "inner");
     inner.setAttribute("layer", layer);
     var child = Elem.creat("div", inner, "title");
-    child.innerHTML = title;
+    child.innerHTML = '<h2>' + title + '</h2>';
     loopElement(inner, data, 0);
 }
 
@@ -222,15 +222,19 @@ function loopElement(inner, data, idx) {
     var tr = Elem.creat("tr", table, "row");
     for (let y in data) {
         var td = Elem.creat("td", tr, "col");
-        if (typeof (data[y]) == "object")
+        if (typeof (data[y]) === "object")
             loopElement(td, data[y], y);
         else
-            td.innerHTML = toHead(y) + data[y];
+            td.innerHTML = toHead(y) + toText(data[y]);
     }
 }
 
 function toHead(idx) {
     return !isNaN(idx)? "":"<h1>" + idx + "</h1>";
+}
+
+function toText(data) {
+    return data || data.replace(/\r\n/g,'<br/>');
 }
 
 
@@ -243,13 +247,13 @@ function resetOuter(outer) {
         var table = inner.children[1];
 
         //居中
-        if (!setting.isCenter) {
+        if (!Setting.isCenter) {
 
             table.className = "align-left";
             title.style.textAlign = "left";
         } 
         //堆叠
-        while (!setting.isFlex && inner.children.length > 2) {
+        while (!Setting.isFlex && inner.children.length > 2) {
             var tableNext = inner.children[2];
             var trNext = tableNext.children[0].children[0];
             table.appendChild(trNext);
@@ -259,7 +263,7 @@ function resetOuter(outer) {
 
     for (var i=0;i<outer.children.length;i++) {
         var inner = outer.children[i];
-        if (setting.isAlign) {
+        if (Setting.isAlign) {
             resetAlign(inner);
         }
     } 
@@ -288,7 +292,7 @@ function resetAlign(inner) {
             return;
 
         var title = Elem.creat("tr", thisTbody);
-        var align = setting.isCenter ? "center" : "left";
+        var align = Setting.isCenter ? "center" : "left";
         var tdstr = `<tr><td class='title' colspan='100'><h2 style='text-align:` + align + `';>`;
         title.innerHTML = tdstr + next.children[0].innerHTML + "</h2></td></tr>";
 
@@ -336,39 +340,40 @@ function tapButton(btn) {
     var nameVal = btn.getAttribute("val-name");
     //run action
     if (modeVal) {
-        setting.mode = modeVal;
-        setting.isSplit = modeVal == "initSplit";
-        setting.isEdit = /initText|initEdit/i.test(modeVal);
-        setting.isText = /initText|initEdit|initSave/i.test(modeVal);
+        Setting.mode = modeVal;
+        Setting.isSplit = modeVal == "initSplit";
+        Setting.isEdit = /initText|initEdit/i.test(modeVal);
+        Setting.isText = /initText|initEdit|initSave/i.test(modeVal);
         var block2 = Elem.get("flex2").parentNode;
         var block3 = Elem.get("flex3").parentNode;
-        togButtonHide(block2, setting.isText, "block");
-        togButtonHide(block3, setting.isText, "block");
-        togButtonHide(block3, !setting.isSplit, "block");
+        togButtonHide(block2, Setting.isText, "block");
+        togButtonHide(block3, Setting.isText, "block");
+        togButtonHide(block3, !Setting.isSplit, "block");
     }
     if (viewVal) {
         togButtonView(btn, viewVal, "isFlex");
         togButtonView(btn, viewVal, "isFlow");
         togButtonView(btn, viewVal, "isAlign");
         togButtonView(btn, viewVal, "isCenter"); 
-        setting.view = viewVal;
+        Setting.view = viewVal;
     }
 
     //split length
     if (lengVal) {
-        setting.leng = lengVal;
+        Setting.leng = lengVal;
     }
     //data name
     if (nameVal) {
         name = nameVal;
-        setting.name = nameVal;
+        Setting.name = nameVal;
         data = getJson(nameVal);
     }
 
-    if (name == "setting") 
-        data = copyJson(setting);
-    // if (typeof(setting.mode) == "function")
-        eval(setting.mode+"();");
+    if (name == "Setting") 
+        data = copyJson(Setting);
+    Setting.isElement = name == "CONSTRUCTORS";
+    // if (typeof(Setting.mode) == "function")
+        eval(Setting.mode+"();");
     var nodes = btn.parentNode.childNodes;
     for (let x in nodes) {
         togButton(nodes[x]);            
@@ -378,10 +383,10 @@ function tapButton(btn) {
 
 function togButton(btn) {
     if (!btn || !btn.style) return;
-    if (btn.getAttribute("val-mode") == setting.mode || 
-        btn.getAttribute("val-view") == setting.view || 
-        btn.getAttribute("val-leng") == setting.leng || 
-        btn.getAttribute("val-name") == setting.name) {
+    if (btn.getAttribute("val-mode") == Setting.mode || 
+        btn.getAttribute("val-view") == Setting.view || 
+        btn.getAttribute("val-leng") == Setting.leng || 
+        btn.getAttribute("val-name") == Setting.name) {
         btn.setAttribute("btype", "live");
     } else {
         btn.setAttribute("btype", "dead");
@@ -391,22 +396,22 @@ function togButton(btn) {
 function togButtonView(btn, viewVal, key) {
     if (viewVal == key) {
         if (viewVal == "isFlex") 
-            setting.isPile = true;
+            Setting.isPile = true;
         if (viewVal == "isFlow") 
-            setting.isPile = false;
-        setting[key] = !setting[key];
+            Setting.isPile = false;
+        Setting[key] = !Setting[key];
         togButtonText(btn, key);
     }
 }
 
 
 function togButtonText(btn, key) {
-    for (let x in setting.btnKey) {
-        if (key == setting.btnKey[x]) {
-            if (setting[key])
-                btn.innerHTML = setting.btnDefault[x];
+    for (let x in Setting.btnKey) {
+        if (key == Setting.btnKey[x]) {
+            if (Setting[key])
+                btn.innerHTML = Setting.btnDefault[x];
             else
-                btn.innerHTML = setting.btnOpposite[x];
+                btn.innerHTML = Setting.btnOpposite[x];
         }
     }
 }
@@ -418,8 +423,8 @@ function togButtonHide(btn, hide, display) {
 
 
 function back() {
-    var config = getJson("Config");
-    var href = config ? config.name : "home";
+    var Config = getJson("Config");
+    var href = Config ? Config.cfg.name : "home";
     window.location.href = "../#1/#1.html".replace(/#1/g, href);
 }
 
@@ -430,10 +435,10 @@ window.onresize = function() {
 }
 
 function setAgent() {
-    setting.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
-    setting.zoom = setting.isMobile ? setting.zoomMobile : setting.zoomComputer;
-    document.body.style.zoom = setting.zoom;
-    var agent = setting.isMobile ? "mobile" : "computer";
+    Setting.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
+    Setting.zoom = Setting.isMobile ? Setting.zoomMobile : Setting.zoomComputer;
+    document.body.style.zoom = Setting.zoom;
+    var agent = Setting.isMobile ? "mobile" : "computer";
     var outerBot = Elem.get("outer-bot");
     outerBot.setAttribute("agent", agent);
     var blocks = document.getElementsByClassName("block");
@@ -444,32 +449,32 @@ function setAgent() {
 
 function setCenter() {
     //20 = outer.paddingTop + outer.paddingBot;
-    var height = window.innerHeight / setting.zoom - 20;
+    var height = window.innerHeight / Setting.zoom - 20;
     var outer = Elem.get("outer");
     var btnCenter = Elem.get("flex2").children[2];
     var btnAlign = Elem.get("flex2").children[3];
     //outer.scrollWidth超出body.inner,隐藏居中按钮
-    setting.isOver = outer.scrollWidth * setting.zoom > window.innerWidth;
-    setting.isHide = setting.isOver || !setting.isPile;
+    Setting.isOver = outer.scrollWidth * Setting.zoom > window.innerWidth;
+    Setting.isHide = Setting.isOver || !Setting.isPile;
     outer.style.height = (height - 90) + "px";
-    togButtonHide(btnCenter, setting.isHide, "inline");
+    togButtonHide(btnCenter, Setting.isHide, "inline");
     togButtonText(btnCenter, "isCenter");
-    if (!setting.isPile) 
-        setting.isCenter = true;
-    if (setting.isOver) 
-        setting.isCenter = false;
+    if (!Setting.isPile) 
+        Setting.isCenter = true;
+    if (Setting.isOver) 
+        Setting.isCenter = false;
 }
 
 function setCustom() {
     var btnJoin = Elem.get("initJoin");
     var btnSplit = Elem.get("initSplit");
-    togButtonHide(btnJoin, setting.isEdit, "inline");
-    togButtonHide(btnSplit, setting.isEdit, "inline");
+    togButtonHide(btnJoin, Setting.isEdit, "inline");
+    togButtonHide(btnSplit, Setting.isEdit, "inline");
 
     var btnEdit = Elem.get("initEdit");
     var btnSave = Elem.get("initSave");
-    togButtonHide(btnEdit, !setting.isEdit, "inline");
-    togButtonHide(btnSave, !setting.isEdit, "inline");
+    togButtonHide(btnEdit, !Setting.isEdit, "inline");
+    togButtonHide(btnSave, !Setting.isEdit, "inline");
 }
 
 

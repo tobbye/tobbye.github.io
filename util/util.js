@@ -53,6 +53,10 @@ Parse.fillZero = function (num, count) {
   }
 }
 
+Parse.titleCase = function(text) {
+    return text[0].toUpperCase() + text.substring(1).toLowerCase();
+}
+
 Parse.limitText = function (str, len) {
     var str = str.toString();
 	var regexp = /[^\x00-\xff]/g;// 正在表达式匹配中文
@@ -304,7 +308,7 @@ Elem.togState = function(e, state) {
 var Storage = {};
 
 Storage.get = function (name) {
-    var value = localStorage.getItem(name);
+    var value = localStorage.getItem(name) || null;
     var data = JSON.parse(value);
     // console.log('Storage.get(' + name + ':' + value + ')');
     return data;
@@ -316,10 +320,9 @@ Storage.set = function (name, val) {
     // console.log('Storage.set(' + name + ':' + value + ')');
 }
 
-Storage.add = function (name, addVal) { 
-    let oldVal = Storage.get(name) || [];
-    let newVal = oldVal.concat(addVal);
-    Storage.set(name, newVal);
+Storage.add = function (name, arr) { 
+    let data = Storage.get(name) || [];
+    Storage.set(name, data.concat(arr));
 }
 
 Storage.update = function(name, key, val) {
@@ -535,10 +538,12 @@ var jsonToAlert = function(data) {
 
 var jsonToTable = function(Item) {
     if (Config.name == 'home') return;
+    console.log(Item);
     Storage.set('Item', Item);
-    Storage.set('Alert', Alert);
     Storage.set('Config', Config);
     Storage.set('Constant', Constant);
+    Storage.set('Instances', Instances);
+    Storage.set('Constrtctors', Constrtctors);
     window.location.href = '../view/view.html';
 }
 

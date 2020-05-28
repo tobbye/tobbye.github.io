@@ -7,8 +7,8 @@ window.onload = function() {
 
 
 var cfg = {
-	name: 'inve',
-	inveCount: 33,
+	name: 'tran',
+	inveCount: 20,
 	laddCount: 25,
 	laddSrc: '../../picture/ladd/',
 	rightColor: 'green',
@@ -57,7 +57,7 @@ group: '淘金者',
 packType:'福袋', 
 packTitle: '发现一个福袋', 
 taskTitle:'任务#0-#1', 
-taskTypes:['snake', 'puzzle', 'jigsaw'], 
+taskTypes:['tetris', 'labyrinth', 'snake', 'puzzle', 'jigsaw'], 
 resultTitle:'恭喜您获得了', 
 
 inverStr: '投入者: ', 
@@ -76,14 +76,13 @@ lines: []},
 list: [
 {title: '红包池', vice: '抢夺投放的红包来获取收益',
 dot: 100, 
-type:'grab',
+type:'gain',
 group: '赞助商', 
 packType:'红包', 
 packTitle: '发现一个红包', 
 taskTitle:'任务#idx-#type', 
-taskTypes:['labyrinth', 'snake', 'puzzle', 'jigsaw'], 
 resultTitle:'恭喜您获得了', 
-
+taskTypes:['puzzle', 'jigsaw', 'snake', 'labyrinth', 'tetris'], 
 inverStr: '投放者: ', flexStr: '#0的投放',
 laddStr: '阶梯<br/><h3>#0阶</h3>',
 pieceStr: '剩余份数<br/><h3>#0份</h3>',
@@ -153,6 +152,15 @@ var instance = {
 '马高大',
 ],
 	grab: [
+		{name:'陈胜', word:'王侯将相/宁有种乎', pic:['']},
+		{name:'陈胜', word:'苟富贵/勿相忘', pic:['']},
+		{name:'张角', word:'苍天已死/黄天当立', pic:['']},
+		{name:'老子', word:'老子打儿子/天经地义', pic:['']},
+		{name:'儿子', word:'儿子打老子/逆天之道', pic:['']},
+		{name:'儿子', word:'天道可逆/天命可违', pic:['']},
+
+	],
+	gain: [
 		{name:'GSUNG钻戒', word:'GSUNG/钻戒', pic:['https://img.alicdn.com/bao/uploaded/i2/1050683166/O1CN01KJqMKW1ZG4Q5V7ZzV_!!0-item_pic.jpg']},
 		{name:'华为Mate30', word:'华为/Mate30/Pro5G', pic:['https://img.alicdn.com/bao/uploaded/i4/TB1IFWxl5_1gK0jSZFq59.paXXa_112746.jpg']},
 		{name:'多力多滋', word:'多力多滋/Doritos', pic:['https://img.alicdn.com/bao/uploaded/i2/2961304099/O1CN01ZFdSWH1g9NyEHKzfy_!!2961304099.jpg']},

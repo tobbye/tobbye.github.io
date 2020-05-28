@@ -6,7 +6,7 @@ function __Fund() {
 	this.init = function() {
 		this.setConfig();
 		this.creatElems();
-		console.log(this);
+        Container(this);
 	}
 
 
@@ -17,7 +17,7 @@ function __Fund() {
 		Alert.showInner();
 	}
 
-	this.setContent = function(inner, x) {
+	this.creatContent = function(inner, x) {
 	    let list = items[x].list;
 	    for (let y in list) {
 	        let content = Elem.creat('div', inner, 'content', y);

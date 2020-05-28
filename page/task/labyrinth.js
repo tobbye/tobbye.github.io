@@ -1,18 +1,24 @@
 
-Task.creatLabyrinth = function(block, word) {
+Task.creatLabyrinth = function(line) {
     Task.game = new Task.Labyrinth();
-    Task.game.init(block, word);
+    Task.game.init(line.word);
 }
 
 Task.Labyrinth = function() {
     var that = this;
     var canvas, ctx;
 
-    this.init = function(block, word) {
+    this.init = function(word) {
+        this.word = word.replace(/\//g,'');
+        this.initCfg();
+        this.initBody();
+    };
+
+    this.initCfg = function() {
         this.title = '任务#idx-迷宫';
         this.orgTips = '口令'; 
         this.tgtTips = '探索迷宫打开#pack';
-        this.logText = '<h4>滑动屏幕控制方向</h4>吃掉文字输入口令';
+        this.logTips = '<h4>滑动屏幕控制方向</h4>吃掉文字输入口令';
         this.state = 'going';
         this.isArrow = true;
         this.isLoop = false;
@@ -31,19 +37,20 @@ Task.Labyrinth = function() {
         this.colorList = ['white', 'black', 'dodgerblue', 'red', 'green', 'green'];
         this.roadType = {ROAD:0, WALL:1, PAST:2, COLL:3, START:4, END:5};
         this.scale = ~~(Config.page.alertWidth / (2*this.col+1));
-        this.word = word.replace(/\//g,'');
-        this.initCanvas(block, word);
+    }
+
+    this.initBody = function() {
+        this.initCanvas();
         this.initMap();
         this.fillMap();
         this.drawMap(); 
+    }
 
-    };
-
-    this.initCanvas = function(block, word) {
-        let tips = Elem.creat('div', block, 'cell-tips');
-        tips.innerHTML = word;
-        let body = Elem.creat('div', block, 'cell-tips');
-        canvas = Elem.creat('canvas', body);
+    this.initCanvas = function() {
+        let tips = Elem.creat('div', Task.block, 'cell-tips');
+        tips.innerHTML = this.word;
+        let flex = Elem.creat('div', Task.block, 'cell-flex');
+        canvas = Elem.creat('canvas', flex);
         canvas.width = (2*this.col+1)*this.scale;
         canvas.height = (2*this.row+1)*this.scale;
         canvas.onclick = function (){
@@ -154,7 +161,7 @@ Task.Labyrinth = function() {
                 this.wall.push(this.arrowList[idx]);
         }
         if (this.wall.length == 4)
-            Task.checkState('stop');
+            Task.checkState('ending');
     };
 
 
@@ -177,7 +184,7 @@ Task.Labyrinth = function() {
             this.fillText('墙', i, j); 
             this.check();
         } else if (this.map[i][j] == this.roadType.END) {
-            if (Task.state != 'succeed');
+            if (this.state != 'succeed');
                 Task.checkState('succeed');
         }
     };

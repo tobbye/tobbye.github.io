@@ -5,7 +5,7 @@ function __Rank() {
 
 	this.init = function() {
 		this.creatElems();
-		console.log(this);
+        Container(this);
 	}
 
 
@@ -16,7 +16,7 @@ function __Rank() {
 		Alert.showInner();
 	}
 
-	this.setContent = function(inner, x) {
+	this.creatContent = function(inner, x) {
 		let list = items[x].list;
 		for (let y in list) {
 			let content = Elem.creat('div', inner, 'content', y);

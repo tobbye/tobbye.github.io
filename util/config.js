@@ -1,7 +1,15 @@
 
+var Instances = {};
+var Constrtctors = {};
 
+function Container(that) {
+    let name = that.name || cfg.name;
+    console.log(that);
+    Instances[name] = ['Instances'];
+    Constrtctors[name] = ['Constrtctors'];
+} 
 
-let Constant = {
+var Constant = {
     agent: {},
     action: {
         ref: '#host/#uid/#act/#idx',
@@ -48,7 +56,7 @@ let Constant = {
         text: '深黑',
     },
     clock: {
-        mixLoop: 10,
+        loop: 10,
     },
     hrefTop: [
         {name:'sett', href:'../sett/sett.html', text:'设置'},
@@ -72,13 +80,13 @@ function __Config() {
 //初始化配置
     this.init = function() {
         this.cfg = cfg;
-        this.name = cfg.name;
+        this.name = 'Config';
         this.fade = new Fade();
 
         let temp = Storage.get('Config') || {};
-        if (this.name == 'sett')
+        if (cfg.name == 'sett')
             temp = {};
-        if (this.name == temp.name && temp.sett.isInto)
+        if (cfg.name == temp.name && temp.sett.isInto)
             this.innerIdx = temp.innerIdx || 0;
         else
             this.innerIdx = 0;
@@ -86,7 +94,7 @@ function __Config() {
         this.setDefult(temp, 'color');
         this.setDefult(temp, 'clock');
         this.getHost();
-        console.log(this);
+        Container(this);
         window.onresize();
     }
 

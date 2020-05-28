@@ -30,24 +30,19 @@ var Panel = function() {
     }
 }
 
-var Alert = new __Alert();
 
-// this.page = {
-//     nexu: Nexu,
-//     tran: Tran,
-//     fund: Fund,
-// }
+var Alert = new __Alert();
 
 function __Alert() {
 //初始化Alert
     this.init = function() {
-        this.name = Config.cfg.name;
+        this.name = 'Alert';
         this.initAlert();
         this.btnClick('btn-quit', this.hidePanel);
         this.btnClick('btn-abon', this.hidePanel);
         this.btnClick('btn-close', this.hidePanel);
         this.hidePanel();
-        console.log(Alert);
+        Container(this);
     }
 
 
@@ -99,7 +94,7 @@ function __Alert() {
         outerCenter.innerHTML = '';
         for (let x in items) {
             let inner = Elem.creat('div', outerCenter, 'inner', x);
-            that.setContent(inner, x);
+            that.creatContent(inner, x);
         }
     }
 
@@ -109,8 +104,8 @@ function __Alert() {
     }
 
     //显示内页
-    this.showInner = function(innerIdx) {
-        let idx = Config.sett.isInto ? Config.innerIdx : innerIdx || 0;
+    this.showInner = function(clickIdx) {
+        let idx = Config.sett.isInto ? Config.innerIdx : clickIdx || 0;
         let outerTop = Elem.get('outer-top').children;
         let outerCenter = Elem.get('outer-center').children;
         let isPage = Config.sett.colorType == 'page';
@@ -133,18 +128,18 @@ function __Alert() {
                 Elem.show(childCenter, 'none');
             }
         }
+        Config.sett.isInto = Config.innerIdx != clickIdx;
         Config.innerIdx = idx;
-        this.setInner(innerIdx, idx);
+        this.setInner(clickIdx, idx);
     }
 
-    this.setInner = function(innerIdx, idx) {
+    this.setInner = function(clickIdx, idx) {
         let isText = Config.sett.colorType == 'text';
         if (isText)
             Elem.color(document.body, getColorType(), '');
         else
             Elem.color(document.body, getColorType(), getColorBgd());
-        Config.sett.isInto = Config.innerIdx != innerIdx;
-        if (Config.sett.isInto || innerIdx == null || Config.sett.debugType == 'close') {
+        if (Config.sett.isInto || clickIdx == null || Config.sett.debugType == 'close') {
             Config.sett.isInto = false;
             Storage.set('Config', Config);
         } else if (Config.sett.debugType != 'close') {
@@ -199,7 +194,7 @@ function __Alert() {
         this.setBox();
         this.isAlert = true;
         this.curPanel = this.panels[name];
-        console.log(this.curPanel);
+        // console.log(this.curPanel);
         if (!this.curPanel) return;
         Elem.show(this.self);
         Elem.show(this.curPanel.panel);
@@ -243,42 +238,41 @@ function __Alert() {
         }
     }
 
-    this.User = function() {
+    this.UserFlex = function() {
 
-    }
+        this.init = function(user, line, isNext) {
+            this.body = user;
+            if (cfg.isRank || isNext) {
+                this.top = Elem.creat('div', this.body, 'user-top');
+                this.order = Elem.creat('div', this.top, 'user-order');
+                this.value = Elem.creat('div', this.top, 'user-value');
 
-    this.setUserFlex = function(user, line, isNext) {
-        if (cfg.isRank || isNext) {
-            let top = Elem.creat('div', user, 'user-top');
-            let order = Elem.creat('div', top, 'user-order');
-            let value = Elem.creat('div', top, 'user-value');
+                this.order.innerHTML = line.order;
+                this.value.innerHTML = line.value;  
+            }
+            this.mark = [];
+            this.flex = Elem.creat('div', this.body, 'user-flex');
+            this.head = Elem.creat('img',  this.flex, 'user-head');
+            this.left = Elem.creat('div',  this.flex, 'user-left');
+            this.right = Elem.creat('div',  this.flex, 'user-right');
+            this.name = Elem.creat('div',  this.left, 'user-name');
+            this.marks = Elem.creat('div',  this.left, 'user-flex');
+            this.ladd = Elem.creat('div',  this.right, 'user-ladd');
+            this.group = Elem.creat('div',  this.right, 'user-group');
+            line.mark = line.mark || ["身份标签1", "身份标签2"];
+            for (let i in line.mark) {
+                this.mark[i] = Elem.creat('div', this.marks, 'user-mark');
+                this.mark[i].innerHTML = line.mark[i];
+                this.mark[i].style.borderColor = getColorType();
+            }
+            Elem.color(this.head, '', getColorLight());
+            Elem.color(this.group, 'white', getColorType());
+            Elem.css(this.group, 'borderColor', getColorType());
 
-            order.innerHTML = line.order;
-            value.innerHTML = line.value;  
+            this.name.innerHTML = line.name || line.inver;
+            this.ladd.innerHTML = line.ladd + '阶' || '??阶';
+            this.group.innerHTML = line.group || '未知';
         }
-
-        let flex = Elem.creat('div', user, 'user-flex');
-        let head = Elem.creat('img', flex, 'user-head');
-        let left = Elem.creat('div', flex, 'user-left');
-        let right = Elem.creat('div', flex, 'user-right');
-        let name = Elem.creat('div', left, 'user-name');
-        let marks = Elem.creat('div', left, 'user-flex');
-        let ladd = Elem.creat('div', right, 'user-ladd');
-        let group = Elem.creat('div', right, 'user-group');
-        line.mark = line.mark || ["身份标签1", "身份标签2"];
-        for (let i in line.mark) {
-            let mark = Elem.creat('div', marks, 'user-mark');
-            mark.innerHTML = line.mark[i];
-            mark.style.borderColor = getColorType();
-        }
-        Elem.color(head, '', getColorLight());
-        Elem.color(group, 'white', getColorType());
-        Elem.css(group, 'borderColor', getColorType());
-
-        name.innerHTML = line.name || line.inver;
-        ladd.innerHTML = line.ladd + '阶' || '??阶';
-        group.innerHTML = line.group || '未知';
-        return flex;
     }
 
 
@@ -293,7 +287,8 @@ function __Alert() {
         let title = this.curPanel.title;
         let block = this.curPanel.block;
         let body = Elem.creat('div', block, 'user-body');
-        let flex = this.setUserFlex(body, line, x);
+        let flex = new Alert.UserFlex();
+        flex.init(body, line, x);
         let tags = Elem.creat('div', body, 'user-tags');
         let desc = Elem.creat('div', body, 'user-desc');
         if (line.tag) {

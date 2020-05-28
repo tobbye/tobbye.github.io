@@ -3,9 +3,13 @@ var Task = {
     idx: 0,
     ladd: 1, 
     roll: 1,
+    body: {},
 };
 
 Task.cfg = {
+    logReady:'<h4>任务#idx准备</h4>加油！奥里给!',
+    logPause:'<h4>任务#idx暂停</h4>加油！奥里给!奥里给!',
+    logGoing:'<h4>任务#idx进行中</h4>加油！奥里给!奥里给!奥里给!',
     logFail:'<h4>任务#idx失败</h4>请重置后再次尝试!',
     logStop:'<h4>任务#idx中止</h4>请打开#pack',
     logNext:'<h4>任务#idx完成</h4>请进行下一任务',
@@ -13,63 +17,50 @@ Task.cfg = {
 };
 
 Task.creatTask = function(block, mix) {
-    document.block = block;
     let data = document.body.data;
     let line = document.body.line;
     if (Task.index != line.index)
         Task.idx = 0;
+    Task.block = block;
     Task.index = line.index;
     Task.pack = data.packType;
     Task.types = data.taskTypes;
     Task.type = Task.types[Task.idx];
+    Task.typeC = 'creat' + Parse.titleCase(Task.type);
+    Task[Task.typeC](line);
     Config.task = Task;
-    switch (Task.type) {
-
-        case 'snake':
-            Task.creatSnake(block, line.word);
-            break;
-        case 'puzzle': 
-            Task.creatPuzzle(block, line.word);
-            break;
-        case 'jigsaw':
-            Task.creatJigsaw(block, line.src, line.idx);
-            break;
-        case 'labyrinth':
-            Task.creatLabyrinth(block, line.word);
-            break;
-    }
 
     if (Task.game && !mix) {
         Task.initTask();
         Task.checkAction('redo');
-        console.log(Task);
+        console.log (Task);
     }
 }
 
 Task.mixAnim = function(block) {
-    var clock = Config.clock;
-    clearInterval(clock.mixClock);
-    clock.mixLoop = Config.constant.clock.mixLoop;
-    clock.mixClock = setInterval(function() {
-        block = block || document.block;
-        if (clock.mixLoop > 0) {
+    clearInterval(Task.timer);
+    clearInterval(Task.clock);
+    Task.loop = Constant.clock.loop;
+    Task.clock = setInterval(function() {
+        Task.game.state = 'pause';
+        if (Task.loop > 0) {
             if (Task.game.mixAnim) {
                 Task.game.mixAnim();
             } else {
-                block.innerHTML = '';
-                Task.game.isLoop = false;
-                Task.creatTask(block, true);
+                Task.block.innerHTML = '';
+                Task.creatTask(Task.block, true);
             }
-            clock.mixLoop--;
+            Task.loop--;
         } else {
-            clearInterval(clock.mixClock);
-            clock.mixLoop = Config.constant.clock.mixLoop;
+            Task.game.state = 'going';
+            clearInterval(Task.clock);
+            Task.loop = Constant.clock.loop;
         }
     }, 120);  
     if (!Task.game.mixAnim) {
         Task.initTask();
         Task.checkAction('redo');
-        console.log(Task); 
+        console.log (Task); 
     }
 }
 
@@ -77,58 +68,70 @@ Task.mixAnim = function(block) {
 Task.initTask = function() {
     Task.type = Task.types[Task.idx];
     Task.ladd = Task.idx + 1;
-    console.log(Task.game)
-    Task.title = Task.game.title.replace('#idx', Task.ladd);
-    Task.cfg.logText = Task.game.logText.replace('#pack', Task.pack);
-    Task.cfg.orgTips = Task.game.orgTips.replace('#pack', Task.pack); 
-    Task.cfg.tgtTips = Task.game.tgtTips.replace('#pack', Task.pack);
-    Elem.text(Alert.panels.task.title, Task.title);
+    Task.title = Task.text(Task.game.title);
+    Elem.text(Alert.curPanel.title, Task.title);
 }
 
 Task.checkState = function(state) {
     Task.state = state;
-    if (state == 'stop') {
-        if (Task.idx > 1)
-            Task.checkAction('stop');
-        else
-            Task.checkAction('fail');
-    } else {
-        if (Task.ladd < Task.types.length) {
-            Task.initTask();  
-            Task.checkAction('next');
-        } else {
-            Task.checkAction('open');
-        }
-        Task.idx ++;
+    Task.game.state = state;
+    switch (state) {
+        case 'ready':
+            Task.log (Task.cfg.logReady);
+            break;
+        case 'pause':
+            Task.log (Task.cfg.logPause);
+            break;
+        case 'going':
+            Task.log (Task.cfg.logGoing);
+            break;
+        case 'succeed':
+            Task.game.control = null;
+            clearInterval(Task.game.timer);
+            if (Task.ladd < Task.types.length) {
+                Task.initTask();  
+                Task.checkAction('next');
+            } else {
+                Task.checkAction('open');
+            }
+            Task.idx ++;
+            break;
+        case 'ending':
+            clearInterval(Task.game.timer);
+            if (Task.idx > 1)
+                Task.checkAction('stop');
+            else
+                Task.checkAction('fail');
+            break;
     }
 }
 
 Task.checkAction = function(action) {
-    Task.action = action;
+    Task.game.action = action;
     Elem.hide(Alert.buttons.open);
     Elem.hide(Alert.buttons.next);
     Elem.hide(Alert.buttons.redo);
     Elem.hide(Alert.buttons.abon);
  
     if (action == 'open') {
-        Task.fade(Task.cfg.logOpen);
+        Task.log (Task.cfg.logOpen);
         Elem.show(Alert.buttons.open);
     }
     if (action == 'next') {
-        Task.fade(Task.cfg.logNext);
+        Task.log (Task.cfg.logNext);
         Elem.show(Alert.buttons.next);
      }
     if (action == 'redo') {
-        Task.fade(Task.cfg.logText);
+        Task.log (Task.game.logTips);
         Elem.show(Alert.buttons.redo);
         Elem.show(Alert.buttons.abon);
     }
     if (action == 'stop') {
-        Task.fade(Task.cfg.logStop);
+        Task.log (Task.cfg.logStop);
         Elem.show(Alert.buttons.open);
     }
     if (action == 'fail') {
-        Task.fade(Task.cfg.logFail);
+        Task.log (Task.cfg.logFail);
         Elem.show(Alert.buttons.redo);
         Elem.show(Alert.buttons.abon);
     }
@@ -164,9 +167,22 @@ Task.getRoll = function(all, roll) {
     }
 }
 
-Task.fade = function(log) {
-    Task.cfg.fade = log.replace('#idx', Task.ladd).replace('#pack', Task.pack);
-    Alert.log(Task.cfg.fade);
+Task.text = function(text) {
+    return text
+    .replace('#idx', Task.ladd)
+    .replace('#pack', Task.pack)
+    .replace('#remain', Task.remain);
+}
+
+Task.log = function(log) {
+    Task.cfg.log = Task.text(log);
+    Alert.log (Task.cfg.log);
+}
+
+Task.tips = function(tips) {
+    let elem = Elem.creat('div', Task.block, 'cell-tips');
+    elem.innerHTML = Task.text(tips);
+    return elem;
 }
 
 Task.alert = function(log) {

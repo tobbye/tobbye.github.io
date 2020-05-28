@@ -1,32 +1,40 @@
-Task.creatPuzzle = function(block, word) {
+Task.creatPuzzle = function(line) {
     Task.game = new Task.Puzzle();
-    Task.game.init(block, word);
-
+    Task.game.init(line.word);
 }
 
 Task.Puzzle = function() {
     var that = this;
     var blockOrg, blockTgt;
 
-    this.init = function(block, word) {
-        this.title = '任务#idx-拼字';
-        this.orgTips = '口令'; 
-        this.tgtTips = '正确输入口令打开#pack';
-        this.logText = '<h4>点击格子输入口令</h4>正确输入口令打开#pack';
-        this.isArrow = false;
+    this.init = function(word) {
         this.word = word;
         this.wordOrg = word.replace(/ /g, '/');
         this.wordTgt = word.replace(/[\/ ]/g, '');
-        blockOrg = Elem.creat('div', block, 'cell-block');
-        this.creat(blockOrg, 'ready');
+        this.initCfg();
+        this.initBody();
+    }
 
-        blockTgt = Elem.creat('div', block, 'cell-block');
-        this.creat(blockTgt, 'going');
+    this.initCfg = function() {
+        this.title = '任务#idx-拼字';
+        this.orgTips = '口令'; 
+        this.tgtTips = '正确输入口令打开#pack';
+        this.logTips = '<h4>点击格子输入口令</h4>正确输入口令打开#pack';
+        this.isArrow = false;
+    }
+
+
+    this.initBody = function() {
+        blockOrg = Elem.creat('div', Task.block, 'cell-block');
+        this.creatBody(blockOrg, 'ready');
+
+        blockTgt = Elem.creat('div', Task.block, 'cell-block');
+        this.creatBody(blockTgt, 'going');
     }
 
 
     //解密字块
-    this.creat = function(block, state) {
+    this.creatBody = function(block, state) {
         this.state = state;
         this.wordCur = '';
         this.wordMix = Parse.mix(this.wordOrg);
@@ -34,7 +42,9 @@ Task.Puzzle = function() {
 
         block.innerHTML = '';
         var tips = Elem.creat('div', block, 'cell-tips');
-        tips.innerHTML = state == 'going' ? Task.cfg.tgtTips : Task.cfg.orgTips;
+        if (state == 'going')
+            this.tgtTips
+        tips.innerHTML = state == 'going' ? Task.text(this.tgtTips) : Task.text(this.orgTips);
         Elem.creat('div', block, 'space20');
         var flex = Elem.creat('div', block, 'cell-flex');
         for(let idx in this.wordOrg) {
@@ -73,7 +83,7 @@ Task.Puzzle = function() {
                 Elem.btnDanger('redo');
             }
             if (this.wordTgt == this.wordCur) {
-                Task.checkState('next');
+                Task.checkState('succeed');
             }
             cell.able = false;
         }

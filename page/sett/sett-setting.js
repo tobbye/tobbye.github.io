@@ -4,7 +4,7 @@ function __Sett() {
 
 	this.init = function() {
 		this.creatElems();
-		console.log(this);
+        Container(this);
 	}
 
 
@@ -15,33 +15,21 @@ function __Sett() {
 		Alert.showInner();
 	}
 
-	this.setContent = function(inner, x) {
+	this.creatContent = function(inner, x) {
 		let list = items[x].list;
 		for (let y in list) {
 			let content = Elem.creat('div', inner, 'content', y);
 			let data = list[y];
-			this.setTitle(content, data);
-			this.setLine(content, data);
+			Alert.creatTitle(content, data);
+			this.creatLine(content, data);
 			if (data.key == 'colorType') {
 				this.setStyle(content, data);
 			}
 		}
 	}
 
-	this.setTitle = function(content, data) {
-		if (data.title) {
-		    let title = Elem.creat('div', content, 'title');
-		    title.innerHTML = data.title;
-		}
-		if (data.vice) {
-		    let vice = Elem.creat('div', content, 'vice');
-		    vice.innerHTML = data.vice;
-		}
-	}
 
-
-
-	this.setLine = function(content, data) {
+	this.creatLine = function(content, data) {
 
 		let select = Elem.creat('div', content, 'select');
 		for (let z in data.optName) {
@@ -64,6 +52,8 @@ function __Sett() {
 		// let child = select.children[data.default];
 		// if (child) child.onclick();
 	}
+
+	
 	this.setOptDefault = function(opt) {
 		let childs = opt.parentNode.children;
 		for (let i=0; i<childs.length; i++) {

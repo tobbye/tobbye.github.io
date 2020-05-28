@@ -5,7 +5,7 @@ function __Recd() {
     this.init = function() {
         this.getjson();
         this.creatElems();
-        console.log(this);
+        Container(this);
     }
 
 
@@ -16,7 +16,7 @@ function __Recd() {
         Alert.showInner();
     }
 
-    this.setContent = function(inner, x) {
+    this.creatContent = function(inner, x) {
         var list = items[x].list;
         for (let y in list) {
             var content = Elem.creat('div', inner, 'content', y);
