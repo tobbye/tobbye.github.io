@@ -6,9 +6,11 @@ Task.creatTetris = function(line) {
 
 
 Task.Tetris = function() {
+    let tips, flex, table;
 
     this.init = function(word) {
         this.word = word.replace(/\//g,'');
+        this.word = word;
         this.initCfg();
         this.initBody();
         this.creatBlk();
@@ -22,9 +24,9 @@ Task.Tetris = function() {
         this.logTips = '<h4>点击按钮控制方向</h4>消除#remain行打开#pack';
         this.arrowList = ['left', 'up', 'right', 'down'];
         this.color = ['white', 'dodgerblue', 'darkorange']; 
-        this.gap = 800;
+        this.gap = 1000;
         this.col = 10;
-        this.row = 10; 
+        this.row = 12; 
         this.state = 'going'; 
         this.isBottom = false;
         this.size = ~~(Config.page.alertWidth / this.col);
@@ -43,15 +45,16 @@ Task.Tetris = function() {
 
     this.initBody = function() {
         Task.block.innerHTML = '';
-        this.tips = Elem.creat('div', Task.block, 'cell-tips');
-        this.tips.innerHTML = Task.text(this.tgtTips);
-        this.flex = Elem.creat('div', Task.block, 'cell-flex');
-        this.table = Elem.creat('table', this.flex);
-        this.table.style.color = this.color[0];
+        let body = Elem.creat('div', Task.block, 'cell-body');
+        tips = Elem.creat('div', body, 'cell-tips');
+        flex = Elem.creat('div', body, 'cell-flex');
+        table = Elem.creat('table', flex);
+        tips.innerHTML = Task.text(this.tgtTips);
+        table.style.color = this.color[0];
         this.map = new Array(this.row); 
         for(let i=0; i<this.row; i++){ 
             this.map[i] = new Array(this.col); 
-            let tr = Elem.creat('tr', this.table);
+            let tr = Elem.creat('tr', table);
             tr.style.height = this.size + 'px';
             for(let j=0; j<this.col; j++){ 
                 this.map[i][j] = 0; 
@@ -69,7 +72,7 @@ Task.Tetris = function() {
             return;
         if (Task.remain <= 0) {
             Task.remain = 0;
-            this.tips.innerHTML = Task.text(this.tgtTips);
+            tips.innerHTML = Task.text(this.tgtTips);
             Task.checkState('succeed');
             return; 
         }
@@ -100,8 +103,9 @@ Task.Tetris = function() {
             if(lines!=0){ 
                 Task.remain -= lines; 
                 this.paintMap(); 
-                this.tgtTip.innerHTML = Task.text(this.tgtTips);
+                tips.innerHTML = Task.text(this.tgtTips);
             } 
+            clearInterval(this.timer);
             this.creatBlk();
         }  
 
@@ -264,7 +268,7 @@ Task.Tetris = function() {
     this.paintMap = function(key){ 
         for(let i=0;i<this.row;i++){ 
             for(let j=0; j<this.col; j++){ 
-                let cell = this.table.rows[i].cells[j];
+                let cell = table.rows[i].cells[j];
                 if(this.map[i][j]==1){ 
                     cell.style.backgroundColor = this.color[2]; 
                 } else {
@@ -280,7 +284,7 @@ Task.Tetris = function() {
         for(let i=0; i<4; i++){ 
             let x = this.blk[i].x;
             let y = this.blk[i].y;
-            let cell = this.table.rows[x].cells[y];
+            let cell = table.rows[x].cells[y];
             cell.style.backgroundColor = this.color[idx]; 
         } 
     } 

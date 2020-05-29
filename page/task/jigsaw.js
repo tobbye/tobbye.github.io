@@ -4,8 +4,8 @@ Task.creatJigsaw = function(line) {
 }
 
 Task.Jigsaw = function() {
-    let that = this;
-    let img, tips, flex, blockOrg, blockTgt;
+
+    let img, tips, flex;
 
     this.init = function(src, idx) {
         this.src = src;
@@ -39,12 +39,12 @@ Task.Jigsaw = function() {
         img = new Image();
         img.src = this.fullPath;
         img.onload = function() {
-            that.loadImg(this);
+            Task.game.loadImg(this);
         }
     }
 
 
-    this.loadImg = function(img) {
+    this.loadImg = function() {
         this.hpw = ~~(img.height / img.width * 100) / 100;
         let cWidth = Task.block.clientWidth;
         this.blkWidth = ~~(cWidth);
@@ -65,27 +65,22 @@ Task.Jigsaw = function() {
                 }
             }
         }
-        blkOrg = Elem.creat('div', Task.block, 'cell-block');
-        this.creatBody(blkOrg, 'ready');
+        this.creatBody('ready', this.orgTips);
     };
 
 
-    this.creatBody = function(block, state) {
+    this.creatBody = function(state, text) {
         Task.checkState(state)
-        block.innerHTML = '';
-        tips = Elem.creat('div', block, 'cell-tips');
-        flex = Elem.creat('div', block, 'cell-flex');
+        Task.block.innerHTML = '';
+        let body = Elem.creat('div', Task.block, 'cell-body');
+        tips = Elem.creat('div', body, 'cell-tips');
+        flex = Elem.creat('div', body, 'cell-flex');
+        tips.innerHTML =  Task.text(text);
         flex.style.flexWrap = 'wrap';
-        if (state == 'going') {
-            this.cells = Parse.mix(this.cells);
-            tips.innerHTML =  Task.text(this.tgtTips);
-        } else {
-            tips.innerHTML =  Task.text(this.orgTips);
-        }
 
         for (let i=0;i<this.row;i++) {
             for (let j=0;j<this.col;j++) {
-                let idx = i*this.col + j;
+                idx = i*this.col + j;
                 let cell = Elem.creat('div', flex, 'cell-jigsaw', idx);
                 cell.idx = this.cells[idx].idx;
                 cell.style.width = this.cellWidth + 'px';
@@ -94,8 +89,8 @@ Task.Jigsaw = function() {
                 cell.style.backgroundPosition = this.cells[idx].posX + 'px ' + this.cells[idx].posY + 'px';
                 cell.style.backgroundImage = `url(${this.fullPath})`
                 cell.addEventListener('click', function(event) {
-                    if (that.state == 'going')
-                        that.click(event);
+                    if (Task.game.state == 'going')
+                        Task.game.click(event);
                 });
                 this.cells[idx].cellId = cell.id;
             }
@@ -117,7 +112,7 @@ Task.Jigsaw = function() {
     this.check = function() {
         if (this.state == 'going')
             this.state = 'succeed';
-        for (let i=0;i<flex.children.length;i++) {
+        for (let i=0; i<flex.children.length; i++) {
             let child = flex.children[i];
             child.style.border = `solid ${this.border}px white`;
             if (child.idx == i) {
@@ -131,7 +126,7 @@ Task.Jigsaw = function() {
         org.style.border = `solid ${this.border}px ${getColorType()}`;
 
         if (this.state == 'ready' || this.state == 'succeed' ) {
-            img = Elem.creat('img', blkOrg, 'image');
+            img = Elem.creat('img', Task.block, 'image');
             img.style.width = this.blkWidth - 2*this.border + 'px';
             img.style.height = this.blkHeight - 2*this.border + 'px';
             img.style.border = `solid ${this.border}px white`;
@@ -141,8 +136,8 @@ Task.Jigsaw = function() {
                 Elem.show(flex, 'flex');
                 Elem.show(img, 'none');
                 setTimeout(function() {
-                    Elem.show(flex, 'none');
-                    Elem.show(img, 'inline');
+                    Elem.show(Task.game.flex, 'none');
+                    Elem.show(Task.game.img, 'inline');
                 },1000);
             } else {
                 Elem.show(flex, 'none');
@@ -159,7 +154,8 @@ Task.Jigsaw = function() {
     };
 
     this.mixAnim = function() {
-        this.creatBody(blkOrg, 'going');
+        this.cells = Parse.mix(this.cells);
+        this.creatBody('going', this.tgtTips);
     }
 }
 

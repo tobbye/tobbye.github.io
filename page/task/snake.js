@@ -4,12 +4,12 @@ Task.creatSnake = function(line) {
 }
 
 Task.Snake = function() {
-    let that = this;
-    let canvas, ctx;
+    let tips, flex, canvas, ctx;
 
     this.init = function(word) {
 
         this.word = word.replace(/\//g,'');
+        this.word = word;
         this.initCfg();
         this.initBody();
         this.refresh(true);
@@ -37,10 +37,11 @@ Task.Snake = function() {
     }
 
     this.initBody = function(word) {
-        let tips = Elem.creat('div', Task.block, 'cell-tips');
+        let body = Elem.creat('div', Task.block, 'cell-body');
+        tips = Elem.creat('div', body, 'cell-tips');
+        flex = Elem.creat('div', body, 'cell-flex');
         tips.innerHTML = this.word;
-        let body = Elem.creat('div', Task.block, 'cell-tips');
-        canvas = Elem.creat('canvas', body);
+        canvas = Elem.creat('canvas', flex);
         canvas.width = this.col*this.size;
         canvas.height = this.row*this.size;
         ctx = canvas.getContext('2d');
@@ -83,7 +84,7 @@ Task.Snake = function() {
         }
 
         if (this.state == 'going')
-            setTimeout(function() {that.refresh(true)}, this.gap);  
+            setTimeout(function() {Task.game.refresh(true)}, this.gap);  
     };
 
     this.drawFood = function() {

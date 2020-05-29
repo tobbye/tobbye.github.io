@@ -5,11 +5,11 @@ Task.creatLabyrinth = function(line) {
 }
 
 Task.Labyrinth = function() {
-    var that = this;
-    var canvas, ctx;
+    let tips, flex, canvas, ctx;
 
     this.init = function(word) {
         this.word = word.replace(/\//g,'');
+        this.word = word;
         this.initCfg();
         this.initBody();
     };
@@ -47,15 +47,16 @@ Task.Labyrinth = function() {
     }
 
     this.initCanvas = function() {
-        let tips = Elem.creat('div', Task.block, 'cell-tips');
-        tips.innerHTML = this.word;
-        let flex = Elem.creat('div', Task.block, 'cell-flex');
+        Task.block.innerHTML = '';
+        let body = Elem.creat('div', Task.block, 'cell-body');
+        tips = Elem.creat('div', body, 'cell-tips');
+        flex = Elem.creat('div', body, 'cell-flex');
         canvas = Elem.creat('canvas', flex);
         canvas.width = (2*this.col+1)*this.scale;
         canvas.height = (2*this.row+1)*this.scale;
         canvas.onclick = function (){
             if (!Config.sett.isMobile)
-                that.downLoad();
+                Task.game.downLoad();
         }
         ctx = canvas.getContext('2d');
         ctx.textAlign = "center";

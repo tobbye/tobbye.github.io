@@ -47,10 +47,24 @@ function __Sett() {
 		for (let i=0; i < select.children.length; i++) {
 			let child = select.children[i];
 			if (child.optName == Config.sett[child.key])
-				Sett.setOption(child);
+				Sett.setOptDefault(child);
 		}
 		// let child = select.children[data.default];
 		// if (child) child.onclick();
+	}
+
+
+
+
+	this.setOption = function(opt) {
+		this.setOptDefault(opt);
+		if (opt.key == 'debugType' && opt.optName == 'test') {
+	        Storage.set('Config', Config);
+	        jsonToTable(items[0]); 
+	        return;
+		}
+		Config.sett[opt.key] = opt.optName;
+	    Storage.set('Config', Config);
 	}
 
 	
@@ -63,53 +77,32 @@ function __Sett() {
 	            childs[i].setAttribute('state', 'dead');
 	        }				
 		}
-		let optName = opt.optName;
 		if (opt.key == 'hostType') {
-			let host = Constant.host[optName];
+			this.setHostType(opt);
+		}
+	}
+
+	this.setHostType = function(opt) {
+		let optName = opt.optName;
+		let host = Constant.host[optName];
+
+		Config.sett.isOnline = !(optName == 'html' || optName == 'github');
+		Config.sett.isHtmlAll = optName == 'html';
+		Config.sett.isLocalMob = optName == 'local' && Config.sett.isMobile;
+
+		if (Config.sett.hostType == optName) {
 			Alert.log('<h4>成功连接到' + opt.optText + '!</h4>' + host);
+		} else if (Config.sett.isHtmlAll || Config.sett.isLocalMob) {
+			Alert.log('<h4>无法连接到' + opt.optText + '!</h4>' + host);
+		} else {
+			Alert.log('<h4>准备连接到' + opt.optText + '</h4>' + host);
+			Config.action.host = host;
+			setTimeout(function() {
+				window.location.href = Config.action.host + "/page/sett/sett.html";
+			}, 2000);
 		}
-	}
-
-	this.setOption = function(opt) {
-		let isSave = true;
-		let childs = opt.parentNode.children;
-		for (let i=0; i<childs.length; i++) {
-			if (opt.innerHTML == childs[i].innerHTML)  {
-	            childs[i].setAttribute('state', 'live');
-	        } else {
-	            childs[i].setAttribute('state', 'dead');
-	        }				
-		}
-		let optName = opt.optName;
-		if (opt.key == 'hostType') {
-			let host = Constant.host[optName];
-			Config.sett.isOnline = !(optName == 'html' || optName == 'github');
-			Config.sett.isHtmlAll = optName == 'html';
-			Config.sett.isLocalMob = optName == 'local' && Config.sett.isMobile;
-
-			if (Config.sett.isHtmlAll || Config.sett.isLocalMob) {
-				isSave = false;
-				Alert.log('<h4>无法连接到' + opt.optText + '!</h4>' + host);
-			} else if (Config.sett.hostType == optName) {
-				Alert.log('<h4>成功连接到' + opt.optText + '!</h4>' + host);
-			} else {
-				Alert.log('<h4>准备连接到' + opt.optText + '</h4>' + host);
-				Config.action.host = host;
-				isSave = false;
-				setTimeout(function() {
-					window.location.href = Config.action.host + "/page/sett/sett.html";
-				}, 2000);
-			}
-		}
-
-		if (opt.key == 'debugType' && opt.optName == 'test') {
-	        Storage.set('Config', Config);
-	        jsonToTable(items[0]); 
-		}
-		if (isSave)
-			Config.sett[opt.key] = optName;
-	    Storage.set('Config', Config);
-	}
+    	Storage.set('Config', Config);
+	}	
 
 	this.setStyle = function(content, data) {
 		let table = Elem.creat('table', content, 'table', 'style');

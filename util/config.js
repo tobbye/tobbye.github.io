@@ -83,6 +83,17 @@ function __Config() {
         this.name = 'Config';
         this.fade = new Fade();
 
+        this.getTemp();
+        this.setConst(temp, 'sett');
+        this.setConst(temp, 'color');
+        this.setConst(temp, 'clock');
+        this.setConst(temp, 'action');
+        this.getHost();
+        Container(this);
+        window.onresize();
+    }
+
+    this.getTemp = function() {
         let temp = Storage.get('Config') || {};
         if (cfg.name == 'sett')
             temp = {};
@@ -90,32 +101,26 @@ function __Config() {
             this.innerIdx = temp.innerIdx || 0;
         else
             this.innerIdx = 0;
-        this.setDefult(temp, 'sett');
-        this.setDefult(temp, 'color');
-        this.setDefult(temp, 'clock');
-        this.getHost();
-        Container(this);
-        window.onresize();
     }
 
     this.setAction = function(act, idx) {
         let uid = 'i';
-        let action = Constant.action;
-        let ref = action.ref.replace('#uid', uid).replace('#act', act).replace('#idx', idx);
-        action.router = ref.replace('#host', '');
-        console.log(Config);
-        ref = ref.replace('#host', action.host);
+        let ref = Constant.action.ref;
+        ref = ref.replace('#uid', uid).replace('#act', act).replace('#idx', idx);
+        this.action.router = ref.replace('#host', '');
+        this.action.ref = ref.replace('#host', this.action.host);
+        console.log(this.action);
         return ref;
     }
 
 
-    this.setDefult = function(temp, key) {
-        Config[key] = temp[key] || Constant[key];
-        if (typeof(Config[key]) === 'object')
-            Config[key] = JSON.parse(JSON.stringify(Config[key]));
+    this.setConst = function(temp, key) {
+        this[key] = temp[key] || Constant[key];
+        if (typeof(this[key]) === 'object')
+            this[key] = JSON.parse(JSON.stringify(this[key]));
     }
 
-    this.getDefult = function(that, key) {
+    this.getConst = function(that, key) {
         let defult = Constant[key];
         for (let x in defult) {
             that[x] = defult[x];
@@ -123,13 +128,12 @@ function __Config() {
     }
 
     this.getHost = function() {
-        let action = Constant.action;
         let path = window.document.location.href;
         let page = window.document.location.pathname;
         let pos = path.indexOf(page);
         let host = path.substring(0, pos);
-        action.host = host;
-        action.page = page;
+        this.action.host = host;
+        this.action.page = page;
         this.getHostType(host);
     }
 
@@ -137,7 +141,6 @@ function __Config() {
         for (let key in Constant.host) {
             if (Constant.host[key] == host) {
                 this.sett.hostType = key;
-                console.log(key);
                 return;
             }
         }

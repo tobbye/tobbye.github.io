@@ -169,12 +169,12 @@ function __Fund() {
 		input.dataready = data;
 		title.innerHTML = data.title;
 		limit.innerHTML = '(范围：0-' + input.max + ')';
-		if (Config.page.isOnline) {
+		if (Config.sett.isOnline) {
 			let tran = Elem.get('fundtran');
 			let ref = tran.getAttribute('ref');
 			let uid = Parse.getDate(null, '');
 			console.log(uid);
-			tran.action = setAction('fundtran', data.idx);
+			tran.action = Config.setAction('fundtran', data.idx);
 		}
 	}
 

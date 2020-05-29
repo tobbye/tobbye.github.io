@@ -273,7 +273,7 @@ Elem.state = function(e, v) {
 }
 
 Elem.btnPermit = function(k) {Elem.attr(Alert.buttons[k], 'state', 'permit'); } 
-Elem.btnDefult = function(k) {Elem.attr(Alert.buttons[k], 'state', 'defult'); }
+Elem.btnConst = function(k) {Elem.attr(Alert.buttons[k], 'state', 'defult'); }
 Elem.btnDanger = function(k) {Elem.attr(Alert.buttons[k], 'state', 'danger'); }
 //克隆元素
 Elem.clone = function(e, parent){
@@ -389,16 +389,16 @@ var getColorLight = function() {
 }
 
 
-var Page = function() {
+function Page() {
     var that = this;
 
-    Config.getDefult(this, 'page');
+    Config.getConst(this, 'page');
     this.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
     this.isWechat = (/micromessenger|MicroMessenger/i.test(navigator.userAgent));
     this.zoom = this.isMobile ? this.zoomMobile : this.zoomComput;
     this.zoom = this.isWechat ? this.zoomWechat : this.zoom;
-    this.windWidth = Math.floor(window.innerWidth / this.zoom);
-    this.windHeight = Math.floor(window.innerHeight / this.zoom);
+    this.windWidth = ~~(window.innerWidth / this.zoom);
+    this.windHeight = ~~(window.innerHeight / this.zoom);
     this.alertHeight = this.windHeight - this.alertOffset;
     this.outerHeight = this.windHeight - this.outerOffset;
     this.innerHeight = this.windHeight - this.innerOffset;
@@ -408,14 +408,14 @@ var Page = function() {
     this.alertWidth = this.windWidth - this.alertMargin * 2 - 36;
     this.isWidth = this.windWidth > this.windHeight;
     this.isFlow = this.innerHeight > this.minHeight;
-    var box = Elem.get('alert-box');
+    let box = Elem.get('alert-box');
     if (box) {
         box.style.left = this.alertMargin + 'px';
         box.style.right = this.alertMargin + 'px';
     }
 
     document.body.style.zoom = this.zoom;
-    var center = Elem.get('outer-center');
+    let center = Elem.get('outer-center');
     center.style.height = this.outerHeight + 'px';
     center.style.maxHeight = this.outerHeight + 'px';
 }
@@ -429,7 +429,7 @@ var Page = function() {
 
 
 var setFullScreen = function() {
-    if (Config.isMobile) {
+    if (Config.page.isMobile) {
         var body = document.body;
         if (body.requestFullScreen) body.requestFullScreen(); //W3C
         if (body.msRequestFullScreen) body.msRequestFullScreen();  //IE11
@@ -443,7 +443,7 @@ var setFullScreen = function() {
 //显示提醒信息
 function Fade() {
     var that = this;
-    Config.getDefult(this, 'fade');
+    Config.getConst(this, 'fade');
     
     this.getElem = function(e) {
         e = e || Elem.get('log');
@@ -461,14 +461,14 @@ function Fade() {
 
     this.setAnim = function(text, e, timeOn) {
         this.text = text;
-        this.e = this.getElem(e);
+        this.elem = this.getElem(e);
         this.timeOn = timeOn || this.timeOn;
-        if (this.e.getAttribute('fade') != 'over') {
+        if (this.elem.getAttribute('fade') != 'over') {
             window.clearTimeout(this.fadeIn);
             window.clearTimeout(this.fadeOn);
             window.clearTimeout(this.fadeOut);
             window.clearTimeout(this.fadeTog);
-            this.e.setAttribute('fade', 'on');
+            this.elem.setAttribute('fade', 'on');
             this.animTog();
         } else {
             this.animIn();
@@ -477,8 +477,8 @@ function Fade() {
 
     this.animIn = function() {
         if (this.text)
-            this.e.innerHTML = this.text;
-        this.e.setAttribute('fade', 'in');
+            this.elem.innerHTML = this.text;
+        this.elem.setAttribute('fade', 'in');
         this.fadeIn = setTimeout(function() {
             that.fadeIn = null;
             that.animOn();
@@ -486,7 +486,7 @@ function Fade() {
     }
 
     this.animOn = function() {
-        this.e.setAttribute('fade', 'on');
+        this.elem.setAttribute('fade', 'on');
         this.fadeOn = setTimeout(function() {
             that.fadeOn = null;    
             that.animOut();
@@ -495,8 +495,8 @@ function Fade() {
 
     this.animTog = function() {
         if (this.text)
-            this.e.innerHTML = this.text;
-        this.e.setAttribute('fade', 'tog');
+            this.elem.innerHTML = this.text;
+        this.elem.setAttribute('fade', 'tog');
         this.fadeTog = setTimeout(function() {
             that.fadeTog = null;
             that.animOn();
@@ -504,7 +504,7 @@ function Fade() {
     }
 
     this.animOut = function() {
-        this.e.setAttribute('fade', 'out');
+        this.elem.setAttribute('fade', 'out');
         this.fadeOut = setTimeout(function() {
             that.fadeOut = null;
             that.animOver();
@@ -512,7 +512,7 @@ function Fade() {
     }
 
     this.animOver = function() {
-        this.e.setAttribute('fade', 'over');
+        this.elem.setAttribute('fade', 'over');
     }  
 }
 
