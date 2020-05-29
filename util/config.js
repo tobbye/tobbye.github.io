@@ -84,10 +84,7 @@ function __Config() {
         this.fade = new Fade();
 
         this.getTemp();
-        this.setConst(temp, 'sett');
-        this.setConst(temp, 'color');
-        this.setConst(temp, 'clock');
-        this.setConst(temp, 'action');
+
         this.getHost();
         Container(this);
         window.onresize();
@@ -101,6 +98,10 @@ function __Config() {
             this.innerIdx = temp.innerIdx || 0;
         else
             this.innerIdx = 0;
+        this.setConst(temp, 'sett');
+        this.setConst(temp, 'color');
+        this.setConst(temp, 'clock');
+        this.setConst(temp, 'action');
     }
 
     this.setAction = function(act, idx) {
@@ -110,7 +111,7 @@ function __Config() {
         this.action.router = ref.replace('#host', '');
         this.action.ref = ref.replace('#host', this.action.host);
         console.log(this.action);
-        return ref;
+        return this.action.ref;
     }
 
 
