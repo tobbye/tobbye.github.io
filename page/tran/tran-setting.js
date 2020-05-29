@@ -299,7 +299,7 @@ function __Tran() {
             let priceStr = data.priceStr.replace('#0', Parse.sub4Num(line[priceKey][i-1]));
             let timesStr = data.timesStr.replace('#0', Parse.sub4Num(line[timesKey][i-1]));
             let ladd = this.creatText(flex2, 'A', laddStr);
-            let piece = this.creatText(flex2, 'C', pieceStr);
+            let piece = this.creatText(flex2, 'B', pieceStr);
             let price = this.creatText(flex2, 'B', priceStr);
             let times = this.creatText(flex2, 'B', timesStr);
         }
