@@ -71,7 +71,6 @@ Task.Jigsaw = function() {
 
     this.creatBody = function(state, text) {
         Task.checkState(state)
-        Task.block.innerHTML = '';
         let body = Elem.creat('div', Task.block, 'cell-body');
         tips = Elem.creat('div', body, 'cell-tips');
         flex = Elem.creat('div', body, 'cell-flex');

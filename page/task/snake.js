@@ -9,18 +9,16 @@ Task.Snake = function() {
     this.init = function(word) {
 
         this.word = word.replace(/\//g,'');
-        this.word = word;
         this.initCfg();
         this.initBody();
-        this.refresh(true);
-        this.drawFood();
+
     };
 
     this.initCfg = function() {
         this.title = '任务#idx-贪吃蛇';
         this.orgTips = '口令'; 
-        this.tgtTips = '正确输入口令打开#pack';
-        this.logTips = '<h4>滑动屏幕控制方向</h4>吃掉文字输入口令';
+        this.tgtTips = '正确吃掉文字完成任务';
+        this.logTips = '<h4>点击按钮控制方向</h4>吃掉文字完成任务';
         this.arrowList = ['left', 'up', 'right', 'down'];
         this.state = 'going';
         this.isArrow = true;
@@ -36,7 +34,13 @@ Task.Snake = function() {
         this.nextList = [-1, -this.col, 1, this.col]; 
     }
 
-    this.initBody = function(word) {
+    this.initBody = function() {
+        this.initCanvas();
+        this.eatFood(true);
+        this.drawFood();
+    }
+
+    this.initCanvas = function() {
         let body = Elem.creat('div', Task.block, 'cell-body');
         tips = Elem.creat('div', body, 'cell-tips');
         flex = Elem.creat('div', body, 'cell-flex');
@@ -50,18 +54,8 @@ Task.Snake = function() {
         ctx.font = this.size - 20 + "px bold sans-serif";
     };
 
-    this.draw = function(pos, color, idx) {
-        let x = pos % this.col *this.size + 1;
-        let y = ~~(pos / this.col) * this.size + 1;
-        ctx.fillStyle = color;
-        ctx.fillRect(x, y, this.size-2, this.size-2);
-        if (idx != null) {
-            ctx.fillStyle = 'white';
-            ctx.fillText(this.word[idx], x+this.size/2, y+this.size/2);
-        }
-    };
     
-    this.refresh = function(loop) {
+    this.eatFood = function(loop) {
         this.body.unshift(this.next = this.body[0] + this.direction);
         if (this.body.indexOf(this.next, 1) > 0) {
             return Task.checkState('ending');
@@ -84,12 +78,24 @@ Task.Snake = function() {
         }
 
         if (this.state == 'going')
-            setTimeout(function() {Task.game.refresh(true)}, this.gap);  
+            setTimeout(function() {Task.game.eatFood(true)}, this.gap);  
     };
 
     this.drawFood = function() {
         while (this.body.indexOf(this.food = ~~(Math.random() * this.col*this.row)) > 0);
             this.draw(this.food, "darkred", this.body.length);
+    };
+
+
+    this.draw = function(pos, color, idx) {
+        let x = pos % this.col *this.size + 1;
+        let y = ~~(pos / this.col) * this.size + 1;
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, this.size-2, this.size-2);
+        if (idx != null) {
+            ctx.fillStyle = 'white';
+            ctx.fillText(this.word[idx], x+this.size/2, y+this.size/2);
+        }
     };
 
 
@@ -100,5 +106,6 @@ Task.Snake = function() {
         if (this.body[1] - this.body[0] != this.next)
             this.direction =  this.next;
     };
+
 }
 

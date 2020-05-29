@@ -33,8 +33,8 @@ function __Rank() {
 		for (let z in data.lines) {
 			let line = data.lines[z];
 			let user = Elem.creat('div', block, 'user-block');
-
-			user.flex = Alert.setUserFlex(user, line);
+			user.flex = new Alert.UserFlex();
+            user.flex.init(user, line);
 			user.data = data;
 			user.line = line;
 			user.onclick = function() {

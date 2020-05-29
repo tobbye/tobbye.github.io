@@ -28,7 +28,7 @@ var colors = [
 var items = [
 {title: '设置', 
 list: [
-{title: '连接', vice: '请选择一个连接', default: 0, key: 'hostType',
+{title: '连接', vice: '请选择一个连接', default: 0, key: 'linkType',
 optName: ['Github', 'Local', 'Http'],
 optText: ['Github', '内网','外网'],
 },

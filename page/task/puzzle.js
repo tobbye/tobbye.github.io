@@ -17,8 +17,8 @@ Task.Puzzle = function() {
     this.initCfg = function() {
         this.title = '任务#idx-拼字';
         this.orgTips = '口令'; 
-        this.tgtTips = '正确输入口令打开#pack';
-        this.logTips = '<h4>点击格子输入口令</h4>正确输入口令打开#pack';
+        this.tgtTips = '正确输入口令完成任务';
+        this.logTips = '<h4>点击格子输入口令</h4>正确输入口令完成任务';
         this.isArrow = false;
     }
 

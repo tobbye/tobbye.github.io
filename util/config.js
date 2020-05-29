@@ -13,12 +13,12 @@ var Constant = {
     agent: {},
     action: {
         ref: '#host/#uid/#act/#idx',
-        host:'http://tobbye.github.io',
+        host:'http://localhost:8888',
         page:'/page/home/home.html',
         router:'/#uid/#act/#idx',
     },
     sett: {
-        hostType: 'github',   
+        linkType: 'github',   
         modeType: 'digger',
         colorType: 'text',
         debugType: 'close', 
@@ -30,7 +30,7 @@ var Constant = {
         timeOut: 1000,
         timeTog: 1000,
     },
-    host: {
+    link: {
         html: 'file:///C:/Users/ZHANGJIALIANG/<br/>Documents/GitHub/tobbye.github.io',
         github: 'http://tobbye.github.io',
         local: 'http://localhost:8888',
@@ -82,10 +82,11 @@ function __Config() {
         this.cfg = cfg;
         this.name = 'Config';
         this.fade = new Fade();
+        this.action = {};
 
         this.getTemp();
 
-        this.getHost();
+        this.getLink();
         Container(this);
         window.onresize();
     }
@@ -101,7 +102,6 @@ function __Config() {
         this.setConst(temp, 'sett');
         this.setConst(temp, 'color');
         this.setConst(temp, 'clock');
-        this.setConst(temp, 'action');
     }
 
     this.setAction = function(act, idx) {
@@ -109,7 +109,7 @@ function __Config() {
         let ref = Constant.action.ref;
         ref = ref.replace('#uid', uid).replace('#act', act).replace('#idx', idx);
         this.action.router = ref.replace('#host', '');
-        this.action.ref = ref.replace('#host', this.action.host);
+        this.action.ref = ref.replace('#host', Constant.action.host);
         console.log(this.action);
         return this.action.ref;
     }
@@ -128,20 +128,20 @@ function __Config() {
         }
     }
 
-    this.getHost = function() {
+    this.getLink = function() {
         let path = window.document.location.href;
         let page = window.document.location.pathname;
         let pos = path.indexOf(page);
-        let host = path.substring(0, pos);
-        this.action.host = host;
+        let link = path.substring(0, pos);
+        this.action.link = link;
         this.action.page = page;
-        this.getHostType(host);
+        this.getLinkType(link);
     }
 
-    this.getHostType = function(host) {
-        for (let key in Constant.host) {
-            if (Constant.host[key] == host) {
-                this.sett.hostType = key;
+    this.getLinkType = function(link) {
+        for (let key in Constant.link) {
+            if (Constant.link[key] == link) {
+                this.sett.linkType = key;
                 return;
             }
         }

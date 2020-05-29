@@ -9,7 +9,6 @@ Task.Labyrinth = function() {
 
     this.init = function(word) {
         this.word = word.replace(/\//g,'');
-        this.word = word;
         this.initCfg();
         this.initBody();
     };
@@ -17,8 +16,8 @@ Task.Labyrinth = function() {
     this.initCfg = function() {
         this.title = '任务#idx-迷宫';
         this.orgTips = '口令'; 
-        this.tgtTips = '探索迷宫打开#pack';
-        this.logTips = '<h4>滑动屏幕控制方向</h4>吃掉文字输入口令';
+        this.tgtTips = '找到迷宫出口完成任务';
+        this.logTips = '<h4>点击按钮控制方向</h4>找到迷宫出口完成任务';
         this.state = 'going';
         this.isArrow = true;
         this.isLoop = false;
@@ -47,7 +46,6 @@ Task.Labyrinth = function() {
     }
 
     this.initCanvas = function() {
-        Task.block.innerHTML = '';
         let body = Elem.creat('div', Task.block, 'cell-body');
         tips = Elem.creat('div', body, 'cell-tips');
         flex = Elem.creat('div', body, 'cell-flex');
@@ -119,8 +117,8 @@ Task.Labyrinth = function() {
                 this.accessed.push(cur);
             }
         }
-        this.accessed = null;
-        this.notAccessed = null;
+        this.accessed = [];
+        this.notAccessed = [];
     };
 
 

@@ -7,14 +7,24 @@ var Task = {
 };
 
 Task.cfg = {
+    logDetail:'此红包由 #inver 赞助<h4>完成的任务越多获得的#pack金额越大</h4>',
     logReady:'<h4>任务#idx准备</h4>加油！奥里给!',
     logPause:'<h4>任务#idx暂停</h4>加油！奥里给!奥里给!',
-    logGoing:'<h4>任务#idx进行中</h4>加油！奥里给!奥里给!奥里给!',
+    logGoing:'<h4>任务#idx进行中</h4>加油！奥里给!奥里给!',
+    logRedo:'<h4>任务#idx已重置</h4>加油！奥里给!奥里给!',
     logFail:'<h4>任务#idx失败</h4>请重置后再次尝试!',
     logStop:'<h4>任务#idx中止</h4>请打开#pack',
     logNext:'<h4>任务#idx完成</h4>请进行下一任务',
     logOpen:'<h4>任务全部完成</h4>您可以打开#pack啦!',
 };
+
+Task.gameNames = {
+    tetris:'俄罗斯方块', 
+    labyrinth:'迷宫', 
+    snake:'贪吃蛇', 
+    puzzle:'文字解密', 
+    jigsaw: '拼图',
+}
 
 Task.creatTask = function(block, mix) {
     let data = document.body.data;
@@ -33,6 +43,7 @@ Task.creatTask = function(block, mix) {
     if (Task.game && !mix) {
         Task.initTask();
         Task.checkAction('redo');
+        Task.checkState('going');
         console.log (Task);
     }
 }
@@ -42,24 +53,23 @@ Task.mixAnim = function(block) {
     clearInterval(Task.clock);
     Task.loop = Constant.clock.loop;
     Task.clock = setInterval(function() {
-        Task.game.state = 'pause';
         if (Task.loop > 0) {
+            Task.block.innerHTML = '';
             if (Task.game.mixAnim) {
                 Task.game.mixAnim();
             } else {
-                Task.block.innerHTML = '';
                 Task.creatTask(Task.block, true);
             }
             Task.loop--;
         } else {
-            Task.game.state = 'going';
+            Task.checkState('going');
             clearInterval(Task.clock);
             Task.loop = Constant.clock.loop;
         }
     }, 120);  
+    Task.checkAction('redo');
     if (!Task.game.mixAnim) {
         Task.initTask();
-        Task.checkAction('redo');
         console.log (Task); 
     }
 }
@@ -83,11 +93,9 @@ Task.checkState = function(state) {
             Task.log (Task.cfg.logPause);
             break;
         case 'going':
-            Task.log (Task.cfg.logGoing);
+            Task.log (Task.game.logTips);
             break;
         case 'succeed':
-            Task.game.control = null;
-            clearInterval(Task.game.timer);
             if (Task.ladd < Task.types.length) {
                 Task.initTask();  
                 Task.checkAction('next');
@@ -95,6 +103,7 @@ Task.checkState = function(state) {
                 Task.checkAction('open');
             }
             Task.idx ++;
+            Task.clear();
             break;
         case 'ending':
             clearInterval(Task.game.timer);
@@ -104,7 +113,9 @@ Task.checkState = function(state) {
                 Task.checkAction('fail');
             break;
     }
+    Task.showArrow();
 }
+
 
 Task.checkAction = function(action) {
     Task.game.action = action;
@@ -112,40 +123,51 @@ Task.checkAction = function(action) {
     Elem.hide(Alert.buttons.next);
     Elem.hide(Alert.buttons.redo);
     Elem.hide(Alert.buttons.abon);
- 
-    if (action == 'open') {
-        Task.log (Task.cfg.logOpen);
-        Elem.show(Alert.buttons.open);
+    switch (action) {
+        case 'open':
+            Task.log (Task.cfg.logOpen);
+            Elem.show(Alert.buttons.open);
+            break;
+        case 'next':
+            Task.log (Task.cfg.logNext);
+            Elem.show(Alert.buttons.next);
+            break;
+        case 'redo':
+            Task.log (Task.cfg.logRedo);
+            Elem.show(Alert.buttons.redo);
+            Elem.show(Alert.buttons.abon);
+            break;
+        case 'stop':
+            Task.log (Task.cfg.logStop);
+            Elem.show(Alert.buttons.open);
+            break;
+        case 'fail':
+            Task.log (Task.cfg.logFail);
+            Elem.show(Alert.buttons.redo);
+            Elem.show(Alert.buttons.abon);
+            break;
     }
-    if (action == 'next') {
-        Task.log (Task.cfg.logNext);
-        Elem.show(Alert.buttons.next);
-     }
-    if (action == 'redo') {
-        Task.log (Task.game.logTips);
-        Elem.show(Alert.buttons.redo);
-        Elem.show(Alert.buttons.abon);
-    }
-    if (action == 'stop') {
-        Task.log (Task.cfg.logStop);
-        Elem.show(Alert.buttons.open);
-    }
-    if (action == 'fail') {
-        Task.log (Task.cfg.logFail);
-        Elem.show(Alert.buttons.redo);
-        Elem.show(Alert.buttons.abon);
-    }
+}
 
-    if (action == 'redo' || action == 'fail' && Task.game.isArrow) { 
-        Elem.show(Alert.buttons.up);
-        Elem.show(Alert.buttons.down);
-        Elem.show(Alert.buttons.left);
-        Elem.show(Alert.buttons.right);
-    } else {
+
+Task.showArrow = function() {
+    if (Task.state == 'succeed' || Task.state == 'ending') {
         Elem.hide(Alert.buttons.up);
         Elem.hide(Alert.buttons.down);
         Elem.hide(Alert.buttons.left);
         Elem.hide(Alert.buttons.right);
+    } else {
+        Elem.show(Alert.buttons.up);
+        Elem.show(Alert.buttons.down);  
+        Elem.show(Alert.buttons.left);
+        Elem.show(Alert.buttons.right);
+    }
+}
+
+Task.clear = function() {
+    if (Task.game) {
+        clearInterval(Task.game.timer);
+        Task.game = null;
     }
 }
 

@@ -1,6 +1,5 @@
 Task.creatTetris = function(line) {
     Task.game = new Task.Tetris();
-    Task.remain = ~~(line.word.length / 2); 
     Task.game.init(line.word);
 }
 
@@ -10,7 +9,6 @@ Task.Tetris = function() {
 
     this.init = function(word) {
         this.word = word.replace(/\//g,'');
-        this.word = word;
         this.initCfg();
         this.initBody();
         this.creatBlk();
@@ -20,7 +18,7 @@ Task.Tetris = function() {
     this.initCfg = function() {
         this.title = '任务#idx-俄罗斯方块';
         this.orgTips = '消除'; 
-        this.tgtTips = '消除#remain行打开#pack';
+        this.tgtTips = '消除#remain行方块打开#pack';
         this.logTips = '<h4>点击按钮控制方向</h4>消除#remain行打开#pack';
         this.arrowList = ['left', 'up', 'right', 'down'];
         this.color = ['white', 'dodgerblue', 'darkorange']; 
@@ -30,7 +28,6 @@ Task.Tetris = function() {
         this.state = 'going'; 
         this.isBottom = false;
         this.size = ~~(Config.page.alertWidth / this.col);
-        this.offset = this.row*this.col % this.word.length;
         this.blkCfg = [
             [{x:0, y:4}, {x:1, y:4}, {x:0, y:5}, {x:1, y:5}],
             [{x:0, y:3}, {x:0, y:4}, {x:0, y:5}, {x:0, y:6}],
@@ -44,7 +41,7 @@ Task.Tetris = function() {
 
 
     this.initBody = function() {
-        Task.block.innerHTML = '';
+        Task.remain = ~~(this.word.length / 2); 
         let body = Elem.creat('div', Task.block, 'cell-body');
         tips = Elem.creat('div', body, 'cell-tips');
         flex = Elem.creat('div', body, 'cell-flex');
@@ -59,8 +56,8 @@ Task.Tetris = function() {
             for(let j=0; j<this.col; j++){ 
                 this.map[i][j] = 0; 
                 let td = Elem.creat('td', tr);
-                let idx = i*this.col+j - this.offset + this.word.length;
-                td.innerHTML = this.word[idx % this.word.length];
+                let idx = i*this.col+j - (this.col*this.row) % this.word.length;
+                td.innerHTML = this.word[(idx+this.word.length) % this.word.length];
             } 
         } 
     }
@@ -68,8 +65,6 @@ Task.Tetris = function() {
     //生产方块形状, 有7种基本形状。 
     //检查刚生产的四个小方格是否可以放在初始化的位置. 
     this.creatBlk = function(redo){ 
-        if (this.state != 'going')
-            return;
         if (Task.remain <= 0) {
             Task.remain = 0;
             tips.innerHTML = Task.text(this.tgtTips);
@@ -87,6 +82,7 @@ Task.Tetris = function() {
             } 
         } 
 
+        this.paintBlk(1); 
         clearInterval(this.timer);
         this.timer = setInterval(function() {
             Task.game.moveAuto();
@@ -332,10 +328,8 @@ Task.Tetris = function() {
 
 
     this.mixAnim = function() {
-        this.initCfg();
         this.initBody();
         this.creatBlk();
-        this.moveDown();
     }
 }
 

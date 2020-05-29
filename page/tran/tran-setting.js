@@ -276,50 +276,41 @@ function __Tran() {
         block.innerHTML = '';
 
 
-        let ladd = line.ladd - 1;
         //alert(JSON.stringify(line));
         let priceKey = 'priceAllList';
         let pieceKey = data.type != 'inve' ? 'pieceCurList' : 'pieceAllList';
         let timesKey = data.type != 'inve' ? 'timesCurList' : 'timesAllList';
 
-        for (let i = 0; i < line.ladd; i++) {
-            let idx = line.ladd - i - 1;
-            let flex = Elem.creat('div', block, 'user-flex', idx);
-            let laddStr = data.laddStr.replace('#0', (line.ladd - i));
-            let pieceStr = data.pieceStr.replace('#0', Parse.sub4Num(line[pieceKey][idx]));
-            let priceStr = data.priceStr.replace('#0', Parse.sub4Num(line[priceKey][idx]));
-            let timesStr = data.timesStr.replace('#0', Parse.sub4Num(line[timesKey][idx]));
-            let ladd = this.creatText(flex, 'A', laddStr);
-            let piece = this.creatText(flex, 'B', pieceStr);
-            let price = this.creatText(flex, 'B', priceStr);
-            let times = this.creatText(flex, 'B', timesStr);
+        for (let i = line.ladd; i > 0; i--) {
+            if (data.type != 'mine' && data.type != 'inve') {
+                let flex = Elem.creat('div', block, 'user-flex');
+                flex.style.marginBottom = '0px';
+                let orderStr = '<h3>任务' + (parseInt(i));
+                let nameStr = '<h3>' + Task.gameNames[data.taskTypes[i]];
+                let order = this.creatText(flex, 'A', orderStr);
+                let name = this.creatText(flex, 'B', nameStr);
+            } else {
+                Elem.hide(Alert.buttons.doit);
+            }
+
+            let flex2 = Elem.creat('div', block, 'user-flex', i);
+            let laddStr = data.laddStr.replace('#0', i);
+            let pieceStr = data.pieceStr.replace('#0', Parse.sub4Num(line[pieceKey][i-1]));
+            let priceStr = data.priceStr.replace('#0', Parse.sub4Num(line[priceKey][i-1]));
+            let timesStr = data.timesStr.replace('#0', Parse.sub4Num(line[timesKey][i-1]));
+            let ladd = this.creatText(flex2, 'A', laddStr);
+            let piece = this.creatText(flex2, 'C', pieceStr);
+            let price = this.creatText(flex2, 'B', priceStr);
+            let times = this.creatText(flex2, 'B', timesStr);
         }
 
         if(block.firstChild)
             block.firstChild.scrollIntoView();
-
+        Task.cfg.log = Task.cfg.logDetail
+        .replace('#inver', line.inver)
+        .replace('#pack', data.packType);
+        Alert.log(Task.cfg.log);
         Alert.showButton(data);
-    }
-
-    this.showPack = function() {
-        Alert.hidePanel();
-        Alert.showPanel('pack');
-        let title, block, data;
-        data = document.body.data;
-        title = Alert.curPanel.title;
-        block = Alert.curPanel.block;
-        title.innerHTML = data.packTitle;
-
-        for (let idx in data.taskTypes) {
-            let line, flex;
-            flex = Elem.creat('div', block, 'user-flex');
-            line = Elem.creat('div', flex, 'line');
-            line.setAttribute('state', 'A');
-            line.innerHTML = '<h3>任务' + (parseInt(idx)+1);
-            line = Elem.creat('div', flex, 'line');
-            line.setAttribute('state', 'B');
-            line.innerHTML = '<h3>' + data.taskTypes[idx] + ' Task';
-        }
     }
 
 

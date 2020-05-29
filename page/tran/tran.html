@@ -68,9 +68,18 @@
         padding: 10px 10px;
         font-size: 0.9em; 
     }.line[state=A] {
-        flex: 12;
+        flex: 10;
+        margin-left: 10px;
+        text-align: left;
     }.line[state=B] {
         flex: 20;
+        margin-right: 10px;
+        text-align: right;
+    }.line[state=C] {
+        flex: 10;
+    }.line[state=D] {
+        flex: 20;
+
     }
 
     .user-index {
@@ -144,7 +153,7 @@
                 <div class="alert-title">查看详情</div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
-                    <div class="button" state="permit" name="doit" onclick="Tran.showPack()">确认</div>
+                    <div class="button" state="permit" name="doit" onclick="Tran.showTask()">确认</div>
                     <div class="button" state="danger" name="quit" onclick="Alert.hidePanel()">关闭</div>
                 </div>
             </div>

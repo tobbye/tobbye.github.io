@@ -212,6 +212,8 @@ function __Alert() {
             let panel = this.box.children[i];
             Elem.hide(panel);
         }
+        if (cfg.name == 'tran')
+            Task.clear();
     }
 
 
@@ -270,7 +272,7 @@ function __Alert() {
             Elem.css(this.group, 'borderColor', getColorType());
 
             this.name.innerHTML = line.name || line.inver;
-            this.ladd.innerHTML = line.ladd + '阶' || '??阶';
+            this.ladd.innerHTML = (line.ladder || line.ladd || '??') + '阶';
             this.group.innerHTML = line.group || '未知';
         }
     }
@@ -321,7 +323,8 @@ function __Alert() {
                 line.order = order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
             line.group = line.uid[0].replace('s','赞助商').replace('d','淘金者');
             line.value = "权值: " + Parse.sub4Num(line.val);
-            this.setUserFlex(user, line, true);
+            this.user = new Alert.UserFlex();
+            this.user.init(user, line, true);
         }
         this.log('搜索成功!');
     }
