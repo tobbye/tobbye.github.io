@@ -1,13 +1,8 @@
 
 window.onresize = function() {
-    if (this.isAlert) {
-        Style.display('alert', 'none');
-        Config.page = new Page();
-        Style.display('alert'); 
-    } else {
-        Config.page = new Page();
-    }
+    Config.page = new Page();
 }
+
 
 
 var Panel = function() {
@@ -274,6 +269,7 @@ function __Alert() {
             this.name.innerHTML = line.name || line.inver;
             this.ladd.innerHTML = (line.ladder || line.ladd || '??') + '阶';
             this.group.innerHTML = line.group || '未知';
+            this.flex.setAttribute('margin', 'T5');
         }
     }
 

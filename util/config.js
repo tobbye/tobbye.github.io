@@ -2,12 +2,42 @@
 var Instances = {};
 var Constrtctors = {};
 
-function Container(that) {
+var Container = function(that) {
     let name = that.name || cfg.name;
     console.log(that);
     Instances[name] = ['Instances'];
     Constrtctors[name] = ['Constrtctors'];
 } 
+
+var Page= function() {
+
+    Config.getConst(this, 'page');
+    this.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
+    this.isWechat = (/micromessenger|MicroMessenger/i.test(navigator.userAgent));
+    this.zoom = this.isMobile ? this.zoomMobile : this.zoomComput;
+    this.zoom = this.isWechat ? this.zoomWechat : this.zoom;
+    this.windWidth = ~~(window.innerWidth / this.zoom);
+    this.windHeight = ~~(window.innerHeight / this.zoom);
+    this.alertHeight = this.windHeight - this.alertOffset;
+    this.outerHeight = this.windHeight - this.outerOffset;
+    this.innerHeight = this.windHeight - this.innerOffset;
+    this.flowHeight = Math.max(this.innerHeight, this.minHeight);
+    this.alertMargin = this.windWidth - this.alertMaxWidth;
+    this.alertMargin = Math.max(this.alertMargin / 2, this.alertMinMargin);
+    this.alertWidth = this.windWidth - this.alertMargin * 2 - 36;
+    this.isWidth = this.windWidth > this.windHeight;
+    this.isFlow = this.innerHeight > this.minHeight;
+    let box = Elem.get('alert-box');
+    if (box) {
+        box.style.left = this.alertMargin + 'px';
+        box.style.right = this.alertMargin + 'px';
+    }
+
+    document.body.style.zoom = this.zoom;
+    let center = Elem.get('outer-center');
+    center.style.height = this.outerHeight + 'px';
+    center.style.maxHeight = this.outerHeight + 'px';
+}
 
 var Constant = {
     agent: {},

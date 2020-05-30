@@ -7,15 +7,15 @@ var Task = {
 };
 
 Task.cfg = {
-    logDetail:'此红包由 #inver 赞助<h4>完成的任务越多获得的#pack金额越大</h4>',
-    logReady:'<h4>任务#idx准备</h4>加油！奥里给!',
-    logPause:'<h4>任务#idx暂停</h4>加油！奥里给!奥里给!',
-    logGoing:'<h4>任务#idx进行中</h4>加油！奥里给!奥里给!',
-    logRedo:'<h4>任务#idx已重置</h4>加油！奥里给!奥里给!',
-    logFail:'<h4>任务#idx失败</h4>请重置后再次尝试!',
-    logStop:'<h4>任务#idx中止</h4>请打开#pack',
-    logNext:'<h4>任务#idx完成</h4>请进行下一任务',
-    logOpen:'<h4>任务全部完成</h4>您可以打开#pack啦!',
+    logDetail:'此红包由 #inver 赞助<h5>完成的任务越多获得的#pack金额越大</h5>',
+    logReady:'<h5>任务#idx准备</h5>加油！奥里给!',
+    logPause:'<h5>任务#idx暂停</h5>加油！奥里给!奥里给!',
+    logGoing:'<h5>任务#idx进行中</h5>加油！奥里给!奥里给!',
+    logRedo:'<h5>任务#idx已重置</h5>加油！奥里给!奥里给!',
+    logFail:'<h5>任务#idx失败</h5>请重置后再次尝试!',
+    logStop:'<h5>任务#idx中止</h5>请打开#pack',
+    logNext:'<h5>任务#idx完成</h5>请进行下一任务',
+    logOpen:'<h5>任务全部完成</h5>您可以打开#pack啦!',
 };
 
 Task.gameNames = {
