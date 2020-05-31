@@ -14,15 +14,8 @@ function __Home() {
         Alert.showInner();
     }
 
-    this.creatContent = function(inner, x) {
-    	let list = items[x].list;
-        for (let y in list) {
-            let content = Elem.creat('div', inner, 'content', y);
-            let data = list[y];
-            this.creatTitle(content, data);
-    		// if (Config.sett.modeType == 'ghost' && data.isDepot)
+    this.creatBlock = function(content, data) {
 
-        }
     }
 
     this.creatTitle = function(content, data) {

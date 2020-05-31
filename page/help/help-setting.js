@@ -16,15 +16,10 @@ function __Help() {
         Alert.showInner();
     }
 
-    this.creatContent = function(inner, x) {
-        let list = items[x].list;
-        for (let y in list) {
-            let content = Elem.creat('div', inner, 'content', y);
-            let data = list[y];
-            Alert.creatTitle(content, data);
-            this.setHelp(content, data);
-            this.setFeed(content, data);
-        }
+
+    this.creatBlock = function(content, data) {
+        this.setHelp(content, data);
+        this.setFeed(content, data);
     }
 
 

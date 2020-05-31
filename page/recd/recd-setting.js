@@ -16,39 +16,32 @@ function __Recd() {
         Alert.showInner();
     }
 
-    this.creatContent = function(inner, x) {
-        var list = items[x].list;
-        for (let y in list) {
-            var content = Elem.creat('div', inner, 'content', y);
-            var data = list[y];
-            Alert.creatTitle(content, data);
-            this.creatLine(content, data.lines, x, y);
-        }
+    this.creatBlock = function(content, data) {
+        this.creatLine(content, data);
     }
 
 
-    this.creatLine = function(content, lines, x, y) {
-        if (!lines) return;
-        var list = items[x].list[y];
-        var block = Elem.creat('table', content, 'block', x);
+    this.creatLine = function(content, data) {
+        if (!data.lines) return;
+        let lines = data.lines;
+        let block = Elem.creat('table', content, 'block');
         for (let z in lines) {
-            var data = lines[z];
-            data.color = items[x].color;
+            let line = lines[z];
 
             //BLOCK
-            var flex = Elem.creat('tr', block, 'row', z);	
-            var left = Elem.creat('td', flex, 'col', 0);
-            var stamp = Elem.creat('td', flex, 'col', 1);
-            var right = Elem.creat('td', flex, 'col', 2);
+            let flex = Elem.creat('tr', block, 'row', 'lines['+z+']');	
+            let left = Elem.creat('td', flex, 'col', 'left');
+            let stamp = Elem.creat('td', flex, 'col', 'stamp');
+            let right = Elem.creat('td', flex, 'col', 'right');
 
             if (z == 0) {
-                left.innerHTML = data.left;
-                stamp.innerHTML = data.stamp;
-                right.innerHTML = data.right;
+                left.innerHTML = line.left;
+                stamp.innerHTML = line.stamp;
+                right.innerHTML = line.right;
             } else {
-                left.innerHTML = data.left ? list.left.replace('#0', Parse.sub4Num(data.left)) : '';
-                stamp.innerHTML = data.stamp;
-                right.innerHTML = data.right ?  list.right.replace('#0', Parse.sub4Num(data.right)) : '';
+                left.innerHTML = line.left ? data.left.replace('#0', Parse.sub4Num(line.left)) : '';
+                stamp.innerHTML = line.stamp;
+                right.innerHTML = line.right ?  data.right.replace('#0', Parse.sub4Num(line.right)) : '';
             }
         }
     }

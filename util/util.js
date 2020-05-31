@@ -176,16 +176,18 @@ Parse.remove = function(lines, line) {
 var  Elem = {};
 
 //创建一个元素
-Elem.creat = function(type, parent, className, id) {
+Elem.creat = function(type, parent, className, key) {
 	var e = document.createElement(type);
 	if (parent)
 		parent.appendChild(e);
 	if (className)
 		e.className = className;
-	if (id != null)
-		e.id = className + '_' + id;
+	if (key != null)
+		e.setAttribute('key', key);
 	return e;
 }
+
+
 
 //获取当个元素
 Elem.get = function (e) {
@@ -244,8 +246,11 @@ Elem.width = function(e, a, w) {
 }
 
 Elem.height = function(e, height) {
-    Elem.css(e, 'height', height); 
-    Elem.css(e, 'maxHeight', height); 
+    Elem.css(e, 'height', height+'px'); 
+}
+
+Elem.maxheight = function(e, height) {
+    Elem.css(e, 'maxHeight', height+'px'); 
 }
 
 Elem.show = function(e, attr) {
@@ -270,6 +275,10 @@ Elem.attr = function(e, k, v) {
 
 Elem.state = function(e, v) {
     Elem.attr(e, 'state', v);
+}
+
+Elem.setKey = function(e, key) {
+    e.setAttribute('key', key);
 }
 
 Elem.btnPermit = function(k) {Elem.attr(Alert.buttons[k], 'state', 'permit'); } 
@@ -301,6 +310,16 @@ Elem.togState = function(e, state) {
     var attr = e.getAttribute('state') || 'default';
     state = state || Parse.swape(attr, 'permit', 'danger');
     e.setAttribute('state', state);
+}
+
+Elem.release = function() {
+    let refs = document.querySelectorAll('form');
+    for (let i=0; i< refs.length; i++) {
+        let last = refs[i].parentNode.lastChild;
+        while (last != refs[i]) {
+            refs[i].appendChild(last);
+        }
+    }
 }
 
 
@@ -342,6 +361,7 @@ var localData = {};
 //保存本地数据
 localData.save = function() {
     Storage.set('values', values);
+    Storage.set('Config', Config);
     // window.location.reload();
 }
 

@@ -43,11 +43,6 @@
 	}
 
 
-	.iblock {
-		display: block;
-		margin: 20px 20px;
-	}
-
 	.line {
 		flex: 100;
 		margin: 3px;
@@ -77,12 +72,6 @@
 	}
 
 
-	.alert-block {
-		margin: 0px 10px;
-		margin-bottom: 5px;
-		background-color: white;
-	}
-
 </style>
 
 <body>
@@ -96,12 +85,15 @@
 		    <div class="alert-panel" name='edit'>
 
 				<form id="fundtran" ref="http://#host/#uid/fundtran/#idx" method="POST">
+				</form>
 					<div class="alert-title">标题名称</div>
 	        		<div class="alert-block">
-						<div class="alert-limit"></div>
-						<div class="alert-flex">
-							<text class="alert-text">￥</text>
-							<input class="alert-input" name="tran" type="number" oninput="Fund.onInput(this)"/>
+		        		<div class="alert-body">
+							<div class="alert-limit"></div>
+							<div class="alert-flex">
+								<text class="alert-text">￥</text>
+								<input class="alert-input" name="tran" type="number" oninput="Fund.onInput(this)"/>
+							</div>
 						</div>
 					</div>
 
@@ -110,7 +102,6 @@
 						<input class="button" state="permit" name="doit" onclick="Fund.onDoit()" type="submit" value="确定"></input>
 						<input class="button" state="danger" name="quit" onclick="Fund.onQuit()" type="reset" value="取消"></input>
 					</div>
-				</form>
 			</div>
 		</div>
 	</div>

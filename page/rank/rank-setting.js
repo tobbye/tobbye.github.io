@@ -1,5 +1,6 @@
 
 var Rank = new __Rank();
+var UserData = new Alert.UserData();
 
 function __Rank() {
 
@@ -16,34 +17,26 @@ function __Rank() {
 		Alert.showInner();
 	}
 
-	this.creatContent = function(inner, x) {
-		let list = items[x].list;
-		for (let y in list) {
-			let content = Elem.creat('div', inner, 'content', y);
-			let data = list[y];
-			Alert.creatTitle(content, data);
-			this.creatLine(content, data);
-		}
-	}
+	this.creatBlock = function(content, data) {
+		this.creatLine(content, data);
+    }
 
 
 	this.creatLine = function(content, data) {
-		data.lines = data.lines || this.initTempLine(data);
+		data.lines = [];
+		let lines = this.initTempLine(data);
 		let block = Elem.creat('div', content, 'block');
-		for (let z in data.lines) {
-			let line = data.lines[z];
-			let user = Elem.creat('div', block, 'user-block');
-			user.flex = new Alert.UserFlex();
-            user.flex.init(user, line);
-			user.data = data;
-			user.line = line;
-			user.onclick = function() {
+		for (let z in lines) {
+			let line = new Alert.UserData();
+			line.init(lines[z]);
+			let body = Elem.creat('div', block, 'user-block', 'lines['+z+']');
+			line.flex = new Alert.UserFlex(body, line);
+            line.flex.init(body, line);
+			body.onclick = function() {
 				document.body.user = this;
-				document.body.line = this.line;
-				document.body.lines = this.data.lines;
-				console.log(this.line);
 				Alert.showUser(this);
 			}
+			data.lines[z] = line;
 		}
 	}
 

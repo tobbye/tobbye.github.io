@@ -59,7 +59,7 @@ function __Alert() {
             let link = Elem.creat('a', outer, 'button-bot');
             link.innerHTML = data.text;
             link.href = data.href;
-            if (Config.name == data.name) 
+            if (cfg.name == data.name) 
                 link.setAttribute('state', 'live');
             else
                 link.setAttribute('state', 'dead');
@@ -88,8 +88,16 @@ function __Alert() {
         let outerCenter = Elem.get('outer-center');
         outerCenter.innerHTML = '';
         for (let x in items) {
-            let inner = Elem.creat('div', outerCenter, 'inner', x);
-            that.creatContent(inner, x);
+            let inner = Elem.creat('div', outerCenter, 'inner', 'items['+x+'].');
+            let list = items[x].list;
+            for (let y in list) {
+                let content = Elem.creat('div', inner, 'content', 'list['+y+'].');
+                let data = list[y];
+                if (that.setTitle)
+                    that.setTitle(content, data);
+                this.creatTitle(content, data);
+                that.creatBlock(content, data, x, y);
+            }
         }
     }
 
@@ -148,9 +156,9 @@ function __Alert() {
     this.initAlert = function() {
         this.panels = {};
         this.buttons = {};
-        this.self = document.querySelector('#alert');
+        this.alert = document.querySelector('#alert');
         this.box = document.querySelector('#alert-box');
-        if (!this.self || !this.box) return;
+        if (!this.alert || !this.box) return;
         let panels = this.box.querySelectorAll('.alert-panel');
         for (var i=0; i<panels.length; i++) {
             let name = panels[i].getAttribute('name');
@@ -185,13 +193,14 @@ function __Alert() {
 
     //显示弹窗
     this.showPanel = function(name, save) {
+        this.curPanel = this.panels[name];
+        if (!this.curPanel) return;
         this.hidePanel();
         this.setBox();
         this.isAlert = true;
-        this.curPanel = this.panels[name];
         // console.log(this.curPanel);
-        if (!this.curPanel) return;
-        Elem.show(this.self);
+
+        Elem.show(this.alert);
         Elem.show(this.curPanel.panel);
         if (!save)
             Elem.text(this.curPanel.block, '');
@@ -201,8 +210,8 @@ function __Alert() {
     //隐藏弹窗
     this.hidePanel = function(name) {
         this.isAlert = false;
-        Elem.hide(this.self);
-        if (!this.self || !this.box) return;
+        Elem.hide(this.alert);
+        if (!this.alert || !this.box) return;
         for (var i=0; i<this.box.children.length; i++) {
             let panel = this.box.children[i];
             Elem.hide(panel);
@@ -218,6 +227,7 @@ function __Alert() {
 
     this.setBox = function() {
         Elem.color(this.box, '', getColorLight());
+        Elem.maxheight(this.curPanel.block, Config.page.alertHeight);
     }
 
 
@@ -235,6 +245,14 @@ function __Alert() {
         }
     }
 
+
+    this.UserData = function() {
+
+        this.init = function(line) {
+            Config.getObject(this, line);
+        }
+    }
+
     this.UserFlex = function() {
 
         this.init = function(user, line, isNext) {
@@ -247,20 +265,21 @@ function __Alert() {
                 this.order.innerHTML = line.order;
                 this.value.innerHTML = line.value;  
             }
-            this.mark = [];
+            this.marks = [];
             this.flex = Elem.creat('div', this.body, 'user-flex');
             this.head = Elem.creat('img',  this.flex, 'user-head');
             this.left = Elem.creat('div',  this.flex, 'user-left');
             this.right = Elem.creat('div',  this.flex, 'user-right');
             this.name = Elem.creat('div',  this.left, 'user-name');
-            this.marks = Elem.creat('div',  this.left, 'user-flex');
+            this.mark = Elem.creat('div',  this.left, 'user-flex');
             this.ladd = Elem.creat('div',  this.right, 'user-ladd');
             this.group = Elem.creat('div',  this.right, 'user-group');
             line.mark = line.mark || ["身份标签1", "身份标签2"];
             for (let i in line.mark) {
-                this.mark[i] = Elem.creat('div', this.marks, 'user-mark');
-                this.mark[i].innerHTML = line.mark[i];
-                this.mark[i].style.borderColor = getColorType();
+                let mark = Elem.creat('div', this.mark, 'user-mark');
+                mark.innerHTML = line.mark[i];
+                mark.style.borderColor = getColorType();
+                this.marks[i] = mark;
             }
             Elem.color(this.head, '', getColorLight());
             Elem.color(this.group, 'white', getColorType());
@@ -273,6 +292,29 @@ function __Alert() {
         }
     }
 
+    this.UserBody = function() {
+
+        this.init = function(block, line) {
+            this.tags = [];
+            this.body = Elem.creat('div', block, 'user-body');
+            this.flex = new Alert.UserFlex();
+            this.flex.init(this.body, line);
+            this.tag = Elem.creat('div', this.body, 'user-tags');
+            this.desc = Elem.creat('div', this.body, 'user-desc');
+            if (line.tag) {
+                for (let i in line.tag) {
+                    let tag = Elem.creat('div', this.tag, 'user-tag');
+                    tag.innerHTML = line.tag[i];
+                    tag.onclick = function() {
+                        Alert.showSearch(this);
+                    }
+                    this.tags[i] = tag;
+                }
+            }
+            this.desc.innerHTML = line.desc.replace(/\n/g, '<br/>');
+        }
+    }
+
 
     this.showUser = function(user) {
 
@@ -280,25 +322,13 @@ function __Alert() {
         this.showPanel('detail');
         user = user || document.body.user;
         let x = user.x;
-        let data = user.data;
-        let line = user.line;
+        let data = Config.__list(user);
+        let line = Config.__line(user);
         let title = this.curPanel.title;
         let block = this.curPanel.block;
-        let body = Elem.creat('div', block, 'user-body');
-        let flex = new Alert.UserFlex();
-        flex.init(body, line, x);
-        let tags = Elem.creat('div', body, 'user-tags');
-        let desc = Elem.creat('div', body, 'user-desc');
-        if (line.tag) {
-            for (let i in line.tag) {
-                let tag = Elem.creat('div',tags, 'user-tag');
-                tag.innerHTML = line.tag[i];
-                tag.onclick = function() {
-                    Alert.showSearch(this);
-                }
-            }
-        }
-        desc.innerHTML = line.desc.replace(/\n/g, '<br/>');
+        console.log(line);
+        line.body = new this.UserBody();
+        line.body.init(block, line);
         this.showButton(data);
     }
 
@@ -308,19 +338,18 @@ function __Alert() {
         let title = this.curPanel.title;
         let block = this.curPanel.block;
         block.innerHTML = "";
-        block.style.maxHeight = Config.page.alertHeight + "px";
         title.innerHTML = cfg.titleStr.replace("#0", button.innerHTML);
         for (let z in tempData.searchData) {
 
-            let user = Elem.creat("div", block, "user-block", z);
+            let body = Elem.creat("div", block, "user-block", 'lines['+z+']');
             let line = tempData.searchData[z];
             let order = line.order + "th";
             if (order.length == 3)
                 line.order = order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
             line.group = line.uid[0].replace('s','赞助商').replace('d','淘金者');
             line.value = "权值: " + Parse.sub4Num(line.val);
-            this.user = new Alert.UserFlex();
-            this.user.init(user, line, true);
+            this.flex = new Alert.UserFlex();
+            this.flex.init(body, line, true);
         }
         this.log('搜索成功!');
     }

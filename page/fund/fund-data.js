@@ -6,8 +6,7 @@ window.onload = function() {
 
 var cfg = {
 	name: "fund",
-
-	showType: "block",
+	isBlock: true,
 	radius: "30px",
 	border: [[""],["TopLeft", "TopRight"],["BottomLeft"],["BottomRight"]],
 	dict: "HIJKLMNOPQRSTUV",	

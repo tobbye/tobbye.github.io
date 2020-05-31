@@ -18,17 +18,11 @@ function __Tran() {
         Alert.showInner();
     }
 
-    this.creatContent = function(inner, x) {
-        let list = items[x].list
-        for (let y in list) {
-            let data = list[y];
-            let content = Elem.creat('div', inner, 'content', y);
-            Alert.creatTitle(content, data);
-            if (data.type == 'inve')
-                this.creatInveBody(content, data);
-            else
-                this.creatGrabBody(content, data);
-        }
+    this.creatBlock = function(content, data) {
+        if (data.type == 'inve')
+            this.creatInveBody(content, data);
+        else
+            this.creatGrabBody(content, data);
     }
 
 
@@ -43,7 +37,7 @@ function __Tran() {
         for (let idx in lines) {
             if (idx >= cfg.inveCount) break;
             let line = new Tran.GrabData();
-            line.init(data, lines, idx);
+            line.init(data, lines[idx], idx);
             let body = new Tran.GrabBody();
             body.init(block, data, line);
             data.lines[idx] = line;
@@ -53,14 +47,14 @@ function __Tran() {
 
     this.GrabData = function() {
 
-        this.init = function(data, lines, idx) {
-            this.initTemp(data, lines, idx);
+        this.init = function(data, line, idx) {
+            this.initTemp(data, line, idx);
             this.initData(data.dot, data.type);
         };
 
-        this.initTemp = function(data, lines, idx) {
+        this.initTemp = function(data, line, idx) {
             this.idx = idx;
-            this.inver = lines[idx].name;
+            this.inver = line.name;
             this.group = data.group;
             this.ladder = Math.floor(20 * Math.random() * Math.random()) + 6;
             this.ladd = this.ladder - Math.floor(5 * Math.random());
@@ -68,8 +62,8 @@ function __Tran() {
             this.mark = ['身份标签1', '身份标签2'];
             this.index = Math.floor((1547 + Math.random()) * 1e9);
             this.stamp = Parse.formatTime(this.index).replace(' ', '<h3>');
-            this.word = lines[idx].word;
-            this.src = lines[idx].pic[0];
+            this.word = line.word;
+            this.src = line.pic[0];
         };
 
         this.initInve = Inve.initData;
@@ -115,33 +109,30 @@ function __Tran() {
             if (!line.ladd) return;
             line.initData = line.initData || new this.GrabData().initData;
             line.initData(data.dot, data.type);
-            // line.body = this;
-            this.body = Elem.creat('div', block, 'user-block');
-            this.body.setAttribute('margin', 'B15');
-            this.body.body = this;
-            this.body.data = data;
-            this.body.line = line;
+            line.body = this;
+            this.body = Elem.creat('div', block, 'user-block', 'lines['+line.idx+']');
             this.body.onclick = function() {
-                console.log(this.line);
-                console.log(this.body);
                 Tran.bodySelect(this);
                 Tran.showDetail(this);
             }
-            this.flex = Tran.creatFlex(this.body, 'T5');
-            this.index = Elem.creat('div', this.flex, 'user-index');
-            this.stamp = Elem.creat('div', this.flex, 'user-stamp');
+            this.flex1 = Elem.creat('div', this.body, 'user-flex');
+            this.index = Elem.creat('div', this.flex1, 'user-index');
+            this.stamp = Elem.creat('div', this.flex1, 'user-stamp');
             this.index.innerHTML = '编号: ' + line.index;
             this.index.innerHTML += '<br/>' + data.inverStr;
             this.stamp.innerHTML = '时间: ' + line.stamp;
 
-            this.user = new Alert.UserFlex();
-            this.user.init(this.body, line);
+            this.flex2 = new Alert.UserFlex();
+            this.flex2.init(this.body, line);
 
-            this.flex = Tran.creatFlex(this.body, 'T0');
-            this.ladd  = Tran.creatText(this.flex, 'L10', line.laddStr);
-            this.piece = Tran.creatText(this.flex, 'R20', line.pieceStr);
-            this.price = Tran.creatText(this.flex, 'R20', line.priceStr);
-            this.times = Tran.creatText(this.flex, 'R20', line.timesStr);
+            this.flex3 = Elem.creat('div', this.body, 'user-flex');
+            this.ladd  = Tran.creatText(this.flex3, 'L10', line.laddStr);
+            this.piece = Tran.creatText(this.flex3, 'R20', line.pieceStr);
+            this.price = Tran.creatText(this.flex3, 'R20', line.priceStr);
+            this.times = Tran.creatText(this.flex3, 'R20', line.timesStr);
+            this.body.setAttribute('margin', 'B15');
+            this.flex1.setAttribute('margin', 'T5');
+            this.flex3.setAttribute('margin', 'T0');
         }
     }
 
@@ -213,15 +204,9 @@ function __Tran() {
             line.initData = line.initData || new Tran.InveData().initData;
             line.initData(data.dot, data.type);
             line.row = Math.floor(line.ladd / 5 - 0.2);
-            // line.body = this;
-            this.line = line;
-            this.body = Tran.creatFlex(block, 'T5');
-            this.body.body = this;
-            this.body.data = data;
-            this.body.line = line;
+            line.body = this;
+            this.body = Elem.creat('div', block, 'user-flex');
             this.body.onclick = function() {
-                console.log(this.line);
-                console.log(this.body);
                 Tran.bodySelect(this);
                 Tran.showDetail(this);
             }
@@ -229,6 +214,7 @@ function __Tran() {
             this.piece = Tran.creatText(this.body, 'R20', line.pieceStr);
             this.price = Tran.creatText(this.body, 'R20', line.priceStr);
             this.times = Tran.creatText(this.body, 'R20', line.timesStr);
+            this.body.setAttribute('margin', 'T5')
             if (z == 0) {
                 Tran.bodySelect(this.body);
             }
@@ -266,14 +252,14 @@ function __Tran() {
     this.showDetail = function(body) {
         Alert.hidePanel();
         Alert.showPanel('detail');
-        let data = body.data;
-        let line = body.line;
+        let data = Config.__list(body);
+        let line = Config.__line(body);
         document.body.line = line;
         document.body.data = data;
+        console.log(line);
         let title = Alert.curPanel.title;
         let block = Alert.curPanel.block;
         title.innerHTML = data.flexStr.replace('#0',line.inver);
-        block.style.maxHeight = Config.page.alertHeight + 'px';
         block.innerHTML = '';
 
 
@@ -333,12 +319,12 @@ function __Tran() {
         Alert.showPanel('result');
         let line = document.body.line;
         let data = document.body.data;
-        let redo, title, block;
-        block = Alert.curPanel.block;
+        let block = Alert.curPanel.block;
         Task.initRoll(line);
         Task.ladd = Math.min(line.ladd, Task.ladd);
 
-        let ladd = Elem.creat('div', block, 'line');
+        let body = Elem.creat('div', block, 'alert-body');
+        let ladd = Elem.creat('div', body, 'line');
         ladd.innerHTML = line.inver + '的' + Task.ladd + '阶' + Task.pack;
         let pic = Elem.creat('img', block, 'img');
         pic.src = cfg.laddSrc + Task.ladd + '.png';

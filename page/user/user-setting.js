@@ -15,26 +15,19 @@ function __User() {
 		Alert.showInner();
 	}
 
-	this.creatContent = function(inner, x) {
-		let list = items[x].list;
-		for (let y in list) {
-			let content = Elem.creat('div', inner, 'content', y);
-			let data = list[y];
-			Alert.creatTitle(content, data);
-
-			if (x == 0) {
-				this.creatDetail(content, data, x);
-				this.creatRank(content, data);
-				this.creatTags(content, data);
-			}
-			if (x == 1) {
-				let lines = data.lines;
-				this.setRecentLine(content, lines, x, y);
-			}
-			if (x == 2) {
-				let lines = data.lines;
-				this.setAchieLine(content, lines, x, y);
-			}
+	this.creatBlock = function(content, data, x, y) {
+		if (x == 0) {
+			this.creatDetail(content, data, x);
+			this.creatRank(content, data);
+			this.creatTags(content, data);
+		}
+		if (x == 1) {
+			let lines = data.lines;
+			this.setRecentLine(content, lines, x, y);
+		}
+		if (x == 2) {
+			let lines = data.lines;
+			this.setAchieLine(content, lines, x, y);
 		}
 	}
 

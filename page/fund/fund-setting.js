@@ -17,50 +17,44 @@ function __Fund() {
 		Alert.showInner();
 	}
 
-	this.creatContent = function(inner, x) {
-	    let list = items[x].list;
-	    for (let y in list) {
-	        let content = Elem.creat('div', inner, 'content', y);
-	        let data = list[y];
-			this.creatTitle(content, data);
-			this.creatLine(content, data);
-			this.creatBlock(content, data);
-			this.creatButton(content, data);
-	    }
+	this.creatBlock = function(content, data) {
+		this.creatLineView(content, data);
+		this.creatBlockView(content, data);
+		this.creatButton(content, data);
 	}
 
 
-	this.creatTitle = function(content, data) {
+	this.setTitle = function(content, data) {
 		let va = values[data.vice.split('/')[0].split('.')[0]];
 		let vb = values[data.vice.split('/')[1].split('.')[0]];
 		let vc = Math.abs(va / vb).toFixed(4);
 		data.viceStr = data.vice + vc;
-		Alert.creatTitle(content, data)
 	}
 
 
 	//设置Line视图
-	this.creatLine = function(content, data) {
+	this.creatLineView = function(content, data) {
 		let trs = data.lines;
-		let table = Elem.creat('table', content, 'table-line');
-		Elem.height(table, Config.page.flowHeight + 'px');
+		let table = Elem.creat('table', content, 'view-line');
+		Elem.height(table, Config.page.flowHeight);
 		Elem.hide(table);
 		for (let y in trs) {
 			let tds = trs[y];
-			let tr = Elem.creat('tr', table, 'tr-row', y);
+			let tr = Elem.creat('tr', table, 'tr', 'lines['+y+']');
 			for (let z in tds) {
-				let td = Elem.creat('td', tr, 'td-col');
+				let td = Elem.creat('td', tr, 'td','['+z+']');
 				let col = tds[z].col;
 				if (!col) {
 					Elem.color(td, '#222', '#eee');
 					continue;
 				}
-				td.colSpan = col;
 				let key = tds[z].text.split('.')[0];
 				let size = col > 1 ? '<h2>' : '<h3>';
 				tds[z].value = values[key];
 				text = tds[z].text + '<br/>' + size + this.formatKey(key, 0);
+				td.setAttribute('val', key);
 				td.innerHTML = text;
+				td.colSpan = col;
 
 				let border = cfg.border[tds[z].border];
 				for(let i in border) {
@@ -72,29 +66,31 @@ function __Fund() {
 	}
 
 
+
 	//设置Block视图
-	this.creatBlock = function(content, data) {
+	this.creatBlockView = function(content, data) {
 		let trs = data.blocks;
-		let table = Elem.creat('table', content, 'table-block');
-		Elem.height(table, Config.page.flowHeight + 'px');
+		let table = Elem.creat('table', content, 'view-block');
+		Elem.height(table, Config.page.flowHeight);
 		Elem.show(table, 'table');
 		for (let y in trs) {
-			let tr = Elem.creat('tr', table, 'tr-row', y);
+			let tr = Elem.creat('tr', table, 'tr', 'blocks['+y+']');
 			let tds = trs[y];
 			for (let z in tds) {
-				let td = Elem.creat('td', tr, 'td-col');
+				let td = Elem.creat('td', tr, 'td', '['+z+']');
 				let row = tds[z].row;
 				if (!row) {
 					Elem.color(td, '#222', '#eee');
 					continue;
 				}
-				td.rowSpan = row;
 				let text = tds[z].text;
 				let key = text.split('.')[0];
 				tds[z].value = values[key];
 				text = '<h2>' + text.replace('.', '</h2>');
 				text += '<h4>' + this.formatKey(key, 1) + '</h4>';
+				td.setAttribute('val', key);
 				td.innerHTML = text;
+				td.rowSpan = row;
 			}
 		}
 	}
@@ -117,15 +113,15 @@ function __Fund() {
 		}
 		if (item.getAttribute('state') == 'danger')
 			return;
-		let lines = Elem.getClass('table-line');
-		let blocks = Elem.getClass('table-block');
+		let lines = Elem.getClass('view-line');
+		let blocks = Elem.getClass('view-block');
 		let buttons = Elem.getClass('button-min');
 		for (let x in lines)
 			Elem.show(lines[x], view[0]);
 		for (let y in blocks)
 			Elem.show(blocks[y], view[1]);
 		for (let z in buttons) {
-			Elem.show(buttons[z]);
+			Elem.togState(buttons[z]);
 		}
 	}
 
@@ -219,7 +215,6 @@ function __Fund() {
 		let limit = Alert.curPanel.limit;
 		let list = input.data.tran.split('|');
 		let str = '';
-		let idx = Config.innerIdx;
 		for (let i in list) {
 			let line = list[i].split('*');
 			let val = parseInt(input.value) * parseFloat(line[1]);
@@ -234,9 +229,15 @@ function __Fund() {
 		console.log(str);
 		// input.value = 0;
 		localData.save();
+		// let childs = document.querySelectorAll('[val]');
+		// for (let i=0; i<childs.length; i++) {
+		// 	let key = childs[i].getAttribute('val');
+		// 	childs[i].innerHTML = values[key];
+		// }
+
 		Alert.creatOuterCenter(this);
-		Config.page.isInto = true;
-		Alert.showInner(idx);
+		Config.sett.isInto = true;
+		Alert.showInner();
 	}
 
 

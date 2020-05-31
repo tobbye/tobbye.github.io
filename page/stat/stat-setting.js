@@ -15,14 +15,9 @@ function __Stat() {
         Alert.showInner();
     }
 
-	this.creatContent = function(inner, x) {
-	    let list = items[x].list;
-	    for (let y in list) {
-	        let content = Elem.creat('div', inner, 'content', y);
-	        let data = list[y];
-	        Alert.creatTitle(content, data, x);
-	        this.creatLine(content, data, x, y);
-	    }
+
+	this.creatBlock = function(content, data, x, y) {
+	    this.creatLine(content, data, x, y);
 	}
 
 

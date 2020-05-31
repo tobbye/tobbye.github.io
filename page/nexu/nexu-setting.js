@@ -1,6 +1,7 @@
 
 
 var Nexu = new __Nexu();
+var UserData = new Alert.UserData();
 
 function __Nexu() {
 
@@ -17,15 +18,10 @@ function __Nexu() {
 		Alert.showInner();
 	}
 
-	this.creatContent = function(inner, x) {
-		let list = items[x].list;
-		for (let y in list) {
-			let content = Elem.creat('div', inner, 'content', y);
-			let data = list[y];
-			Alert.creatTitle(content, data);
-			this.creatLine(content, data);
-		}
-	}
+
+	this.creatBlock = function(content, data) {
+		this.creatLine(content, data);
+    }
 
 
 	this.creatLine = function(content, data) {
@@ -34,32 +30,30 @@ function __Nexu() {
 		let lines = data.lines;
 		let block = Elem.creat('div', content, 'block');
 		for (let z in lines) {
-			let line = this.initTempLine(lines[z]);
-			let body = Elem.creat('div', block, 'user-block');
-			body.user = new Alert.UserFlex();
-            body.user.init(body, line);
-			body.data = data;
-			body.line = line;
+			let line = new Alert.UserData();
+			line.init(lines[z]);
+			this.initTemp(line);
+			let body = Elem.creat('div', block, 'user-block', 'lines['+z+']');
+			line.flex = new Alert.UserFlex(body, line);
+            line.flex.init(body, line);
 			body.onclick = function() {
 				document.body.user = this;
-				document.body.line = this.line;
-				document.body.lines = this.data.lines;
-				console.log(this.line);
-				console.log(this.user);
 				Alert.showUser(this);
 			}
+			data.lines[z] = line;
 		}
 	}
 
-
-	this.initTempLine = function(line) {
+	this.initTemp = function(line) {
 		line.group = line.uid[0].replace('s','赞助商').replace('d','淘金者');
 		line.desc = '<h3>' + line.name + '的描述</h3>';
 		line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
 		line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
 		line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
-		return line;
 	}
+
+
+
 
 
 	this.showOnline = function() {

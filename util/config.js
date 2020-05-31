@@ -13,7 +13,7 @@ var Page= function() {
 
     Config.getConst(this, 'page');
     this.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
-    this.isWechat = (/micromessenger|MicroMessenger/i.test(navigator.userAgent));
+    this.isWechat = (/MicroMessenger/i.test(navigator.userAgent));
     this.zoom = this.isMobile ? this.zoomMobile : this.zoomComput;
     this.zoom = this.isWechat ? this.zoomWechat : this.zoom;
     this.windWidth = ~~(window.innerWidth / this.zoom);
@@ -35,8 +35,7 @@ var Page= function() {
 
     document.body.style.zoom = this.zoom;
     let center = Elem.get('outer-center');
-    center.style.height = this.outerHeight + 'px';
-    center.style.maxHeight = this.outerHeight + 'px';
+    Elem.height(center, this.outerHeight);
 }
 
 var Constant = {
@@ -132,7 +131,49 @@ function __Config() {
         this.setConst(temp, 'sett');
         this.setConst(temp, 'color');
         this.setConst(temp, 'clock');
+        if (this.sett.isOnline) {
+            Elem.release();
+        }
     }
+
+//---根据绑定的idx属性查找数据
+    this.__key = function(e, attr) {
+        attr = attr || '';
+        if (e.parentNode == document.body) {
+            return attr;
+        } else {
+            if (e.getAttribute('key')) 
+                attr = e.getAttribute('key') + attr;
+            return this.__key(e.parentNode, attr);  
+        }
+    }
+
+    this.__line = function(e) {
+        let key = this.__key(e).replace(/(?<=lines\[\d\])[^\s]*/, '');
+        // console.log(key);
+        return eval(key);
+    }
+
+    this.__list = function(e) {
+        let key = this.__key(e).replace(/(?<=list\[\d\])[^\s]*/, '');
+        // console.log(key);
+        return eval(key);
+    }
+
+    this.__item = function(e) {
+        let key = this.__key(e).replace(/(?<=items\[\d\])[^\s]*/, '');
+        // console.log(key);
+        return eval(key);
+    }
+
+
+    this.__self = function(e) {
+        let key = this.__key(e);
+        // console.log(key);
+        return eval(key);
+    }
+//---根据绑定的idx属性查找数据
+
 
     this.setAction = function(act, idx) {
         let uid = 'i';
@@ -155,6 +196,13 @@ function __Config() {
         let defult = Constant[key];
         for (let x in defult) {
             that[x] = defult[x];
+        }
+    }
+
+
+    this.getObject = function(that, obj) {
+        for (let x in obj) {
+            that[x] = obj[x];
         }
     }
 

@@ -27,7 +27,13 @@ function __Sett() {
 			}
 		}
 	}
-
+	
+    this.creatBlock = function(content, data) {
+		this.creatLine(content, data);
+		if (data.key == 'colorType') {
+			this.setStyle(content, data);
+		}
+    }
 
 	this.creatLine = function(content, data) {
 

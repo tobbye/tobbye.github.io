@@ -201,11 +201,6 @@ Task.log = function(log) {
     Alert.log (Task.cfg.log);
 }
 
-Task.tips = function(tips) {
-    let elem = Elem.creat('div', Task.block, 'cell-tips');
-    elem.innerHTML = Task.text(tips);
-    return elem;
-}
 
 Task.alert = function(log) {
     setTimeout(function() {alert(log)}, 200);
