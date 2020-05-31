@@ -68,7 +68,7 @@ var Constant = {
     page: {
         alertMaxWidth: 1000,
         alertMinMargin: 20,
-        alertOffset: 716,
+        alertOffset: 700,
         outerOffset: 220,
         innerOffset: 770, 
         minHeight: 700,
@@ -136,43 +136,6 @@ function __Config() {
         }
     }
 
-//---根据绑定的idx属性查找数据
-    this.__key = function(e, attr) {
-        attr = attr || '';
-        if (e.parentNode == document.body) {
-            return attr;
-        } else {
-            if (e.getAttribute('key')) 
-                attr = e.getAttribute('key') + attr;
-            return this.__key(e.parentNode, attr);  
-        }
-    }
-
-    this.__line = function(e) {
-        let key = this.__key(e).replace(/(?<=lines\[\d\])[^\s]*/, '');
-        // console.log(key);
-        return eval(key);
-    }
-
-    this.__list = function(e) {
-        let key = this.__key(e).replace(/(?<=list\[\d\])[^\s]*/, '');
-        // console.log(key);
-        return eval(key);
-    }
-
-    this.__item = function(e) {
-        let key = this.__key(e).replace(/(?<=items\[\d\])[^\s]*/, '');
-        // console.log(key);
-        return eval(key);
-    }
-
-
-    this.__self = function(e) {
-        let key = this.__key(e);
-        // console.log(key);
-        return eval(key);
-    }
-//---根据绑定的idx属性查找数据
 
 
     this.setAction = function(act, idx) {
@@ -224,6 +187,45 @@ function __Config() {
             }
         }
     }
+
+
+    //---根据绑定的idx属性查找数据
+    this.__key = function(e, attr) {
+        attr = attr || '';
+        if (e.parentNode == document.body) {
+            return attr;
+        } else {
+            if (e.getAttribute('key')) 
+                attr = e.getAttribute('key') + attr;
+            return this.__key(e.parentNode, attr);  
+        }
+    }
+
+    this.__line = function(e) {
+        let key = this.__key(e).replace(/(?<=lines\[\d\])[^\s]*/, '');
+        // console.log(key);
+        return eval(key);
+    }
+
+    this.__list = function(e) {
+        let key = this.__key(e).replace(/(?<=list\[\d\])[^\s]*/, '');
+        // console.log(key);
+        return eval(key);
+    }
+
+    this.__item = function(e) {
+        let key = this.__key(e).replace(/(?<=items\[\d\])[^\s]*/, '');
+        // console.log(key);
+        return eval(key);
+    }
+
+
+    this.__self = function(e) {
+        let key = this.__key(e);
+        // console.log(key);
+        return eval(key);
+    }
+    //---根据绑定的idx属性查找数据
 }
 
 

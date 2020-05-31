@@ -20,6 +20,8 @@ Task.Puzzle = function() {
         this.tgtTips = '正确输入口令完成任务';
         this.logTips = '<h5>点击格子输入口令</h5>正确输入口令完成任务';
         this.isArrow = false;
+        this.rightColor = 'green';
+        this.wrongColor = 'red';
     }
 
 
@@ -66,12 +68,12 @@ Task.Puzzle = function() {
             console.log('tgt:' + this.wordTgt + ' cur:' + this.wordCur);
             if (this.wordTgt.indexOf(this.wordCur) < 0 || this.wordTgt[0] != this.wordCur[0]) {
                 cell.style.color = 'white';
-                cell.style.backgroundColor = cfg.wrongColor;
-                cell.style.borderColor = cfg.wrongColor;
+                cell.style.backgroundColor = this.wrongColor;
+                cell.style.borderColor = this.wrongColor;
             } else {
                 cell.style.color = 'white';
-                cell.style.backgroundColor = cfg.rightColor;
-                cell.style.borderColor = cfg.rightColor;
+                cell.style.backgroundColor = this.rightColor;
+                cell.style.borderColor = this.rightColor;
             }
             if (this.wordTgt == this.wordCur) {
                 Task.checkState('succeed');

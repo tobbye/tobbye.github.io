@@ -108,7 +108,7 @@ div[fade=over] {
 
 #outer-top {
 	display: flex;
-	width: 100%;
+	flex-wrap: wrap;
 	overflow: auto;
 	padding-bottom: 10px;
 }
@@ -199,6 +199,7 @@ div[fade=over] {
 	padding: 20px;
 	height: 60px;
 	line-height: 60px;
+	min-width: 200px;
 	font-size: 1.2em;
 }.button-top[state=dead] {
 	color: dodgerblue;
@@ -367,7 +368,7 @@ div[fade=over] {
 #alert-box {
 	display: block;
 	position: absolute;
-    top: 200px;
+    top: 180px;
 	border: solid 8px #fff;
 	border-radius: 30px;
 }

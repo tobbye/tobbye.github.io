@@ -149,7 +149,7 @@ function __Tran() {
             let line = new Tran.InveData();
             line.init(data, idx);
             let body = new Tran.InveBody();
-            body.init(block, data, line);
+            body.init(block, line, data, idx);
             data.lines[idx] = line;
         }
     }
@@ -199,22 +199,23 @@ function __Tran() {
     this.InveBody = function() {
         let that = this;
 
-        this.init = function(block, data, line, z) {
+        this.init = function(block, line, data, z) {
             if (!line.ladd) return;
             line.initData = line.initData || new Tran.InveData().initData;
             line.initData(data.dot, data.type);
             line.row = Math.floor(line.ladd / 5 - 0.2);
             line.body = this;
-            this.body = Elem.creat('div', block, 'user-flex');
+            this.body = Elem.creat('div', block, 'user-block', 'lines['+z+']');
             this.body.onclick = function() {
                 Tran.bodySelect(this);
                 Tran.showDetail(this);
             }
-            this.ladd  = Tran.creatText(this.body, 'L10', line.laddStr);
-            this.piece = Tran.creatText(this.body, 'R20', line.pieceStr);
-            this.price = Tran.creatText(this.body, 'R20', line.priceStr);
-            this.times = Tran.creatText(this.body, 'R20', line.timesStr);
-            this.body.setAttribute('margin', 'T5')
+            this.flex = Elem.creat('div', this.body, 'user-flex');
+            this.ladd  = Tran.creatText(this.flex, 'L10', line.laddStr);
+            this.piece = Tran.creatText(this.flex, 'R20', line.pieceStr);
+            this.price = Tran.creatText(this.flex, 'R20', line.priceStr);
+            this.times = Tran.creatText(this.flex, 'R20', line.timesStr);
+            this.flex.setAttribute('margin', 'T5')
             if (z == 0) {
                 Tran.bodySelect(this.body);
             }
@@ -230,7 +231,7 @@ function __Tran() {
 
     this.creatText = function(flex, attr, text) {
         let elem = Elem.creat('text', flex, 'line');
-        elem.setAttribute('state', attr);
+        elem.setAttribute('margin', attr);
         elem.innerHTML = text;
         return elem;
     }
@@ -292,10 +293,8 @@ function __Tran() {
 
         if(block.firstChild)
             block.firstChild.scrollIntoView();
-        Task.cfg.log = Task.cfg.logDetail
-        .replace('#inver', line.inver)
-        .replace('#pack', data.packType);
-        Alert.log(Task.cfg.log);
+        Task.logs.cur = data.logTips.replace('#inver', line.inver);
+        Alert.log(Task.logs.cur);
         Alert.showButton(data);
     }
 

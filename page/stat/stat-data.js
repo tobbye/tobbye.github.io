@@ -12,7 +12,7 @@ var cfg = {
 
 var items = [
 
-{title:"日计", colorIdx: 1, seed: 1,
+{title:"日计", seed: 1,
 list: [
 {title:"今日统计", vice:"2019/1/15日",
 lines: [
@@ -33,7 +33,7 @@ lines: [
 ]},
 
 
-{title:"周计", colorIdx: 2, seed: 7,
+{title:"周计", seed: 7,
 list: [
 {title:"本周统计", vice:"2019/第3周",
 lines: [
@@ -50,7 +50,7 @@ lines: [
 ]},
 ]},
 
-{title:"月计", colorIdx: 3, seed: 30,
+{title:"月计", seed: 30,
 list: [
 {title:"本月统计", vice:"2019/1月",
 lines: [
@@ -76,7 +76,7 @@ lines: [
 ]},
 
 
-{title:"年计", colorIdx: 4, seed: 365,
+{title:"年计", seed: 365,
 list: [
 {title:"今年统计", vice:"2019年",
 lines: [

@@ -133,7 +133,8 @@ function __Alert() {
         }
         Config.sett.isInto = Config.innerIdx != clickIdx;
         Config.innerIdx = idx;
-        this.setInner(clickIdx, idx);
+        Alert.setInner(clickIdx, idx);
+        Task.setTask(idx);
     }
 
     this.setInner = function(clickIdx, idx) {
@@ -151,6 +152,8 @@ function __Alert() {
             jsonToTable(items[idx]); 
         }
     }
+
+
 
 
     this.initAlert = function() {

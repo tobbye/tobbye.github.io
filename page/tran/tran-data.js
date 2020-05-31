@@ -2,6 +2,7 @@ window.onload = function() {
     Config.init();
     Alert.init();
     Tran.init();
+    Task.init();
 }
 
 
@@ -11,8 +12,7 @@ var cfg = {
 	inveCount: 20,
 	laddCount: 25,
 	laddSrc: '../../picture/ladd/',
-	rightColor: 'green',
-	wrongColor: 'red',
+
 };
 
 
@@ -21,6 +21,7 @@ var items = [
 { id: 0, title: '投入',
 list: [
 {title: '我的投入', vice: '投入的资金可被淘金者抢夺', 
+logTips: '',
 dot: 1, 
 type: 'mine', 
 group: '淘金者',
@@ -34,6 +35,7 @@ btnName: ['quit'],
 btnText: ['关闭'],
 lines: []},
 {title: '选择投入', vice: '投入资金后可以抢夺等量的资金', 
+logTips: '投入资金<h5>投入资金后可以抢夺等量的资金</h5>',
 dot: 1, 
 type:'inve',
 inverStr: '投入者: ', 
@@ -51,6 +53,7 @@ lines: []},
 { id: 1, title: '抢夺', 
 list: [
 {title: '资金池', vice: '抢夺资金以提高可获收益上限',
+logTips: '抢夺淘金者资金<h5>完成的任务越多获得的资金越多</h5>',
 dot: 1, 
 type:'grab',
 group: '淘金者', 
@@ -75,6 +78,7 @@ lines: []},
 { id: 2, title: '获取', 
 list: [
 {title: '红包池', vice: '抢夺投放的红包来获取收益',
+logTips: '获取赞助商红包<h5>完成的任务越多获得的红包金额越大</h5>',
 dot: 100, 
 type:'gain',
 group: '赞助商', 
