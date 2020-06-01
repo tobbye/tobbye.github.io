@@ -6,6 +6,8 @@ function __Task() {
         this.idx = 0;
         this.ladd = 1; 
         this.roll = 1;
+        this.isLog = 1;
+        this.isTask = 0;
         this.body = {};
         Container(this);
     };
@@ -19,24 +21,72 @@ function __Task() {
 
     this.setTask = function(idx) {
         if (cfg.name == 'task') {
-            let typef = 'creat' + Parse.titleCase(items[idx].name);
-            let line = {word: 'ABCDEFG/HIJKLMN/OPQRST/UVWXYZ'};
-            let title = this.setTastText('title', items[idx].title);
-            let vice = this.setTastText('vice', items[idx].name);
-            let block = this.setTastText('block', '');
-            clearInterval(Task.timer);
-            this.game = null;
+            let data = items[idx];
+            let typef = 'creat' + Parse.titleCase(data.name);
+            let line = {};
+            line.idx = 0;
+            line.word = data.word || 'http/tobbye/top';
+            line.src = data.src || 'http://img04.sogoucdn.com/app/a/100520021/c7dc2f290b7c5e1639cb8a27a5d1237f.jpg';
+            let block = Elem.get('block');
+            Elem.text(block, '');
+            Elem.show(Alert.box);
+            if (Task.game) {
+                clearInterval(Task.game.timer);
+                Task.game = null;
+            }
+            this.setTaskCfg(block, data);
+            this.curIdx = idx;
+            this.isLog = data.isLog;
+            this.isTask = 1;
+            this.ladd = 1;
+            this.cfg = data;
+            this.logs.fail = '<h5>任务失败</h5>伐开心(ಥ﹏ಥ)!'
+            this.logs.open = '<h5>任务完成</h5>棒棒哒\(^o^)/~!'
             this.block = block;
+            this.col = data.col;
+            this.row = data.row;
+            this.gap = data.gap;
+            this.types = [data.name];
+            this.scale = Math.max(data.scale, 1);
+            this.alertWidth = Math.max(Config.page.alertFillWidth, this.col* data.size);
+            this.alertWidth = Math.min(Config.page.alertFullWidth, this.alertWidth*this.scale);
+            this.block.style.width = this.alertWidth + 'px';
             this[typef](line);
+            this.log(Task.game.logTips);
+            console.log (this); 
         }
     }
 
-    this.setTastText = function(name, text) {
-        let e = Elem.get(name);
-        e.innerHTML = text;
-        Elem.show(e);
-        return e;
+    this.setLog =  function() {
+        this.isLog = !this.isLog;
+        Alert.buttons.log.innerHTML = this.isLog ? '提醒':'不提醒';
     }
+
+    this.setTaskCfg = function(block, data) {
+        this.input = Elem.get('input');
+        this.input.value = JSON.stringify(data).replace(/,/g, ', ');
+        this.input.onfocus = function() {
+            Task.log(cfg.desc);
+        }
+        this.submit = Elem.get('submit');
+        this.submit.onclick = function() {
+            let idx = Task.curIdx;
+            items[idx] = JSON.parse(Task.input.value);
+            clearInterval(Task.game.timer);
+            Task.setTask(idx);
+        }
+        let flex = Elem.get('flex');
+        if (Config.page.isMobile) {
+            Elem.height(this.input, 200);
+            Elem.show(flex, 'block');
+
+        } else {
+            Elem.height(this.input, 100);
+            Elem.show(flex, 'flex');
+        }
+    }
+
+
 
     this.logs = {
         detail:'此红包由 #inver 赞助<h5>完成的任务越多获得的#pack金额越大</h5>',
@@ -69,6 +119,7 @@ function __Task() {
         this.types = data.taskTypes;
         this.type = this.types[this.idx];
         this.typef = 'creat' + Parse.titleCase(this.type);
+        this.alertWidth = Config.page.alertWidth;
         this[this.typef](line);
         Config.task = this;
 
@@ -88,7 +139,7 @@ function __Task() {
             Task.mixLoop();
         }, 120);  
         this.checkAction('redo');
-        if (!this.game.mixAnim) {
+        if (!this.game.mixAnim && !this.isTask) {
             this.initTask();
             console.log (this); 
         }
@@ -100,7 +151,10 @@ function __Task() {
             if (this.game.mixAnim) {
                 this.game.mixAnim();
             } else {
-                this.creatTask(this.block, true);
+                if (this.isTask)
+                    this.setTask(Task.curIdx);
+                else
+                    this.creatTask(this.block, true);
             }
             this.loop--;
         } else {
@@ -233,8 +287,10 @@ function __Task() {
     }
 
     this.log = function(log) {
+        if (!this.isLog) return;
         this.cur = this.text(log);
         Alert.log (this.cur);
+        // console.log (this.cur);
     }
 
 
@@ -250,10 +306,10 @@ function __Task() {
     };
 
     document.onkeydown = function(evt) { 
-        if (!this.game) return;
-        if (!this.game.control) return;
+        if (!Task.game) return;
+        if (!Task.game.control) return;
         let idx = evt.keyCode - 37;
-        this.game.control(idx);
+        Task.game.control(idx);
     };
 
 }

@@ -48,12 +48,28 @@
         border-collapse:collapse
     }
 
+    textarea {
+        padding: 10px;
+        width: 95%;
+        font-size: 1em;
+        border: inline;
+    }
+
+    .button-min {
+        min-width: 200px;
+    }
+
 
 
     .block {
         display: block;
         overflow: auto;
         margin-bottom: 0px;
+    }
+
+    #flex, #block {
+        margin: auto;
+        padding: 10px 20px;
     }
 
     .line {
@@ -86,7 +102,7 @@
 
 
     .cell-flex {
-        margin: -2px 0px;
+        margin: 5px 0px;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -107,7 +123,7 @@
         height: 100px;
         line-height: 100px;
         font-size: 1.8em;
-        border: solid 6px red;
+        border: solid 6px transparent;
     }
 
     .cell-fill {
@@ -125,10 +141,23 @@
     <div id="outer-top">
     </div>
     <div id="outer-center">
-        <div id="title"></div>
-        <div id="vice"></div>
+        <div id="flex">
+            <textarea id="input"></textarea>
+            <div class="button-min" id="submit" state="permit">提交配置</div>
+        </div>
         <div id="block"></div>
+            <div class="alert-flex">
+                <div class="button" state="danger" name="redo" onclick="Task.mixAnim()">重置</div>
+                <div class="button" state="defult" name="up"   onclick="Task.setArrow(1)">↑</div>
+                <div class="button" state="danger" name="log" onclick="Task.setLog()">提醒</div>
+            </div>
+            <div class="alert-flex" id="task-arrow">
+                <div class="button" state="defult" name="left"  onclick="Task.setArrow(0)">←</div>
+                <div class="button" state="defult" name="down"  onclick="Task.setArrow(3)">↓</div>
+                <div class="button" state="defult" name="right" onclick="Task.setArrow(2)">→</div>
+            </div>
     </div>
+
     <div id="outer-bot"></div>
 </body>
 </html>

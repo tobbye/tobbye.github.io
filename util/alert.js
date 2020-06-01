@@ -109,8 +109,8 @@ function __Alert() {
     //显示内页
     this.showInner = function(clickIdx) {
         let idx = Config.sett.isInto ? Config.innerIdx : clickIdx || 0;
-        let outerTop = Elem.get('outer-top').children;
-        let outerCenter = Elem.get('outer-center').children;
+        let outerTop = document.querySelectorAll('.button-top');
+        let outerCenter = document.querySelectorAll('.inner');
         let isPage = Config.sett.colorType == 'page';
         for (let i = 0; i < outerTop.length; i++) {
             let childTop = outerTop[i];
@@ -161,17 +161,17 @@ function __Alert() {
         this.buttons = {};
         this.alert = document.querySelector('#alert');
         this.box = document.querySelector('#alert-box');
+        let buttons = document.querySelectorAll('.button');
+            for (var i=0; i<buttons.length; i++) {
+            let name = buttons[i].getAttribute('name');
+            this.buttons[name] = buttons[i];
+        }
         if (!this.alert || !this.box) return;
         let panels = this.box.querySelectorAll('.alert-panel');
         for (var i=0; i<panels.length; i++) {
             let name = panels[i].getAttribute('name');
             let panel = new Panel();
             panel.init(panels[i], name);
-        }
-        let buttons = this.box.querySelectorAll('.button');
-            for (var i=0; i<buttons.length; i++) {
-            let name = buttons[i].getAttribute('name');
-            this.buttons[name] = buttons[i];
         }
     }
 

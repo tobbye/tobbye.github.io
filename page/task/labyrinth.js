@@ -21,8 +21,9 @@ Task.Labyrinth = function() {
         this.state = 'going';
         this.isArrow = true;
         this.isLoop = false;
-        this.col = 8;
-        this.row = 8;
+        this.col = Task.col || 8;
+        this.row = Task.row || 8;
+        this.scale = Task.size || ~~(Task.alertWidth / (2*this.col+1));
         this.map = [];
         this.cur = [0, 1];
         this.next = [0, 0];
@@ -35,7 +36,6 @@ Task.Labyrinth = function() {
         this.arrowList = ['left', 'up', 'right', 'down'];
         this.colorList = ['white', 'black', 'dodgerblue', 'red', 'green', 'green'];
         this.roadType = {ROAD:0, WALL:1, PAST:2, COLL:3, START:4, END:5};
-        this.scale = ~~(Config.page.alertWidth / (2*this.col+1));
     }
 
     this.initBody = function() {
@@ -49,6 +49,7 @@ Task.Labyrinth = function() {
         let body = Elem.creat('div', Task.block, 'cell-body');
         tips = Elem.creat('div', body, 'cell-tips');
         flex = Elem.creat('div', body, 'cell-flex');
+        tips.innerHTML =  Task.text(this.tgtTips);
         canvas = Elem.creat('canvas', flex);
         canvas.width = (2*this.col+1)*this.scale;
         canvas.height = (2*this.row+1)*this.scale;

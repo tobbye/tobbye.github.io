@@ -322,12 +322,12 @@ function __Tran() {
         Task.initRoll(line);
         Task.ladd = Math.min(line.ladd, Task.ladd);
 
-        let body = Elem.creat('div', block, 'alert-body');
+        let body = Elem.creat('div', block, 'padd-body');
         let ladd = Elem.creat('div', body, 'line');
         ladd.innerHTML = line.inver + '的' + Task.ladd + '阶' + Task.pack;
-        let pic = Elem.creat('img', block, 'img');
-        pic.src = cfg.laddSrc + Task.ladd + '.png';
-        let price = Elem.creat('div', block, 'line');
+        let pic = Elem.creat('img', body, 'img');
+        pic.src = Path.ladd['ladd'+Task.ladd];
+        let price = Elem.creat('div', body, 'line');
         price.innerHTML = '<h1>￥' +  Parse.addSplit(line.priceAllList[Task.ladd - 1]);
         Alert.log('<h5>恭喜您获得了</h5>' + ladd.innerText);
     }

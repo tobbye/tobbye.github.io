@@ -59,10 +59,10 @@ form {
 	padding: 0px;
 }
 
-		@keyframes fade-in {0% {opacity: 0; top: -300px;} 100% {opacity: 1; top: 0px;} }
-@-webkit-keyframes fade-in {0% {opacity: 0; top: -300px;} 100% {opacity: 1; top: 0px;} }
-		@keyframes fade-out {0% {opacity: 1; top: 0px;} 100% {opacity: 0; top: -300px;} }
-@-webkit-keyframes fade-out {0% {opacity: 1; top: 0px;} 100% {opacity: 0; top: -300px;} }
+		@keyframes fade-in {0% {opacity: 0; top: -500px;} 100% {opacity: 1; top: 0px;} }
+@-webkit-keyframes fade-in {0% {opacity: 0; top: -500px;} 100% {opacity: 1; top: 0px;} }
+		@keyframes fade-out {0% {opacity: 1; top: 0px;} 100% {opacity: 0; top: -500px;} }
+@-webkit-keyframes fade-out {0% {opacity: 1; top: 0px;} 100% {opacity: 0; top: -500px;} }
 		@keyframes fade-tog {0% {opacity: 0; top: 0px;} 100% {opacity: 1; top: 0px;} }
 @-webkit-keyframes fade-tog {0% {opacity: 0; top: 0px;} 100% {opacity: 1; top: 0px;} }
 
@@ -91,14 +91,14 @@ div[fade=tog] {
 } 
 
 div[fade=out] {
-	top: -300px;
+	top: -500px;
     animation: fade-out 1s;
     -webkit-animation:fade-out 1s;/*针对webkit内核*/ 
     animation-timing-function: ease; 	
 }
 
 div[fade=over] {
-	top: -300px;
+	top: -500px;
 } 
 
 #log {
@@ -108,7 +108,6 @@ div[fade=over] {
 
 #outer-top {
 	display: flex;
-	flex-wrap: wrap;
 	overflow: auto;
 	padding-bottom: 10px;
 }

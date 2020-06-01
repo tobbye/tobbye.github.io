@@ -25,6 +25,8 @@ var Page= function() {
     this.alertMargin = this.windWidth - this.alertMaxWidth;
     this.alertMargin = Math.max(this.alertMargin / 2, this.alertMinMargin);
     this.alertWidth = this.windWidth - this.alertMargin * 2 - 36;
+    this.alertFillWidth = this.windWidth - this.alertMargin * 2 - 0;
+    this.alertFullWidth = this.windWidth - this.alertMinMargin * 2 - 0;
     this.isWidth = this.windWidth > this.windHeight;
     this.isFlow = this.innerHeight > this.minHeight;
     let box = Elem.get('alert-box');
@@ -90,6 +92,7 @@ var Constant = {
     hrefTop: [
         {name:'sett', href:'../sett/sett.html', text:'设置'},
         {name:'rank', href:'../rank/rank.html', text:'榜单'},
+        {name:'stat', href:'../task/task.html', text:'任务'},
         {name:'stat', href:'../stat/stat.html', text:'记录'},
         {name:'help', href:'../help/help.html', text:'帮助'},
     ],
@@ -299,3 +302,32 @@ let tempData = {
     {text:`启动资金的问题你不用担心，我大力支持。加油干！二狗子！`, time:"11：30", isMine:1},
     ],
 }
+
+var Path = {};
+Path.ladd = {
+    ladd1: "http://i2.tiimg.com/720251/f51b4943c8a7e60f.png", 
+    ladd2: "http://i2.tiimg.com/720251/d6971ccfb30b6859.png", 
+    ladd3: "http://i2.tiimg.com/720251/2c4eda7a6d43b981.png", 
+    ladd4: "http://i2.tiimg.com/720251/ba8abd4aae2f71f8.png", 
+    ladd5: "http://i2.tiimg.com/720251/11923a433f061e6d.png", 
+    ladd6: "http://i2.tiimg.com/720251/cda4f3f4ae1df0e6.png", 
+    ladd7: "http://i2.tiimg.com/720251/03c9057484efbb44.png", 
+    ladd8: "http://i2.tiimg.com/720251/585f51f06acbdfe8.png", 
+    ladd9: "http://i2.tiimg.com/720251/4fbee14258ac3dc5.png", 
+    ladd10: "http://i2.tiimg.com/720251/e2ffbd1759cb9472.png", 
+    ladd11: "http://i2.tiimg.com/720251/9f4e922cb3e6fcc8.png", 
+    ladd12: "http://i2.tiimg.com/720251/e6004b5bfb19dbd2.png", 
+    ladd13: "http://i2.tiimg.com/720251/30ff1cdf0c4ae501.png", 
+    ladd14: "http://i2.tiimg.com/720251/9a2a435dd7db6c0d.png", 
+    ladd15: "http://i2.tiimg.com/720251/3e9556a6811e3ef7.png", 
+    ladd16: "http://i2.tiimg.com/720251/42cc78a9afd77da9.png", 
+    ladd17: "http://i2.tiimg.com/720251/0e5f4514e3a14e71.png", 
+    ladd18: "http://i2.tiimg.com/720251/e7392610e203397f.png", 
+    ladd19: "http://i2.tiimg.com/720251/692d5e9f83a30768.png", 
+    ladd20: "http://i2.tiimg.com/720251/dec85db050086f23.png", 
+    ladd21: "http://i2.tiimg.com/720251/20de9a85f417f796.png", 
+    ladd22: "http://i2.tiimg.com/720251/fcba683d6ac4b702.png", 
+    ladd23: "http://i2.tiimg.com/720251/819cb3f1c51476fd.png", 
+    ladd24: "http://i2.tiimg.com/720251/b8220dda07cbace1.png", 
+    ladd25: "http://i2.tiimg.com/720251/3c7238efdd6df7d2.png", 
+};

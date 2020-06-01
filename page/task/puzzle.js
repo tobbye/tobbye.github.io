@@ -56,7 +56,8 @@ Task.Puzzle = function() {
             cell.innerHTML = this.wordMix[idx];
             cell.style.borderColor = getColorType();
             cell.onclick = function() {
-                Task.game.click(this);
+                if (state == 'going')
+                    Task.game.click(this);
             }
         }
         flex.style.paddingBottom = '20px';

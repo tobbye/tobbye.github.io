@@ -17,26 +17,26 @@ Task.Snake = function() {
     this.initCfg = function() {
         this.title = '任务#idx-贪吃蛇';
         this.orgTips = '口令'; 
-        this.tgtTips = '正确吃掉文字完成任务';
+        this.tgtTips = '吃掉文字完成任务';
         this.logTips = '<h5>点击按钮控制方向</h5>吃掉文字完成任务';
         this.arrowList = ['left', 'up', 'right', 'down'];
+        this.color = {bgd:'white', body:'darkgreen', food:'darkred'};
         this.state = 'going';
         this.isArrow = true;
         this.isLoop = true;
-        this.gap = 300;
-        this.col = 10;
-        this.row = 10;
-        this.food = 45;
+        this.gap = Task.gap || 300;
+        this.col = Task.col || 10;
+        this.row = Task.row || 10;
+        this.size = Task.size || ~~(Task.alertWidth / this.col);
+        this.food = 4*this.col+5;
         this.next = 1;
         this.direction = 1;
-        this.body = [41, 40]; 
-        this.size = ~~(Config.page.alertWidth / this.col);
+        this.body = [4*this.col+1, 4*this.col]; 
         this.nextList = [-1, -this.col, 1, this.col]; 
     }
 
     this.initBody = function() {
         this.initCanvas();
-        this.eatFood(true);
         this.drawFood();
     }
 
@@ -51,7 +51,16 @@ Task.Snake = function() {
         ctx = canvas.getContext('2d');
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
+        ctx.fillStyle = this.color.bgd;
         ctx.font = this.size - 20 + "px bold sans-serif";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (this.state == 'going') {
+            this.timer = setInterval(function() {
+                Task.game.eatFood(true)
+            }, this.gap);
+        } else {
+            clearInterval(this.timer);
+        }
     };
 
     
@@ -70,20 +79,18 @@ Task.Snake = function() {
                 this.drawFood();
             }
         } else {    
-            this.draw(this.body.pop(), "white");
+            this.draw(this.body.pop(), this.color.bgd);
         }
 
         for (let x in this.body) {
-            this.draw(this.body[x], "darkgreen", this.body.length-1-x);
+            this.draw(this.body[x], this.color.body, this.body.length-1-x);
         }
-
-        if (this.state == 'going')
-            setTimeout(function() {Task.game.eatFood(true)}, this.gap);  
+ 
     };
 
     this.drawFood = function() {
         while (this.body.indexOf(this.food = ~~(Math.random() * this.col*this.row)) > 0);
-            this.draw(this.food, "darkred", this.body.length);
+            this.draw(this.food, this.color.food, this.body.length);
     };
 
 
