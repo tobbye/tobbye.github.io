@@ -34,9 +34,8 @@ function __Task() {
                 clearInterval(Task.game.timer);
                 Task.game = null;
             }
-            this.setTaskCfg(block, data);
             this.curIdx = idx;
-            this.isLog = data.isLog;
+            this.showCfg = !false;
             this.isTask = 1;
             this.ladd = 1;
             this.cfg = data;
@@ -52,21 +51,26 @@ function __Task() {
             this.alertWidth = Math.min(Config.page.alertFullWidth, this.alertWidth*this.scale);
             this.block.style.width = this.alertWidth + 'px';
             this[typef](line);
-            this.log(Task.game.logTips);
+            this.checkState('going');
+            this.setTaskCfg(block, data);
+            if (this.isLog == null)
+                this.togLog(true);
+            else 
+                this.togLog(this.isLog);
             console.log (this); 
         }
     }
 
-    this.setLog =  function() {
-        this.isLog = !this.isLog;
-        Alert.buttons.log.innerHTML = this.isLog ? '提醒':'不提醒';
-    }
 
     this.setTaskCfg = function(block, data) {
         this.input = Elem.get('input');
         this.input.value = JSON.stringify(data).replace(/,/g, ', ');
         this.input.onfocus = function() {
             Task.log(cfg.desc);
+        }
+        this.toggle = Elem.get('toggle');
+        this.toggle.onclick = function() {
+            Task.togLog(!Task.isLog);
         }
         this.submit = Elem.get('submit');
         this.submit.onclick = function() {
@@ -75,15 +79,32 @@ function __Task() {
             clearInterval(Task.game.timer);
             Task.setTask(idx);
         }
-        let flex = Elem.get('flex');
-        if (Config.page.isMobile) {
-            Elem.height(this.input, 200);
-            Elem.show(flex, 'block');
+        this.togTaskCfg();
 
+    }
+
+    this.togTaskCfg = function() {
+        this.showCfg = !this.showCfg;
+        let flex = Elem.get('flex');
+        if (this.showCfg) {
+            if (Config.page.isMobile) {
+                Elem.height(this.input, 300);
+                Elem.show(flex, 'block');
+
+            } else {
+                Elem.height(this.input, 100);
+                Elem.show(flex, 'flex');
+            } 
         } else {
-            Elem.height(this.input, 100);
-            Elem.show(flex, 'flex');
+            Elem.show(flex, 'none');
         }
+    }
+
+
+    this.togLog = function(isLog) {
+        this.isLog = isLog;
+        Elem.text(this.toggle, Task.isLog ? '已开启提醒':'已关闭提醒');
+        Elem.state(this.toggle, Task.isLog ? 'permit':'danger');
     }
 
 
@@ -125,20 +146,19 @@ function __Task() {
 
         if (this.game && !mix) {
             this.initTask();
-            this.checkAction('redo');
             this.checkState('going');
             console.log (this);
         }
     }
 
     this.mixAnim = function(block) {
+        this.checkAction('redo');
         clearInterval(this.timer);
         clearInterval(this.clock);
         this.loop = Constant.clock.loop;
         this.clock = setInterval(function() {
             Task.mixLoop();
         }, 120);  
-        this.checkAction('redo');
         if (!this.game.mixAnim && !this.isTask) {
             this.initTask();
             console.log (this); 
@@ -183,7 +203,7 @@ function __Task() {
                 this.log (this.logs.pause);
                 break;
             case 'going':
-                this.log (this.game.logTips);
+                this.checkAction('going');
                 break;
             case 'succeed':
                 if (this.ladd < this.types.length) {
@@ -214,6 +234,16 @@ function __Task() {
         Elem.hide(Alert.buttons.redo);
         Elem.hide(Alert.buttons.abon);
         switch (action) {
+            case 'going':
+                this.log (this.game.logTips);
+                Elem.show(Alert.buttons.redo);
+                Elem.show(Alert.buttons.abon);
+                break;
+            case 'redo':
+                this.log (this.logs.redo);
+                Elem.show(Alert.buttons.redo);
+                Elem.show(Alert.buttons.abon);
+                break;
             case 'open':
                 this.log (this.logs.open);
                 Elem.show(Alert.buttons.open);
@@ -221,11 +251,6 @@ function __Task() {
             case 'next':
                 this.log (this.logs.next);
                 Elem.show(Alert.buttons.next);
-                break;
-            case 'redo':
-                this.log (this.logs.redo);
-                Elem.show(Alert.buttons.redo);
-                Elem.show(Alert.buttons.abon);
                 break;
             case 'stop':
                 this.log (this.logs.stop);
@@ -241,12 +266,14 @@ function __Task() {
 
 
     this.showArrow = function() {
+        console.log('showArrow')
         if (this.state == 'succeed' || this.state == 'ending') {
             Elem.hide(Alert.buttons.up);
             Elem.hide(Alert.buttons.down);
             Elem.hide(Alert.buttons.left);
             Elem.hide(Alert.buttons.right);
         } else {
+        console.log('showArrow')
             Elem.show(Alert.buttons.up);
             Elem.show(Alert.buttons.down);  
             Elem.show(Alert.buttons.left);
@@ -287,10 +314,12 @@ function __Task() {
     }
 
     this.log = function(log) {
-        if (!this.isLog) return;
-        this.cur = this.text(log);
-        Alert.log (this.cur);
-        // console.log (this.cur);
+        if (this.isLog) {
+            this.cur = this.text(log);
+            Alert.log (this.cur);  
+        } else {
+            console.log (this.cur);
+        }
     }
 
 

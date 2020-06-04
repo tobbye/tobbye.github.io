@@ -143,13 +143,14 @@
     <div id="outer-center">
         <div id="flex">
             <textarea id="input"></textarea>
+            <div class="button-min" id="toggle" state="permit">已开启提醒</div>
             <div class="button-min" id="submit" state="permit">提交配置</div>
         </div>
         <div id="block"></div>
             <div class="alert-flex">
                 <div class="button" state="danger" name="redo" onclick="Task.mixAnim()">重置</div>
                 <div class="button" state="defult" name="up"   onclick="Task.setArrow(1)">↑</div>
-                <div class="button" state="danger" name="log" onclick="Task.setLog()">提醒</div>
+                <div class="button" state="danger" name="log" onclick="Task.togTaskCfg()">自定义</div>
             </div>
             <div class="alert-flex" id="task-arrow">
                 <div class="button" state="defult" name="left"  onclick="Task.setArrow(0)">←</div>

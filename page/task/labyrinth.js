@@ -20,7 +20,6 @@ Task.Labyrinth = function() {
         this.logTips = '<h5>点击按钮控制方向</h5>找到迷宫出口完成任务';
         this.state = 'going';
         this.isArrow = true;
-        this.isLoop = false;
         this.col = Task.col || 8;
         this.row = Task.row || 8;
         this.scale = Task.size || ~~(Task.alertWidth / (2*this.col+1));

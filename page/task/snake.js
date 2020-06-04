@@ -7,8 +7,8 @@ Task.Snake = function() {
     let tips, flex, canvas, ctx;
 
     this.init = function(word) {
-
-        this.word = word.replace(/\//g,'');
+        this.wordOrg = word;
+        this.word = word.replace(/[\/ |,;]/g,'');
         this.initCfg();
         this.initBody();
 
@@ -44,7 +44,7 @@ Task.Snake = function() {
         let body = Elem.creat('div', Task.block, 'cell-body');
         tips = Elem.creat('div', body, 'cell-tips');
         flex = Elem.creat('div', body, 'cell-flex');
-        tips.innerHTML = this.word;
+        tips.innerHTML = this.wordOrg;
         canvas = Elem.creat('canvas', flex);
         canvas.width = this.col*this.size;
         canvas.height = this.row*this.size;

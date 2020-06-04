@@ -1,0 +1,418 @@
+<!DOCTYPE>
+<html> 
+<head> 
+<title>动态展示复平面运算</title> 
+<meta charset="UTF-8">
+<style> 
+
+body {
+    text-align: center;
+    background: #eeeeee;
+}
+
+button {
+    flex: 10;
+    margin: 10px;
+    padding: 10px 20px;
+    color: white;
+    border-radius: 20px;
+    background-image: linear-gradient(to bottom,#06b, #60b);
+}
+
+.block {
+    margin: 5px;
+}
+
+.flex {
+    padding: 0px 10px;
+    display: flex;
+}
+
+</style> 
+</head> 
+    <body> 
+        <div class="flex">
+            <div class="block">
+                <canvas id="canvas1"></canvas>
+                <div class="flex">
+                    <button onclick="drawAction(1, 11, 'self')">原始坐标</button>
+                    <button onclick="drawAction(1, 10, 'translate')">旋转</button>
+                    <button onclick="drawAction(1, 11, 'translate')">旋转+拉伸</button>
+                    <button onclick="drawAction(1, 1, 'translate')">拉伸</button>
+                    <button onclick="drawAction(1, 11, 'result')">结果坐标</button>
+                </div>
+            </div>
+            <div class="block">
+                <canvas id="canvas2"></canvas>
+                <div class="flex">
+                    <button onclick="drawAction(2, 11, 'self')">原始坐标</button>
+                    <button onclick="drawAction(2, 10, 'translate')">旋转</button>
+                    <button onclick="drawAction(2, 11, 'translate')">旋转+拉伸</button>
+                    <button onclick="drawAction(2, 1, 'translate')">拉伸</button>
+                    <button onclick="drawAction(2, 11, 'result')">结果坐标</button>
+                </div>
+            </div>
+        </div>
+    </body> 
+    <script type="text/javascript">
+
+var Euler = new __Euler();
+Euler.init();
+Euler.initCanvas(); 
+
+function drawAction(idx, modle, action) {
+    let gap = 0;
+    if (Euler.state == 'going') {
+        clearInterval(Euler.timer);
+        gap = Math.max(10, Euler.gap / 2)
+    }
+    Euler = new __Euler();
+    Euler.init(gap); 
+    Euler.drawReady(idx, modle, action);  
+}
+
+
+
+function __Euler() {
+
+    this.init = function(gap) {
+        this.triangleList = [];
+        this.idxList = [];
+        this.gap = gap || 100;
+        this.idx = 0;
+        this.mix = 0;
+        this.multi = 2;
+        this.count = 20;
+        this.margin = 30;       //四周空白
+        this.zoom = 150;        //视图比例
+        this.ableSize = 600;    //可用尺寸
+        this.fullSize = this.margin *2 + this.ableSize; //画布尺寸
+        this.modle = 11;
+        this.state = 'ready';
+        this.action = 'self';
+        this.posWord = '(2+3i)(4+5i)';
+        this.posList = [[-1,-2],[-1,1],[4,-1],[-1,-1],[1,1],[0,-1]];
+        this.posResult = [[1, 0]];
+        this.axis = {left:[-1, 0], right:[1,0], top:[0,1], bot:[0, -1]};
+    }
+
+
+
+    this.setList = function() {
+        // return;
+        this.posList = [[2,1]];
+        for (let i=0; i <this.multi*this.count; i++) {
+            this.posList.push([1, this.fixed(Math.PI/this.count)]);
+        }
+    }
+
+    //初始化画布
+    this.initCanvas = function() {
+        this.setCanvas('canvas1');
+        this.initAxis();
+        this.setCanvas('canvas2');
+        this.initAxis(); 
+    }
+
+
+    this.setCanvas = function(name){ 
+        this.canvas = document.getElementById(name);
+        this.canvas.width = this.fullSize;
+        this.canvas.height = this.fullSize;
+        this.ctx = this.canvas.getContext('2d');
+        this.ctx.textAlign = "center";
+        this.ctx.textBaseline = "middle";
+        this.ctx.font = "20px bold Arial"; 
+    } 
+
+    this.getCanvas = function(name) {
+        this.canvas = document.getElementById(name);
+        this.ctx = this.canvas.getContext('2d');
+    }
+
+    //初始化坐标系
+    this.initAxis = function() {
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.lineWidth = 2;
+        this.ctx.strokeStyle = '#333';
+        this.ctx.beginPath();
+        this.drawAxis(this.axis.left, 1);
+        this.drawAxis(this.axis.right, 0);
+        this.drawAxis(this.axis.top, 1);
+        this.drawAxis(this.axis.bot, 0);
+        this.ctx.closePath();
+        this.ctx.stroke();
+    }
+
+    //绘制坐标系
+    this.drawAxis = function(pos, move) {
+        let x = pos[0] * this.ableSize / this.zoom / 2;
+        let y = pos[1] * this.ableSize / this.zoom / 2;
+        this.drawPos([x, y], move);
+    }
+
+
+
+    //------------------------------------------------
+
+    //绘制准备
+    this.drawReady = function(idx, modle, action) {
+        this.setList();
+        this.getCanvas('canvas'+idx);
+        this.mix = 0;
+        this.idx = 0;
+        this.idxList = [];
+        this.modle = modle || this.modle;
+        this.action = action || this.action;
+        console.log('---------- ' + this.action + ' ------------')
+        console.log(this);
+        this.timer = setInterval(function() {Euler.drawGoing();}, this.gap);
+    }
+
+
+
+    //绘制进行
+    this.drawGoing = function() {
+        this.state = 'going';
+        if (this.action == 'translate')
+            this.mix += 0.05;
+        else
+            this.mix += 0.8*(this.mix || 0.1);
+        this.mix = this.mix > 1 ? 1 : Euler.fixed(this.mix);
+        this.triangleList = [];
+        this.initAxis();
+        for (let i=0; i<this.posList.length; i++) {
+            let triangle = new this.Triangle();
+            triangle.init(i);
+            this.triangleList.push(triangle);
+        }
+        if (this.mix >= 1) {
+            if (this.action == 'translate') {
+                this.idxList.push(this.idx);
+                this.idx ++;
+                if (this.idx > this.posList.length)
+                    this.drawEnding();
+            } else {
+                this.drawEnding();
+            }
+            this.mix = 0;
+        }
+    }
+
+    this.drawEnding = function() {
+        clearInterval(this.timer);
+        this.state = 'ending';
+    }
+
+
+
+    //构造三角形
+    this.Triangle = function() {
+        this.idx = 0;
+
+        this.init = function(idx) {
+            this.idx = idx;
+            this.colorLine = ['#468', '#648', '#486', '#684', '#846', '#864'][idx%6||0] + 'F';
+            this.colorFill = ['#ace', '#cae', '#aec', '#cea', '#eac', '#eca'][idx%6||0] + '8';
+            this.colorText = ['#ace', '#cae', '#aec', '#cea', '#eac', '#eca'][idx%6||0] + 'F';
+            this.selfPos = Euler.posList[idx];
+            this.selfAng = Euler.calcAng(this.selfPos);
+            this.selfLen = Euler.calcLen(this.selfPos);
+            this.orgPos = Euler.posResult[idx];
+            this.orgAng = Euler.calcAng(this.orgPos);
+            this.orgLen = Euler.calcLen(this.orgPos);
+            this.tgtPos = Euler.calcPos(this, this.orgPos, this.selfPos);
+            this.tgtAng = Euler.calcAng(this.tgtPos);
+            this.tgtLen = Euler.calcLen(this.tgtPos);
+            this.curPos = [0, 0];
+            this.zeroPos = [0, 0];
+            this.onePos = [1, 0];
+            this.oneAng = 0;
+            this.oneLen = 1;
+            this.action();
+        }
+
+        //操作
+        this.action = function() {
+            if (Euler.action == 'self') {
+                this.curPos = Euler.copyPos(this.selfPos);
+                this.curPos[1] = Euler.fixed(this.curPos[1]*Euler.mix);
+            }
+
+            if (Euler.action == 'result') {
+                this.curPos = Euler.copyPos(this.tgtPos);
+                this.curPos[1] = Euler.fixed(this.tgtPos[1]*Euler.mix);
+            }
+            if (Euler.action == 'translate') {
+                this.curPos = Euler.copyPos(this.selfPos);
+                this.curAng = this.selfAng;
+                this.curLen = this.selfLen;
+                if (Euler.idx == this.idx) {
+                    this.isAng = ~~(Euler.modle / 10) == 1;
+                    this.isLen = Euler.modle % 10 == 1;
+                    this.mix = Euler.mix;
+                    this.translate('curAng', 'curLen', 'curPos');
+                    this.translate('oneAng', 'oneLen', 'onePos');  
+                } else if (Euler.idxList.indexOf(this.idx) > -1) {
+                    this.curPos = Euler.copyPos(this.tgtPos);
+                    this.onePos = Euler.copyPos(this.orgPos);
+                }
+            }
+            Euler.autosize(Euler.posResult);
+            Euler.draw(this);
+            Euler.fillText(this, Euler.format(this.curPos), this.curPos);
+        }
+
+
+
+        //旋转三角形
+        this.translate = function(ang, len, pos) {
+            if (this.isAng)
+                this[ang] = this[ang]+this.orgAng*this.mix;
+            if (this.isLen)
+                this[len] = this[len]*(1+(this.orgLen-1)*this.mix);
+            this[pos][0] = Euler.fixed(Math.cos(this[ang]*Math.PI/180)*this[len]);
+            this[pos][1] = Euler.fixed(Math.sin(this[ang]*Math.PI/180)*this[len]);
+        }
+    }
+
+
+    //获取复数集合的最长边
+    this.getLengthAxis = function(list) {
+        let lenAxis = 1;
+        this.lenAxis = 1;
+        for (let i=0; i<list.length; i++) {
+            lenAxis = Math.max(Math.abs(list[i][0]), Math.abs(list[i][1]));
+            this.lenAxis = this.fixed(Math.max(this.lenAxis, lenAxis));
+        }
+    }
+
+    //缩放自适应
+    this.autosize = function(list) {
+        this.getLengthAxis(list);
+        this.zoom = this.fixed(this.ableSize / this.lenAxis / 2);
+    }
+
+    //绘制三角形
+    this.draw = function(triangle) {
+        this.ctx.strokeStyle = triangle.colorLine;
+        this.ctx.fillStyle = triangle.colorFill;
+        this.ctx.beginPath();
+        this.drawPos(triangle.zeroPos, 1);
+        this.drawPos(triangle.onePos, 0);
+        this.drawPos(triangle.curPos, 0);
+        this.ctx.closePath();
+        this.ctx.stroke();
+        this.ctx.fill();  
+    }
+
+    //复制点
+    this.copyPos = function(pos) {
+        return [pos[0], pos[1]];
+    }
+
+
+    //计算点
+    this.calcPos = function(triangle, a, b) {
+        let x = this.fixed(a[0]*b[0] - a[1]*b[1]);
+        let y = this.fixed(a[0]*b[1] + a[1]*b[0]);
+        triangle.resultStr = this.connect(a, b, [x, y]);
+        if (this.posResult.length <= this.posList.length)
+            this.posResult.push([x, y]);
+        // console.log(triangle.idx + '  '+ this.posResult);
+        return [x, y];
+    }
+
+    //计算角度
+    this.calcAng = function(pos) {
+        let ang = this.fixed(Math.atan(pos[1] / pos[0]||Infinity) * 180 / Math.PI);
+        if (pos[0] == 0 && pos[1] > 0)
+            return 90;
+        if (pos[0] == 0 && pos[1] < 0)
+            return 270;
+        if (pos[0] > 0 && pos[1] > 0)
+            return ang + 0;
+        if (pos[0] < 0 && pos[1] > 0)
+            return ang + 180;
+        if (pos[0] < 0 && pos[1] < 0)
+            return ang + 180;
+        if (pos[0] > 0 && pos[1] < 0)
+            return ang + 360;
+    }
+
+    //计算模长度
+    this.calcLen = function(pos) {
+        return this.fixed(Math.sqrt(pos[0]*pos[0] + pos[1]*pos[1]));
+    }
+
+
+    //绘制文本
+    this.fillText = function(triangle, text, pos) {
+        text = 'p' + (triangle.idx+1) + '.' + text;
+        this.ctx.fillStyle = triangle.colorText;
+        let x = pos[0] == 0 ? 0 : pos[0]>0 ? 20 : -20;
+        let y = pos[1] == 0 ? 0 : pos[1]<0 ? 20 : -20;
+        pos = this.tran_zoom(pos);
+        this.ctx.fillText(text, pos[0]+x, pos[1]+y);
+        this.ctx.fillStyle = triangle.colorFill;
+    }
+
+    //字符连接
+    this.connect = function(a, b, r) {
+        return  this.format(a) + ' * ' + this.format(b) + ' = ' + this.format(r);
+    }
+
+    //字符拼接
+    this.format = function(pos) {
+        return `(${pos[0]}+${pos[1]}i)`
+        .replace(/\(0\+/g, '(')
+        .replace(/\+0i/g, '')
+        .replace(/1i/g, 'i')
+        .replace(/\+-/g, '-');
+    }
+
+    this.fixed = function(num) {
+        return Math.round(num*1e2)/1e2;
+    }
+
+
+
+    //绘制点
+    this.drawPos = function(pos, move) {
+        if (move)
+            this.tran_moveTo(pos);
+        else
+            this.tran_lineTo(pos);
+    }
+
+
+    this.tran_moveTo = function(pos) {
+        pos = this.tran_zoom(pos);
+        this.ctx.moveTo(pos[0], pos[1]);
+    }
+
+    this.tran_lineTo = function(pos) {
+        pos = this.tran_zoom(pos);
+        this.ctx.lineTo(pos[0], pos[1]);
+    }
+
+
+    this.tran_zoom = function(pos) {
+        let x = 0 + pos[0] * this.zoom + this.fullSize / 2;
+        let y = 0 - pos[1] * this.zoom + this.fullSize / 2 ;
+        return [x, y];
+    }
+
+    //复数变换到画布上
+    this.tran = function(pos) {
+        let x = 0 + pos[0] + this.fullSize / 2;
+        let y = 0 - pos[1] + this.fullSize / 2 ;
+        return [x, y];  
+    }
+
+}
+
+
+    </script>
+</html> 
