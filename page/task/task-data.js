@@ -14,12 +14,15 @@ var cfg = {
 	<br/>=== 其中size, scale在手机上设置无效 ===</h5>`
 }
 
-
 var items = [
-{title:'欧拉', 		name:"euler",       count: 12, power: 15, gap: 100, posList:[[2, 1], [-1, -2]], word:'(2+i)(-1-2i)'},
-{title:'迷宫', 		name:"labyrinth", 	size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/LABYRINTH'},
-{title:'贪吃蛇', 	name:"snake", 		size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/SNAKE'},
-{title:'拼字', 		name:"puzzle", 		size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/PUZZLE'},
-{title:'拼图', 		name:"jigsaw", 		size:0, scale: 1, col: 3, row: 3, gap: 500, src:'http://img04.sogoucdn.com/app/a/100520021/c7dc2f290b7c5e1639cb8a27a5d1237f'},
-{title:'方块', 		name:"tetris", 		size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/TETRIS'},
+{
+list:[
+{name:'迷宫', 		typef:"labyrinth", 		size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/LABYRINTH'},
+{name:'贪吃蛇', 		typef:"snake", 			size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/SNAKE'},
+{name:'拼字', 		typef:"puzzle", 		size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/PUZZLE'},
+{name:'拼图', 		typef:"jigsaw", 		size:0, scale: 1, col: 3, row: 3, gap: 500, src:'http://img04.sogoucdn.com/app/a/100520021/c7dc2f290b7c5e1639cb8a27a5d1237f'},
+{name:'俄罗斯方块', 	typef:"tetris", 		size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/TETRIS'},
+{name:'复平面', 		typef:"euler",       	count: 12, power: 15, gap: 100, posList:[[2, 1], [-1, -2]], word:'(2+i)(-1-2i)'},
+
+]},
 ];

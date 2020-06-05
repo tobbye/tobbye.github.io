@@ -53,15 +53,15 @@
         flex: 70;
         margin: 5px 10px;
         padding: 10px;
+        height: 220px;
         font-size: 1em;
         border: inline;
     }
 
 
-    .block {
-        display: block;
-        overflow: auto;
-        margin: 10px;
+    #block-btn {
+        display: flex;
+        flex-wrap: wrap;
     }
 
 
@@ -140,13 +140,14 @@
     <div id="outer-top"></div>
     <div id="outer-center">
 
+        <div id="block-btn"></div>
         <div id="block-game"></div>
 
         <div id="block-ctrl">
             <div class="alert-flex">
                 <button class="button" state="danger" name="redo" onclick="Task.mixAnim()">重置</button>
                 <button class="button" state="defult" name="up"   onclick="Task.setArrow(1)">↑</button>
-                <button class="button" state="danger" name="log" onclick="Task.togTaskCfg()">自定义</button>
+                <button class="button" state="danger" name="log" onclick="Task.showTask()">自定义</button>
             </div>
             <div class="alert-flex" id="task-arrow">
                 <button class="button" state="defult" name="left"  onclick="Task.setArrow(0)">←</button>
@@ -154,19 +155,30 @@
                 <button class="button" state="defult" name="right" onclick="Task.setArrow(2)">→</button>
             </div>
         </div>
-        <div id="block-cfg">
-            <div class="alert-flex">
-                <textarea id="input"></textarea>
-            </div>
-            <div class="alert-flex">
-                <button class="button" id="toggle" state="permit">已开启提醒</button>
-            </div>
-            <div class="alert-flex">
-                <button class="button" id="submit" state="permit">提交配置</button>
-            </div>
-        </div>
+
     </div>
 
     <div id="outer-bot"></div>
+
+    <div id="alert">
+        <div id="alert-mask"></div>
+        <div id="alert-box">
+
+            <div class="alert-panel" name="task">
+                <div class="alert-title">选择一个任务</div>
+                <div class="alert-block"></div>
+                <div class="alert-flex">
+                    <textarea id="input"></textarea>
+                </div>
+                <div class="alert-flex">
+                    <button class="button" state="permit" name="toggle" >提醒</button>
+                    <button class="button" state="permit" name="submit" >载入</button>
+                </div>
+                <div class="alert-flex">
+                    <button class="button" state="danger" name="quit" onclick="Alert.hidePanel()">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>            
 </body>
 </html>

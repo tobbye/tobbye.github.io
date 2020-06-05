@@ -15,18 +15,6 @@ function __Sett() {
 		Alert.showInner();
 	}
 
-	this.creatContent = function(inner, x) {
-		let list = items[x].list;
-		for (let y in list) {
-			let content = Elem.creat('div', inner, 'content', y);
-			let data = list[y];
-			Alert.creatTitle(content, data);
-			this.creatLine(content, data);
-			if (data.key == 'colorType') {
-				this.setStyle(content, data);
-			}
-		}
-	}
 	
     this.creatBlock = function(content, data) {
 		this.creatLine(content, data);

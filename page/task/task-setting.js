@@ -3,6 +3,7 @@ var Task = new __Task();
 function __Task() {
 
     this.init = function(){
+        this.curIdx = 0;
         this.idx = 0;
         this.ladd = 1; 
         this.roll = 1;
@@ -17,58 +18,90 @@ function __Task() {
         Alert.creatOuterTop(this);
         Alert.creatOuterBot(this);
         Alert.showInner();
+        this.showTask();
+    }
+
+    
+
+    this.showTask = function() {
+        Alert.showPanel('task');
+        let block = Alert.panels.task.block;
+        let list = items[0].list;
+        for (let z in list) {
+            let btn = Elem.creat('div', block, 'button-top', 'list['+z+']');
+            btn.innerHTML = '任务' + (~~z+1) +  ' ' + list[z].name;
+            btn.idx = z;
+            btn.onclick = function() {
+                let childs = this.parentNode.children;
+                for (let i=0; i<childs.length; i++) {
+                    if (this.innerHTML == childs[i].innerHTML)  {
+                        childs[i].setAttribute('state', 'live');
+                    } else {
+                        childs[i].setAttribute('state', 'dead');
+                    }               
+                }
+                Task.curIdx = btn.idx;
+                Task.setTaskCfg(this.idx);
+            } 
+
+            if (this.curIdx == z)  {
+                btn.setAttribute('state', 'live');
+                this.setTaskCfg(this.curIdx);
+            } else {
+                btn.setAttribute('state', 'dead');
+            }  
+        }
     }
 
     this.setTask = function(idx) {
-        if (cfg.name == 'task') {
-            this.clear();
-            this.cfg = items[idx];
-            let block = Elem.get('block-game');
-            Elem.text(block, '');
-            this.curIdx = idx;
-            this.showCfg = !false;
-            this.isTask = 1;
-            this.ladd = 1;
-            this.logs.fail = '<h5>任务失败</h5>伐开心(ಥ﹏ಥ)!'
-            this.logs.open = '<h5>任务完成</h5>棒棒哒\(^o^)/~!'
-            this.block = block;
-            this.types = [this.cfg.name];
-            this.typef = 'creat' + Parse.titleCase(this.cfg.name);
-            this.scale = Math.max(this.cfg.scale, 1);
-            this.alertWidth = Math.max(Config.page.alertFillWidth, this.col* this.cfg.size);
-            this.alertWidth = Math.min(Config.page.alertFullWidth, this.alertWidth*this.scale);
-            this[this.typef]();
-            this.setTaskCfg(block);
-            if (!Config.page.isMobile)
-                this.isArrow = false;
-            else
-                this.isArrow = this.game.isArrow;
-            if (this.isLog == null)
-                this.togLog(true);
-            else 
-                this.togLog(this.isLog);
-            this.checkState('going');
-            console.log (this); 
-        }
+        this.clear();
+        this.cfg = items[0].list[idx];
+        this.block = Elem.get('block-game');
+        this.block.innerHTML = '';
+        this.curIdx = idx;
+        this.showCfg = !false;
+        this.isTask = 1;
+        this.ladd = 1;
+        this.logs.fail = '<h5>任务失败</h5>伐开心(ಥ﹏ಥ)!'
+        this.logs.open = '<h5>任务完成</h5>棒棒哒\(^o^)/~!'
+        this.types = [this.cfg.typef];
+        this.typef = 'creat' + Parse.titleCase(this.cfg.typef);
+        this.scale = Math.max(this.cfg.scale, 1);
+        this.alertWidth = Math.max(Config.page.alertFillWidth, this.cfg.col* this.cfg.size);
+        this.alertWidth = Math.min(Config.page.alertFullWidth, this.alertWidth*this.scale);
+        this[this.typef]();
+        if (!Config.page.isMobile)
+            this.isArrow = false;
+        else
+            this.isArrow = this.game.isArrow;
+        if (this.isLog == null)
+            this.togLog(true);
+        else 
+            this.togLog(this.isLog);
+        this.checkState('going');
+        console.log (this); 
     }
 
 
-    this.setTaskCfg = function(block) {
+    this.setTaskCfg = function(idx) {
+
         Elem.width(this.block, this.alertWidth+'px');
-        this.input = Elem.get('input');
-        this.input.value = JSON.stringify(this.cfg).replace(/,/g, ', ');
-        this.input.onfocus = function() {
-            Task.log(this.cfg.desc);
+        let input = Alert.curPanel.input;
+        let toggle = Alert.buttons.toggle;
+        let submit = Alert.buttons.submit;
+        let data = items[0].list[idx];
+        input.value = JSON.stringify(data).replace(/,/g, ', ');
+        input.onfocus = function() {
+            Task.log(cfg.desc);
         }
-        this.toggle = Elem.get('toggle');
-        this.toggle.onclick = function() {
+        toggle.onclick = function() {
             Task.togLog(!Task.isLog);
         }
-        this.submit = Elem.get('submit');
-        this.submit.onclick = function() {
+        submit.onclick = function() {
             let idx = Task.curIdx;
-            items[idx] = JSON.parse(Task.input.value);
+            items[0].list[idx] = JSON.parse(Alert.curPanel.input.value);
             Task.setTask(idx);
+            Alert.hidePanel();
         }
         this.togTaskCfg();
 
@@ -78,10 +111,8 @@ function __Task() {
         this.showCfg = !this.showCfg;
         let block = Elem.get('block-cfg');
         if (Config.page.isMobile) {
-            Elem.height(this.input, 300);
             this.isArrow = this.game.isArrow;
         } else {
-            Elem.height(this.input, 100);
             this.isArrow = false;
         } 
         if (this.showCfg) {
@@ -94,8 +125,8 @@ function __Task() {
 
     this.togLog = function(isLog) {
         this.isLog = isLog;
-        Elem.text(this.toggle, Task.isLog ? '已开启提醒':'已关闭提醒');
-        Elem.state(this.toggle, Task.isLog ? 'permit':'danger');
+        Elem.text(Alert.buttons.toggle, Task.isLog ? '已开启提醒':'已关闭提醒');
+        Elem.state(Alert.buttons.toggle, Task.isLog ? 'permit':'danger');
     }
 
 

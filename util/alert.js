@@ -18,7 +18,7 @@ var Panel = function() {
             this.input = panel.querySelector('.alert-input');
             this.limit = panel.querySelector('.alert-limit');
         }
-        if (name == 'chat') {
+        if (/chat|task/i.test(name)) {
             this.input = panel.querySelector('textarea');
         }
         Alert.panels[name] = this;
@@ -69,7 +69,7 @@ function __Alert() {
 
     this.creatOuterTop = function(that) {
         let outerTop = Elem.get('outer-top');
-        if (items.length == 1) {
+        if (items.length < 2) {
             this.creatLink(outerTop, Constant.hrefTop);
             return;
         }
@@ -134,7 +134,6 @@ function __Alert() {
         Config.sett.isInto = Config.innerIdx != clickIdx;
         Config.innerIdx = idx;
         Alert.setInner(clickIdx, idx);
-        Task.setTask(idx);
     }
 
     this.setInner = function(clickIdx, idx) {
@@ -162,13 +161,13 @@ function __Alert() {
         this.alert = document.querySelector('#alert');
         this.box = document.querySelector('#alert-box');
         let buttons = document.querySelectorAll('.button');
-            for (var i=0; i<buttons.length; i++) {
+            for (let i=0; i<buttons.length; i++) {
             let name = buttons[i].getAttribute('name');
             this.buttons[name] = buttons[i];
         }
         if (!this.alert || !this.box) return;
         let panels = this.box.querySelectorAll('.alert-panel');
-        for (var i=0; i<panels.length; i++) {
+        for (let i=0; i<panels.length; i++) {
             let name = panels[i].getAttribute('name');
             let panel = new Panel();
             panel.init(panels[i], name);
