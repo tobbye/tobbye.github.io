@@ -21,12 +21,11 @@ function __Task() {
 
     this.setTask = function(idx) {
         if (cfg.name == 'task') {
-            let data = items[idx];
-            let typef = 'creat' + Parse.titleCase(data.name);
+            this.cfg = items[idx];
             let line = {};
             line.idx = 0;
-            line.word = data.word || 'http/tobbye/top';
-            line.src = data.src || 'http://img04.sogoucdn.com/app/a/100520021/c7dc2f290b7c5e1639cb8a27a5d1237f.jpg';
+            line.word = this.cfg.word || 'http/tobbye/top';
+            line.src = this.cfg.src || 'http://img04.sogoucdn.com/app/a/100520021/c7dc2f290b7c5e1639cb8a27a5d1237f.jpg';
             let block = Elem.get('block');
             Elem.text(block, '');
             Elem.show(Alert.box);
@@ -38,21 +37,22 @@ function __Task() {
             this.showCfg = !false;
             this.isTask = 1;
             this.ladd = 1;
-            this.cfg = data;
+            this.cfg = this.cfg;
             this.logs.fail = '<h5>任务失败</h5>伐开心(ಥ﹏ಥ)!'
             this.logs.open = '<h5>任务完成</h5>棒棒哒\(^o^)/~!'
             this.block = block;
-            this.col = data.col;
-            this.row = data.row;
-            this.gap = data.gap;
-            this.types = [data.name];
-            this.scale = Math.max(data.scale, 1);
-            this.alertWidth = Math.max(Config.page.alertFillWidth, this.col* data.size);
+            this.col = this.cfg.col;
+            this.row = this.cfg.row;
+            this.gap = this.cfg.gap;
+            this.types = [this.cfg.name];
+            this.typef = 'creat' + Parse.titleCase(this.cfg.name);
+            this.scale = Math.max(this.cfg.scale, 1);
+            this.alertWidth = Math.max(Config.page.alertFillWidth, this.col* this.cfg.size);
             this.alertWidth = Math.min(Config.page.alertFullWidth, this.alertWidth*this.scale);
             this.block.style.width = this.alertWidth + 'px';
-            this[typef](line);
+            this[this.typef](line);
             this.checkState('going');
-            this.setTaskCfg(block, data);
+            this.setTaskCfg(block);
             if (this.isLog == null)
                 this.togLog(true);
             else 
@@ -62,9 +62,9 @@ function __Task() {
     }
 
 
-    this.setTaskCfg = function(block, data) {
+    this.setTaskCfg = function(block) {
         this.input = Elem.get('input');
-        this.input.value = JSON.stringify(data).replace(/,/g, ', ');
+        this.input.value = JSON.stringify(this.cfg).replace(/,/g, ', ');
         this.input.onfocus = function() {
             Task.log(cfg.desc);
         }
@@ -88,11 +88,14 @@ function __Task() {
         let flex = Elem.get('flex');
         if (this.showCfg) {
             if (Config.page.isMobile) {
+
                 Elem.height(this.input, 300);
+                Elem.width(this.input, '95%');
                 Elem.show(flex, 'block');
 
             } else {
                 Elem.height(this.input, 100);
+                Elem.width(this.input, '80%');
                 Elem.show(flex, 'flex');
             } 
         } else {
@@ -142,7 +145,6 @@ function __Task() {
         this.typef = 'creat' + Parse.titleCase(this.type);
         this.alertWidth = Config.page.alertWidth;
         this[this.typef](line);
-        Config.task = this;
 
         if (this.game && !mix) {
             this.initTask();
@@ -212,11 +214,13 @@ function __Task() {
                 } else {
                     this.checkAction('open');
                 }
+                this.isArrow = false;
                 this.idx ++;
                 this.clear();
                 break;
             case 'ending':
                 clearInterval(this.game.timer);
+                this.isArrow = false;
                 if (this.idx > 1)
                     this.checkAction('stop');
                 else
@@ -266,18 +270,16 @@ function __Task() {
 
 
     this.showArrow = function() {
-        console.log('showArrow')
-        if (this.state == 'succeed' || this.state == 'ending') {
-            Elem.hide(Alert.buttons.up);
-            Elem.hide(Alert.buttons.down);
-            Elem.hide(Alert.buttons.left);
-            Elem.hide(Alert.buttons.right);
-        } else {
-        console.log('showArrow')
+        if (this.game.isArrow) {
             Elem.show(Alert.buttons.up);
             Elem.show(Alert.buttons.down);  
             Elem.show(Alert.buttons.left);
             Elem.show(Alert.buttons.right);
+        } else {
+            Elem.hide(Alert.buttons.up);
+            Elem.hide(Alert.buttons.down);
+            Elem.hide(Alert.buttons.left);
+            Elem.hide(Alert.buttons.right);
         }
     }
 

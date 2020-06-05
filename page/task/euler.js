@@ -1,66 +1,48 @@
-<!DOCTYPE>
-<html> 
-<head> 
-<title>动态展示复平面运算</title> 
-<meta charset="UTF-8">
-<style> 
 
-body {
-    text-align: center;
-    background: #eeeeee;
+Task.html = `<div class="cell-body">
+    <canvas id="canvas1"></canvas>
+    <div class="flex">
+        <div class='button-min' state='defult' onclick="Task.drawAction(1, 11, 'self')">原始坐标</div>
+        <div class='button-min' state='defult' onclick="Task.drawAction(1, 11, 'result')">结果坐标</div>
+    </div>
+    <div class="flex">
+        <div class='button-min' state='defult' onclick="Task.drawAction(1, 10, 'translate')">旋转</div>
+        <div class='button-min' state='defult' onclick="Task.drawAction(1, 11, 'translate')">变换</div>
+        <div class='button-min' state='defult' onclick="Task.drawAction(1, 1, 'translate')">拉伸</div>
+    </div>
+</div>
+<div class="cell-body">
+    <canvas id="canvas2"></canvas>
+    <div class="flex">
+        <div class='button-min' state='defult' onclick="Task.drawAction(2, 11, 'self')">原始坐标</div>
+        <div class='button-min' state='defult' onclick="Task.drawAction(2, 11, 'result')">结果坐标</div>
+    </div>
+    <div class="flex">
+        <div class='button-min' state='defult' onclick="Task.drawAction(2, 10, 'translate')">旋转</div>
+        <div class='button-min' state='defult' onclick="Task.drawAction(2, 11, 'translate')">变换</div>
+        <div class='button-min' state='defult' onclick="Task.drawAction(2, 1, 'translate')">拉伸</div>
+    </div>
+</div>`;
+
+Task.creatEuler = function(line) {
+    Task.block.innerHTML = Task.html;
+    if (!Config.page.isMobile) {
+        Elem.width(Task.block, Task.alertWidth*2+'px');
+        Elem.show(Task.block, 'flex');
+    } else {
+        Elem.width(Task.block, Task.alertWidth+'px');
+        Elem.show(Task.block, 'block');     
+    }
+
+    Task.game = new __Euler();
+    Task.game.init(line.word);
+    Task.game.initCanvas();
+    Euler = Task.game;
 }
 
-button {
-    flex: 10;
-    margin: 10px;
-    padding: 10px 20px;
-    color: white;
-    border-radius: 20px;
-    background-image: linear-gradient(to bottom,#06b, #60b);
-}
 
-.block {
-    margin: 5px;
-}
 
-.flex {
-    padding: 0px 10px;
-    display: flex;
-}
-
-</style> 
-</head> 
-    <body> 
-        <div class="flex">
-            <div class="block">
-                <canvas id="canvas1"></canvas>
-                <div class="flex">
-                    <button onclick="drawAction(1, 11, 'self')">原始坐标</button>
-                    <button onclick="drawAction(1, 10, 'translate')">旋转</button>
-                    <button onclick="drawAction(1, 11, 'translate')">旋转+拉伸</button>
-                    <button onclick="drawAction(1, 1, 'translate')">拉伸</button>
-                    <button onclick="drawAction(1, 11, 'result')">结果坐标</button>
-                </div>
-            </div>
-            <div class="block">
-                <canvas id="canvas2"></canvas>
-                <div class="flex">
-                    <button onclick="drawAction(2, 11, 'self')">原始坐标</button>
-                    <button onclick="drawAction(2, 10, 'translate')">旋转</button>
-                    <button onclick="drawAction(2, 11, 'translate')">旋转+拉伸</button>
-                    <button onclick="drawAction(2, 1, 'translate')">拉伸</button>
-                    <button onclick="drawAction(2, 11, 'result')">结果坐标</button>
-                </div>
-            </div>
-        </div>
-    </body> 
-    <script type="text/javascript">
-
-var Euler = new __Euler();
-Euler.init();
-Euler.initCanvas(); 
-
-function drawAction(idx, modle, action) {
+Task.drawAction = function(idx, modle, action) {
     let gap = 0;
     if (Euler.state == 'going') {
         clearInterval(Euler.timer);
@@ -73,9 +55,14 @@ function drawAction(idx, modle, action) {
 
 
 
+var Euler = new __Euler();
 function __Euler() {
 
     this.init = function(gap) {
+        this.title = '任务#idx-欧拉';
+        this.orgTips = '无'; 
+        this.tgtTips = '欧拉公式';
+        this.logTips = '<h5>动态展示复平面运算</h5>计算出欧拉公式完成任务';
         this.triangleList = [];
         this.idxList = [];
         this.gap = gap || 100;
@@ -83,10 +70,10 @@ function __Euler() {
         this.mix = 0;
         this.multi = 2;
         this.count = 20;
-        this.margin = 30;       //四周空白
-        this.zoom = 150;        //视图比例
-        this.ableSize = 600;    //可用尺寸
-        this.fullSize = this.margin *2 + this.ableSize; //画布尺寸
+        this.margin = 30;  
+        this.zoom = 150;   
+        this.fullSize =  ~~Task.alertWidth; 
+        this.ableSize = this.fullSize - this.margin *2;    
         this.modle = 11;
         this.state = 'ready';
         this.action = 'self';
@@ -179,7 +166,7 @@ function __Euler() {
             this.mix += 0.05;
         else
             this.mix += 0.8*(this.mix || 0.1);
-        this.mix = this.mix > 1 ? 1 : Euler.fixed(this.mix);
+        this.mix = this.mix > 1 ? 1 : this.fixed(this.mix);
         this.triangleList = [];
         this.initAxis();
         for (let i=0; i<this.posList.length; i++) {
@@ -205,6 +192,20 @@ function __Euler() {
         this.state = 'ending';
     }
 
+    this.calcColor = function(idx, v3, v4) {
+        let code = [
+            ['#468', '#648', '#486', '#684', '#846', '#864'],
+            ['#ACE', '#CAE', '#AEC', '#CEA', '#EAC', '#ECA'],
+        ][v3][idx%6||0] + v4;
+        let r, g, b, a;
+            r = parseInt(Number('0x'+code[1]+code[1]), 10);
+            g = parseInt(Number('0x'+code[2]+code[2]), 10);
+            b = parseInt(Number('0x'+code[3]+code[3]), 10);
+            a = parseInt(Number('0x'+code[4]+code[4]), 10);
+            a = this.fixed(a / 255);
+        return `rgba(${r}, ${g}, ${b}, ${a})`;
+    }
+
 
 
     //构造三角形
@@ -213,9 +214,9 @@ function __Euler() {
 
         this.init = function(idx) {
             this.idx = idx;
-            this.colorLine = ['#468', '#648', '#486', '#684', '#846', '#864'][idx%6||0] + 'F';
-            this.colorFill = ['#ace', '#cae', '#aec', '#cea', '#eac', '#eca'][idx%6||0] + '8';
-            this.colorText = ['#ace', '#cae', '#aec', '#cea', '#eac', '#eca'][idx%6||0] + 'F';
+            this.colorLine = Euler.calcColor(idx, 0, 'F');
+            this.colorFill = Euler.calcColor(idx, 1, '8');
+            this.colorText = Euler.calcColor(idx, 1, 'F');
             this.selfPos = Euler.posList[idx];
             this.selfAng = Euler.calcAng(this.selfPos);
             this.selfLen = Euler.calcLen(this.selfPos);
@@ -413,6 +414,3 @@ function __Euler() {
 
 }
 
-
-    </script>
-</html> 

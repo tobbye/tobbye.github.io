@@ -240,8 +240,7 @@ Elem.flex = function(e, a, f) {
     Elem.css(e, 'flex', f); 
 }
 
-Elem.width = function(e, a, w) {
-    Elem.css(e, 'textAlign', a); 
+Elem.width = function(e, w) {
     Elem.css(e, 'width', w); 
 }
 

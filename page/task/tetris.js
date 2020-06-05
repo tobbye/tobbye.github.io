@@ -22,12 +22,12 @@ Task.Tetris = function() {
         this.logTips = '<h5>点击按钮控制方向</h5>消除#remain行方块完成任务';
         this.arrowList = ['left', 'up', 'right', 'down'];
         this.color = ['white', 'dodgerblue', 'darkorange']; 
+        this.state = 'going'; 
+        this.isArrow = true;
         this.gap = Task.gap || 1000;
         this.col = Task.col || 10;
         this.row = Task.row || 10; 
         this.size = Task.size || ~~(Task.alertWidth / this.col);
-        this.state = 'going'; 
-        this.isBottom = false;
         this.blkCfg = [
             [{x:0, y:4}, {x:1, y:4}, {x:0, y:5}, {x:1, y:5}],
             [{x:0, y:3}, {x:0, y:4}, {x:0, y:5}, {x:0, y:6}],

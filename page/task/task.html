@@ -15,6 +15,7 @@
     <script src="../task/puzzle.js"> </script>
     <script src="../task/snake.js"> </script>
     <script src="../task/tetris.js"> </script>
+    <script src="../task/euler.js"> </script>
 </head>
 
 
@@ -50,15 +51,9 @@
 
     textarea {
         padding: 10px;
-        width: 95%;
         font-size: 1em;
         border: inline;
     }
-
-    .button-min {
-        min-width: 200px;
-    }
-
 
 
     .block {
@@ -138,25 +133,25 @@
 </style>
 
 <body>
-    <div id="outer-top">
-    </div>
+    <div id="outer-top"></div>
     <div id="outer-center">
+
+        <div id="block"></div>
+        <div class="alert-flex">
+            <div class="button" state="danger" name="redo" onclick="Task.mixAnim()">重置</div>
+            <div class="button" state="defult" name="up"   onclick="Task.setArrow(1)">↑</div>
+            <div class="button" state="danger" name="log" onclick="Task.togTaskCfg()">自定义</div>
+        </div>
+        <div class="alert-flex" id="task-arrow">
+            <div class="button" state="defult" name="left"  onclick="Task.setArrow(0)">←</div>
+            <div class="button" state="defult" name="down"  onclick="Task.setArrow(3)">↓</div>
+            <div class="button" state="defult" name="right" onclick="Task.setArrow(2)">→</div>
+        </div>
         <div id="flex">
             <textarea id="input"></textarea>
             <div class="button-min" id="toggle" state="permit">已开启提醒</div>
             <div class="button-min" id="submit" state="permit">提交配置</div>
         </div>
-        <div id="block"></div>
-            <div class="alert-flex">
-                <div class="button" state="danger" name="redo" onclick="Task.mixAnim()">重置</div>
-                <div class="button" state="defult" name="up"   onclick="Task.setArrow(1)">↑</div>
-                <div class="button" state="danger" name="log" onclick="Task.togTaskCfg()">自定义</div>
-            </div>
-            <div class="alert-flex" id="task-arrow">
-                <div class="button" state="defult" name="left"  onclick="Task.setArrow(0)">←</div>
-                <div class="button" state="defult" name="down"  onclick="Task.setArrow(3)">↓</div>
-                <div class="button" state="defult" name="right" onclick="Task.setArrow(2)">→</div>
-            </div>
     </div>
 
     <div id="outer-bot"></div>
