@@ -1,6 +1,6 @@
-Task.creatTetris = function(line) {
+Task.creatTetris = function() {
     Task.game = new Task.Tetris();
-    Task.game.init(line.word);
+    Task.game.init();
 }
 
 
@@ -8,7 +8,7 @@ Task.Tetris = function() {
     let tips, flex, table;
 
     this.init = function(word) {
-        this.word = word.replace(/\//g,'');
+        this.word = Task.cfg.word.replace(/\//g,'');
         this.initCfg();
         this.initBody();
         this.creatBlk();
@@ -24,10 +24,10 @@ Task.Tetris = function() {
         this.color = ['white', 'dodgerblue', 'darkorange']; 
         this.state = 'going'; 
         this.isArrow = true;
-        this.gap = Task.gap || 1000;
-        this.col = Task.col || 10;
-        this.row = Task.row || 10; 
-        this.size = Task.size || ~~(Task.alertWidth / this.col);
+        this.gap = Task.cfg.gap || 1000;
+        this.col = Task.cfg.col || 10;
+        this.row = Task.cfg.row || 10; 
+        this.size = Task.cfg.size || ~~(Task.alertWidth / this.col);
         this.blkCfg = [
             [{x:0, y:4}, {x:1, y:4}, {x:0, y:5}, {x:1, y:5}],
             [{x:0, y:3}, {x:0, y:4}, {x:0, y:5}, {x:0, y:6}],

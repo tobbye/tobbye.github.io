@@ -1,14 +1,14 @@
 
-Task.creatLabyrinth = function(line) {
+Task.creatLabyrinth = function() {
     Task.game = new Task.Labyrinth();
-    Task.game.init(line.word);
+    Task.game.init();
 }
 
 Task.Labyrinth = function() {
     let tips, flex, canvas, ctx;
 
     this.init = function(word) {
-        this.word = word.replace(/\//g,'');
+        this.word = Task.cfg.word.replace(/\//g,'');
         this.initCfg();
         this.initBody();
     };
@@ -20,9 +20,9 @@ Task.Labyrinth = function() {
         this.logTips = '<h5>点击按钮控制方向</h5>找到迷宫出口完成任务';
         this.state = 'going';
         this.isArrow = true;
-        this.col = Task.col || 8;
-        this.row = Task.row || 8;
-        this.scale = Task.size || ~~(Task.alertWidth / (2*this.col+1));
+        this.col = Task.cfg.col || 8;
+        this.row = Task.cfg.row || 8;
+        this.scale = Task.cfg.size || ~~(Task.alertWidth / (2*this.col+1));
         this.map = [];
         this.cur = [0, 1];
         this.next = [0, 0];

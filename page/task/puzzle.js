@@ -1,15 +1,15 @@
-Task.creatPuzzle = function(line) {
+Task.creatPuzzle = function() {
     Task.game = new Task.Puzzle();
-    Task.game.init(line.word);
+    Task.game.init();
 }
 
 Task.Puzzle = function() {
     let tips, flex;
 
     this.init = function(word) {
-        this.word = word;
-        this.wordOrg = word.replace(/ /g, '/');
-        this.wordTgt = word.replace(/[\/ ]/g, '');
+        this.word = Task.cfg.word;
+        this.wordOrg = this.word.replace(/ /g, '/');
+        this.wordTgt = this.word.replace(/[\/ ]/g, '');
         this.initCfg();
         this.initBody();
     }

@@ -1,6 +1,6 @@
-Task.creatJigsaw = function(line) {
+Task.creatJigsaw = function() {
     Task.game = new Task.Jigsaw();
-    Task.game.init(line.src, line.idx);
+    Task.game.init();
 }
 
 Task.Jigsaw = function() {
@@ -8,9 +8,8 @@ Task.Jigsaw = function() {
     let img, tips, flex;
 
     this.init = function(src, idx) {
-        this.src = src;
-        this.imgSrc = src;
-        this.funIdx = idx;
+        this.src = Task.cfg.src;
+        this.imgSrc = this.src;
         this.initCfg();
         this.initBody();
     }
@@ -23,8 +22,8 @@ Task.Jigsaw = function() {
         this.imgNone = 'http://pic134.nipic.com/file/20170701/8399529_123819889000_2.jpg';
         this.isArrow = false;
         this.hpw = 1;
-        this.col = Task.col || 3;
-        this.row = Task.row || 3;
+        this.col = Task.cfg.col || 3;
+        this.row = Task.cfg.row || 3;
         this.border = 10;
         this.cells = [];
     }

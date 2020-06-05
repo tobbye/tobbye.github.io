@@ -59,6 +59,7 @@ form {
 	padding: 0px;
 }
 
+
 		@keyframes fade-in {0% {opacity: 0; top: -500px;} 100% {opacity: 1; top: 0px;} }
 @-webkit-keyframes fade-in {0% {opacity: 0; top: -500px;} 100% {opacity: 1; top: 0px;} }
 		@keyframes fade-out {0% {opacity: 1; top: 0px;} 100% {opacity: 0; top: -500px;} }
@@ -101,6 +102,8 @@ div[fade=over] {
 	top: -500px;
 } 
 
+
+
 #log {
 	padding: 30px;
 	font-size: 1.2em;
@@ -129,6 +132,7 @@ div[fade=over] {
 .row,
 .flex {
 	display: flex;
+    justify-content: center;
 }
 
 
@@ -148,29 +152,28 @@ div[fade=over] {
 	background-color: white;
 }
 
-.button, 
+
+
+
+
+
+
+.button,
 .button-min,
 .button-micro {
 	flex: 10;
+	color: white;
 	margin: 5px 10px;
 	padding: 15px;
-	color: white;
+	padding-top: 10px;
+	font-weight: bold;
 	border: solid 6px white;
-	border-radius: 20px;
+	border-radius: 30px;
 }
 
-.button {
-	font-size: 1.4em;
-}
-
-.button-min {
-	font-size: 1.2em;
-}
-
-.button-micro {
-    font-size: 1em;
-}
-
+.button {font-size: 1.4em; }
+.button-min {font-size: 1.2em; }
+.button-micro {font-size: 1em; }
 
 	
 /*[state=danger] {background-color: red;}
@@ -187,9 +190,7 @@ div[fade=over] {
 [state=danger]:hover {background-image: linear-gradient(to bottom,#804, #840);}
 [state=permit]:hover {background-image: linear-gradient(to bottom,#084, #480);}
 [state=defult]:hover {background-image: linear-gradient(to bottom,#048, #408);}
-
 [state=arrow] {border: none;}
-
 
 
 .button-top {
@@ -461,7 +462,6 @@ div[fade=over] {
 }
 
 .cell-block {
-    margin: 10px;
     background-color: white;
 }
 

@@ -1,14 +1,14 @@
-Task.creatSnake = function(line) {
+Task.creatSnake = function() {
     Task.game = new Task.Snake();
-    Task.game.init(line.word);
+    Task.game.init();
 }
 
 Task.Snake = function() {
     let tips, flex, canvas, ctx;
 
     this.init = function(word) {
-        this.wordOrg = word;
-        this.word = word.replace(/[\/ |,;]/g,'');
+        this.wordOrg = Task.cfg.word;
+        this.word = this.wordOrg.replace(/[\/ |,;]/g,'');
         this.initCfg();
         this.initBody();
 
@@ -24,10 +24,10 @@ Task.Snake = function() {
         this.state = 'going';
         this.isArrow = true;
         this.isLoop = true;
-        this.gap = Task.gap || 300;
-        this.col = Task.col || 10;
-        this.row = Task.row || 10;
-        this.size = Task.size || ~~(Task.alertWidth / this.col);
+        this.gap = Task.cfg.gap || 300;
+        this.col = Task.cfg.col || 10;
+        this.row = Task.cfg.row || 10;
+        this.size = Task.cfg.size || ~~(Task.alertWidth / this.col);
         this.food = 4*this.col+5;
         this.next = 1;
         this.direction = 1;
@@ -37,6 +37,7 @@ Task.Snake = function() {
 
     this.initBody = function() {
         this.initCanvas();
+        this.eatFood();
         this.drawFood();
     }
 
@@ -56,7 +57,7 @@ Task.Snake = function() {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         if (this.state == 'going') {
             this.timer = setInterval(function() {
-                Task.game.eatFood(true)
+                Task.game.eatFood()
             }, this.gap);
         } else {
             clearInterval(this.timer);
@@ -64,7 +65,7 @@ Task.Snake = function() {
     };
 
     
-    this.eatFood = function(loop) {
+    this.eatFood = function() {
         this.body.unshift(this.next = this.body[0] + this.direction);
         if (this.body.indexOf(this.next, 1) > 0) {
             return Task.checkState('ending');

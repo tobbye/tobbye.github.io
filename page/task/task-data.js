@@ -16,7 +16,7 @@ var cfg = {
 
 
 var items = [
-{title:'欧拉', 		name:"euler", 		size:0, scale: 1, col: 12, row: 15, gap: 500, word:'(2+3i)(1+2i)'},
+{title:'欧拉', 		name:"euler",       count: 12, power: 15, gap: 100, posList:[[2, 1], [-1, -2]], word:'(2+i)(-1-2i)'},
 {title:'迷宫', 		name:"labyrinth", 	size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/LABYRINTH'},
 {title:'贪吃蛇', 	name:"snake", 		size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/SNAKE'},
 {title:'拼字', 		name:"puzzle", 		size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/PUZZLE'},

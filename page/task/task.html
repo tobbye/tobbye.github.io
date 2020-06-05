@@ -50,6 +50,8 @@
     }
 
     textarea {
+        flex: 70;
+        margin: 5px 10px;
         padding: 10px;
         font-size: 1em;
         border: inline;
@@ -59,12 +61,14 @@
     .block {
         display: block;
         overflow: auto;
-        margin-bottom: 0px;
+        margin: 10px;
     }
 
-    #flex, #block {
+
+    #block-game {
         margin: auto;
-        padding: 10px 20px;
+        width: 100%;
+        padding: 10px 0px;
     }
 
     .line {
@@ -136,21 +140,30 @@
     <div id="outer-top"></div>
     <div id="outer-center">
 
-        <div id="block"></div>
-        <div class="alert-flex">
-            <div class="button" state="danger" name="redo" onclick="Task.mixAnim()">重置</div>
-            <div class="button" state="defult" name="up"   onclick="Task.setArrow(1)">↑</div>
-            <div class="button" state="danger" name="log" onclick="Task.togTaskCfg()">自定义</div>
+        <div id="block-game"></div>
+
+        <div id="block-ctrl">
+            <div class="alert-flex">
+                <button class="button" state="danger" name="redo" onclick="Task.mixAnim()">重置</button>
+                <button class="button" state="defult" name="up"   onclick="Task.setArrow(1)">↑</button>
+                <button class="button" state="danger" name="log" onclick="Task.togTaskCfg()">自定义</button>
+            </div>
+            <div class="alert-flex" id="task-arrow">
+                <button class="button" state="defult" name="left"  onclick="Task.setArrow(0)">←</button>
+                <button class="button" state="defult" name="down"  onclick="Task.setArrow(3)">↓</button>
+                <button class="button" state="defult" name="right" onclick="Task.setArrow(2)">→</button>
+            </div>
         </div>
-        <div class="alert-flex" id="task-arrow">
-            <div class="button" state="defult" name="left"  onclick="Task.setArrow(0)">←</div>
-            <div class="button" state="defult" name="down"  onclick="Task.setArrow(3)">↓</div>
-            <div class="button" state="defult" name="right" onclick="Task.setArrow(2)">→</div>
-        </div>
-        <div id="flex">
-            <textarea id="input"></textarea>
-            <div class="button-min" id="toggle" state="permit">已开启提醒</div>
-            <div class="button-min" id="submit" state="permit">提交配置</div>
+        <div id="block-cfg">
+            <div class="alert-flex">
+                <textarea id="input"></textarea>
+            </div>
+            <div class="alert-flex">
+                <button class="button" id="toggle" state="permit">已开启提醒</button>
+            </div>
+            <div class="alert-flex">
+                <button class="button" id="submit" state="permit">提交配置</button>
+            </div>
         </div>
     </div>
 

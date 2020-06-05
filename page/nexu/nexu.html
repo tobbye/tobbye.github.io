@@ -37,10 +37,10 @@
                 </div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
-                    <div class="button" state="permit" onclick="Alert.showChat()">发消息</div>
-                    <div class="button" state="danger" onclick="Alert.showNexu(1)">添加关注</div>
-                    <div class="button" state="permit" onclick="Alert.showNexu(0)">取消关注</div>
-                    <div class="button" state="defult" onclick="Alert.showChat()">查看主页</div>
+                    <button class="button" state="permit" onclick="Alert.showChat()">发消息</button>
+                    <button class="button" state="danger" onclick="Alert.showNexu(1)">添加关注</button>
+                    <button class="button" state="permit" onclick="Alert.showNexu(0)">取消关注</button>
+                    <button class="button" state="defult" onclick="Alert.showChat()">查看主页</button>
                 </div>
             </div>
 
@@ -48,7 +48,7 @@
                 <div class="alert-title">搜索结果</div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
-                    <div class="button" state="danger" onclick="Alert.hidePanel()">关闭</div>
+                    <button class="button" state="danger" onclick="Alert.hidePanel()">关闭</button>
                 </div>
             </div>
             
@@ -60,9 +60,9 @@
                 </div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
-                    <div class="button-micro" id="btn-vocie" state="permit">语音</div>
+                    <button class="button-micro" id="btn-vocie" state="permit">语音</button>
                     <textarea id="chat-textarea" onfocus="Alert.onChatFocus()"></textarea>
-                    <div class="button-micro" id="btn-send" state="permit">发送</div>
+                    <button class="button-micro" id="btn-send" state="permit">发送</button>
                 </div>
             </div>
         </div>

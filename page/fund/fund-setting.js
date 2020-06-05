@@ -133,7 +133,7 @@ function __Fund() {
 			let flex = Elem.creat('div', block, 'flex');
 			for(let z in list[y]) {
 				let data = list[y][z];
-				let button = Elem.creat('div', flex, 'button');
+				let button = Elem.creat('button', flex, 'button');
 				button.data = data;
 				button.innerHTML = data.text;
 				button.setAttribute('state', data.state);

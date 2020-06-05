@@ -1,115 +1,118 @@
 
-Task.html = `<div class="cell-body">
+Task.htmlMob = `<div class="cell-body">
     <canvas id="canvas1"></canvas>
     <div class="flex">
-        <div class='button-min' state='defult' onclick="Task.drawAction(1, 11, 'self')">原始坐标</div>
-        <div class='button-min' state='defult' onclick="Task.drawAction(1, 11, 'result')">结果坐标</div>
-    </div>
-    <div class="flex">
-        <div class='button-min' state='defult' onclick="Task.drawAction(1, 10, 'translate')">旋转</div>
-        <div class='button-min' state='defult' onclick="Task.drawAction(1, 11, 'translate')">变换</div>
-        <div class='button-min' state='defult' onclick="Task.drawAction(1, 1, 'translate')">拉伸</div>
-    </div>
-</div>
-<div class="cell-body">
-    <canvas id="canvas2"></canvas>
-    <div class="flex">
-        <div class='button-min' state='defult' onclick="Task.drawAction(2, 11, 'self')">原始坐标</div>
-        <div class='button-min' state='defult' onclick="Task.drawAction(2, 11, 'result')">结果坐标</div>
-    </div>
-    <div class="flex">
-        <div class='button-min' state='defult' onclick="Task.drawAction(2, 10, 'translate')">旋转</div>
-        <div class='button-min' state='defult' onclick="Task.drawAction(2, 11, 'translate')">变换</div>
-        <div class='button-min' state='defult' onclick="Task.drawAction(2, 1, 'translate')">拉伸</div>
+        <button class='button-min' state='defult' onclick="Task.drawAction(1, 11, 'self')">原始坐标</button>
+        <button class='button-min' state='defult' onclick="Task.drawAction(1, 10, 'translate')">旋转</button>
+        <button class='button-min' state='defult' onclick="Task.drawAction(1, 11, 'translate')">变换</button>
+        <button class='button-min' state='defult' onclick="Task.drawAction(1, 1, 'translate')">拉伸</button>
+        <button class='button-min' state='defult' onclick="Task.drawAction(1, 11, 'result')">结果坐标</button>
     </div>
 </div>`;
 
-Task.creatEuler = function(line) {
-    Task.block.innerHTML = Task.html;
-    if (!Config.page.isMobile) {
-        Elem.width(Task.block, Task.alertWidth*2+'px');
-        Elem.show(Task.block, 'flex');
-    } else {
-        Elem.width(Task.block, Task.alertWidth+'px');
-        Elem.show(Task.block, 'block');     
-    }
+Task.htmlPc = `<div class="flex">
+    <div class="block">
+        <canvas id="canvas1"></canvas>
+        <div class="flex">
+            <button class='button-min' state='defult' onclick="Task.drawAction(1, 11, 'self')">原始坐标</button>
+            <button class='button-min' state='defult' onclick="Task.drawAction(1, 10, 'translate')">旋转</button>
+            <button class='button-min' state='defult' onclick="Task.drawAction(1, 11, 'translate')">旋转+拉伸</button>
+            <button class='button-min' state='defult' onclick="Task.drawAction(1, 1, 'translate')">拉伸</button>
+            <button class='button-min' state='defult' onclick="Task.drawAction(1, 11, 'result')">结果坐标</button>
+        </div>
+    </div>
+    <div class="block">
+        <canvas id="canvas2"></canvas>
+        <div class="flex">
+            <button class='button-min' state='defult' onclick="Task.drawAction(2, 11, 'self')">原始坐标</button>
+            <button class='button-min' state='defult' onclick="Task.drawAction(2, 10, 'translate')">旋转</button>
+            <button class='button-min' state='defult' onclick="Task.drawAction(2, 11, 'translate')">旋转+拉伸</button>
+            <button class='button-min' state='defult' onclick="Task.drawAction(2, 1, 'translate')">拉伸</button>
+            <button class='button-min' state='defult' onclick="Task.drawAction(2, 11, 'result')">结果坐标</button>
+        </div>
+    </div>
+</div>`;
 
-    Task.game = new __Euler();
-    Task.game.init(line.word);
+Task.creatEuler = function() {
+    Task.game = new Task.Euler();
+    Task.game.init();
     Task.game.initCanvas();
-    Euler = Task.game;
 }
 
 
 
 Task.drawAction = function(idx, modle, action) {
-    let gap = 0;
-    if (Euler.state == 'going') {
-        clearInterval(Euler.timer);
-        gap = Math.max(10, Euler.gap / 2)
+    if (Task.game.state == 'going') {
+        clearInterval(Task.game.timer);
+        Task.cfg.gap = Math.max(10, Task.game.gap / 2);
     }
-    Euler = new __Euler();
-    Euler.init(gap); 
-    Euler.drawReady(idx, modle, action);  
+    Task.game.init(); 
+    Task.game.drawReady(idx, modle, action);  
 }
 
 
 
-var Euler = new __Euler();
-function __Euler() {
+Task.Euler = function() {
+    let That = this;
 
-    this.init = function(gap) {
+    this.init = function() {
         this.title = '任务#idx-欧拉';
         this.orgTips = '无'; 
         this.tgtTips = '欧拉公式';
         this.logTips = '<h5>动态展示复平面运算</h5>计算出欧拉公式完成任务';
         this.triangleList = [];
         this.idxList = [];
-        this.gap = gap || 100;
         this.idx = 0;
         this.mix = 0;
-        this.multi = 2;
-        this.count = 20;
+        this.gap = Task.cfg.gap || 100;
+        this.power = Task.cfg.power || 1;
+        this.count = Task.cfg.count || 10;
         this.margin = 30;  
         this.zoom = 150;   
-        this.fullSize =  ~~Task.alertWidth; 
-        this.ableSize = this.fullSize - this.margin *2;    
         this.modle = 11;
         this.state = 'ready';
         this.action = 'self';
-        this.posWord = '(2+3i)(4+5i)';
-        this.posList = [[-1,-2],[-1,1],[4,-1],[-1,-1],[1,1],[0,-1]];
+        this.posWord = Task.cfg.word || '(2+i)(-1-2i)';
+        this.posList = this.copyPos(Task.cfg.posList) || [[2, 1], [-1, -2]];
         this.posResult = [[1, 0]];
         this.axis = {left:[-1, 0], right:[1,0], top:[0,1], bot:[0, -1]};
     }
 
 
-
     this.setList = function() {
-        // return;
-        this.posList = [[2,1]];
-        for (let i=0; i <this.multi*this.count; i++) {
+        for (let i=0; i <this.power; i++) {
             this.posList.push([1, this.fixed(Math.PI/this.count)]);
         }
     }
 
     //初始化画布
     this.initCanvas = function() {
+        if (!Config.page.isMobile) {
+            Task.block.innerHTML = Task.htmlPc;
+            Task.alertWidth = Config.page.alertFullWidth - 20;
+            this.fullSize =  ~~(Task.alertWidth / 2 -40);
+            this.setCanvas('canvas2');
+            this.initAxis();  
+        } else {
+            Task.block.innerHTML = Task.htmlMob;
+            Task.alertWidth = Config.page.alertFillWidth;
+            this.fullSize =  ~~Task.alertWidth;  
+        }
         this.setCanvas('canvas1');
         this.initAxis();
-        this.setCanvas('canvas2');
-        this.initAxis(); 
     }
 
 
     this.setCanvas = function(name){ 
+
+        this.ableSize = this.fullSize - this.margin *2; 
         this.canvas = document.getElementById(name);
         this.canvas.width = this.fullSize;
         this.canvas.height = this.fullSize;
         this.ctx = this.canvas.getContext('2d');
         this.ctx.textAlign = "center";
         this.ctx.textBaseline = "middle";
-        this.ctx.font = "20px bold Arial"; 
+        this.ctx.font = "30px bold Arial"; 
     } 
 
     this.getCanvas = function(name) {
@@ -154,7 +157,7 @@ function __Euler() {
         this.action = action || this.action;
         console.log('---------- ' + this.action + ' ------------')
         console.log(this);
-        this.timer = setInterval(function() {Euler.drawGoing();}, this.gap);
+        this.timer = setInterval(function() {That.drawGoing();}, this.gap);
     }
 
 
@@ -192,17 +195,15 @@ function __Euler() {
         this.state = 'ending';
     }
 
-    this.calcColor = function(idx, v3, v4) {
+    this.calcColor = function(idx, rgb, a) {
         let code = [
             ['#468', '#648', '#486', '#684', '#846', '#864'],
             ['#ACE', '#CAE', '#AEC', '#CEA', '#EAC', '#ECA'],
-        ][v3][idx%6||0] + v4;
-        let r, g, b, a;
-            r = parseInt(Number('0x'+code[1]+code[1]), 10);
-            g = parseInt(Number('0x'+code[2]+code[2]), 10);
-            b = parseInt(Number('0x'+code[3]+code[3]), 10);
-            a = parseInt(Number('0x'+code[4]+code[4]), 10);
-            a = this.fixed(a / 255);
+        ][rgb][idx%6||0];
+        let r, g, b;
+        r = parseInt(Number('0x'+code[1]+code[1]), 10);
+        g = parseInt(Number('0x'+code[2]+code[2]), 10);
+        b = parseInt(Number('0x'+code[3]+code[3]), 10);
         return `rgba(${r}, ${g}, ${b}, ${a})`;
     }
 
@@ -214,18 +215,18 @@ function __Euler() {
 
         this.init = function(idx) {
             this.idx = idx;
-            this.colorLine = Euler.calcColor(idx, 0, 'F');
-            this.colorFill = Euler.calcColor(idx, 1, '8');
-            this.colorText = Euler.calcColor(idx, 1, 'F');
-            this.selfPos = Euler.posList[idx];
-            this.selfAng = Euler.calcAng(this.selfPos);
-            this.selfLen = Euler.calcLen(this.selfPos);
-            this.orgPos = Euler.posResult[idx];
-            this.orgAng = Euler.calcAng(this.orgPos);
-            this.orgLen = Euler.calcLen(this.orgPos);
-            this.tgtPos = Euler.calcPos(this, this.orgPos, this.selfPos);
-            this.tgtAng = Euler.calcAng(this.tgtPos);
-            this.tgtLen = Euler.calcLen(this.tgtPos);
+            this.colorLine = That.calcColor(idx, 0, 1);
+            this.colorFill = That.calcColor(idx, 1, 0.5);
+            this.colorText = That.calcColor(idx, 1, 1);
+            this.selfPos = That.posList[idx];
+            this.selfAng = That.calcAng(this.selfPos);
+            this.selfLen = That.calcLen(this.selfPos);
+            this.orgPos = That.posResult[idx];
+            this.orgAng = That.calcAng(this.orgPos);
+            this.orgLen = That.calcLen(this.orgPos);
+            this.tgtPos = That.calcPos(this, this.orgPos, this.selfPos);
+            this.tgtAng = That.calcAng(this.tgtPos);
+            this.tgtLen = That.calcLen(this.tgtPos);
             this.curPos = [0, 0];
             this.zeroPos = [0, 0];
             this.onePos = [1, 0];
@@ -236,33 +237,33 @@ function __Euler() {
 
         //操作
         this.action = function() {
-            if (Euler.action == 'self') {
-                this.curPos = Euler.copyPos(this.selfPos);
-                this.curPos[1] = Euler.fixed(this.curPos[1]*Euler.mix);
+            if (That.action == 'self') {
+                this.curPos = That.copyPos(this.selfPos);
+                this.curPos[1] = That.fixed(this.curPos[1]*That.mix);
             }
 
-            if (Euler.action == 'result') {
-                this.curPos = Euler.copyPos(this.tgtPos);
-                this.curPos[1] = Euler.fixed(this.tgtPos[1]*Euler.mix);
+            if (That.action == 'result') {
+                this.curPos = That.copyPos(this.tgtPos);
+                this.curPos[1] = That.fixed(this.tgtPos[1]*That.mix);
             }
-            if (Euler.action == 'translate') {
-                this.curPos = Euler.copyPos(this.selfPos);
+            if (That.action == 'translate') {
+                this.curPos = That.copyPos(this.selfPos);
                 this.curAng = this.selfAng;
                 this.curLen = this.selfLen;
-                if (Euler.idx == this.idx) {
-                    this.isAng = ~~(Euler.modle / 10) == 1;
-                    this.isLen = Euler.modle % 10 == 1;
-                    this.mix = Euler.mix;
+                if (That.idx == this.idx) {
+                    this.isAng = ~~(That.modle / 10) == 1;
+                    this.isLen = That.modle % 10 == 1;
+                    this.mix = That.mix;
                     this.translate('curAng', 'curLen', 'curPos');
                     this.translate('oneAng', 'oneLen', 'onePos');  
-                } else if (Euler.idxList.indexOf(this.idx) > -1) {
-                    this.curPos = Euler.copyPos(this.tgtPos);
-                    this.onePos = Euler.copyPos(this.orgPos);
+                } else if (That.idxList.indexOf(this.idx) > -1) {
+                    this.curPos = That.copyPos(this.tgtPos);
+                    this.onePos = That.copyPos(this.orgPos);
                 }
             }
-            Euler.autosize(Euler.posResult);
-            Euler.draw(this);
-            Euler.fillText(this, Euler.format(this.curPos), this.curPos);
+            That.autosize(That.posResult);
+            That.draw(this);
+            That.fillText(this, That.format(this.curPos), this.curPos);
         }
 
 
@@ -273,8 +274,8 @@ function __Euler() {
                 this[ang] = this[ang]+this.orgAng*this.mix;
             if (this.isLen)
                 this[len] = this[len]*(1+(this.orgLen-1)*this.mix);
-            this[pos][0] = Euler.fixed(Math.cos(this[ang]*Math.PI/180)*this[len]);
-            this[pos][1] = Euler.fixed(Math.sin(this[ang]*Math.PI/180)*this[len]);
+            this[pos][0] = That.fixed(Math.cos(this[ang]*Math.PI/180)*this[len]);
+            this[pos][1] = That.fixed(Math.sin(this[ang]*Math.PI/180)*this[len]);
         }
     }
 
@@ -310,7 +311,7 @@ function __Euler() {
 
     //复制点
     this.copyPos = function(pos) {
-        return [pos[0], pos[1]];
+        return JSON.parse(JSON.stringify(pos));
     }
 
 

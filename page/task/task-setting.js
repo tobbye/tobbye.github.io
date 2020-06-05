@@ -21,52 +21,44 @@ function __Task() {
 
     this.setTask = function(idx) {
         if (cfg.name == 'task') {
+            this.clear();
             this.cfg = items[idx];
-            let line = {};
-            line.idx = 0;
-            line.word = this.cfg.word || 'http/tobbye/top';
-            line.src = this.cfg.src || 'http://img04.sogoucdn.com/app/a/100520021/c7dc2f290b7c5e1639cb8a27a5d1237f.jpg';
-            let block = Elem.get('block');
+            let block = Elem.get('block-game');
             Elem.text(block, '');
-            Elem.show(Alert.box);
-            if (Task.game) {
-                clearInterval(Task.game.timer);
-                Task.game = null;
-            }
             this.curIdx = idx;
             this.showCfg = !false;
             this.isTask = 1;
             this.ladd = 1;
-            this.cfg = this.cfg;
             this.logs.fail = '<h5>任务失败</h5>伐开心(ಥ﹏ಥ)!'
             this.logs.open = '<h5>任务完成</h5>棒棒哒\(^o^)/~!'
             this.block = block;
-            this.col = this.cfg.col;
-            this.row = this.cfg.row;
-            this.gap = this.cfg.gap;
             this.types = [this.cfg.name];
             this.typef = 'creat' + Parse.titleCase(this.cfg.name);
             this.scale = Math.max(this.cfg.scale, 1);
             this.alertWidth = Math.max(Config.page.alertFillWidth, this.col* this.cfg.size);
             this.alertWidth = Math.min(Config.page.alertFullWidth, this.alertWidth*this.scale);
-            this.block.style.width = this.alertWidth + 'px';
-            this[this.typef](line);
-            this.checkState('going');
+            this[this.typef]();
             this.setTaskCfg(block);
+            if (!Config.page.isMobile)
+                this.isArrow = false;
+            else
+                this.isArrow = this.game.isArrow;
             if (this.isLog == null)
                 this.togLog(true);
             else 
                 this.togLog(this.isLog);
+            this.checkState('going');
             console.log (this); 
         }
     }
 
 
     this.setTaskCfg = function(block) {
+        Elem.width(this.block, this.alertWidth+'px');
         this.input = Elem.get('input');
         this.input.value = JSON.stringify(this.cfg).replace(/,/g, ', ');
         this.input.onfocus = function() {
-            Task.log(cfg.desc);
+            Task.log(this.cfg.desc);
         }
         this.toggle = Elem.get('toggle');
         this.toggle.onclick = function() {
@@ -76,7 +68,6 @@ function __Task() {
         this.submit.onclick = function() {
             let idx = Task.curIdx;
             items[idx] = JSON.parse(Task.input.value);
-            clearInterval(Task.game.timer);
             Task.setTask(idx);
         }
         this.togTaskCfg();
@@ -85,21 +76,18 @@ function __Task() {
 
     this.togTaskCfg = function() {
         this.showCfg = !this.showCfg;
-        let flex = Elem.get('flex');
-        if (this.showCfg) {
-            if (Config.page.isMobile) {
-
-                Elem.height(this.input, 300);
-                Elem.width(this.input, '95%');
-                Elem.show(flex, 'block');
-
-            } else {
-                Elem.height(this.input, 100);
-                Elem.width(this.input, '80%');
-                Elem.show(flex, 'flex');
-            } 
+        let block = Elem.get('block-cfg');
+        if (Config.page.isMobile) {
+            Elem.height(this.input, 300);
+            this.isArrow = this.game.isArrow;
         } else {
-            Elem.show(flex, 'none');
+            Elem.height(this.input, 100);
+            this.isArrow = false;
+        } 
+        if (this.showCfg) {
+            Elem.show(block);
+        } else {
+            Elem.hide(block);
         }
     }
 
@@ -137,6 +125,11 @@ function __Task() {
         let line = document.body.line;
         if (this.index != line.index)
             this.idx = 0;
+
+        this.cfg = {
+            src: line.src,
+            word: line.word,
+        };
         this.block = block;
         this.index = line.index;
         this.pack = data.packType;
@@ -144,7 +137,7 @@ function __Task() {
         this.type = this.types[this.idx];
         this.typef = 'creat' + Parse.titleCase(this.type);
         this.alertWidth = Config.page.alertWidth;
-        this[this.typef](line);
+        this[this.typef]();
 
         if (this.game && !mix) {
             this.initTask();
@@ -191,6 +184,7 @@ function __Task() {
         this.type = this.types[this.idx];
         this.ladd = this.idx + 1;
         this.title = this.text(this.game.title);
+        this.isArrow = this.game.isArrow;
         Elem.text(Alert.curPanel.title, this.title);
     }
 
@@ -270,7 +264,7 @@ function __Task() {
 
 
     this.showArrow = function() {
-        if (this.game.isArrow) {
+        if (this.isArrow) {
             Elem.show(Alert.buttons.up);
             Elem.show(Alert.buttons.down);  
             Elem.show(Alert.buttons.left);
