@@ -112,7 +112,7 @@ Task.Euler = function() {
         this.ctx = this.canvas.getContext('2d');
         this.ctx.textAlign = "center";
         this.ctx.textBaseline = "middle";
-        this.ctx.font = "30px bold Arial"; 
+        this.ctx.font = "36px bold Arial"; 
     } 
 
     this.getCanvas = function(name) {

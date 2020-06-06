@@ -92,7 +92,7 @@ var Constant = {
     hrefTop: [
         {name:'sett', href:'../sett/sett.html', text:'设置'},
         {name:'rank', href:'../rank/rank.html', text:'榜单'},
-        {name:'stat', href:'../task/task.html', text:'任务'},
+        {name:'task', href:'../task/task.html', text:'任务'},
         {name:'stat', href:'../stat/stat.html', text:'记录'},
         {name:'help', href:'../help/help.html', text:'帮助'},
     ],

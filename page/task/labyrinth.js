@@ -22,7 +22,8 @@ Task.Labyrinth = function() {
         this.isArrow = true;
         this.col = Task.cfg.col || 8;
         this.row = Task.cfg.row || 8;
-        this.scale = Task.cfg.size || ~~(Task.alertWidth / (2*this.col+1));
+        this.size = ~~(Task.alertWidth / (2*this.col+1));
+        this.size = Math.min(Task.cfg.size || this.size, this.size);
         this.map = [];
         this.cur = [0, 1];
         this.next = [0, 0];
@@ -50,8 +51,8 @@ Task.Labyrinth = function() {
         flex = Elem.creat('div', body, 'cell-flex');
         tips.innerHTML =  Task.text(this.tgtTips);
         canvas = Elem.creat('canvas', flex);
-        canvas.width = (2*this.col+1)*this.scale;
-        canvas.height = (2*this.row+1)*this.scale;
+        canvas.width = (2*this.col+1)*this.size;
+        canvas.height = (2*this.row+1)*this.size;
         canvas.onclick = function (){
             if (!Config.sett.isMobile)
                 Task.game.downLoad();
@@ -59,7 +60,7 @@ Task.Labyrinth = function() {
         ctx = canvas.getContext('2d');
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.font = this.scale - 8 + "px bold Arial"; 
+        ctx.font = this.size - 8 + "px bold Arial"; 
         ctx.fillStyle = this.colorList[0];
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     };
@@ -140,12 +141,12 @@ Task.Labyrinth = function() {
 
     this.fillRect = function(idx, i, j) {
         ctx.fillStyle = this.colorList[idx];
-        ctx.fillRect(j * this.scale, i * this.scale, this.scale, this.scale); 
+        ctx.fillRect(j * this.size, i * this.size, this.size, this.size); 
     };
 
     this.fillText = function(word, i, j) {
         ctx.fillStyle = 'white';
-        ctx.fillText(word, (j+0.5)*this.scale, (i+0.5)*this.scale); 
+        ctx.fillText(word, (j+0.5)*this.size, (i+0.5)*this.size); 
     };
 
 

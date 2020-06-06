@@ -192,6 +192,10 @@ div[fade=over] {
 [state=defult]:hover {background-image: linear-gradient(to bottom,#048, #408);}
 [state=arrow] {border: none;}
 
+[state=dead] {color: dodgerblue; background-color: #eee; } 
+[state=live] {color: white; background-color: dodgerblue; }
+[state=deadLink] {color: darkorange; background-color: #eee; }
+[state=liveLink] {color: white; background-color: darkorange; }
 
 .button-top {
 	flex: 10;
@@ -201,13 +205,8 @@ div[fade=over] {
 	line-height: 60px;
 	min-width: 200px;
 	font-size: 1.2em;
-}.button-top[state=dead] {
-	color: dodgerblue;
-	background-color: #eee;
-}.button-top[state=live] {
-	color: white;
-	background-color: dodgerblue;
 }
+
 
 .button-bot {
 	flex: 10;
@@ -216,13 +215,8 @@ div[fade=over] {
 	height: 60px;
 	line-height: 60px;
 	font-size: 1.2em;
-}.button-bot[state=dead] {
-	color: darkorange;
-	background-color: #eee;
-}.button-bot[state=live] {
-	color: white;
-	background-color: darkorange;
 }
+
 
 
 

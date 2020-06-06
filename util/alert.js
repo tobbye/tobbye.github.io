@@ -9,6 +9,7 @@ var Panel = function() {
     this.init = function(panel, name) {
         this.name  = name;
         this.panel = panel;
+        this.offset = panel.getAttribute('offset') || 0;
         this.title = panel.querySelector('.alert-title');
         this.block = panel.querySelector('.alert-block');
         this.buttons = panel.querySelectorAll('.button');
@@ -60,9 +61,9 @@ function __Alert() {
             link.innerHTML = data.text;
             link.href = data.href;
             if (cfg.name == data.name) 
-                link.setAttribute('state', 'live');
+                link.setAttribute('state', 'liveLink');
             else
-                link.setAttribute('state', 'dead');
+                link.setAttribute('state', 'deadLink');
         }
     }
 
@@ -229,7 +230,7 @@ function __Alert() {
 
     this.setBox = function() {
         Elem.color(this.box, '', getColorLight());
-        Elem.maxheight(this.curPanel.block, Config.page.alertHeight);
+        Elem.maxheight(this.curPanel.block, Config.page.alertHeight-this.curPanel.offset);
     }
 
 

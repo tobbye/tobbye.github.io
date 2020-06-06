@@ -27,7 +27,8 @@ Task.Tetris = function() {
         this.gap = Task.cfg.gap || 1000;
         this.col = Task.cfg.col || 10;
         this.row = Task.cfg.row || 10; 
-        this.size = Task.cfg.size || ~~(Task.alertWidth / this.col);
+        this.size = ~~(Task.alertWidth / this.col);
+        this.size = Math.min(Task.cfg.size || this.size, this.size);
         this.blkCfg = [
             [{x:0, y:4}, {x:1, y:4}, {x:0, y:5}, {x:1, y:5}],
             [{x:0, y:3}, {x:0, y:4}, {x:0, y:5}, {x:0, y:6}],
@@ -57,6 +58,7 @@ Task.Tetris = function() {
                 this.map[i][j] = 0; 
                 let td = Elem.creat('td', tr);
                 let idx = i*this.col+j - (this.col*this.row) % this.word.length;
+                td.style.width = this.size + 'px';
                 td.innerHTML = this.word[(idx+this.word.length) % this.word.length];
             } 
         } 

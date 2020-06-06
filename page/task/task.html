@@ -53,7 +53,7 @@
         flex: 70;
         margin: 5px 10px;
         padding: 10px;
-        height: 220px;
+        height: 300px;
         font-size: 1em;
         border: inline;
     }
@@ -67,16 +67,30 @@
 
     #block-game {
         margin: auto;
-        width: 100%;
         padding: 10px 0px;
     }
 
-    .line {
-        flex: 10;
-        padding: 10px 10px;
-        font-size: 0.9em; 
+    .block {
+        margin: 0px 10px;
     }
 
+    .line-flex {
+        display: flex;
+        padding: 10px;
+        font-size: 1.2em;
+    }
+
+    .line-L {
+        flex: 10;
+        padding: 10px 10px;
+        text-align: left;
+    }
+
+    .line-R {
+        flex: 10;
+        padding: 10px 10px;
+        text-align: right;
+    }
     .user-index {
         flex: 30;
         padding: 10px 10px;
@@ -101,7 +115,7 @@
 
 
     .cell-flex {
-        margin: 5px 0px;
+        margin: 0px 0px;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -147,7 +161,7 @@
             <div class="alert-flex">
                 <button class="button" state="danger" name="redo" onclick="Task.mixAnim()">重置</button>
                 <button class="button" state="defult" name="up"   onclick="Task.setArrow(1)">↑</button>
-                <button class="button" state="danger" name="log" onclick="Task.showTask()">自定义</button>
+                <button class="button" state="danger" name="log" onclick="Task.showTask()">配置</button>
             </div>
             <div class="alert-flex" id="task-arrow">
                 <button class="button" state="defult" name="left"  onclick="Task.setArrow(0)">←</button>
@@ -164,7 +178,7 @@
         <div id="alert-mask"></div>
         <div id="alert-box">
 
-            <div class="alert-panel" name="task">
+            <div class="alert-panel" name="task" offset='468'>
                 <div class="alert-title">选择一个任务</div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">

@@ -27,17 +27,20 @@ function __Task() {
         Alert.showPanel('task');
         let block = Alert.panels.task.block;
         let list = items[0].list;
-        for (let z in list) {
-            let btn = Elem.creat('div', block, 'button-top', 'list['+z+']');
-            btn.innerHTML = '任务' + (~~z+1) +  ' ' + list[z].name;
+        for (let z=0; z<list.length; z++) {
+            let btn = Elem.creat('div', block, 'line-flex', 'list['+z+']');
+            let left = Elem.creat('div', btn, 'line-L');
+            let right = Elem.creat('div', btn, 'line-R');
+            left.innerHTML = '任务' + (~~z+1);
+            right.innerHTML = list[z].name;
             btn.idx = z;
             btn.onclick = function() {
                 let childs = this.parentNode.children;
                 for (let i=0; i<childs.length; i++) {
                     if (this.innerHTML == childs[i].innerHTML)  {
-                        childs[i].setAttribute('state', 'live');
+                        Elem.color(childs[i], 'white', getColorType());
                     } else {
-                        childs[i].setAttribute('state', 'dead');
+                        Elem.color(childs[i], getColorType(), 'white');
                     }               
                 }
                 Task.curIdx = btn.idx;
@@ -45,12 +48,12 @@ function __Task() {
             } 
 
             if (this.curIdx == z)  {
-                btn.setAttribute('state', 'live');
-                this.setTaskCfg(this.curIdx);
+                Elem.color(btn, 'white', getColorType());
             } else {
-                btn.setAttribute('state', 'dead');
+                Elem.color(btn, getColorType(), 'white');
             }  
         }
+        this.setTaskCfg(this.curIdx);
     }
 
     this.setTask = function(idx) {
@@ -70,10 +73,12 @@ function __Task() {
         this.alertWidth = Math.max(Config.page.alertFillWidth, this.cfg.col* this.cfg.size);
         this.alertWidth = Math.min(Config.page.alertFullWidth, this.alertWidth*this.scale);
         this[this.typef]();
-        if (!Config.page.isMobile)
-            this.isArrow = false;
-        else
+        Elem.width(this.block, this.alertWidth+'px');
+        if (Config.page.isMobile) {
             this.isArrow = this.game.isArrow;
+        } else {
+            this.isArrow = false;
+        } 
         if (this.isLog == null)
             this.togLog(true);
         else 
@@ -84,8 +89,6 @@ function __Task() {
 
 
     this.setTaskCfg = function(idx) {
-
-        Elem.width(this.block, this.alertWidth+'px');
         let input = Alert.curPanel.input;
         let toggle = Alert.buttons.toggle;
         let submit = Alert.buttons.submit;
@@ -103,24 +106,9 @@ function __Task() {
             Task.setTask(idx);
             Alert.hidePanel();
         }
-        this.togTaskCfg();
-
     }
 
-    this.togTaskCfg = function() {
-        this.showCfg = !this.showCfg;
-        let block = Elem.get('block-cfg');
-        if (Config.page.isMobile) {
-            this.isArrow = this.game.isArrow;
-        } else {
-            this.isArrow = false;
-        } 
-        if (this.showCfg) {
-            Elem.show(block);
-        } else {
-            Elem.hide(block);
-        }
-    }
+
 
 
     this.togLog = function(isLog) {
