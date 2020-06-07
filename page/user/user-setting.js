@@ -198,6 +198,10 @@ function __User() {
         Alert.hidePanel();
 	}
 
+	this.onInput = function() {
+
+	}
+
 	this.refresh = function() {
 		let data = items[0].list[0];
 		let idx = cfg.tagIdx;
@@ -212,13 +216,12 @@ function __User() {
 		}
 		console.log(data.tags);
 		if (tag.value)
-			Elem.get('user-tag_' + idx).innerHTML = tag.value;
+			document.querySelector('.user-tag[key="'+idx+'"]').innerHTML = tag.value;
 		if (value.value)
-			Elem.get('value_' + idx).innerHTML = data.valueStr.replace('#1', value.value);
+			document.querySelector('.value[key="'+idx+'"]').innerHTML = data.valueStr.replace('#1', value.value);
 		if (allot.value)
-			Elem.get('allot_' + idx).innerHTML = data.allotStr.replace('#2', allot.value);
+			document.querySelector('.allot[key="'+idx+'"]').innerHTML = data.allotStr.replace('#2', allot.value);
 	}
-
 }
 
 

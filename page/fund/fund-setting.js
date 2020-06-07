@@ -45,7 +45,7 @@ function __Fund() {
 				let td = Elem.creat('td', tr, 'td','['+z+']');
 				let col = tds[z].col;
 				if (!col) {
-					Elem.color(td, '#222', '#eee');
+					Elem.color(td, '#222', 'transparent');
 					continue;
 				}
 				let key = tds[z].text.split('.')[0];
@@ -80,7 +80,7 @@ function __Fund() {
 				let td = Elem.creat('td', tr, 'td', '['+z+']');
 				let row = tds[z].row;
 				if (!row) {
-					Elem.color(td, '#222', '#eee');
+					Elem.color(td, '#222', 'transparent');
 					continue;
 				}
 				let text = tds[z].text;

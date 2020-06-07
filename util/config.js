@@ -70,7 +70,7 @@ var Constant = {
     page: {
         alertMaxWidth: 1000,
         alertMinMargin: 20,
-        alertOffset: 700,
+        alertOffset: 680,
         outerOffset: 220,
         innerOffset: 770, 
         minHeight: 700,

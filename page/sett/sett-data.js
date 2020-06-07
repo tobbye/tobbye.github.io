@@ -13,13 +13,13 @@ var cfg = {
 };
 
 var colors = [
-    {dark:'#333', bright:'#555', light:'#ccc', bgd:'#eee', standard:'black'},
-    {dark:'#957', bright:'#e28', light:'#eac', bgd:'#fde', standard:'red'},
-    {dark:'#975', bright:'#e82', light:'#eca', bgd:'#fed', standard:'orange'},
-    {dark:'#579', bright:'#28e', light:'#ace', bgd:'#def', standard:'blue'},
-    {dark:'#759', bright:'#82e', light:'#cae', bgd:'#edf', standard:'purple'},
-    {dark:'#597', bright:'#2b8', light:'#aec', bgd:'#dfe', standard:'seagreen'},
-    {dark:'#795', bright:'#8b2', light:'#cea', bgd:'#efd', standard:'green'},
+    {dark:'#333', bright:'#555', light:'#ddd', bgd:'#eee', standard:'black'},
+    {dark:'#957', bright:'#e28', light:'#ecd', bgd:'#fde', standard:'red'},
+    {dark:'#975', bright:'#e82', light:'#edc', bgd:'#fed', standard:'orange'},
+    {dark:'#579', bright:'#28e', light:'#cde', bgd:'#def', standard:'blue'},
+    {dark:'#759', bright:'#82e', light:'#dce', bgd:'#edf', standard:'purple'},
+    {dark:'#597', bright:'#2b8', light:'#ced', bgd:'#dfe', standard:'seagreen'},
+    {dark:'#795', bright:'#8b2', light:'#dec', bgd:'#efd', standard:'green'},
 ];
 
 

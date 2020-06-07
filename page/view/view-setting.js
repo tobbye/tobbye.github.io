@@ -132,11 +132,11 @@ function loopSplit(outer, list, path, layer) {
             list[y] = [y];
         }
     }
-    console.log("--------------------------------");
+    // console.log("--------------------------------");
     console.log(path);
-    console.log(list);
-    console.log("obj.length: " + list.length);
-    console.log("str.length: " + JSON.stringify(list).length);
+    // console.log(list);
+    // console.log("obj.length: " + list.length);
+    // console.log("str.length: " + JSON.stringify(list).length);
     jsonToView(outer, list, path, layer);
     for (let y in lines) {
         if (/^\d+$/.test(y))

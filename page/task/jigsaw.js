@@ -129,8 +129,8 @@ Task.Jigsaw = function() {
                 Elem.show(flex, 'flex');
                 Elem.show(img, 'none');
                 setTimeout(function() {
-                    Elem.show(Task.game.flex, 'none');
-                    Elem.show(Task.game.img, 'inline');
+                    Elem.show(flex, 'none');
+                    Elem.show(img, 'inline');
                 },1000);
             } else {
                 Elem.show(flex, 'none');

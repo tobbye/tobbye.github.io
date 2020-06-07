@@ -55,10 +55,15 @@ Task.Puzzle = function() {
             cell.state = state;
             cell.innerHTML = this.wordMix[idx];
             cell.style.borderColor = getColorType();
-            cell.onclick = function() {
-                if (state == 'going')
+            if (state == 'going') {
+                cell.onclick = function() {
                     Task.game.click(this);
+                }
+            } else {
+                cell.style.backgroundColor = getColorLight();
             }
+
+
         }
         flex.style.paddingBottom = '20px';
     }

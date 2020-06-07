@@ -299,7 +299,7 @@ function __Task() {
     this.clear = function() {
         if (this.game) {
             clearInterval(this.game.timer);
-            this.game = null;
+            // this.game = null;
         }
     }
 

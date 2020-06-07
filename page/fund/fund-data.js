@@ -45,7 +45,7 @@ lines: [
 [{col:1, text:"P.累计抢夺", border:2}, {col:1, text:"O.可以抢夺", border:3}],
 ], 
 blocks: [
-[{row:2, text:"M.上次投入"}, {row:1, text:"N.已经抢夺"}],
+[{row:2, text:"M.上次投入"}, {row:1, text:"N.已经抢夺"}, {}],
 [{row:1, text:"O.可以抢夺"}, {row:2, text:"Q.累计投入"}],
 [{}, {row:1, text:"P.累计抢夺"}],
 ],
@@ -66,7 +66,7 @@ lines:[
 [{col:1, text:"U.可以提现", border:2}, {col:1, text:"V.已经提现", border:3}],
 ],
 blocks:[
-[{row:3, text:"R.收益上限"}, {row:1, text:"S.可获收益"}],
+[{row:3, text:"R.收益上限"}, {row:1, text:"S.可获收益"}, {}],
 [{row:2, text:"T.已获收益"}, {row:1, text:"U.可以提现"}],
 [{row:1, text:"V.已经提现"}],
 ],
