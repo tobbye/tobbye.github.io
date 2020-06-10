@@ -38,8 +38,8 @@
                 <div class="alert-block"></div>
                 <div class="alert-flex">
                     <button class="button" state="permit" onclick="Alert.showChat()">发消息</button>
-                    <button class="button" state="danger" onclick="Alert.showNexu(1)">添加关注</button>
-                    <button class="button" state="permit" onclick="Alert.showNexu(0)">取消关注</button>
+                    <button class="button" state="permit" onclick="Alert.showNexu(1)">添加关注</button>
+                    <button class="button" state="danger" onclick="Alert.showNexu(0)">取消关注</button>
                     <button class="button" state="defult" onclick="Alert.showChat()">查看主页</button>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                     <div class="alert-title">查看详情</div>
                     <div class="alert-button" onclick="Alert.hidePanel()">关闭</div>
                 </div>
-                <div class="alert-block"></div>
+                <div class="alert-block" state="white"></div>
                 <div class="alert-flex">
                     <button class="button-micro" id="btn-vocie" state="permit">语音</button>
                     <textarea id="chat-textarea" onfocus="Alert.onChatFocus()"></textarea>

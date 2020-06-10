@@ -38,6 +38,7 @@ function __Nexu() {
             line.flex.init(body, line);
 			body.onclick = function() {
 				document.body.user = this;
+				Alert.bodySelect(this);
 				Alert.showUser(this);
 			}
 			data.lines[z] = line;

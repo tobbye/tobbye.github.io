@@ -54,8 +54,8 @@ function __User() {
 		ladd.innerHTML = data.ladd + '阶';
 		group.innerHTML = ' | ' + data.group;
 		// head.innerHTML = 'zhongxin';
-		// Elem.color(head, '', getColorLight());
-		// Elem.style(head, 'borderColor', getColorType());
+		// Elem.color(head, '', this.colorLight());
+		// Elem.style(head, 'borderColor', this.colorFont());
 	}
 
 
@@ -223,6 +223,7 @@ function __User() {
 			document.querySelector('.allot[key="'+idx+'"]').innerHTML = data.allotStr.replace('#2', allot.value);
 	}
 }
+
 
 
 

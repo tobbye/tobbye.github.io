@@ -112,7 +112,7 @@ function __Tran() {
             line.body = this;
             this.body = Elem.creat('div', block, 'user-block', 'lines['+line.idx+']');
             this.body.onclick = function() {
-                Tran.bodySelect(this);
+                Alert.bodySelect(this);
                 Tran.showDetail(this);
             }
             this.flex1 = Elem.creat('div', this.body, 'user-flex');
@@ -207,7 +207,7 @@ function __Tran() {
             line.body = this;
             this.body = Elem.creat('div', block, 'user-block', 'lines['+z+']');
             this.body.onclick = function() {
-                Tran.bodySelect(this);
+                Alert.bodySelect(this);
                 Tran.showDetail(this);
             }
             this.flex = Elem.creat('div', this.body, 'user-flex');
@@ -217,7 +217,7 @@ function __Tran() {
             this.times = Tran.creatText(this.flex, 'R20', line.timesStr);
             this.flex.setAttribute('margin', 'T5')
             if (z == 0) {
-                Tran.bodySelect(this.body);
+                Alert.bodySelect(this.body);
             }
         }
     }
@@ -234,19 +234,6 @@ function __Tran() {
         elem.setAttribute('margin', attr);
         elem.innerHTML = text;
         return elem;
-    }
-
-
-
-    this.bodySelect = function(flex) { 
-        let old = document.body.flex;
-        if (old) {
-            old.setAttribute('select', 'not');
-        }
-        if (flex) {
-            flex.setAttribute('select', 'yes');
-            document.body.flex = flex; 
-        }
     }
 
 
@@ -276,8 +263,6 @@ function __Tran() {
                 let nameStr = '<h2>' + (Task.gameNames[data.taskTypes[i]] || '未设置');
                 let order = this.creatText(flex, 'L10', orderStr);
                 let name = this.creatText(flex, 'R20', nameStr);
-            } else {
-                Elem.hide(Alert.buttons.doit);
             }
 
             let flex2 = this.creatFlex(block, 'B5');
@@ -294,6 +279,7 @@ function __Tran() {
         if(block.firstChild)
             block.firstChild.scrollIntoView();
         Task.logs.cur = data.logTips.replace('#inver', line.inver);
+        Alert.buttons.doit.innerHTML = data.doitText;
         Alert.log(Task.logs.cur);
         Alert.showButton(data);
     }
@@ -302,10 +288,9 @@ function __Tran() {
     this.showTask = function() {
         Alert.hidePanel();
         Alert.showPanel('task');
-        let redo, title, block;
-        redo = Alert.buttons.redo;
-        title = Alert.curPanel.title;
-        block = Alert.curPanel.block;
+        let redo = Alert.buttons.redo;
+        let title = Alert.curPanel.title;
+        let block = Alert.curPanel.block;
         redo.setAttribute('state', 'danger');
         Task.creatTask(block);
     }

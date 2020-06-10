@@ -43,8 +43,6 @@ function __Sett() {
 			if (child.optName == Config.sett[child.key])
 				Sett.setOptDefault(child);
 		}
-		// let child = select.children[data.default];
-		// if (child) child.onclick();
 	}
 
 
@@ -123,9 +121,9 @@ function __Sett() {
 					Config.color = this.color;
 	    			Storage.set('Config', Config);
 	    			if (Config.sett.colorType == 'text')
-						Elem.color(document.body, this.color.font, '#eee');
+						Elem.color(document.body, Alert.colorFont(), '#eee');
 					else
-						Elem.color(document.body, this.color.font, this.color.bgd);
+						Elem.color(document.body, Alert.colorFont(), Alert.colorBgd());
 				}
 			}
 		}

@@ -38,9 +38,9 @@ function __Task() {
                 let childs = this.parentNode.children;
                 for (let i=0; i<childs.length; i++) {
                     if (this.innerHTML == childs[i].innerHTML)  {
-                        Elem.color(childs[i], 'white', getColorType());
+                        Elem.color(childs[i], 'white', Alert.colorFont());
                     } else {
-                        Elem.color(childs[i], getColorType(), 'white');
+                        Elem.color(childs[i], Alert.colorFont(), 'white');
                     }               
                 }
                 Task.curIdx = btn.idx;
@@ -48,9 +48,9 @@ function __Task() {
             } 
 
             if (this.curIdx == z)  {
-                Elem.color(btn, 'white', getColorType());
+                Elem.color(btn, 'white', Alert.colorFont());
             } else {
-                Elem.color(btn, getColorType(), 'white');
+                Elem.color(btn, Alert.colorFont(), 'white');
             }  
         }
         this.setTaskCfg(this.curIdx);

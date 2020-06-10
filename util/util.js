@@ -382,30 +382,18 @@ localData.init = function(state) {
 
     if (state == 'init') {
         values = Storage.get('values') || localData.init('clear');
-        console.log(contentText('INIT values succeed!'));
+        console.log(Parse.contentText('INIT values succeed!'));
         console.log(values);
         return values;
     }
 }
 
-var contentText = function(str) {
+Parse.contentText = function(str) {
     var line = ' —————————— ';
     return line + ' ' + str + ' ' + line; 
 }
 
 
-
-var getColorBgd = function() {
-    return Config.color.bgd;
-}
-
-var getColorType = function() {
-    return Config.color.font;
-}
-
-var getColorLight = function() {
-    return Config.color.light;
-}
 
 
 

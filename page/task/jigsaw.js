@@ -109,14 +109,14 @@ Task.Jigsaw = function() {
             let child = flex.children[i];
             child.style.border = `solid ${this.border}px white`;
             if (child.idx == i) {
-                // child.style.border = `solid ${this.border}px ${getColorBgd()}`;
+                // child.style.border = `solid ${this.border}px ${Alert.colorBgd()}`;
             } else {
                 this.state = 'going';
             }
         }
 
         let org = flex.children[this.center];
-        org.style.border = `solid ${this.border}px ${getColorType()}`;
+        org.style.border = `solid ${this.border}px ${Alert.colorFont()}`;
 
         if (this.state == 'ready' || this.state == 'succeed' ) {
             img = Elem.creat('img', Task.block, 'image');

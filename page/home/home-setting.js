@@ -17,17 +17,6 @@ function __Home() {
     this.creatBlock = function(content, data) {
 
     }
-
-    this.creatTitle = function(content, data) {
-    	if (data.title) {
-    		let title = Elem.creat('div', content, 'title');
-    		title.innerHTML = data.title;
-    	}
-    	if (data.vice) {
-    		let vice = Elem.creat('div', content, 'vice');
-    		vice.innerHTML = data.vice;
-    	}
-    }
 }
 
 
@@ -140,7 +129,7 @@ function Depot(content, data) {
         let oldTd = oldCell[i] || td;
 
         let tgtTd = tgtCell[i] || td;
-        Elem.color(oldTd, getColorType(), 'white');
+        Elem.color(oldTd, Alert.colorFont(), 'white');
         if (td.tag.i - tgtTd.tag.i > 1) {
             resetTag(tgtTd.tag, 1);
         } else {
@@ -148,7 +137,7 @@ function Depot(content, data) {
             tgtCell[i] = td;
         }
         oldCell[i] = td;
-        Elem.color(td, 'white', getColorType(0));
+        Elem.color(td, 'white', Alert.colorFont());
         let button = td.tag.parentNode.parentNode.lastChild;
         button.innerHTML = '<h2>DISCOVER</h2>';
     }

@@ -146,6 +146,19 @@ div[fade=over] {
 	padding-bottom: 5px;
 }
 
+.guide[key=L] {
+	min-width: 120px;
+	margin-top: 10px;
+}
+.guide[key=C] {
+	flex:30;
+}
+.guide[key=R] {
+	min-width: 120px;
+	margin-top: 10px;
+}
+
+
 .hide {
 	font-size: 1.5em;
 	padding: 2em;
@@ -190,6 +203,7 @@ div[fade=over] {
 [state=danger]:hover {background-image: linear-gradient(to bottom,#804, #840);}
 [state=permit]:hover {background-image: linear-gradient(to bottom,#084, #480);}
 [state=defult]:hover {background-image: linear-gradient(to bottom,#048, #408);}
+[state=white] {background-color: white; }
 [state=arrow] {border: none;}
 
 [state=dead] {color: dodgerblue; background-color: #eee; } 

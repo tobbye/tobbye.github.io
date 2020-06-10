@@ -44,9 +44,9 @@ optName: ['Close', 'Test', 'Open'],
 optText: ['关闭', '试一试', '开启'],
 },
 
-{title: '模式', vice: '请选择一个模式', default: 0, key: 'modeType',
-optName: ['Digger', 'Ghost'],
-optText: ['众鑫淘金', '凡人修仙'],
-},
+// {title: '模式', vice: '请选择一个模式', default: 0, key: 'modeType',
+// optName: ['Digger', 'Ghost'],
+// optText: ['众鑫淘金', '凡人修仙'],
+// },
 ]},
 ];

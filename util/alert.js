@@ -42,15 +42,45 @@ function __Alert() {
     }
 
 
-    this.creatTitle = function(content, data) {
+    this.creatTitle = function(content, data, list, y) {
+        let flex   = Elem.creat('div', content, 'flex');
+        let left   = Elem.creat('div', flex, 'guide', 'L');
+        let center = Elem.creat('div', flex, 'guide', 'C');
+        let right  = Elem.creat('div', flex, 'guide', 'R');
         if (data.title) {
-            let title = Elem.creat('div', content, 'title');
+            let title = Elem.creat('div', center, 'title');
             title.innerHTML = data.title;
         }
 
         if (data.vice) {
-            let vice = Elem.creat('div', content, 'vice');
+            let vice = Elem.creat('div', center, 'vice');
             vice.innerHTML = data.viceStr || data.vice;
+        }
+
+        if (list.length > 1) {
+            if (y > 0) {
+                let guide   = Elem.creat('div', left, 'button-min');
+                guide.style.borderColor = Alert.colorFont();
+                guide.style.color = Alert.colorFont();
+                guide.innerHTML = '↑';
+                guide.onclick = function() {
+                    let tgt = this.parentNode.parentNode.parentNode.previousSibling;
+                    console.log(tgt);
+                    tgt.scrollIntoView();
+                }
+
+            }
+            if (y < list.length-1) {
+                let guide   = Elem.creat('div', right, 'button-min');
+                guide.style.borderColor = Alert.colorFont();
+                guide.style.color = Alert.colorFont();
+                guide.innerHTML = '↓';
+                guide.onclick = function() {
+                    let tgt = this.parentNode.parentNode.parentNode.nextSibling;
+                    console.log(tgt);
+                    tgt.scrollIntoView();
+                }
+            }
         }
     }
 
@@ -96,7 +126,7 @@ function __Alert() {
                 let data = list[y];
                 if (that.setTitle)
                     that.setTitle(content, data);
-                this.creatTitle(content, data);
+                this.creatTitle(content, data, list, y);
                 that.creatBlock(content, data, x, y);
             }
         }
@@ -120,13 +150,13 @@ function __Alert() {
                 break;
             if (i == idx) {
                 if (isPage)
-                    Elem.color(childTop, getColorBgd(), getColorType());
+                    Elem.color(childTop, Alert.colorBgd(), Alert.colorFont());
                 else
                     Elem.attr(childTop, 'state', 'live');
                 Elem.show(childCenter);
             } else {
                 if (isPage)
-                    Elem.color(childTop, getColorType(), getColorBgd());
+                    Elem.color(childTop, Alert.colorFont(), Alert.colorBgd());
                 else
                     Elem.attr(childTop, 'state', 'dead');
                 Elem.show(childCenter, 'none');
@@ -140,9 +170,9 @@ function __Alert() {
     this.setInner = function(clickIdx, idx) {
         let isText = Config.sett.colorType == 'text';
         if (isText)
-            Elem.color(document.body, getColorType(), '');
+            Elem.color(document.body, Alert.colorFont(), '');
         else
-            Elem.color(document.body, getColorType(), getColorBgd());
+            Elem.color(document.body, Alert.colorFont(), Alert.colorBgd());
         if (Config.sett.isInto || clickIdx == null || Config.sett.debugType == 'close') {
             Config.sett.isInto = false;
             Storage.set('Config', Config);
@@ -229,7 +259,7 @@ function __Alert() {
     }
 
     this.setBox = function() {
-        Elem.color(this.box, '', getColorLight());
+        Elem.color(this.box, '', Alert.colorLight());
         Elem.maxheight(this.curPanel.block, Config.page.alertHeight-this.curPanel.offset);
     }
 
@@ -281,12 +311,12 @@ function __Alert() {
             for (let i in line.mark) {
                 let mark = Elem.creat('div', this.mark, 'user-mark');
                 mark.innerHTML = line.mark[i];
-                mark.style.borderColor = getColorType();
+                mark.style.borderColor = Alert.colorFont();
                 this.marks[i] = mark;
             }
-            Elem.color(this.head, '', getColorLight());
-            Elem.color(this.group, 'white', getColorType());
-            Elem.css(this.group, 'borderColor', getColorType());
+            Elem.color(this.head, '', Alert.colorLight());
+            Elem.color(this.group, 'white', Alert.colorFont());
+            Elem.css(this.group, 'borderColor', Alert.colorFont());
 
             this.name.innerHTML = line.name || line.inver;
             this.ladd.innerHTML = (line.ladder || line.ladd || '??') + '阶';
@@ -318,6 +348,18 @@ function __Alert() {
         }
     }
 
+
+
+    this.bodySelect = function(flex) { 
+        let old = document.body.flex;
+        if (old) {
+            old.setAttribute('select', 'not');
+        }
+        if (flex) {
+            flex.setAttribute('select', 'yes');
+            document.body.flex = flex; 
+        }
+    }
 
     this.showUser = function(user) {
 
@@ -359,20 +401,25 @@ function __Alert() {
 
     this.showNexu = function() {
         this.hidePanel();
-        Elem.remove(document.body.user);
-        Parse.remove(document.body.lines, document.body.line);  
+        let user = document.body.user;
+        let line = Config.__line(user);
+        let lines = Config.__list(user).lines;
+        Parse.remove(lines, line);  
+        Elem.remove(user);
     }
 
 
     this.showChat = function() {
         this.hidePanel();
         this.showPanel("chat");
+        let user = document.body.user;
+        let line = Config.__line(user);
         let title = this.curPanel.title;
         let block = this.curPanel.block;
         let input = this.curPanel.input;
-        Elem.color(input, getColorLight(), "");
+        Elem.color(input, Alert.colorLight(), "");
         input.placeholder = "输入内容";
-        title.innerHTML = document.body.line.name;
+        title.innerHTML = line.name;
         this.box.style.maxHeight = (Config.page.windHeight - 440) + "px";
         block.style.maxHeight = (Config.page.windHeight - 703) + "px";
         block.innerHTML = "";
@@ -400,7 +447,7 @@ function __Alert() {
                 time: Parse.getTime(),
                 isMine: 1,
             });
-        Elem.color(input, getColorLight(), "");
+        Elem.color(input, Alert.colorLight(), "");
         input.placeholder = "输入内容";
         input.value = "";
     }
@@ -436,10 +483,24 @@ function __Alert() {
         let block = this.curPanel.block;
         let input = this.curPanel.input;
         block.lastChild.scrollIntoView();
-        Elem.color(input, getColorType(), "");
+        Elem.color(input, Alert.colorFont(), "");
         input.value = "";
 
         // Style.height("detail-block", "550px");
+    }
+
+
+
+    this.colorBgd = function() {
+        return Config.color.bgd;
+    }
+
+    this.colorFont = function() {
+        return Config.color.font;
+    }
+
+    this.colorLight = function() {
+        return Config.color.light;
     }
 
 }

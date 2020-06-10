@@ -52,6 +52,7 @@ function __Fund() {
 				let size = col > 1 ? '<h2>' : '<h3>';
 				tds[z].value = values[key];
 				text = tds[z].text + '<br/>' + size + this.formatKey(key, 0);
+				td.style.borderColor = Alert.colorBgd();
 				td.setAttribute('val', key);
 				td.innerHTML = text;
 				td.colSpan = col;
@@ -88,6 +89,7 @@ function __Fund() {
 				tds[z].value = values[key];
 				text = '<h2>' + text.replace('.', '</h2>');
 				text += '<h4>' + this.formatKey(key, 1) + '</h4>';
+				td.style.borderColor = Alert.colorBgd();
 				td.setAttribute('val', key);
 				td.innerHTML = text;
 				td.rowSpan = row;
@@ -157,7 +159,7 @@ function __Fund() {
 		let title = Alert.curPanel.title;
 		let limit = Alert.curPanel.limit;
 		let input = Alert.curPanel.input;
-		Elem.color(input, getColorType(), '#eee')
+		Elem.color(input, Alert.colorFont(), '#eee')
 		input.focus();
 		input.min = 0;
 		input.value = 0;

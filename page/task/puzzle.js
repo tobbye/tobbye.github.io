@@ -26,7 +26,7 @@ Task.Puzzle = function() {
 
 
     this.initBody = function() {
-        this.wordColor = getColorLight();
+        this.wordColor = Alert.colorLight();
         this.wordMix = this.wordOrg;
         this.creatBody('ready', this.orgTips);
 
@@ -54,13 +54,13 @@ Task.Puzzle = function() {
             cell.able = true;
             cell.state = state;
             cell.innerHTML = this.wordMix[idx];
-            cell.style.borderColor = getColorType();
+            cell.style.borderColor = Alert.colorFont();
             if (state == 'going') {
                 cell.onclick = function() {
                     Task.game.click(this);
                 }
             } else {
-                cell.style.backgroundColor = getColorLight();
+                cell.style.backgroundColor = Alert.colorLight();
             }
 
 
