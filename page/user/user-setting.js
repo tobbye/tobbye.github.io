@@ -93,11 +93,11 @@ function __User() {
 		let tips = Elem.creat('div', block, 'tips');
 		tips.innerHTML = data.tipsTag;
 
-		let flex1 = Elem.creat('div', block, 'flex', 1);
-		let flex2 = Elem.creat('div', block, 'flex', 2);
-		let flex3 = Elem.creat('div', block, 'flex', 3);
-		let flex4 = Elem.creat('div', block, 'flex', 4);
-		let flex5 = Elem.creat('div', block, 'flex', 5);
+		let flex1 = Elem.creat('div', block, 'flex', 'Z');
+		let flex2 = Elem.creat('div', block, 'flex', 'H');
+		let flex3 = Elem.creat('div', block, 'flex', 'A');
+		let flex4 = Elem.creat('div', block, 'flex', 'N');
+		let flex5 = Elem.creat('div', block, 'flex', 'G');
 
 		for(let y in tags) {
 			let _data = tags[y];
@@ -134,9 +134,6 @@ function __User() {
 		let edit = Elem.creat('div', flex5, 'button');
 		edit.setAttribute('state', 'permit');
 		edit.innerHTML = '编辑资料';
-		flex4.style.padding = '5px';
-		flex5.style.padding = '10px 5px';
-		flex5.style.marginTop = '5px';
 	}
 
 

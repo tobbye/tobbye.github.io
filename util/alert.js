@@ -57,7 +57,7 @@ function __Alert() {
             vice.innerHTML = data.viceStr || data.vice;
         }
 
-        if (list.length > 1) {
+        if (list.length > 1 && cfg.name == 'nexu' || cfg.name == 'rank') {
             if (y > 0) {
                 let guide   = Elem.creat('div', left, 'button-min');
                 guide.style.borderColor = Alert.colorFont();
@@ -68,7 +68,6 @@ function __Alert() {
                     console.log(tgt);
                     tgt.scrollIntoView();
                 }
-
             }
             if (y < list.length-1) {
                 let guide   = Elem.creat('div', right, 'button-min');

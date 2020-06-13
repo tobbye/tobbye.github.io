@@ -12,10 +12,10 @@ var Container = function(that) {
 var Page= function() {
 
     Config.getConst(this, 'page');
-    this.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
-    this.isWechat = (/MicroMessenger/i.test(navigator.userAgent));
-    this.zoom = this.isMobile ? this.zoomMobile : this.zoomComput;
-    this.zoom = this.isWechat ? this.zoomWechat : this.zoom;
+    this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
+    this.isPad = (/Pad/i.test(navigator.userAgent));
+    this.zoom = this.isPhone ? this.zoomPhone : this.zoomPc;
+    this.zoom = this.isPad ? this.zoomPad : this.zoom;
     this.windWidth = ~~(window.innerWidth / this.zoom);
     this.windHeight = ~~(window.innerHeight / this.zoom);
     this.alertHeight = this.windHeight - this.alertOffset;
@@ -74,9 +74,9 @@ var Constant = {
         outerOffset: 220,
         innerOffset: 770, 
         minHeight: 700,
-        zoomMobile: 1.00,
-        zoomWechat: 1.00,
-        zoomComput: 0.40,
+        zoomPhone: 1.00,
+        zoomPad: 0.80,
+        zoomPc: 0.40,
     }, 
     color: {
         font: '#333',
