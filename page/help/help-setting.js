@@ -62,7 +62,7 @@ function __Help() {
         let textarea = Elem.creat('textarea', form, 'textarea');
         textarea.name = 'feed';
         textarea.placeholder = data.remind;
-        textarea.style.color = getColorType();
+        textarea.style.color = Alert.colorFont();
 
         let flex = Elem.creat('div', form, 'flex');
         let button = Elem.creat('input', flex, 'button');

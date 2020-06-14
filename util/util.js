@@ -104,6 +104,10 @@ Parse.mix = function(str) {
         return arr.join('');
 }
 
+Parse.pick = function(arr) {
+    return arr[~~(arr.length*Math.random())];
+}
+
 Parse.swape = function(str, a, b){
     return str.replace(a, '#0').replace(b, a).replace('#0', b);
 }

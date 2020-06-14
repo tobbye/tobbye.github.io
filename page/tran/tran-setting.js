@@ -54,7 +54,9 @@ function __Tran() {
 
         this.initTemp = function(data, line, idx) {
             this.idx = idx;
-            this.inver = line.name;
+            this.sponer = instance.sponer[line.sid];
+            this.inver = line.name || this.sponer.name;
+
             this.group = data.group;
             this.ladder = Math.floor(20 * Math.random() * Math.random()) + 6;
             this.ladd = this.ladder - Math.floor(5 * Math.random());
@@ -62,8 +64,8 @@ function __Tran() {
             this.mark = ['身份标签1', '身份标签2'];
             this.index = Math.floor((1547 + Math.random()) * 1e9);
             this.stamp = Parse.formatTime(this.index).replace(' ', '<h3>');
-            this.word = line.word;
-            this.src = line.pic[0];
+            this.word = this.sponer.word;
+            this.src = this.sponer.pic[0];
         };
 
         this.initInve = Inve.initData;
@@ -119,7 +121,7 @@ function __Tran() {
             this.index = Elem.creat('div', this.flex1, 'user-index');
             this.stamp = Elem.creat('div', this.flex1, 'user-stamp');
             this.index.innerHTML = '编号: ' + line.index;
-            this.index.innerHTML += '<br/>' + data.inverStr;
+            this.index.innerHTML += '<h3>' + data.inverStr + line.sponer.name;
             this.stamp.innerHTML = '时间: ' + line.stamp;
 
             this.flex2 = new Alert.UserFlex();

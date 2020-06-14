@@ -141,7 +141,7 @@ function __Task() {
 
     this.creatTask = function(block, mix) {
         let data = document.body.data;
-        let line = document.body.line;
+        let line = document.body.line.sponer;
         if (this.index != line.index)
             this.idx = 0;
 
