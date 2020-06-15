@@ -81,15 +81,9 @@
 		}
 
 		#outer-bot {
-			background-color: #eee;
-		} #outer-bot[agent=mobile] {
-			display: block;
-			margin-top: 0px;
-			margin-left: 0px;
-		} #outer-bot[agent=computer] {
 			display: flex;
-			margin-top: -2px;
-			margin-left: -2px;
+			flex-wrap: wrap;
+			background-color: #eee;
 		}
 
 		.inner {
@@ -123,6 +117,7 @@
 
 		.block {
 			flex: 10;
+			min-width: 400px;
 		}.block[agent=mobile] {
 			border-top: solid 0px #eee;
 			border-left: solid 0px #eee;

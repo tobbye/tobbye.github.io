@@ -21,11 +21,12 @@ var Setting = {
     isEdit: false,
     isText: false,
     isSplit: true,
-    isMobile: false,
+    isPhone: false,
     isElement: !true,
     zoom: 1.00,
-    zoomMobile: 2.00,
-    zoomComputer: 0.70,
+    zoomPhone: 2.00,
+    zoomPad: 1.00,
+    zoomPc: 0.70,
 
     desc: {
         mix: "混合系数",
@@ -44,11 +45,11 @@ var Setting = {
         isEdit: "是编辑模式吗",
         isText: "是文本模式吗",
         isSplit: "是拆分模式吗",
-        isMobile: "是手机端吗",
+        isPhone: "是手机端吗",
         isElement: "采用DOM节点的方式生成吗",
         zoom: "当前页面缩放比例",
-        zoomMobile: "手机端缩放比例",
-        zoomComputer: "电脑端缩放比例",
+        zoomPhone: "手机端缩放比例",
+        zoomPc: "电脑端缩放比例",
     }
 };
 
@@ -435,10 +436,12 @@ window.onresize = function() {
 }
 
 function setAgent() {
-    Setting.isMobile = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
-    Setting.zoom = Setting.isMobile ? Setting.zoomMobile : Setting.zoomComputer;
+    Setting.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
+    Setting.isPad = (/Pad/i.test(navigator.userAgent));
+    Setting.zoom = Setting.isPhone ? Setting.zoomPhone : Setting.zoomPc;
+    Setting.zoom = Setting.isPad ? Setting.zoomPad : Setting.zoom;
     document.body.style.zoom = Setting.zoom;
-    var agent = Setting.isMobile ? "mobile" : "computer";
+    var agent = Setting.isPhone ? "mobile" : "computer";
     var outerBot = Elem.get("outer-bot");
     outerBot.setAttribute("agent", agent);
     var blocks = document.getElementsByClassName("block");

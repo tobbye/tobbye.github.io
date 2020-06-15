@@ -15,12 +15,17 @@ function __Home() {
     }
 
     this.creatBlock = function(content, data) {
-
+        let block = Elem.creat('div', content, 'block');
+        document.block = block;
+        if (data.isDepot) {
+            creatRect();
+            // Depot(block, data);
+        }
     }
 }
 
 
-function Depot(content, data) {
+function Depot(block, data) {
     let cap = 8888;
     let abbr = [];
     let size = [5,5];
@@ -32,19 +37,19 @@ function Depot(content, data) {
     let lvlDict = '金木水火土';
     let rowDict = 'ABCDEFGHI';
     let colDict = '123456789';
-    init(content, data);
+    init(block, data);
 
-    function init(content, data) {
+    function init(block, data) {
         // let cap = Math.pow(25,5);
         // let idx = getScale(cap, []);
         // Config.mapScale = Parse.reverse(idx);
         // Config.mapTgt = Parse.reverse(idx);
         // idx = Parse.reverse(idx);
         // console.log(idx);
-        let flex = Elem.creat('div', content, 'flex');
-        let table = Elem.creat('table', content, 'table');
-        let button = Elem.creat('div', content, 'button-depot');
-        Elem.togType(button, 'permit');
+        let flex = Elem.creat('div', block, 'flex');
+        let table = Elem.creat('table', block, 'table');
+        let button = Elem.creat('div', block, 'button-depot');
+        Elem.state(button, 'permit');
 
         for (let i=0;i<scale.length;i++) {
             setDegree(i, 0);

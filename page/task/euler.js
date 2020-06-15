@@ -87,7 +87,7 @@ Task.Euler = function() {
 
     //初始化画布
     this.initCanvas = function() {
-        if (!Config.page.isMobile) {
+        if (!Config.page.isPhone) {
             Task.block.innerHTML = Task.htmlPc;
             Task.alertWidth = Config.page.alertFullWidth - 20;
             this.fullSize =  ~~(Task.alertWidth / 2 -40);
