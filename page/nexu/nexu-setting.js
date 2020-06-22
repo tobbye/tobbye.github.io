@@ -34,8 +34,8 @@ function __Nexu() {
 			line.init(lines[z]);
 			this.initTemp(line);
 			let body = Elem.creat('div', block, 'user-block', 'lines['+z+']');
-			line.flex = new Alert.UserFlex(body, line);
-            line.flex.init(body, line);
+			let flex = new Alert.UserFlex(body, line);
+            flex.init(body, line);
 			body.onclick = function() {
 				document.body.user = this;
 				Alert.bodySelect(this);

@@ -42,7 +42,7 @@ function __Alert() {
     }
 
 
-    this.creatTitle = function(content, data, list, y) {
+    this.creatTitle = function(content, data, len, y) {
         let flex   = Elem.creat('div', content, 'flex');
         let left   = Elem.creat('div', flex, 'guide', 'L');
         let center = Elem.creat('div', flex, 'guide', 'C');
@@ -57,7 +57,7 @@ function __Alert() {
             vice.innerHTML = data.viceStr || data.vice;
         }
 
-        if (list.length > 1 && cfg.name == 'nexu' || cfg.name == 'rank') {
+        if (len > 1 && cfg.name == 'nexu' || cfg.name == 'rank') {
             if (y > 0) {
                 let guide   = Elem.creat('div', left, 'button-min');
                 guide.style.borderColor = Alert.colorFont();
@@ -69,7 +69,7 @@ function __Alert() {
                     tgt.scrollIntoView();
                 }
             }
-            if (y < list.length-1) {
+            if (y < len-1) {
                 let guide   = Elem.creat('div', right, 'button-min');
                 guide.style.borderColor = Alert.colorFont();
                 guide.style.color = Alert.colorFont();
@@ -98,13 +98,13 @@ function __Alert() {
 
 
     this.creatOuterTop = function(that) {
-        let outerTop = Elem.get('outer-top');
+        let outer = Elem.get('outer-top');
         if (items.length < 2) {
-            this.creatLink(outerTop, Constant.hrefTop);
+            this.creatLink(outer, Constant.hrefTop);
             return;
         }
         for (let x in items) {
-            let btn = Elem.creat('div', outerTop, 'button-top');
+            let btn = Elem.creat('div', outer, 'button-top');
             btn.innerHTML = items[x].title;
             btn.idx = x;
             btn.onclick = function() {
@@ -115,25 +115,37 @@ function __Alert() {
 
     this.creatOuterCenter = function(that) {
         window.onresize();
-        let outerCenter = Elem.get('outer-center');
-        outerCenter.innerHTML = '';
+        let outer = Elem.get('outer-center');
+        outer.innerHTML = '';
         for (let x in items) {
-            let inner = Elem.creat('div', outerCenter, 'inner', 'items['+x+'].');
+            let inner = Elem.creat('div', outer, 'inner', 'items['+x+'].');
             let list = items[x].list;
             for (let y in list) {
                 let content = Elem.creat('div', inner, 'content', 'list['+y+'].');
                 let data = list[y];
                 if (that.setTitle)
                     that.setTitle(content, data);
-                this.creatTitle(content, data, list, y);
+                this.creatTitle(content, data, list.length, y);
                 that.creatBlock(content, data, x, y);
             }
         }
     }
 
     this.creatOuterBot = function(that) {
-        let outerBot = Elem.get('outer-bot');
-        this.creatLink(outerBot, Constant.hrefBot);
+        let outer = Elem.get('outer-bot');
+        this.creatLink(outer, Constant.hrefBot);
+    }
+
+    this.creatContent = function(that, x, y) {
+        let outer = Elem.get('outer-center');
+        let inner = outer.children[x];
+        let content = inner.children[y];
+        let data = items[x].list[y];
+        content.innerHTML = '';
+        if (that.setTitle)
+            that.setTitle(content, data);
+        this.creatTitle(content, data, 1, y);
+        that.creatBlock(content, data, x, y);
     }
 
     //显示内页
@@ -253,9 +265,21 @@ function __Alert() {
     }
 
 
+    this.prefix = ' ------------------------------- ';
+    this.suffix = ' ------------------------------- ';
+
     this.log = function(text) {
         Config.fade.setAnim(text);
     }
+
+    this.print = function(text) {
+        console.log(text);
+    }
+
+    this.printName = function(name) {
+        console.log(this.prefix + name + this.suffix);
+    }
+
 
     this.setBox = function() {
         Elem.color(this.box, '', Alert.colorLight());
@@ -370,10 +394,10 @@ function __Alert() {
         let line = Config.__line(user);
         let title = this.curPanel.title;
         let block = this.curPanel.block;
-        console.log(line);
-        line.body = new this.UserBody();
-        line.body.init(block, line);
+        let body = new this.UserBody();
+        body.init(block, line);
         this.showButton(data);
+        this.print([line.name, line, body]);
     }
 
     this.showSearch = function(button) {
@@ -382,7 +406,7 @@ function __Alert() {
         let title = this.curPanel.title;
         let block = this.curPanel.block;
         block.innerHTML = "";
-        title.innerHTML = cfg.titleStr.replace("#0", button.innerHTML);
+        title.innerHTML = Constant.string.titleSearch.replace("#0", button.innerHTML);
         for (let z in tempData.searchData) {
 
             let body = Elem.creat("div", block, "user-block", 'lines['+z+']');

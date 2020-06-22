@@ -111,8 +111,8 @@ function __Tran() {
             if (!line.ladd) return;
             line.initData = line.initData || new this.GrabData().initData;
             line.initData(data.dot, data.type);
-            line.body = this;
             this.body = Elem.creat('div', block, 'user-block', 'lines['+line.idx+']');
+            this.body.self = this;
             this.body.onclick = function() {
                 Alert.bodySelect(this);
                 Tran.showDetail(this);
@@ -206,7 +206,6 @@ function __Tran() {
             line.initData = line.initData || new Tran.InveData().initData;
             line.initData(data.dot, data.type);
             line.row = Math.floor(line.ladd / 5 - 0.2);
-            line.body = this;
             this.body = Elem.creat('div', block, 'user-block', 'lines['+z+']');
             this.body.onclick = function() {
                 Alert.bodySelect(this);
@@ -246,7 +245,7 @@ function __Tran() {
         let line = Config.__line(body);
         document.body.line = line;
         document.body.data = data;
-        console.log(line);
+        Alert.print([line.inver, line, body.self]);
         let title = Alert.curPanel.title;
         let block = Alert.curPanel.block;
         title.innerHTML = data.flexStr.replace('#0',line.inver);

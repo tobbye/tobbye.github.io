@@ -7,7 +7,6 @@ window.onload = function() {
 var cfg = {
     name: "nexu",
     isRank: false,
-    titleStr: "搜索:#0",
 };
 
 
@@ -41,6 +40,7 @@ lines: [
 {uid: 's110004', name: '鬼冢虎OnitsukaTiger', ladd: 15, tag: ['鬼冢虎', '运动鞋', '休闲鞋'], mark: ['鬼冢虎', '亚瑟士']},
 {uid: 's110004', name: '悦诗风吟Innisfree', ladd: 12, tag: ['悦诗风吟', '化妆品', '韩国美妆'], mark: ['韩国美妆', '悦诗风吟']},
 {uid: 's110004', name: '百雀羚', ladd: 15, tag: ['百雀羚', '化妆品', '东方匠韵'], mark: ['东方匠韵', '百雀羚']},
+{uid: 's110004', name: '康师傅', ladd: 15, tag: ['康师傅', '老坛酸菜', '红烧牛肉面'], mark: ['牛肉面', '方便面']},
 
 ]},
 

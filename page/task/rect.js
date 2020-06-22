@@ -9,9 +9,9 @@ function __Rect() {
     this.init = function() {
         this.gap = 500;
         this.col = 10;
-        this.row = 100;
+        this.row = 10;
         this.size = ~~(Config.page.alertFullWidth / this.col);
-        this.rnd = 0;
+        this.rnd = 20;
         this.margin = 5;
         this.isRect = true;
         this.initMap();

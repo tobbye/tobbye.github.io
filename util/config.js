@@ -103,6 +103,9 @@ var Constant = {
         {name:'fund', href:'../fund/fund.html', text:'资金'},
         {name:'tran', href:'../tran/tran.html', text:'市场'},
     ],
+    string: {
+        titleSearch: '搜索: #0',
+    },
 };
 
 var Config = new __Config();

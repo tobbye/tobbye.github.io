@@ -53,6 +53,13 @@ Parse.fillZero = function (num, count) {
   }
 }
 
+Parse.cutZero = function(text) {
+    if (text[0] == '0')
+        return Parse.cutZero(text.substring(1));
+    else
+        return text;
+}
+
 Parse.titleCase = function(text) {
     return text[0].toUpperCase() + text.substring(1).toLowerCase();
 }
@@ -363,14 +370,13 @@ var localData = {};
 
 //保存本地数据
 localData.save = function() {
-    Storage.set('values', values);
+    Storage.set('Values', values);
     Storage.set('Config', Config);
     // window.location.reload();
 }
 
 //初始化本地数据
 localData.init = function(state) {
-    var setting = Storage.get('setting') || {};
 
     if (state == 'clear') {
         Storage.clear();
@@ -378,14 +384,14 @@ localData.init = function(state) {
         for (let idx in dict)
             values[dict[idx]] = 0;
         values.h = 50000;
-        Storage.set('values', values);
-        console.log(contentText('CLEAR values succeed!'));
+        Storage.set('Values', values);
+        console.log(Parse.contentText('CLEAR values succeed!'));
         console.log(values);
         return values;
     }
 
     if (state == 'init') {
-        values = Storage.get('values') || localData.init('clear');
+        values = Storage.get('Values') || localData.init('clear');
         console.log(Parse.contentText('INIT values succeed!'));
         console.log(values);
         return values;
