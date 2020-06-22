@@ -144,7 +144,7 @@ function __Alert() {
         content.innerHTML = '';
         if (that.setTitle)
             that.setTitle(content, data);
-        this.creatTitle(content, data, 1, y);
+        this.creatTitle(content, data, 3, y);
         that.creatBlock(content, data, x, y);
     }
 
@@ -305,7 +305,12 @@ function __Alert() {
     this.UserData = function() {
 
         this.init = function(line) {
-            Config.getObject(this, line);
+            if (line.uid) {
+                this.uid = line.uid;
+                Config.getObject(this, tempData.userData[this.uid]);
+            } else {
+                Config.getObject(this, line);
+            }
         }
     }
 
@@ -408,14 +413,16 @@ function __Alert() {
         block.innerHTML = "";
         title.innerHTML = Constant.string.titleSearch.replace("#0", button.innerHTML);
         for (let z in tempData.searchData) {
-
+            let temp = tempData.searchData[z];
             let body = Elem.creat("div", block, "user-block", 'lines['+z+']');
-            let line = tempData.searchData[z];
-            let order = line.order + "th";
+            let line = new Alert.UserData();
+            line.init(temp);
+            let order = temp.order + "th";
             if (order.length == 3)
                 line.order = order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
-            line.group = line.uid[0].replace('s','赞助商').replace('d','淘金者');
-            line.value = "权值: " + Parse.sub4Num(line.val);
+            line.group = temp.uid[0].replace('s','赞助商').replace('d','淘金者');
+            line.value = "权值: " + Parse.sub4Num(temp.val);
+            tempData.searchData[z] = line;
             this.flex = new Alert.UserFlex();
             this.flex.init(body, line, true);
         }

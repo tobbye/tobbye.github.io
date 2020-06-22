@@ -47,7 +47,7 @@ function __Nexu() {
 
 	this.initTemp = function(line) {
 		line.group = line.uid[0].replace('s','赞助商').replace('d','淘金者');
-		line.desc = '<h3>' + line.name + '的描述</h3>';
+		line.desc = '<div desc="center">' + line.name + '的描述</div>';
 		line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
 		line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
 		line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';

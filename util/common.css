@@ -35,6 +35,11 @@ h5 {margin: 0px; font-size: 0.8em; }
 [select=yes] {border: solid 12px dodgerblue;}
 [select=not] {border: solid 0px transparent;}
 
+[desc] {margin: 15px; font-size: 1.3em; font-weight: bold}
+[desc=left] {text-align: left;}
+[desc=right] {text-align: right;}
+[desc=center] {text-align: center;}
+
 table {
 	width: 100%;
 	margin: 10px 0px;

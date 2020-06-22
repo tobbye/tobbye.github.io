@@ -31,8 +31,10 @@ function __Home() {
             return;
         let lines = data.lines;
         for (let z in lines) {
+            let temp = lines[z];
             let line = new Alert.UserData();
             line.init(lines[z]);
+            line.pos = temp.pos;
             this.initTemp(line, z);
             let body = Elem.creat('div', block, 'user-block', 'lines['+z+']');
             let flex = new Alert.UserFlex(body, line);
@@ -47,10 +49,12 @@ function __Home() {
     }
 
     this.initTemp = function(line, z) {
-        let order = Depot.tgtPos.join('').replace('000000', 'home');
-        line.order = Parse.cutZero(order) + '-' + z;
+        let pos = Parse.cutZero(Depot.tgtPos.join('')) || 'home';
+        line.order = line.pos || pos + '-' + z;
+        let rand = ~~(12*Math.random()*Math.random()+150-10*z);
+        line.value = '已占领: ' + rand + 'h';
         line.group = line.uid[0].replace('s','赞助商').replace('d','淘金者');
-        line.desc = '<h3>' + line.name + '的描述</h3>';
+        line.desc = '<div desc="center">' + line.name + '的描述</div>';
         line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
         line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
         line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
@@ -63,27 +67,22 @@ function __Home() {
 function __Depot() {
 
     let table;
+    this.cap = 8888;
+    this.col = 6;
+    this.row = 6;
+    this.orgPos = '000000';
+    this.tgtPos = [];
+    this.tgtCell = [];
+    this.posCell = [];
+    this.lvlDict = {};
+    this.lvlStr = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     this.init = function(block, data) {
         this.block = block;
         this.data = data;
-        this.initCfg();
         this.initBody();
         console.log(Depot);
     }
-
-    this.initCfg = function() {
-        this.cap = 8888;
-        this.col = 6;
-        this.row = 6;
-        this.orgPos = '000000';
-        this.tgtPos = [];
-        this.tgtCell = [];
-        this.posCell = [];
-        this.lvlDict = {};
-        this.lvlStr = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    }
-
 
     this.initBody = function() {
         // let cap = Math.pow(25,5);
@@ -181,11 +180,11 @@ function __Depot() {
 
     this.toHome = function() {
         this.setPos();
-        Alert.creatContent(Home, 0, 1);
+        Alert.creatContent(Home, 0, 2);
     }
 
     this.toEnter = function() {
-        Alert.creatContent(Home, 0, 1);
+        Alert.creatContent(Home, 0, 2);
     }
 
 

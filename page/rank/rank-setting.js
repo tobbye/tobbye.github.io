@@ -50,7 +50,6 @@ function __Rank() {
 			let unit = tempData.unitData;
 			let text = list[z].split('-');
 			let line = {
-				uid: unit.uid,
 				group: data.group,
 				name: text[0],
 				mark: [text[1], text[2]],
@@ -66,7 +65,7 @@ function __Rank() {
 			let rand = Math.floor((Math.random()+40-z) * 2 * seed);
 			line.value = data.text + ': ￥' + Parse.sub4Num(rand);
 			line.ladd = Math.floor(Math.random() * 20) + 3;
-			line.desc = '<h3>' + line.name + '的描述</h3>';
+			line.desc = '<div desc="center">' + line.name + '的描述</div>';
 			line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
 			line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
 			line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';

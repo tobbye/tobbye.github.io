@@ -8,7 +8,6 @@ var cfg = {
     name: "rank",
     isRank: true,
     rankCount: 20,
-    titleStr: "搜索:#0",
     buttons:[
         { idx:0, text: '发消息', state: 'permit'},
         { idx:1, text: '添加关注', state: 'permit'},
