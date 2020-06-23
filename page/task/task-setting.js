@@ -74,7 +74,7 @@ function __Task() {
         this.alertWidth = Math.min(Config.page.alertFullWidth, this.alertWidth*this.scale);
         this[this.typef]();
         Elem.width(this.block, this.alertWidth+'px');
-        if (Config.page.isMobile) {
+        if (Config.page.isPhone) {
             this.isArrow = this.game.isArrow;
         } else {
             this.isArrow = false;

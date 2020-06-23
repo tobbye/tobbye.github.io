@@ -102,6 +102,7 @@ function __Depot() {
 
         for (let i=0;i<this.col;i++) {
             let pos = Elem.creat('div', flex, 'user-pos', i);
+            Elem.color(pos, 'white', Alert.colorFont());
             this.posCell.push(pos);
         }
         this.setPos();

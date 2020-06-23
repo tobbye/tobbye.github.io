@@ -307,7 +307,7 @@ Elem.autosize = function(e, off) {
     var windWidth = Config.page.windWidth;
     var windHeight = Config.page.windHeight;
     var box = Elem.get('alert-box');
-    var agent = Config.page.isMobile ? 'mobile' : 'computer';
+    var agent = Config.page.isPhone ? 'mobile' : 'computer';
     Elem.attr(box, 'agent', agent);
     e = e || Elem.get('outer-center');
     e.style.height = windHeight - off + 'px';

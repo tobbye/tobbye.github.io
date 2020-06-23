@@ -324,7 +324,8 @@ function __Alert() {
                 this.value = Elem.creat('div', this.top, 'user-value');
 
                 this.order.innerHTML = line.order;
-                this.value.innerHTML = line.value;  
+                this.value.innerHTML = line.value; 
+                Elem.color(this.order, 'white', Alert.colorFont());
             }
             this.marks = [];
             this.flex = Elem.creat('div', this.body, 'user-flex');
@@ -422,7 +423,6 @@ function __Alert() {
                 line.order = order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
             line.group = temp.uid[0].replace('s','赞助商').replace('d','淘金者');
             line.value = "权值: " + Parse.sub4Num(temp.val);
-            tempData.searchData[z] = line;
             this.flex = new Alert.UserFlex();
             this.flex.init(body, line, true);
         }
