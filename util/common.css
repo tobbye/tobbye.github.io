@@ -181,11 +181,9 @@ div[fade=over] {
 .button-micro {
 	flex: 10;
 	color: white;
-	margin: 5px 10px;
+	margin: 10px;
 	padding: 15px;
-	padding-top: 10px;
 	font-weight: bold;
-	border: solid 6px white;
 	border-radius: 20px;
 }
 
@@ -264,15 +262,15 @@ div[fade=over] {
 	display: flex;
 	padding: 10px;
 	margin-top: 5px;
-	margin-bottom: -20px;
+	margin-bottom: -5px;
 	background-color: white;
 }
 
 .user-order {
-	flex: auto;
 	margin: 5px;
-	padding: 10px;
+	padding: 10px 20px;
 	color: white;
+	height: 1.3em;
 	font-size: 1.3em;
 	border-radius: 10px;
 	background-color: #f88;
@@ -280,7 +278,6 @@ div[fade=over] {
 
 .user-value {
 	flex: 20;
-	padding-top: 10px;
 	font-size: 1em;
 	text-align: right;
 }
@@ -331,7 +328,7 @@ div[fade=over] {
 .user-group {
 	display: block;
 	margin: 10px;
-	padding: 10px 15px;
+	padding: 10px;
 	font-size: 0.9em;
 	font-weight: normal;
 	border: solid 3px white;

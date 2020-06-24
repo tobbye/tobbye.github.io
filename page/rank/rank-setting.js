@@ -29,14 +29,9 @@ function __Rank() {
 		for (let z in lines) {
 			let line = new Alert.UserData();
 			line.init(lines[z]);
-			let body = Elem.creat('div', block, 'user-block', 'lines['+z+']');
-			let flex = new Alert.UserFlex(body, line);
+            let body = Elem.creat('div', block, 'user-block', 'lines['+z+']');
+            let flex = new Alert.UserFlex(body, line);
             flex.init(body, line);
-			body.onclick = function() {
-				document.body.user = this;
-				Alert.bodySelect(this);
-				Alert.showUser(this);
-			}
 			data.lines[z] = line;
 		}
 	}

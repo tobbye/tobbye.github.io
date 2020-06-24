@@ -141,12 +141,33 @@
     <div id="alert">
         <div id="alert-mask"></div>
         <div id="alert-box">
+            <div class="alert-panel" name="info">
+                <div class="alert-flex">
+                    <div class="alert-button" onclick="Alert.hidePanel()">返回</div>
+                    <div class="alert-title">个人资料</div>
+                    <div class="alert-button" onclick="Alert.hidePanel()">关闭</div>
+                </div>
+                <div class="alert-block"></div>
+                <div class="alert-flex">
+                    <button class="button" state="permit" name="send" onclick="Alert.showChat()">发消息</button>
+                    <button class="button" state="permit" name="like" onclick="Alert.showNexu(1)">添加关注</button>
+                    <button class="button" state="danger" name="hate" onclick="Alert.showNexu(0)">取消关注</button>
+                    <button class="button" state="defult" name="home" onclick="Alert.showChat()">查看主页</button>
+                </div>
+            </div>
             <div class="alert-panel" name="detail">
                 <div class="alert-title">查看详情</div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
                     <button class="button" state="permit" name="doit" onclick="Tran.showTask()">确认</button>
                     <button class="button" state="danger" name="quit" onclick="Alert.hidePanel()">关闭</button>
+                </div>
+            </div>
+            <div class="alert-panel" name="search">
+                <div class="alert-title">搜索结果</div>
+                <div class="alert-block"></div>
+                <div class="alert-flex">
+                    <button class="button" state="danger" name="close" onclick="Alert.hidePanel()">关闭</button>
                 </div>
             </div>
             <div class="alert-panel" name="pack">

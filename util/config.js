@@ -232,6 +232,12 @@ function __Config() {
         return eval(key);
     }
     //---根据绑定的idx属性查找数据
+
+    this.__user = function(uid) {
+        let user = tempData.userData[uid];
+        user.uid = uid;
+        return user;
+    }
 }
 
 

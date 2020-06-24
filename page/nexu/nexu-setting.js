@@ -32,27 +32,12 @@ function __Nexu() {
 		for (let z in lines) {
 			let line = new Alert.UserData();
 			line.init(lines[z]);
-			this.initTemp(line);
 			let body = Elem.creat('div', block, 'user-block', 'lines['+z+']');
-			let flex = new Alert.UserFlex(body, line);
+            let flex = new Alert.UserFlex(body, line);
             flex.init(body, line);
-			body.onclick = function() {
-				document.body.user = this;
-				Alert.bodySelect(this);
-				Alert.showUser(this);
-			}
 			data.lines[z] = line;
 		}
 	}
-
-	this.initTemp = function(line) {
-		line.group = line.uid[0].replace('s','赞助商').replace('d','淘金者');
-		line.desc = '<div desc="center">' + line.name + '的描述</div>';
-		line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
-		line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
-		line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
-	}
-
 
 
 

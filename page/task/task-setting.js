@@ -141,13 +141,13 @@ function __Task() {
 
     this.creatTask = function(block, mix) {
         let data = document.body.data;
-        let line = document.body.line.sponer;
+        let line = document.body.line.__sponer;
         if (this.index != line.index)
             this.idx = 0;
 
         this.cfg = {
-            src: line.src,
-            word: line.word,
+            src: line.src || '',
+            word: line.word || line.tag.join('/'),
         };
         this.block = block;
         this.index = line.index;

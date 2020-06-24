@@ -48,24 +48,23 @@ function __Tran() {
     this.GrabData = function() {
 
         this.init = function(data, line, idx) {
-            this.initTemp(data, line, idx);
+            this.idx = idx;
+            this.sid = line.sid;
+            this.uid = line.uid || line.sid;
+            this.__digger = new Alert.UserData();
+            this.__sponer = new Alert.UserData();
+            this.__digger.init(Config.__user(this.uid));
+            this.__sponer.init(Config.__user(this.sid));
+            this.initTemp();
             this.initData(data.dot, data.type);
         };
 
-        this.initTemp = function(data, line, idx) {
-            this.idx = idx;
-            this.sponer = instance.sponer[line.sid];
-            this.inver = line.name || this.sponer.name;
-
-            this.group = data.group;
-            this.ladder = Math.floor(20 * Math.random() * Math.random()) + 6;
-            this.ladd = this.ladder - Math.floor(5 * Math.random());
+        this.initTemp = function() {
+            this.ladd = this.__digger.ladd - Math.floor(5 * Math.random());
             this.multi = Math.floor(100 * Math.pow(Math.random(),8)) + 1;
-            this.mark = ['身份标签1', '身份标签2'];
             this.index = Math.floor((1547 + Math.random()) * 1e9);
-            this.stamp = Parse.formatTime(this.index).replace(' ', '<h3>');
-            this.word = this.sponer.word;
-            this.src = this.sponer.pic[0];
+            this.stamp = Parse.formatTime(this.index).replace(' ', '<br/>');
+
         };
 
         this.initInve = Inve.initData;
@@ -113,20 +112,17 @@ function __Tran() {
             line.initData(data.dot, data.type);
             this.body = Elem.creat('div', block, 'user-block', 'lines['+line.idx+']');
             this.body.self = this;
-            this.body.onclick = function() {
-                Alert.bodySelect(this);
-                Tran.showDetail(this);
-            }
-            this.flex1 = Elem.creat('div', this.body, 'user-flex');
-            this.index = Elem.creat('div', this.flex1, 'user-index');
-            this.stamp = Elem.creat('div', this.flex1, 'user-stamp');
+
+            this.flex1 = Elem.creat('div', this.body, 'user-top');
+            this.index = Elem.creat('div', this.flex1, 'user-order');
+            this.stamp = Elem.creat('div', this.flex1, 'user-value');
             this.index.innerHTML = '编号: ' + line.index;
-            this.index.innerHTML += '<h3>' + data.inverStr + line.sponer.name;
+            this.index.innerHTML = line.__sponer.name;
             this.stamp.innerHTML = '时间: ' + line.stamp;
+            Elem.color(this.index, '', Alert.colorFont());
 
             this.flex2 = new Alert.UserFlex();
-            this.flex2.init(this.body, line);
-
+            this.flex2.init(this.body, line.__digger);
             this.flex3 = Elem.creat('div', this.body, 'user-flex');
             this.ladd  = Tran.creatText(this.flex3, 'L10', line.laddStr);
             this.piece = Tran.creatText(this.flex3, 'R20', line.pieceStr);
@@ -134,7 +130,15 @@ function __Tran() {
             this.times = Tran.creatText(this.flex3, 'R20', line.timesStr);
             this.body.setAttribute('margin', 'B15');
             this.flex1.setAttribute('margin', 'T5');
+            this.flex1.onclick = function() {
+                Alert.bodySelect(this);
+                Alert.showUser(this.parentNode, true);
+            }
             this.flex3.setAttribute('margin', 'T0');
+            this.flex3.onclick = function() {
+                Alert.bodySelect(this);
+                Tran.showDetail(this.parentNode);
+            }
         }
     }
 
@@ -243,12 +247,14 @@ function __Tran() {
         Alert.showPanel('detail');
         let data = Config.__list(body);
         let line = Config.__line(body);
+        let digger = line.__digger;
+        let sponer = line.__sponer;
         document.body.line = line;
         document.body.data = data;
-        Alert.print([line.inver, line, body.self]);
+        Alert.print([digger.name, line, body.self]);
         let title = Alert.curPanel.title;
         let block = Alert.curPanel.block;
-        title.innerHTML = data.flexStr.replace('#0',line.inver);
+        title.innerHTML = data.flexStr.replace('#0', digger.name);
         block.innerHTML = '';
 
 
@@ -282,7 +288,7 @@ function __Tran() {
         Task.logs.cur = data.logTips.replace('#inver', line.inver);
         Alert.buttons.doit.innerHTML = data.doitText;
         Alert.log(Task.logs.cur);
-        Alert.showButton(data);
+        Alert.showButton(false);
     }
 
 

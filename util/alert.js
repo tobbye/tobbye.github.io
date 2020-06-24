@@ -60,7 +60,7 @@ function __Alert() {
         if (len > 1 && cfg.name == 'nexu' || cfg.name == 'rank') {
             if (y > 0) {
                 let guide   = Elem.creat('div', left, 'button-min');
-                guide.style.borderColor = Alert.colorFont();
+                guide.style.border = 'solid 6px ' + Alert.colorFont();
                 guide.style.color = Alert.colorFont();
                 guide.innerHTML = '↑';
                 guide.onclick = function() {
@@ -71,7 +71,7 @@ function __Alert() {
             }
             if (y < len-1) {
                 let guide   = Elem.creat('div', right, 'button-min');
-                guide.style.borderColor = Alert.colorFont();
+                guide.style.border = 'solid 6px ' + Alert.colorFont();
                 guide.style.color = Alert.colorFont();
                 guide.innerHTML = '↓';
                 guide.onclick = function() {
@@ -160,7 +160,7 @@ function __Alert() {
             if (childTop.className != 'button-top')
                 break;
             if (i == idx) {
-                if (isPage)
+                if (isPage) 
                     Elem.color(childTop, Alert.colorBgd(), Alert.colorFont());
                 else
                     Elem.attr(childTop, 'state', 'live');
@@ -218,12 +218,18 @@ function __Alert() {
 
 
 
-    this.showButton = function(data) {
+    this.showButton = function(type) {
+        let buttonTypes = {
+            null:[0,3],
+            true:[0,2,3],
+            false:[0,1,3],
+        }
+        let buttonIdx = buttonTypes[type];
         let buttons = this.curPanel.buttons;
-        if (data.buttonIdx) {
+        if (buttonIdx) {
             for (var i=0;i<buttons.length;i++) {
                 let name = buttons[i].getAttribute('name');
-                if (data.buttonIdx.indexOf(i) > -1)
+                if (buttonIdx.indexOf(i) > -1)
                     Elem.show(buttons[i]);
                 else
                     Elem.hide(buttons[i]);
@@ -305,19 +311,30 @@ function __Alert() {
     this.UserData = function() {
 
         this.init = function(line) {
-            if (line.uid) {
-                this.uid = line.uid;
-                Config.getObject(this, tempData.userData[this.uid]);
+            this.uid = line.uid || line.sid;
+            if (this.uid) {
+                Config.getObject(this, Config.__user(this.uid));
             } else {
                 Config.getObject(this, line);
             }
+            this.initTemp();
+        }
+
+
+
+        this.initTemp = function() {
+            this.group = this.uid[0].replace('s','赞助商').replace('d','淘金者');
+            this.desc = '<div desc="center">' + this.name + '的描述</div>';
+            this.desc += 'THE DESCRIBE OF ' + this.name + '<br/>';
+            this.desc += 'THE DESCRIBE OF ' + this.name + '<br/>';
+            this.desc += 'THE DESCRIBE OF ' + this.name + '<br/>';
         }
     }
 
     this.UserFlex = function() {
 
-        this.init = function(user, line, isNext) {
-            this.body = user;
+        this.init = function(body, line, isNext) {
+            this.body = body;
             if (cfg.isRank || isNext) {
                 this.top = Elem.creat('div', this.body, 'user-top');
                 this.order = Elem.creat('div', this.top, 'user-order');
@@ -325,7 +342,7 @@ function __Alert() {
 
                 this.order.innerHTML = line.order;
                 this.value.innerHTML = line.value; 
-                Elem.color(this.order, 'white', Alert.colorFont());
+                Elem.color(this.order, '', Alert.colorFont());
             }
             this.marks = [];
             this.flex = Elem.creat('div', this.body, 'user-flex');
@@ -336,21 +353,26 @@ function __Alert() {
             this.mark = Elem.creat('div',  this.left, 'user-flex');
             this.ladd = Elem.creat('div',  this.right, 'user-ladd');
             this.group = Elem.creat('div',  this.right, 'user-group');
-            line.mark = line.mark || ["身份标签1", "身份标签2"];
             for (let i in line.mark) {
                 let mark = Elem.creat('div', this.mark, 'user-mark');
                 mark.innerHTML = line.mark[i];
                 mark.style.borderColor = Alert.colorFont();
                 this.marks[i] = mark;
             }
-            Elem.color(this.head, '', Alert.colorLight());
+            this.head.style.backgroundColor = Alert.colorLight();
+            this.group.style.borderColor = Alert.colorFont();
             Elem.color(this.group, 'white', Alert.colorFont());
-            Elem.css(this.group, 'borderColor', Alert.colorFont());
 
             this.name.innerHTML = line.name || line.inver;
             this.ladd.innerHTML = (line.ladder || line.ladd || '??') + '阶';
             this.group.innerHTML = line.group || '未知';
             this.flex.setAttribute('margin', 'T5');
+            if (this.body.parentNode.className == 'alert-block')
+                return;
+            this.flex.onclick = function() {
+                Alert.bodySelect(this);
+                Alert.showUser(this);
+            }
         }
     }
 
@@ -366,6 +388,7 @@ function __Alert() {
             if (line.tag) {
                 for (let i in line.tag) {
                     let tag = Elem.creat('div', this.tag, 'user-tag');
+                    tag.style.backgroundColor = Alert.colorFont();
                     tag.innerHTML = line.tag[i];
                     tag.onclick = function() {
                         Alert.showSearch(this);
@@ -390,20 +413,24 @@ function __Alert() {
         }
     }
 
-    this.showUser = function(user) {
+
+
+    this.showUser = function(flex, isSponer) {
 
         this.hidePanel();
-        this.showPanel('detail');
-        user = user || document.body.user;
-        let x = user.x;
-        let data = Config.__list(user);
-        let line = Config.__line(user);
+        this.showPanel('info');
+        flex = flex || document.body.flex;
+        let x = flex.x;
+        let data = Config.__list(flex);
+        let line = Config.__line(flex);
         let title = this.curPanel.title;
         let block = this.curPanel.block;
         let body = new this.UserBody();
-        body.init(block, line);
-        this.showButton(data);
-        this.print([line.name, line, body]);
+        let user = isSponer ? line.__sponer : line.__digger;
+        user = user || line;
+        body.init(block, user);
+        this.showButton(false);
+        this.print([user.name, user, body]);
     }
 
     this.showSearch = function(button) {
@@ -431,19 +458,19 @@ function __Alert() {
 
     this.showNexu = function() {
         this.hidePanel();
-        let user = document.body.user;
-        let line = Config.__line(user);
-        let lines = Config.__list(user).lines;
+        let flex = document.body.flex;
+        let line = Config.__line(flex);
+        let lines = Config.__list(flex).lines;
         Parse.remove(lines, line);  
-        Elem.remove(user);
+        Elem.remove(flex);
     }
 
 
     this.showChat = function() {
         this.hidePanel();
         this.showPanel("chat");
-        let user = document.body.user;
-        let line = Config.__line(user);
+        let flex = document.body.flex;
+        let line = Config.__line(flex);
         let title = this.curPanel.title;
         let block = this.curPanel.block;
         let input = this.curPanel.input;
@@ -513,7 +540,7 @@ function __Alert() {
         let block = this.curPanel.block;
         let input = this.curPanel.input;
         block.lastChild.scrollIntoView();
-        Elem.color(input, Alert.colorFont(), "");
+        input.style.color = Alert.colorFont();
         input.value = "";
 
         // Style.height("detail-block", "550px");
