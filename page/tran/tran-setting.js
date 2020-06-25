@@ -32,7 +32,7 @@ function __Tran() {
 
 
     this.creatGrabBody = function(content, data) {
-        let lines = data.lines.length > 0 ? data.lines : Parse.mix(instance[data.type]);
+        let lines = data.lines.length > 0 ? data.lines : instance[data.type];
         let block = Elem.creat('div', content, 'block');
         for (let idx in lines) {
             if (idx >= cfg.inveCount) break;
@@ -49,12 +49,14 @@ function __Tran() {
 
         this.init = function(data, line, idx) {
             this.idx = idx;
-            this.sid = line.sid;
-            this.uid = line.uid || line.sid;
+            this.uid = line.uid;
+            this.sid = line.sid || line.uid;
             this.__digger = new Alert.UserData();
             this.__sponer = new Alert.UserData();
             this.__digger.init(Config.__user(this.uid));
             this.__sponer.init(Config.__user(this.sid));
+            this.__digger.nexu = line.nexu;
+            this.__sponer.nexu = line.nexu;
             this.initTemp();
             this.initData(data.dot, data.type);
         };
@@ -116,7 +118,7 @@ function __Tran() {
             this.flex1 = Elem.creat('div', this.body, 'user-top');
             this.index = Elem.creat('div', this.flex1, 'user-order');
             this.stamp = Elem.creat('div', this.flex1, 'user-value');
-            this.index.innerHTML = '编号: ' + line.index;
+            // this.index.innerHTML = '编号: ' + line.index;
             this.index.innerHTML = line.__sponer.name;
             this.stamp.innerHTML = '时间: ' + line.stamp;
             Elem.color(this.index, '', Alert.colorFont());
@@ -288,7 +290,7 @@ function __Tran() {
         Task.logs.cur = data.logTips.replace('#inver', line.inver);
         Alert.buttons.doit.innerHTML = data.doitText;
         Alert.log(Task.logs.cur);
-        Alert.showButton(false);
+        Alert.showButton();
     }
 
 

@@ -25,8 +25,6 @@ function __Nexu() {
 
 
 	this.creatLine = function(content, data) {
-		if (!data.lines) 
-			return;
 		let lines = data.lines;
 		let block = Elem.creat('div', content, 'block');
 		for (let z in lines) {

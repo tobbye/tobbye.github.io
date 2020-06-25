@@ -182,6 +182,13 @@ Parse.remove = function(lines, line) {
     }
 }
 
+Parse.empty = function(lines, line) {
+    for (let x in lines) {
+        if (lines[x] == line)
+            lines[x] = null;
+    }
+}
+
 
 //元素
 var  Elem = {};

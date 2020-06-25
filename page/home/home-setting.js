@@ -27,8 +27,6 @@ function __Home() {
     }
 
     this.creatLine = function(block, data) {
-        if (!data.lines) 
-            return;
         let lines = data.lines;
         for (let z in lines) {
             let temp = lines[z];
@@ -39,11 +37,6 @@ function __Home() {
             let body = Elem.creat('div', block, 'user-block', 'lines['+z+']');
             let flex = new Alert.UserFlex(body, line);
             flex.init(body, line);
-            body.onclick = function() {
-                document.body.user = this;
-                Alert.bodySelect(this);
-                Alert.showUser(this);
-            }
             data.lines[z] = line;
         }
     }
@@ -55,9 +48,6 @@ function __Home() {
         line.value = '已占领: ' + rand + 'h';
         line.group = line.uid[0].replace('s','赞助商').replace('d','淘金者');
         line.desc = '<div desc="center">' + line.name + '的描述</div>';
-        line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
-        line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
-        line.desc += 'THE DESCRIBE OF ' + line.name + '<br/>';
     }
 
 }
@@ -93,12 +83,8 @@ function __Depot() {
         // console.log(idx);
         let flex = Elem.creat('div', this.block, 'flex');
         table = Elem.creat('table', this.block, 'table');
-        // block.appendChild(data.btnStr);
         let button = Elem.creat('div', this.block);
         button.innerHTML = this.data.btnStr;
-        // button.innerHTML = '<h3>DISCOVER</h3>';
-        // Elem.state(button, 'permit');
-
 
         for (let i=0;i<this.col;i++) {
             let pos = Elem.creat('div', flex, 'user-pos', i);
@@ -115,7 +101,6 @@ function __Depot() {
 
         td.top = '<h3>' + top + '</h3>';
         td.center = '<h2>' + pos + '</h2>';
-        // td.center = '<h2>' +rowStr[pos[0]] + colStr[pos[1]] + '</h2>';
         td.pos = pos;
         td.innerHTML = td.center + '-';
     }

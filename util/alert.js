@@ -218,25 +218,17 @@ function __Alert() {
 
 
 
-    this.showButton = function(type) {
-        let buttonTypes = {
-            null:[0,3],
-            true:[0,2,3],
-            false:[0,1,3],
-        }
-        let buttonIdx = buttonTypes[type];
+    this.showButton = function(nexu) {
+        let nexus = [[4,5], [0,1,3], [0,2,3], [0,3]][nexu];
         let buttons = this.curPanel.buttons;
-        if (buttonIdx) {
+        if (nexus) {
             for (var i=0;i<buttons.length;i++) {
                 let name = buttons[i].getAttribute('name');
-                if (buttonIdx.indexOf(i) > -1)
+                if (nexus.indexOf(i) > -1)
                     Elem.show(buttons[i]);
                 else
                     Elem.hide(buttons[i]);
             } 
-        }
-        if (data.btnName) {
-
         }
     }
 
@@ -314,28 +306,32 @@ function __Alert() {
             this.uid = line.uid || line.sid;
             if (this.uid) {
                 Config.getObject(this, Config.__user(this.uid));
+                this.initTemp();
             } else {
                 Config.getObject(this, line);
             }
-            this.initTemp();
+            this.nexu = this.nexu || line.nexu;
         }
 
 
 
         this.initTemp = function() {
-            this.group = this.uid[0].replace('s','赞助商').replace('d','淘金者');
+            this.group = Config.getGroup(this);
             this.desc = '<div desc="center">' + this.name + '的描述</div>';
-            this.desc += 'THE DESCRIBE OF ' + this.name + '<br/>';
-            this.desc += 'THE DESCRIBE OF ' + this.name + '<br/>';
-            this.desc += 'THE DESCRIBE OF ' + this.name + '<br/>';
         }
     }
 
     this.UserFlex = function() {
 
         this.init = function(body, line, isNext) {
+            cfg.isNext = isNext;
             this.body = body;
-            if (cfg.isRank || isNext) {
+            this.initTop(line);
+            this.initBody(line);
+        }
+
+        this.initTop = function(line, isNext) {
+            if (cfg.isRank || cfg.isNext) {
                 this.top = Elem.creat('div', this.body, 'user-top');
                 this.order = Elem.creat('div', this.top, 'user-order');
                 this.value = Elem.creat('div', this.top, 'user-value');
@@ -343,7 +339,10 @@ function __Alert() {
                 this.order.innerHTML = line.order;
                 this.value.innerHTML = line.value; 
                 Elem.color(this.order, '', Alert.colorFont());
-            }
+            } 
+        }
+
+        this.initBody = function(line) {
             this.marks = [];
             this.flex = Elem.creat('div', this.body, 'user-flex');
             this.head = Elem.creat('img',  this.flex, 'user-head');
@@ -361,6 +360,7 @@ function __Alert() {
             }
             this.head.style.backgroundColor = Alert.colorLight();
             this.group.style.borderColor = Alert.colorFont();
+            if (line.isSponer)
             Elem.color(this.group, 'white', Alert.colorFont());
 
             this.name.innerHTML = line.name || line.inver;
@@ -369,10 +369,11 @@ function __Alert() {
             this.flex.setAttribute('margin', 'T5');
             if (this.body.parentNode.className == 'alert-block')
                 return;
-            this.flex.onclick = function() {
+            let select = cfg.isRank ? this.body:this.flex;
+            select.onclick = function() {
                 Alert.bodySelect(this);
                 Alert.showUser(this);
-            }
+            } 
         }
     }
 
@@ -397,6 +398,9 @@ function __Alert() {
                 }
             }
             this.desc.innerHTML = line.desc.replace(/\n/g, '<br/>');
+            this.desc.innerHTML += 'THE DESCRIBE OF ' + line.name + '<br/>';
+            this.desc.innerHTML += 'THE DESCRIBE OF ' + line.name + '<br/>';
+            this.desc.innerHTML += 'THE DESCRIBE OF ' + line.name + '<br/>';
         }
     }
 
@@ -429,7 +433,8 @@ function __Alert() {
         let user = isSponer ? line.__sponer : line.__digger;
         user = user || line;
         body.init(block, user);
-        this.showButton(false);
+        title.innerHTML = user.group + '资料';
+        this.showButton(user.nexu);
         this.print([user.name, user, body]);
     }
 
@@ -445,10 +450,8 @@ function __Alert() {
             let body = Elem.creat("div", block, "user-block", 'lines['+z+']');
             let line = new Alert.UserData();
             line.init(temp);
-            let order = temp.order + "th";
-            if (order.length == 3)
-                line.order = order.replace("1th", "1st").replace("2th", "2nd").replace("3th", "3rd");
-            line.group = temp.uid[0].replace('s','赞助商').replace('d','淘金者');
+            line.order = Config.getOrder(z);
+            line.group = Config.getGroup(temp);
             line.value = "权值: " + Parse.sub4Num(temp.val);
             this.flex = new Alert.UserFlex();
             this.flex.init(body, line, true);
@@ -461,8 +464,8 @@ function __Alert() {
         let flex = document.body.flex;
         let line = Config.__line(flex);
         let lines = Config.__list(flex).lines;
-        Parse.remove(lines, line);  
-        Elem.remove(flex);
+        Parse.empty(lines, line);  
+        Elem.remove(flex.parentNode);
     }
 
 
