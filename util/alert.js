@@ -462,10 +462,15 @@ function __Alert() {
     this.showNexu = function() {
         this.hidePanel();
         let flex = document.body.flex;
+        let childs = flex.parentNode.children;
         let line = Config.__line(flex);
         let lines = Config.__list(flex).lines;
-        Parse.empty(lines, line);  
-        Elem.remove(flex.parentNode);
+        Parse.remove(lines, line);  
+        console.log(lines);
+        Elem.remove(flex);
+        for (let i=0; i<childs.length; i++) {
+            childs[i].setAttribute('key', 'lines['+i+']');
+        }
     }
 
 

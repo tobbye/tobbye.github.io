@@ -42,7 +42,7 @@ function __Home() {
     }
 
     this.initTemp = function(line, z) {
-        let pos = Parse.cutZero(Depot.tgtPos.join('')) || 'home';
+        let pos = Parse.cutZero(Depot.tgtPos) || 'home';
         line.order = line.pos || pos + '-' + z;
         let rand = ~~(12*Math.random()*Math.random()+150-10*z);
         line.value = '已占领: ' + rand + 'h';
@@ -61,7 +61,8 @@ function __Depot() {
     this.col = 6;
     this.row = 6;
     this.orgPos = '000000';
-    this.tgtPos = [];
+    this.tgtPos = '000000';
+    this.tgtList = [];
     this.tgtCell = [];
     this.posCell = [];
     this.lvlDict = {};
@@ -91,23 +92,11 @@ function __Depot() {
             Elem.color(pos, 'white', Alert.colorFont());
             this.posCell.push(pos);
         }
-        this.setPos();
+        this.creatPos(this.orgPos);
     }
 
 
-
-
-    this.setText = function(td, pos) {
-
-        td.top = '<h3>' + top + '</h3>';
-        td.center = '<h2>' + pos + '</h2>';
-        td.pos = pos;
-        td.innerHTML = td.center + '-';
-    }
-
-
-
-    this.setPos = function() {
+    this.creatPos = function(tgt) {
         table.innerHTML = '';
         for (let x=0; x<this.row; x++) {
             let tr = Elem.creat('tr', table, 'row', x);
@@ -122,12 +111,13 @@ function __Depot() {
             }
         }
         this.tgtCell = [];
-        this.tgtPos = this.orgPos.split('');
+        this.tgtPos = tgt || this.orgPos;
+        this.tgtList = this.tgtPos.split('');
         for (let x in this.posCell) {
             this.setText(this.posCell[x], this.orgPos[x]);
         }
-        for (let x in this.tgtPos) {
-            let pos = this.tgtPos[x];
+        for (let x in this.tgtList) {
+            let pos = this.tgtList[x];
             let i = this.lvlDict[pos][0];
             let j = this.lvlDict[pos][1];
             let td = table.children[i].children[j];
@@ -142,18 +132,20 @@ function __Depot() {
     }
 
 
+
     this.setCell = function(td) {
         this.tgtCell.push(td);
-        this.tgtPos.push(td.pos);
+        this.tgtList.push(td.pos);
         if (this.tgtCell.length > this.col) {
             let oldTd = this.tgtCell[0];
             oldTd.innerHTML = oldTd.center + '-';
             Elem.color(oldTd, Alert.colorFont(), 'white'); 
             this.tgtCell.shift();
         }
-        if (this.tgtPos.length > this.col) {
-            this.tgtPos.shift();
+        if (this.tgtList.length > this.col) {
+            this.tgtList.shift();
         }
+        this.tgtPos = this.tgtList.join('');
 
         for (let x in this.tgtCell) {
             let tgtTd = this.tgtCell[x];
@@ -164,13 +156,59 @@ function __Depot() {
     }
 
 
-    this.toHome = function() {
-        this.setPos();
-        Alert.creatContent(Home, 0, 2);
+
+    this.setText = function(td, pos) {
+
+        td.top = '<h3>' + top + '</h3>';
+        td.center = '<h2>' + pos + '</h2>';
+        td.pos = pos;
+        td.innerHTML = td.center + '-';
     }
 
-    this.toEnter = function() {
+    this.toLand = function(e) {
+        Alert.hidePanel();
+        let flex = document.body.flex;
+        let line = Config.__line(flex);
+        let pos = Parse.fillZero(line.pos.split('-')[0], 6);
+        this.creatPos(pos);
+        this.toExplore();
+    }
+
+
+    this.toExplore = function() {
         Alert.creatContent(Home, 0, 2);
+        let content = document.body.querySelector('.content');
+        content.nextSibling.nextSibling.scrollIntoView();
+    }
+
+    this.toHome = function() {
+        this.creatPos();
+        Alert.creatContent(Home, 0, 2);
+        let content = document.body.querySelector('.content');
+        content.nextSibling.scrollIntoView();
+    }
+
+    this.toOccupt = function() {
+        let pos = Parse.cutZero(this.tgtPos);
+        let flex = document.body.flex;
+        let lines = items[0].list[0].lines;
+        for (let x in lines) {
+            if (lines[x].pos.split('-')[0] == pos) {
+                Alert.log(`占领地块失败!<h5>不可重复占领,请选择其他地块占领哦</h5>`);
+                return;
+            }
+        }
+        if (lines.length < lines[0].ladd) {
+            let line = JSON.parse(JSON.stringify(lines[0]));
+            line.pos = pos + '-1';
+            lines.unshift(line);
+            Alert.creatContent(Home, 0, 0);
+            Alert.log(`占领地块成功!<h5>您成功占领了地块 ${line.pos}</h5>`);
+            let content = document.body.querySelector('.content');
+            content.scrollIntoView();
+        } else {
+            Alert.log(`可占领地块不足!<h5>解除已占领地块或提升阶梯后再次尝试哦</h5>`);
+        }
     }
 
 

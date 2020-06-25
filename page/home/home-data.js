@@ -31,8 +31,8 @@ btnStr: `
         <button class="button" state="permit" name="clear" onclick="Depot.toHome()">中心区域</button>
     </div>
 	<div class="flex">
-        <button class="button" state="permit" name="enter" onclick="Depot.toEnter()">探索</button>
-        <button class="button" state="permit" name="enter" onclick="Depot.toEnter()">占领</button>
+        <button class="button" state="permit" name="enter" onclick="Depot.toExplore()">探索</button>
+        <button class="button" state="permit" name="enter" onclick="Depot.toOccupt()">占领</button>
     </div>`,
 },
 {title:"公共领地", vice:"查询到#1条结果", buttonIdx: [0,1,3],
