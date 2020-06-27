@@ -15,6 +15,7 @@ Parse.addSplit = function addSplit(num) {
 }
 
 Parse.sub4Num = function(num) {
+    if (typeof(num) !== 'number') return num;
     var length = num.toString().length;
     if (num < 1e4)
         return num;

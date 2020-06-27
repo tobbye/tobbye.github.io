@@ -235,9 +235,9 @@ function __Alert() {
 
     //显示弹窗
     this.showPanel = function(name, save) {
+        this.hidePanel();
         this.curPanel = this.panels[name];
         if (!this.curPanel) return;
-        this.hidePanel();
         this.setBox();
         this.isAlert = true;
         // console.log(this.curPanel);
@@ -251,6 +251,7 @@ function __Alert() {
 
     //隐藏弹窗
     this.hidePanel = function(name) {
+        this.curPanel = null
         this.isAlert = false;
         Elem.hide(this.alert);
         if (!this.alert || !this.box) return;
@@ -304,34 +305,34 @@ function __Alert() {
 
         this.init = function(line) {
             this.uid = line.uid || line.sid;
-            if (this.uid) {
-                Config.getObject(this, Config.__user(this.uid));
-                this.initTemp();
-            } else {
-                Config.getObject(this, line);
-            }
+            Config.getObject(this, line);
+            Config.getObject(this, Config.__user(this.uid));
+            this.initTemp();
             this.nexu = this.nexu || line.nexu;
+ 
         }
 
 
 
         this.initTemp = function() {
-            this.group = Config.getGroup(this);
+            this.group = this.group || Config.getGroup(this);
+            this.order = this.order || Config.getOrder(this.ord);
+            this.value = this.value || (this.valStr + ': ' + Parse.sub4Num(this.val));
             this.desc = '<div desc="center">' + this.name + '的描述</div>';
         }
     }
 
     this.UserFlex = function() {
 
-        this.init = function(body, line, isNext) {
-            cfg.isNext = isNext;
+        this.init = function(body, line, isHead) {
+            cfg.isHead = cfg.isRank || isHead;
             this.body = body;
-            this.initTop(line);
+            this.initHead(line);
             this.initBody(line);
         }
 
-        this.initTop = function(line, isNext) {
-            if (cfg.isRank || cfg.isNext) {
+        this.initHead = function(line) {
+            if (cfg.isHead) {
                 this.top = Elem.creat('div', this.body, 'user-top');
                 this.order = Elem.creat('div', this.top, 'user-order');
                 this.value = Elem.creat('div', this.top, 'user-value');
@@ -345,7 +346,7 @@ function __Alert() {
         this.initBody = function(line) {
             this.marks = [];
             this.flex = Elem.creat('div', this.body, 'user-flex');
-            this.head = Elem.creat('img',  this.flex, 'user-head');
+            this.icon = Elem.creat('img',  this.flex, 'user-icon');
             this.left = Elem.creat('div',  this.flex, 'user-left');
             this.right = Elem.creat('div',  this.flex, 'user-right');
             this.name = Elem.creat('div',  this.left, 'user-name');
@@ -358,7 +359,7 @@ function __Alert() {
                 mark.style.borderColor = Alert.colorFont();
                 this.marks[i] = mark;
             }
-            this.head.style.backgroundColor = Alert.colorLight();
+            this.icon.style.backgroundColor = Alert.colorLight();
             this.group.style.borderColor = Alert.colorFont();
             if (line.isSponer)
             Elem.color(this.group, 'white', Alert.colorFont());
@@ -367,9 +368,9 @@ function __Alert() {
             this.ladd.innerHTML = (line.ladder || line.ladd || '??') + '阶';
             this.group.innerHTML = line.group || '未知';
             this.flex.setAttribute('margin', 'T5');
-            // if (this.body.parentNode.className == 'alert-block')
-            //     return;
-            let select = cfg.isRank ? this.body:this.flex;
+            if (Alert.curPanel && Alert.curPanel.name == 'info')
+                return;
+            let select = cfg.isHead ? this.body:this.flex;
             select.onclick = function() {
                 Alert.bodySelect(this);
                 Alert.showUser(this);
@@ -407,6 +408,7 @@ function __Alert() {
 
 
     this.bodySelect = function(flex) { 
+        if (Alert.curPanel) return;
         let old = document.body.flex;
         if (old) {
             old.setAttribute('select', 'not');
@@ -420,23 +422,20 @@ function __Alert() {
 
 
     this.showUser = function(flex, isSponer) {
-
         this.hidePanel();
         this.showPanel('info');
         flex = flex || document.body.flex;
         let x = flex.x;
         let data = Config.__list(flex);
         let temp = Config.__line(flex);
-        let line;
-        if  (typeof(temp) != 'UserData') {
-            line = new this.UserData();
-            line.init(temp);
-        }
         let title = this.curPanel.title;
         let block = this.curPanel.block;
-        let user = isSponer ? line.__sponer : line.__digger;
-        let body = new this.UserBody();
+        let line = new this.UserData();
+        line.init(temp);
+        let user = isSponer ? temp.__sponer : temp.__digger;
         user = user || line;
+        console.log(user)
+        let body = new this.UserBody();
         body.init(block, user);
         title.innerHTML = user.group + '资料';
         this.showButton(user.nexu);
@@ -448,18 +447,18 @@ function __Alert() {
         this.showPanel("search");
         let title = this.curPanel.title;
         let block = this.curPanel.block;
-        block.innerHTML = "";
         title.innerHTML = Constant.string.titleSearch.replace("#0", button.innerHTML);
         let searchData = Parse.mix(tempData.searchData);
         tempData.searchData = searchData;
         for (let z in searchData) {
             let temp = searchData[z];
+            temp.ord = z;
+            temp.valStr = '权值';
+            temp.val = Math.floor((Math.random()+40-z) * 2e3);
+            temp.nexu = 1;
             let body = Elem.creat("div", block, "user-block", 'tempData.searchData['+z+']');
             let line = new Alert.UserData();
             line.init(temp);
-            line.order = Config.getOrder(z);
-            line.group = Config.getGroup(temp);
-            line.value = "权值: " + Parse.sub4Num(temp.val);
             let flex = new Alert.UserFlex();
             flex.init(body, line, true);
         }

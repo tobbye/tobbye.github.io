@@ -24,7 +24,7 @@ function __Rank() {
 
 	this.creatLine = function(content, data) {
 		data.lines = [];
-		let lines = this.initTempLine(data);
+		let lines = this.initTempData(data);
 		let block = Elem.creat('div', content, 'block');
 		for (let z in lines) {
 			let line = new Alert.UserData();
@@ -37,28 +37,27 @@ function __Rank() {
 	}
 
 
-	this.initTempLine = function(data) {
+	this.initTempData = function(data) {
 		let lines = [];
-	    let list = Parse.mix(sponer);
-		for (let z in list) {
+	    let sponers = Parse.mix(sponer);
+		for (let z in sponers) {
 			if (z >= cfg.rankCount) break;
 			let unit = tempData.unitData;
-			let text = list[z].split('-');
+			let text = sponers[z].split('-');
 			let line = {
 				name: text[0],
+				uid: 's' + (80001 + ~~z),
 				mark: [text[1], text[2]],
 				tag: unit.tag,
-				desc: unit.desc,
 				group: data.group,
 				nexu: 1,
+				ord: z,
+				valStr: data.text,
 			};
 
-			let seed = data.power * data.seed;
-			let rand = Math.floor((Math.random()+40-z) * 2 * seed);
-			line.order = Config.getOrder(z);
-			line.value = data.text + ': ￥' + Parse.sub4Num(rand);
-			line.ladd = Math.floor(Math.random() * 20) + 3;
-			line.desc = '<div desc="center">' + line.name + '的描述</div>';
+			line.seed = data.power * data.seed;
+			line.ladd = Math.floor(Math.random() * 20) + 3,
+			line.val = Math.floor((Math.random()+40-z) * 2 * line.seed);
 			lines.push(line);
 		}
 		return lines;

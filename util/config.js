@@ -20,7 +20,7 @@ var Page = function() {
     this.windHeight = ~~(window.innerHeight / this.zoom);
     if (this.alertType == 'bot') {
         this.alertMinMargin = 0;
-        this.alertBorder = 0;
+        this.alertBord = 0;
     } else {
         this.alertOffset += 180;
     }
@@ -32,7 +32,7 @@ var Page = function() {
     this.alertMargin = Math.max(this.alertMargin / 2, this.alertMinMargin);
     this.alertFillWidth = this.windWidth - this.alertMargin * 2;
     this.alertFullWidth = this.windWidth - this.alertMinMargin * 2;
-    this.alertWidth =  this.alertFillWidth - this.alertPadding - this.alertBorder;
+    this.alertWidth =  this.alertFillWidth - this.alertPadding - this.alertBord;
     this.isWidth = this.windWidth > this.windHeight;
     this.isFlow = this.innerHeight > this.minHeight;
     let box = Elem.get('alert-box');
@@ -78,7 +78,7 @@ var Constant = {
         alertMaxWidth: 1000,
         alertMinMargin: 10,
         alertPadding: 20,
-        alertBorder: 16,
+        alertBord: 16,
         alertOffset: 410,
         outerOffset: 220,
         innerOffset: 770, 
@@ -205,14 +205,17 @@ function __Config() {
     }
 
     this.getOrder = function(idx) {
-        let order = parseInt(idx) + 1 + 'th';
-        if (order.length == 3)
-            order = order.replace('1th', '1st').replace('2th', '2nd').replace('3th', '3rd');
-        return order;
+        let ord = parseInt(idx) + 1 + 'th';
+        if (ord.length == 3)
+            ord = ord.replace('1th', '1st').replace('2th', '2nd').replace('3th', '3rd');
+        return ord;
     }
 
     this.getGroup = function(temp) {
-        temp.isSponer = temp.uid[0] == 's';
+        if (temp.uid) 
+            temp.isSponer = temp.uid[0] == 's';
+        if (temp.group) 
+            temp.isSponer = temp.group == '赞助商';
         return temp.isSponer ? '赞助商':'淘金者';
     }
 
@@ -256,7 +259,9 @@ function __Config() {
     //---根据绑定的idx属性查找数据
 
     this.__user = function(uid) {
+        if (!uid) return;
         let user = tempData.userData[uid];
+        if (!user) return;
         user.uid = uid;
         return user;
     }
@@ -265,14 +270,14 @@ function __Config() {
 
 let tempData = {
     searchData: [
-        {order: 1, val: 948670, nexu:1, uid: 'd20001'},
-        {order: 2, val: 690663, nexu:1, uid: 'd20002'},
-        {order: 3, val: 582830, nexu:1, uid: 'd20003'},
-        {order: 4, val: 699972, nexu:1, uid: 'd20004'},
-        {order: 5, val: 414480, nexu:1, uid: 'd20005'},
-        {order: 6, val: 341222, nexu:1, uid: 'd20006'},
-        {order: 7, val: 202098, nexu:1, uid: 'd20007'},
-        {order: 8, val: 182256, nexu:1, uid: 'd20008'},
+        {uid: 'd20001'},
+        {uid: 'd20002'},
+        {uid: 'd20003'},
+        {uid: 'd20004'},
+        {uid: 'd20005'},
+        {uid: 'd20006'},
+        {uid: 'd20007'},
+        {uid: 'd20008'},
         ],
     userData: {
         d10001:{name:'青青',ladd:13,tag:['自定义标签1','自定义标签2','自定义标签3'],mark:['阶层展示1','阶层展示2']},
@@ -354,7 +359,7 @@ let tempData = {
         m90031:{name:'魇',ladd:10,tag:['婍娸媒','婌婘孃婿','孏娷孈孀孂'],mark:['身份标签1','身份标签2']},
     },
     unitData: {
-        nexu:1, uid: 'uid001', 
+        uid: 'uid001', 
         name: 'The Sponsor', 
         ladd: 17, 
         tag: ['自定义标签1','自定义标签2','自定义标签3'], 

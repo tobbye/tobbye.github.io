@@ -30,24 +30,17 @@ function __Home() {
         let lines = data.lines;
         for (let z in lines) {
             let temp = lines[z];
+            let pos = Parse.cutZero(Depot.tgtPos) || 'home';
+            temp.order = temp.pos || pos + '-' + z;
+            temp.valStr = '已占领';
             let line = new Alert.UserData();
             line.init(lines[z]);
             line.pos = temp.pos;
-            this.initTemp(line, z);
             let body = Elem.creat('div', block, 'user-block', 'lines['+z+']');
             let flex = new Alert.UserFlex(body, line);
             flex.init(body, line);
             data.lines[z] = line;
         }
-    }
-
-    this.initTemp = function(line, z) {
-        let pos = Parse.cutZero(Depot.tgtPos) || 'home';
-        line.order = line.pos || pos + '-' + z;
-        let rand = ~~(12*Math.random()*Math.random()+150-10*z);
-        line.value = '已占领: ' + rand + 'h';
-        line.group = line.uid[0].replace('s','赞助商').replace('d','淘金者');
-        line.desc = '<div desc="center">' + line.name + '的描述</div>';
     }
 
 }

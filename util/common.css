@@ -184,6 +184,7 @@ div[fade=over] {
 	margin: 5px 10px;
 	padding: 15px;
 	font-weight: bold;
+	border: solid 2px transparent;
 	border-radius: 20px;
 }
 
@@ -295,7 +296,7 @@ div[fade=over] {
 }
 
 
-.user-head {
+.user-icon {
 	margin: 15px;
 	width: 150px;
 	height: 150px;
@@ -397,9 +398,30 @@ div[fade=over] {
 	bottom: 0px;
 }
 
+.alert-panel {
+}
+
+
 .alert-flex {
 	display: flex;
 	margin: 5px 0px;
+}
+
+
+.alert-block {
+    overflow: auto;
+    font-size: 1em;
+    margin: 0px 10px;
+}
+
+
+.alert-body {
+    background-color: white;
+}
+
+.alert-block::-webkit-scrollbar{
+
+    display:none
 }
 
 .alert-title {
@@ -412,7 +434,7 @@ div[fade=over] {
 }
 
 .alert-button {
-	margin: 10px 20px;
+	margin: 10px;
 	flex: 10;
 	height: 80px;
 	line-height: 80px;
@@ -423,22 +445,6 @@ div[fade=over] {
 	margin: auto 0px;
 	margin-left: 20%;
 	font-size: 1.8em;
-}
-
-.alert-block {
-    overflow: auto;
-    margin: 0px 10px;
-    font-size: 1em;
-}
-
-
-.alert-body {
-    background-color: white;
-}
-
-.alert-block::-webkit-scrollbar{
-
-    display:none
 }
 
 .chat-flex {

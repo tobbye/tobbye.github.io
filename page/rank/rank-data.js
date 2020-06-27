@@ -22,37 +22,37 @@ var items = [
 
 {title:"日榜",
 list:[
-{title: '1.1 赞助商投放', text: '投放', vice: '2019年1月15日', group: "赞助商", power: 1, seed: 1e4, buttonIdx:[0,1,3]},
-{title: '1.2 淘金者投入', text: '投入', vice: '2019年1月15日', group: "淘金者", power: 1, seed: 1e3, buttonIdx:[0,1,3]},
-{title: '1.3 淘金者抢夺', text: '抢夺', vice: '2019年1月15日', group: "淘金者", power: 1, seed: 1e3, buttonIdx:[0,1,3]},
-{title: '1.4 淘金者收益', text: '收益', vice: '2019年1月15日', group: "淘金者", power: 1, seed: 1e1, buttonIdx:[0,1,3]},
+{title: '1.1 赞助商投放', text: '投放', vice: '2019年1月15日', group: "赞助商", power: 1, seed: 1e4},
+{title: '1.2 淘金者投入', text: '投入', vice: '2019年1月15日', group: "淘金者", power: 1, seed: 1e3},
+{title: '1.3 淘金者抢夺', text: '抢夺', vice: '2019年1月15日', group: "淘金者", power: 1, seed: 1e3},
+{title: '1.4 淘金者收益', text: '收益', vice: '2019年1月15日', group: "淘金者", power: 1, seed: 1e1},
 ]},
 
 
 {title:"周榜", 
 list:[
-{title: '2.1 赞助商投放', text: '投放', vice: '2019年第2周', group: "赞助商", power: 7, seed: 1e4, buttonIdx:[0,1,3]},
-{title: '2.2 淘金者投入', text: '投入', vice: '2019年第2周', group: "淘金者", power: 7, seed: 1e3, buttonIdx:[0,1,3]},
-{title: '2.3 淘金者抢夺', text: '抢夺', vice: '2019年第2周', group: "淘金者", power: 7, seed: 1e3, buttonIdx:[0,1,3]},
-{title: '2.4 淘金者收益', text: '收益', vice: '2019年第2周', group: "淘金者", power: 7, seed: 1e1, buttonIdx:[0,1,3]},
+{title: '2.1 赞助商投放', text: '投放', vice: '2019年第2周', group: "赞助商", power: 7, seed: 1e4},
+{title: '2.2 淘金者投入', text: '投入', vice: '2019年第2周', group: "淘金者", power: 7, seed: 1e3},
+{title: '2.3 淘金者抢夺', text: '抢夺', vice: '2019年第2周', group: "淘金者", power: 7, seed: 1e3},
+{title: '2.4 淘金者收益', text: '收益', vice: '2019年第2周', group: "淘金者", power: 7, seed: 1e1},
 ]},
 
 
 {title:"月榜", 
 list:[
-{title: '3.1 赞助商投放', text: '投放', vice: '2018年12月', group: "赞助商", power: 30, seed: 1e4, buttonIdx:[0,1,3]},
-{title: '3.2 淘金者投入', text: '投入', vice: '2018年12月', group: "淘金者", power: 30, seed: 1e3, buttonIdx:[0,1,3]},
-{title: '3.3 淘金者抢夺', text: '抢夺', vice: '2018年12月', group: "淘金者", power: 30, seed: 1e3, buttonIdx:[0,1,3]},
-{title: '3.4 淘金者收益', text: '收益', vice: '2018年12月', group: "淘金者", power: 30, seed: 1e1, buttonIdx:[0,1,3]},
+{title: '3.1 赞助商投放', text: '投放', vice: '2018年12月', group: "赞助商", power: 30, seed: 1e4},
+{title: '3.2 淘金者投入', text: '投入', vice: '2018年12月', group: "淘金者", power: 30, seed: 1e3},
+{title: '3.3 淘金者抢夺', text: '抢夺', vice: '2018年12月', group: "淘金者", power: 30, seed: 1e3},
+{title: '3.4 淘金者收益', text: '收益', vice: '2018年12月', group: "淘金者", power: 30, seed: 1e1},
 ]},
 
 
 {title:"总榜", 
 list:[
-{title: '4.1 赞助商投放', text: '投放', vice: '2017年4月5日至今', group: "赞助商", power: 750, seed: 1e4, buttonIdx:[0,1,3]},
-{title: '4.2 淘金者投入', text: '投入', vice: '2017年4月5日至今', group: "淘金者", power: 750, seed: 1e3, buttonIdx:[0,1,3]},
-{title: '4.3 淘金者抢夺', text: '抢夺', vice: '2017年4月5日至今', group: "淘金者", power: 750, seed: 1e3, buttonIdx:[0,1,3]},
-{title: '4.4 淘金者收益', text: '收益', vice: '2017年4月5日至今', group: "淘金者", power: 750, seed: 1e1, buttonIdx:[0,1,3]},
+{title: '4.1 赞助商投放', text: '投放', vice: '2017年4月5日至今', group: "赞助商", power: 750, seed: 1e4},
+{title: '4.2 淘金者投入', text: '投入', vice: '2017年4月5日至今', group: "淘金者", power: 750, seed: 1e3},
+{title: '4.3 淘金者抢夺', text: '抢夺', vice: '2017年4月5日至今', group: "淘金者", power: 750, seed: 1e3},
+{title: '4.4 淘金者收益', text: '收益', vice: '2017年4月5日至今', group: "淘金者", power: 750, seed: 1e1},
 ]},
 ];
 
