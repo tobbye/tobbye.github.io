@@ -9,7 +9,7 @@ var Container = function(that) {
     Constrtctors[name] = ['Constrtctors'];
 } 
 
-var Page= function() {
+var Page = function() {
 
     Config.getConst(this, 'page');
     this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
@@ -18,23 +18,29 @@ var Page= function() {
     this.zoom = this.isPad ? this.zoomPad : this.zoom;
     this.windWidth = ~~(window.innerWidth / this.zoom);
     this.windHeight = ~~(window.innerHeight / this.zoom);
+    if (this.alertType == 'bot') {
+        this.alertMinMargin = 0;
+        this.alertBorder = 0;
+    } else {
+        this.alertOffset += 180;
+    }
     this.alertHeight = this.windHeight - this.alertOffset;
     this.outerHeight = this.windHeight - this.outerOffset;
     this.innerHeight = this.windHeight - this.innerOffset;
     this.flowHeight = Math.max(this.innerHeight, this.minHeight);
     this.alertMargin = this.windWidth - this.alertMaxWidth;
     this.alertMargin = Math.max(this.alertMargin / 2, this.alertMinMargin);
-    this.alertWidth = this.windWidth - this.alertMargin * 2 - 36;
-    this.alertFillWidth = this.windWidth - this.alertMargin * 2 - 0;
-    this.alertFullWidth = this.windWidth - this.alertMinMargin * 2 - 0;
+    this.alertFillWidth = this.windWidth - this.alertMargin * 2;
+    this.alertFullWidth = this.windWidth - this.alertMinMargin * 2;
+    this.alertWidth =  this.alertFillWidth - this.alertPadding - this.alertBorder;
     this.isWidth = this.windWidth > this.windHeight;
     this.isFlow = this.innerHeight > this.minHeight;
     let box = Elem.get('alert-box');
     if (box) {
+        box.setAttribute('pos', this.alertType);
         box.style.left = this.alertMargin + 'px';
         box.style.right = this.alertMargin + 'px';
     }
-
     document.body.style.zoom = this.zoom;
     let center = Elem.get('outer-center');
     Elem.height(center, this.outerHeight);
@@ -68,9 +74,12 @@ var Constant = {
         http: 'http://tobbye.top',
     },
     page: {
+        alertType: 'bot',
         alertMaxWidth: 1000,
-        alertMinMargin: 20,
-        alertOffset: 680,
+        alertMinMargin: 10,
+        alertPadding: 20,
+        alertBorder: 16,
+        alertOffset: 410,
         outerOffset: 220,
         innerOffset: 770, 
         minHeight: 700,
@@ -140,6 +149,7 @@ function __Config() {
         if (this.sett.isOnline) {
             Elem.release();
         }
+
     }
 
 

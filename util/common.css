@@ -181,7 +181,7 @@ div[fade=over] {
 .button-micro {
 	flex: 10;
 	color: white;
-	margin: 10px;
+	margin: 5px 10px;
 	padding: 15px;
 	font-weight: bold;
 	border-radius: 20px;
@@ -383,19 +383,18 @@ div[fade=over] {
 }
 
 #alert-box {
+    top: 180px;
 	display: block;
 	position: absolute;
-    top: 180px;
+
+}
+#alert-box[pos=top] {
 	border: solid 8px #fff;
 	border-radius: 30px;
 }
-#alert-box[agent=mobile] {
-    left: 20px;
-    right: 20px;
-}
-#alert-box[agent=computer] {
-    left: 0;
-    right: 0;
+#alert-box[pos=bot] {
+    top: auto;
+	bottom: 0px;
 }
 
 .alert-flex {
@@ -428,7 +427,7 @@ div[fade=over] {
 
 .alert-block {
     overflow: auto;
-    margin: 0px 10px 5px 10px;
+    margin: 0px 10px;
     font-size: 1em;
 }
 

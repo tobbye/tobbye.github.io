@@ -367,8 +367,8 @@ function __Alert() {
             this.ladd.innerHTML = (line.ladder || line.ladd || '??') + '阶';
             this.group.innerHTML = line.group || '未知';
             this.flex.setAttribute('margin', 'T5');
-            if (this.body.parentNode.className == 'alert-block')
-                return;
+            // if (this.body.parentNode.className == 'alert-block')
+            //     return;
             let select = cfg.isRank ? this.body:this.flex;
             select.onclick = function() {
                 Alert.bodySelect(this);
@@ -426,11 +426,16 @@ function __Alert() {
         flex = flex || document.body.flex;
         let x = flex.x;
         let data = Config.__list(flex);
-        let line = Config.__line(flex);
+        let temp = Config.__line(flex);
+        let line;
+        if  (typeof(temp) != 'UserData') {
+            line = new this.UserData();
+            line.init(temp);
+        }
         let title = this.curPanel.title;
         let block = this.curPanel.block;
-        let body = new this.UserBody();
         let user = isSponer ? line.__sponer : line.__digger;
+        let body = new this.UserBody();
         user = user || line;
         body.init(block, user);
         title.innerHTML = user.group + '资料';
@@ -445,16 +450,18 @@ function __Alert() {
         let block = this.curPanel.block;
         block.innerHTML = "";
         title.innerHTML = Constant.string.titleSearch.replace("#0", button.innerHTML);
-        for (let z in tempData.searchData) {
-            let temp = tempData.searchData[z];
-            let body = Elem.creat("div", block, "user-block", 'lines['+z+']');
+        let searchData = Parse.mix(tempData.searchData);
+        tempData.searchData = searchData;
+        for (let z in searchData) {
+            let temp = searchData[z];
+            let body = Elem.creat("div", block, "user-block", 'tempData.searchData['+z+']');
             let line = new Alert.UserData();
             line.init(temp);
             line.order = Config.getOrder(z);
             line.group = Config.getGroup(temp);
             line.value = "权值: " + Parse.sub4Num(temp.val);
-            this.flex = new Alert.UserFlex();
-            this.flex.init(body, line, true);
+            let flex = new Alert.UserFlex();
+            flex.init(body, line, true);
         }
         this.log('搜索成功!');
     }

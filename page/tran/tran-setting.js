@@ -288,9 +288,12 @@ function __Tran() {
         if(block.firstChild)
             block.firstChild.scrollIntoView();
         Task.logs.cur = data.logTips.replace('#inver', line.inver);
+        if (data.type == 'mine') 
+            Elem.hide(Alert.buttons.doit);
+        else
+            Elem.show(Alert.buttons.doit);
         Alert.buttons.doit.innerHTML = data.doitText;
         Alert.log(Task.logs.cur);
-        Alert.showButton();
     }
 
 
