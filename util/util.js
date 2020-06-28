@@ -112,8 +112,13 @@ Parse.mix = function(str) {
         return arr.join('');
 }
 
-Parse.pick = function(arr) {
-    return arr[~~(arr.length*Math.random())];
+Parse.pick = function(arr, count) {
+    let val = arr[~~(arr.length*Math.random())];
+    count --;
+    if (count > 0)
+        return val + Parse.pick(arr, count);
+    else
+        return val;
 }
 
 Parse.swape = function(str, a, b){

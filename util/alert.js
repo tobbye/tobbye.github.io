@@ -235,7 +235,10 @@ function __Alert() {
 
     //显示弹窗
     this.showPanel = function(name, save) {
-        this.hidePanel();
+        if (this.curPanel) {
+            Elem.hide(this.curPanel.panel);
+            this.backName = this.curPanel.name;
+        }
         this.curPanel = this.panels[name];
         if (!this.curPanel) return;
         this.setBox();
@@ -251,8 +254,8 @@ function __Alert() {
 
     //隐藏弹窗
     this.hidePanel = function(name) {
-        this.curPanel = null
         this.isAlert = false;
+        this.backName = null;
         Elem.hide(this.alert);
         if (!this.alert || !this.box) return;
         for (var i=0; i<this.box.children.length; i++) {
@@ -261,6 +264,13 @@ function __Alert() {
         }
         if (cfg.name == 'tran')
             Task.clear();
+    }
+
+    this.backPanel = function() {
+        console.log(this.curPanel);
+        Elem.hide(this.curPanel.panel);
+        if (this.backName)
+            this.showPanel(this.backName, 1);
     }
 
 
@@ -359,7 +369,7 @@ function __Alert() {
                 mark.style.borderColor = Alert.colorFont();
                 this.marks[i] = mark;
             }
-            this.icon.style.backgroundColor = Alert.colorLight();
+            this.icon.style.backgroundColor = Alert.colorFont();
             this.group.style.borderColor = Alert.colorFont();
             if (line.isSponer)
             Elem.color(this.group, 'white', Alert.colorFont());
@@ -368,7 +378,7 @@ function __Alert() {
             this.ladd.innerHTML = (line.ladder || line.ladd || '??') + '阶';
             this.group.innerHTML = line.group || '未知';
             this.flex.setAttribute('margin', 'T5');
-            if (Alert.curPanel && Alert.curPanel.name == 'info')
+            if (Alert.isAlert && Alert.curPanel.name == 'info')
                 return;
             let select = cfg.isHead ? this.body:this.flex;
             select.onclick = function() {
@@ -448,14 +458,22 @@ function __Alert() {
         let title = this.curPanel.title;
         let block = this.curPanel.block;
         title.innerHTML = Constant.string.titleSearch.replace("#0", button.innerHTML);
-        let searchData = Parse.mix(tempData.searchData);
-        tempData.searchData = searchData;
-        for (let z in searchData) {
-            let temp = searchData[z];
-            temp.ord = z;
-            temp.valStr = '权值';
-            temp.val = Math.floor((Math.random()+40-z) * 2e3);
-            temp.nexu = 1;
+        let names = Parse.mix(Array.from(tempData.searchCfg.name));
+        let ladds = Parse.mix(Array.from(tempData.searchCfg.ladd));
+        let marks = Parse.mix(Array.from(tempData.searchCfg.mark));
+        let tags = Parse.mix(Array.from(tempData.searchCfg.tag));
+        for (let z in names) {
+            let temp = {
+                ord: z,
+                name: Parse.pick(names, 6),
+                ladd: Parse.pick(ladds, 1),
+                val: Math.floor((Math.random()+40-z) * 2e3),
+                mark: [Parse.pick(marks, 3), Parse.pick(marks, 3)],
+                tag: [Parse.pick(tags, 3), Parse.pick(tags, 3), Parse.pick(tags, 3)],
+                nexu: 1,
+                valStr: '权值',
+            };
+            tempData.searchData[z] = temp;
             let body = Elem.creat("div", block, "user-block", 'tempData.searchData['+z+']');
             let line = new Alert.UserData();
             line.init(temp);
@@ -491,8 +509,8 @@ function __Alert() {
         Elem.color(input, Alert.colorLight(), "");
         input.placeholder = "输入内容";
         title.innerHTML = line.name;
-        this.box.style.maxHeight = (Config.page.windHeight - 440) + "px";
-        block.style.maxHeight = (Config.page.windHeight - 703) + "px";
+        // this.box.style.maxHeight = (Config.page.windHeight - 440) + "px";
+        // block.style.maxHeight = (Config.page.windHeight - 703) + "px";
         block.innerHTML = "";
         for (let i in tempData.chatData) {
             let data = tempData.chatData[i];

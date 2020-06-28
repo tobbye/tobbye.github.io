@@ -143,9 +143,9 @@
         <div id="alert-box">
             <div class="alert-panel" name="info">
                 <div class="alert-flex">
-                    <div class="alert-button" onclick="Alert.hidePanel()">返回</div>
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">返回</div>
                     <div class="alert-title">个人资料</div>
-                    <div class="alert-button" onclick="Alert.hidePanel()">关闭</div>
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">关闭</div>
                 </div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
@@ -158,22 +158,36 @@
                 </div>
             </div>
             <div class="alert-panel" name="detail">
-                <div class="alert-title">查看详情</div>
+                <div class="alert-flex">
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">返回</div>
+                    <div class="alert-title">查看详情</div>
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">关闭</div>
+                </div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
                     <button class="button" state="permit" name="doit" onclick="Tran.showTask()">确认</button>
-                    <button class="button" state="danger" name="quit" onclick="Alert.hidePanel()">关闭</button>
                 </div>
             </div>
-            <div class="alert-panel" name="search">
-                <div class="alert-title">搜索结果</div>
+
+            <div class="alert-panel"  name="search">
+                <div class="alert-flex">
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">返回</div>
+                    <div class="alert-title">搜索结果</div>
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">关闭</div>
+                </div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
-                    <button class="button" state="danger" name="close" onclick="Alert.hidePanel()">关闭</button>
+                    <input placeholder="请输入标签">搜索</button>
+                    <button class="button" state="danger" onclick="Alert.hidePanel()">搜索</button>
                 </div>
             </div>
+
             <div class="alert-panel" name="pack">
-                <div class="alert-title">发现一个红包</div>
+                <div class="alert-flex">
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">返回</div>
+                    <div class="alert-title">发现一个红包</div>
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">关闭</div>
+                </div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
                     <button class="button" state="permit" name="start" onclick="Tran.showTask()">开始</button>
@@ -182,7 +196,11 @@
             </div>
 
             <div class="alert-panel" name="task">
-                <div class="alert-title">任务1-解密</div>
+                <div class="alert-flex">
+                    <div class="alert-button" onclick="Alert.hidePanel()">返回</div>
+                    <div class="alert-title">任务</div>
+                    <div class="alert-button" onclick="Alert.hidePanel()">关闭</div>
+                </div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
                     <button class="button" state="permit" name="open" onclick="Tran.showResult()">打开</button>
@@ -199,12 +217,15 @@
             </div>
 
             <div class="alert-panel" name="result">
-                <div class="alert-title">恭喜您获得了</div>
+                <div class="alert-flex">
+                    <div class="alert-button" onclick="Alert.hidePanel()">返回</div>
+                    <div class="alert-title">恭喜您获得了</div>
+                    <div class="alert-button" onclick="Alert.hidePanel()">关闭</div>
+                </div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
                     <button class="button" state="permit" name="follow">关注</button>
                     <button class="button" state="defult" name="home">查看主页</button>
-                    <button class="button" state="danger" name="close" onclick="Alert.hidePanel()">关闭</button>
                 </div>
             </div>
         </div>

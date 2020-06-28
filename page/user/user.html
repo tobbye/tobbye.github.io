@@ -152,16 +152,24 @@
     <div id="alert">
         <div id="alert-mask"></div>
         <div id="alert-box">
-            <div class="alert-panel" name="search">
-            	<div class="alert-title">搜索结果</div>
-            	<div class="alert-block"></div>
-	            <div class="alert-flex">
-	                <button class="button" state="danger" name="close" onclick="Alert.hidePanel()">关闭</button>
-	            </div>
+            <div class="alert-panel"  name="search">
+                <div class="alert-flex">
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">返回</div>
+                    <div class="alert-title">搜索结果</div>
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">关闭</div>
+                </div>
+                <div class="alert-block"></div>
+                <div class="alert-flex">
+                    <input placeholder="请输入标签">搜索</button>
+                    <button class="button" state="danger" onclick="Alert.hidePanel()">搜索</button>
+                </div>
             </div>
 
             <div class="alert-panel" name="edit">
-            	<div class="alert-title">自定义标签</div>
+                <div class="alert-flex">
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">返回</div>
+                    <div class="alert-title">自定义标签</div>
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">关闭</div>
             	<div class="alert-block">
             		<div class="user-flex">
 						<text class="alert-text">标签名称<h3>#0</h3></text>
@@ -178,7 +186,6 @@
             	</div>
             	<div class="alert-flex">
                 	<button class="button" state="permit" name="doit" onclick="User.onDoit()">确定</button>
-                	<button class="button" state="danger" name="quit" onclick="Alert.hidePanel()">取消</button>
             	</div>
             </div>
             

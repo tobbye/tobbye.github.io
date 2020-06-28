@@ -25,9 +25,9 @@
 		<div id="alert-box">
             <div class="alert-panel" name="info">
                 <div class="alert-flex">
-                    <div class="alert-button" onclick="Alert.hidePanel()">返回</div>
+                    <div class="alert-button" state="danger" onclick="Alert.backPanel()">返回</div>
                     <div class="alert-title">个人资料</div>
-                    <div class="alert-button" onclick="Alert.hidePanel()">关闭</div>
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">关闭</div>
                 </div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
@@ -41,18 +41,23 @@
             </div>
 
             <div class="alert-panel"  name="search">
-                <div class="alert-title">搜索结果</div>
+                <div class="alert-flex">
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">返回</div>
+                    <div class="alert-title">搜索结果</div>
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">关闭</div>
+                </div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
-                    <button class="button" state="danger" onclick="Alert.hidePanel()">关闭</button>
+                    <input placeholder="请输入标签"></input>
+                    <button class="button" state="permit" onclick="Alert.hidePanel()">搜索</button>
                 </div>
             </div>
             
             <div class="alert-panel"  name="chat">
                 <div class="alert-flex">
-                    <div class="alert-button" onclick="Alert.showUser()">返回</div>
+                    <div class="alert-button" state="danger" onclick="Alert.backPanel()">返回</div>
                     <div class="alert-title">查看详情</div>
-                    <div class="alert-button" onclick="Alert.hidePanel()">关闭</div>
+                    <div class="alert-button" state="danger" onclick="Alert.hidePanel()">关闭</div>
                 </div>
                 <div class="alert-block" state="white"></div>
                 <div class="alert-flex">
