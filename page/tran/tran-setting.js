@@ -121,7 +121,7 @@ function __Tran() {
             // this.index.innerHTML = '编号: ' + line.index;
             this.index.innerHTML = line.__sponer.name;
             this.stamp.innerHTML = '时间: ' + line.stamp;
-            Elem.color(this.index, '', Alert.colorFont());
+            Elem.page(this.index, Alert.colorFont());
 
             this.flex2 = new Alert.UserFlex();
             this.flex2.init(this.body, line.__digger);
@@ -213,6 +213,7 @@ function __Tran() {
             line.initData(data.dot, data.type);
             line.row = Math.floor(line.ladd / 5 - 0.2);
             this.body = Elem.creat('div', block, 'user-block', 'lines['+z+']');
+            this.body.self = this;
             this.body.onclick = function() {
                 Alert.bodySelect(this);
                 Tran.showDetail(this);
@@ -243,20 +244,29 @@ function __Tran() {
         return elem;
     }
 
+    this.isGrabOrGain = function(data) {
+        return (data.type == 'grab' || data.type == 'gain');
+    }
+
 
     this.showDetail = function(body) {
         Alert.hidePanel();
         Alert.showPanel('detail');
         let data = Config.__list(body);
         let line = Config.__line(body);
-        let digger = line.__digger;
-        let sponer = line.__sponer;
+        this.isTask = this.isGrabOrGain(data);
+        if (data.type != 'inve') {
+            let digger = line.__digger;
+            let sponer = line.__sponer;  
+            Alert.print([digger.name, line, body.self]);
+            let title = Alert.curPanel.title;
+            title.innerHTML = data.flexStr.replace('#0', digger.name);
+        } else {
+            Alert.print([line.ladd+'阶', line, body.self]);
+        }
         document.body.line = line;
         document.body.data = data;
-        Alert.print([digger.name, line, body.self]);
-        let title = Alert.curPanel.title;
         let block = Alert.curPanel.block;
-        title.innerHTML = data.flexStr.replace('#0', digger.name);
         block.innerHTML = '';
 
 
@@ -266,7 +276,7 @@ function __Tran() {
         let timesKey = data.type != 'inve' ? 'timesCurList' : 'timesAllList';
 
         for (let i = line.ladd; i > 0; i--) {
-            if (data.type != 'mine' && data.type != 'inve') {
+            if (this.isTask) {
                 let flex = this.creatFlex(block, 'B0');
                 let orderStr = '<h2>任务' + i;
                 let nameStr = '<h2>' + (Task.gameNames[data.taskTypes[i]] || '未设置');
@@ -288,10 +298,10 @@ function __Tran() {
         if(block.firstChild)
             block.firstChild.scrollIntoView();
         Task.logs.cur = data.logTips.replace('#inver', line.inver);
-        if (data.type == 'mine') 
-            Elem.hide(Alert.buttons.doit);
-        else
-            Elem.show(Alert.buttons.doit);
+        // if (data.type == 'mine') 
+        //     Elem.hide(Alert.buttons.doit);
+        // else
+        //     Elem.show(Alert.buttons.doit);
         Alert.buttons.doit.innerHTML = data.doitText;
         Alert.log(Task.logs.cur);
     }
@@ -299,6 +309,7 @@ function __Tran() {
 
     this.showTask = function() {
         Alert.hidePanel();
+        if (!this.isTask) return;
         Alert.showPanel('task');
         let redo = Alert.buttons.redo;
         let title = Alert.curPanel.title;

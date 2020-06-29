@@ -12,7 +12,7 @@ body {
 
 a {text-decoration: none }
 a:hover {text-decoration: underline }
-h1 {margin: 0px; font-size: 1.8em; }
+h1 {margin: 0px; font-size: 4em; }
 h2 {margin: 0px; font-size: 1.5em; }
 h3 {margin: 0px; font-size: 1.2em; }
 h4 {margin: 0px; font-size: 0.9em; }
@@ -35,10 +35,10 @@ h5 {margin: 0px; font-size: 0.8em; }
 [select=yes] {border: solid 12px dodgerblue;}
 [select=not] {border: solid 0px transparent;}
 
-[desc] {margin: 15px; font-size: 1.3em; font-weight: bold}
-[desc=left] {text-align: left;}
-[desc=right] {text-align: right;}
-[desc=center] {text-align: center;}
+[ishead] {margin: 15px; font-size: 1.2em; font-weight: bold}
+[align=left] {text-align: left;}
+[align=right] {text-align: right;}
+[align=center] {text-align: center;}
 
 table {
 	width: 100%;
@@ -154,14 +154,14 @@ div[fade=over] {
 }
 
 .guide[key=L] {
-	min-width: 120px;
+	min-width: 140px;
 	margin-top: 10px;
 }
 .guide[key=C] {
 	flex:30;
 }
 .guide[key=R] {
-	min-width: 120px;
+	min-width: 140px;
 	margin-top: 10px;
 }
 
@@ -276,7 +276,7 @@ div[fade=over] {
 	height: 1.3em;
 	font-size: 1.3em;
 	border-radius: 10px;
-	background-color: #f88;
+	background-color: dodgerblue;
 }
 
 .user-value {
@@ -302,10 +302,11 @@ div[fade=over] {
 	margin: 15px;
 	width: 150px;
 	height: 150px;
-	font-size: 1.5em;
+	line-height: 150px;
+	font-size: 2.5em;
 	margin-right: 5px;
+	border: solid 3px white;
 	border-radius: 10px;
-	opacity: 0.6;
 }
 
 .user-left {
@@ -341,6 +342,29 @@ div[fade=over] {
 }
 
 
+.user-pos {
+	flex: 10;
+	margin: 10px;
+	padding: 15px;
+	color: white;
+	font-size: 1.2em;
+	border-radius: 10px;
+	background-color: dodgerblue;
+}
+
+.user-tag {
+	flex: 10;
+	margin: 10px;
+	padding: 15px;
+	color: white;
+	font-size: 1em;
+	border-radius: 10px;
+	background-color: darkorange;
+}
+
+.user-tag:hover {
+	background-color: #d60; 
+}
 
 
 
@@ -353,24 +377,12 @@ div[fade=over] {
 .user-desc {
 	text-align: left;
 	padding: 10px;
-	font-size: 1em;
+	font-size: 1.1em;
 	font-weight: normal;
 	max-height: 5000px;
 }
 
-.user-tag, 
-.user-pos {
-	flex: 10;
-	margin: 10px;
-	padding: 15px;
-	color: white;
-	border-radius: 10px;
-}
 
-.user-tag {background-color: #6aa; font-size: 1em;}
-.user-pos {background-color: #f88; font-size: 1.2em;}
-.user-tag:hover {background-color: #399; }
-.user-pos:hover {background-color: #f88; }
 
 #alert {
 	display: none;
@@ -439,12 +451,9 @@ div[fade=over] {
 
 .alert-button {
 	margin: 10px;
-	flex: 6;
+	flex: 10;
 	height: 80px;
 	line-height: 80px;
-	color: white;
-	font-weight: normal;
-	border-radius: 10px;
 }
 
 .alert-text {

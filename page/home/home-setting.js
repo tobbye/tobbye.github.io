@@ -31,6 +31,8 @@ function __Home() {
         for (let z in lines) {
             let temp = lines[z];
             let pos = Parse.cutZero(Depot.tgtPos) || 'home';
+            temp.val = Math.floor((Math.random()+40-2*z) * 20);
+            temp.val = ~~(temp.val / 24) + '天' + temp.val % 24 + '时';
             temp.order = temp.pos || pos + '-' + z;
             temp.valStr = '已占领';
             let line = new Alert.UserData();
@@ -82,7 +84,7 @@ function __Depot() {
 
         for (let i=0;i<this.col;i++) {
             let pos = Elem.creat('div', flex, 'user-pos', i);
-            Elem.color(pos, 'white', Alert.colorFont());
+            Elem.page(pos, Alert.colorFont());
             this.posCell.push(pos);
         }
         this.creatPos(this.orgPos);

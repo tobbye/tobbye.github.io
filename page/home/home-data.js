@@ -27,10 +27,10 @@ lines: [
 {title:"新大陆", vice:"一片处女地等待您的探索", 
 isDepot:1,
 btnStr: `
-	<div class="flex">
+	<div class="alert-flex">
         <button class="button" state="permit" name="clear" onclick="Depot.toHome()">中心区域</button>
     </div>
-	<div class="flex">
+	<div class="alert-flex">
         <button class="button" state="permit" name="enter" onclick="Depot.toExplore()">探索</button>
         <button class="button" state="permit" name="enter" onclick="Depot.toOccupt()">占领</button>
     </div>`,

@@ -9,43 +9,6 @@ var Container = function(that) {
     Constrtctors[name] = ['Constrtctors'];
 } 
 
-var Page = function() {
-
-    Config.getConst(this, 'page');
-    this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
-    this.isPad = (/Pad/i.test(navigator.userAgent));
-    this.zoom = this.isPhone ? this.zoomPhone : this.zoomPc;
-    this.zoom = this.isPad ? this.zoomPad : this.zoom;
-    this.windWidth = ~~(window.innerWidth / this.zoom);
-    this.windHeight = ~~(window.innerHeight / this.zoom);
-    if (this.alertType == 'bot') {
-        this.alertMinMargin = 0;
-        this.alertBord = 0;
-    } else {
-        this.alertOffset += 180;
-    }
-    this.alertHeight = this.windHeight - this.alertOffset;
-    this.outerHeight = this.windHeight - this.outerOffset;
-    this.innerHeight = this.windHeight - this.innerOffset;
-    this.flowHeight = Math.max(this.innerHeight, this.minHeight);
-    this.alertMargin = this.windWidth - this.alertMaxWidth;
-    this.alertMargin = Math.max(this.alertMargin / 2, this.alertMinMargin);
-    this.alertFillWidth = this.windWidth - this.alertMargin * 2;
-    this.alertFullWidth = this.windWidth - this.alertMinMargin * 2;
-    this.alertWidth =  this.alertFillWidth - this.alertPadding - this.alertBord;
-    this.isWidth = this.windWidth > this.windHeight;
-    this.isFlow = this.innerHeight > this.minHeight;
-    let box = Elem.get('alert-box');
-    if (box) {
-        box.setAttribute('pos', this.alertType);
-        box.style.left = this.alertMargin + 'px';
-        box.style.right = this.alertMargin + 'px';
-    }
-    document.body.style.zoom = this.zoom;
-    let center = Elem.get('outer-center');
-    Elem.height(center, this.outerHeight);
-}
-
 var Constant = {
     agent: {},
     action: {
@@ -295,17 +258,12 @@ let tempData = {
         ✏✒📝📁📂📅📆📇📈📉📊📋📌📍📎📏📐✂🔒🔓🔏
         🔐🔑🔨🔫🔧🔩🔗💉💊🚬🔮🚩🎌💦💨`,
         `♈♉♊♋♌♍♎♏♐♑♒♓⛎`,
-        `🕛🕧🕐🕜🕑🕝🕒🕞🕓🕟🕔🕠🕕🕡🕖🕢🕗🕣🕘🕤🕙🕥🕚🕦⌛⏳⌚⏰⏱⏲🕰`,
         `🚂🚃🚄🚅🚆🚇🚈🚉🚊🚝🚞🚋🚌🚍🚎🚏🚐🚑🚒🚓
         🚔🚕🚖🚗🚘🚚🚛🚜🚲⛽🚨🚥🚦🚧⚓⛵🚣🚤🚢✈💺🚁🚟🚠🚡🚀`,
         `🏠🏡🏢🏣🏤🏥🏦🏨🏩🏪🏫🏬🏭🏯🏰💒🗼🗽⛪🌆🌇🌉`,
     ],
-    searchCfg: {
-        name:'♈♉♊♋♌♍♎♏♐♑♒♓⛎',
-        ladd:'🕛🕧🕐🕜🕑🕝🕒🕞🕓🕟🕔🕠🕕🕡🕖🕢🕗🕣🕘🕤🕙🕥🕚🕦',
-        mark:'💐🌸💮🌹🌺🌻🌼🌷🌱🌲🌳🌴🌵🌾🌿🍀🍁🍂🍃🍇🍈🍉🍊🍋🍌🍍🍎🍏🍐🍑🍒🍓🍅🍆🌽',
-        tag:'🙈🙉🙊🐵🐒🐶🐕🐩🐺🐱😺😸😹😻😼😽🙀😿😾🐈🐯🐅🐆🐴🐎🐮🐂🐃🐄🐷🐖🐗🐽🐏🐑🐐🐪🐫🐘🐭🐁🐀🐹🐰🐇🐻🐨🐼🐾🐔🐓🐣🐤🐥🐦🐧🐸🐊🐢🐍🐲🐉🐳🐋🐬🐟🐠🐡🐙🐚🐌🐛🐜🐝🐞🦋',
-    },
+    iconStr: 
+        `🙈🙉🙊🐵🐒🐶🐕🐩🐺🐱😺😸😹😻😼😽🙀😿😾🐈🐯🐅🐆🐴🐎🐮🐂🐃🐄🐷🐖🐗🐽🐏🐑🐐🐪🐫🐘🐭🐁🐀🐹🐰🐇🐻🐨🐼🐾🐔🐓🐣🐤🐥🐦🐧🐸🐊🐢🐍🐲🐉🐳🐋🐬🐟🐠🐡🐙🐚🐌🐛🐜🐝🐞🦋`,
     searchData: [
         {uid: 'd20001'},
         {uid: 'd20002'},

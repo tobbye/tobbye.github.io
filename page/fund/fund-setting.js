@@ -130,9 +130,9 @@ function __Fund() {
 
 	this.creatButton = function(content, data) {
 		let list = data.buttons;
-		let block = Elem.creat('div', content, 'block');
+		let block = Elem.creat('div', content, 'alert-block');
 		for (let y in list) {
-			let flex = Elem.creat('div', block, 'flex');
+			let flex = Elem.creat('div', block, 'alert-flex');
 			for(let z in list[y]) {
 				let data = list[y][z];
 				let button = Elem.creat('button', flex, 'button');

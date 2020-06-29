@@ -53,9 +53,6 @@ function __User() {
 		auth.innerHTML = data.auth + ' | ';
 		ladd.innerHTML = data.ladd + '阶';
 		group.innerHTML = ' | ' + data.group;
-		// head.innerHTML = 'zhongxin';
-		// Elem.color(head, '', this.colorLight());
-		// Elem.style(head, 'borderColor', this.colorFont());
 	}
 
 
@@ -103,7 +100,8 @@ function __User() {
 			let _data = tags[y];
 			//TAG
 			let tag = Elem.creat('div', flex1, 'user-tag', y);
-			tag.innerHTML = _data.tag;
+			Elem.text(tag, _data.tag);
+			Elem.page(tag, Alert.colorFont());
 			tag.btnIdx = y;
 			tag.onclick = function() {
 				Alert.showSearch(this);

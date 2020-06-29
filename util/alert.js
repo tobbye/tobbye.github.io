@@ -3,7 +3,44 @@ window.onresize = function() {
     Config.page = new Page();
 }
 
+var Page = function() {
 
+    Config.getConst(this, 'page');
+    this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
+    this.isPad = (/Pad/i.test(navigator.userAgent));
+    this.isPage = Config.sett.colorType == 'page';
+    this.isText = Config.sett.colorType == 'text';
+    this.zoom = this.isPhone ? this.zoomPhone : this.zoomPc;
+    this.zoom = this.isPad ? this.zoomPad : this.zoom;
+    this.windWidth = ~~(window.innerWidth / this.zoom);
+    this.windHeight = ~~(window.innerHeight / this.zoom);
+    if (this.alertType == 'bot') {
+        this.alertMinMargin = 0;
+        this.alertBord = 0;
+    } else {
+        this.alertOffset += 180;
+    }
+    this.alertHeight = this.windHeight - this.alertOffset;
+    this.outerHeight = this.windHeight - this.outerOffset;
+    this.innerHeight = this.windHeight - this.innerOffset;
+    this.flowHeight = Math.max(this.innerHeight, this.minHeight);
+    this.alertMargin = this.windWidth - this.alertMaxWidth;
+    this.alertMargin = Math.max(this.alertMargin / 2, this.alertMinMargin);
+    this.alertFillWidth = this.windWidth - this.alertMargin * 2;
+    this.alertFullWidth = this.windWidth - this.alertMinMargin * 2;
+    this.alertWidth =  this.alertFillWidth - this.alertPadding - this.alertBord;
+    this.isWidth = this.windWidth > this.windHeight;
+    this.isFlow = this.innerHeight > this.minHeight;
+    let box = Elem.get('alert-box');
+    if (box) {
+        box.setAttribute('pos', this.alertType);
+        box.style.left = this.alertMargin + 'px';
+        box.style.right = this.alertMargin + 'px';
+    }
+    document.body.style.zoom = this.zoom;
+    let center = Elem.get('outer-center');
+    Elem.height(center, this.outerHeight);
+}
 
 var Panel = function() {
     this.init = function(panel, name) {
@@ -59,10 +96,10 @@ function __Alert() {
 
         if (len > 1 && cfg.name == 'nexu' || cfg.name == 'rank') {
             if (y > 0) {
-                let guide   = Elem.creat('div', left, 'button-min');
-                guide.style.border = 'solid 6px ' + Alert.colorFont();
-                guide.style.color = Alert.colorFont();
-                guide.innerHTML = '↑';
+                let guide = Elem.creat('div', left, 'button-min');
+                Elem.text(guide, '↑');
+                Elem.color(guide, Alert.colorFont());
+                Elem.border(guide, 'solid 6px ' + Alert.colorFont());
                 guide.onclick = function() {
                     let tgt = this.parentNode.parentNode.parentNode.previousSibling;
                     console.log(tgt);
@@ -70,10 +107,10 @@ function __Alert() {
                 }
             }
             if (y < len-1) {
-                let guide   = Elem.creat('div', right, 'button-min');
-                guide.style.border = 'solid 6px ' + Alert.colorFont();
-                guide.style.color = Alert.colorFont();
-                guide.innerHTML = '↓';
+                let guide = Elem.creat('div', right, 'button-min');
+                Elem.text(guide, '↓');
+                Elem.color(guide, Alert.colorFont());
+                Elem.border(guide, 'solid 6px ' + Alert.colorFont());
                 guide.onclick = function() {
                     let tgt = this.parentNode.parentNode.parentNode.nextSibling;
                     console.log(tgt);
@@ -153,35 +190,13 @@ function __Alert() {
         let idx = Config.sett.isInto ? Config.innerIdx : clickIdx || 0;
         let outerTop = document.querySelectorAll('.button-top');
         let outerCenter = document.querySelectorAll('.inner');
-        let isPage = Config.sett.colorType == 'page';
         for (let i = 0; i < outerTop.length; i++) {
-            let childTop = outerTop[i];
-            let childCenter = outerCenter[i];
-            if (childTop.className != 'button-top')
-                break;
-            if (i == idx) {
-                if (isPage) 
-                    Elem.color(childTop, Alert.colorBgd(), Alert.colorFont());
-                else
-                    Elem.attr(childTop, 'state', 'live');
-                Elem.show(childCenter);
-            } else {
-                if (isPage)
-                    Elem.color(childTop, Alert.colorFont(), Alert.colorBgd());
-                else
-                    Elem.attr(childTop, 'state', 'dead');
-                Elem.show(childCenter, 'none');
-            }
+            this.setChild(outerTop[i], outerCenter[i], i == idx);
         }
         Config.sett.isInto = Config.innerIdx != clickIdx;
         Config.innerIdx = idx;
-        Alert.setInner(clickIdx, idx);
-    }
-
-    this.setInner = function(clickIdx, idx) {
-        let isText = Config.sett.colorType == 'text';
-        if (isText)
-            Elem.color(document.body, Alert.colorFont(), '');
+        if (Config.page.isText)
+            Elem.color(document.body, Alert.colorFont());
         else
             Elem.color(document.body, Alert.colorFont(), Alert.colorBgd());
         if (Config.sett.isInto || clickIdx == null || Config.sett.debugType == 'close') {
@@ -191,6 +206,24 @@ function __Alert() {
             Config.sett.isInto = true;
             Storage.set('Config', Config);
             jsonToTable(items[idx]); 
+        }
+    }
+
+    this.setChild = function(top, center, isClick) {
+        if (top.className != 'button-top')
+            return;
+        if (isClick) {
+            Elem.show(center);
+            if (Config.page.isPage)
+                Elem.color(top, Alert.colorBgd(), Alert.colorFont());
+            else 
+                Elem.state(top, 'live');
+        } else {
+            Elem.hide(center);
+            if (Config.page.isPage)  
+                Elem.color(top, Alert.colorFont(), Alert.colorBgd());
+            else 
+                Elem.state(top, 'dead');
         }
     }
 
@@ -328,7 +361,7 @@ function __Alert() {
             this.group = this.group || Config.getGroup(this);
             this.order = this.order || Config.getOrder(this.ord);
             this.value = this.value || (this.valStr + ': ' + Parse.sub4Num(this.val));
-            this.desc = '<div desc="center">' + this.name + '的描述</div>';
+            this.desc = '<div align="center"><h3>' + this.name + '的描述</h3></div>';
         }
     }
 
@@ -346,17 +379,17 @@ function __Alert() {
                 this.top = Elem.creat('div', this.body, 'user-top');
                 this.order = Elem.creat('div', this.top, 'user-order');
                 this.value = Elem.creat('div', this.top, 'user-value');
-
-                this.order.innerHTML = line.order;
-                this.value.innerHTML = line.value; 
-                Elem.color(this.order, '', Alert.colorFont());
+                Elem.text(this.order, line.order);
+                Elem.text(this.value, line.value);
+                Elem.page(this.order, Alert.colorFont());
             } 
         }
 
         this.initBody = function(line) {
             this.marks = [];
             this.flex = Elem.creat('div', this.body, 'user-flex');
-            this.icon = Elem.creat('img',  this.flex, 'user-icon');
+            this.icon = Elem.creat('div',  this.flex, 'user-icon');
+
             this.left = Elem.creat('div',  this.flex, 'user-left');
             this.right = Elem.creat('div',  this.flex, 'user-right');
             this.name = Elem.creat('div',  this.left, 'user-name');
@@ -364,20 +397,21 @@ function __Alert() {
             this.ladd = Elem.creat('div',  this.right, 'user-ladd');
             this.group = Elem.creat('div',  this.right, 'user-group');
             for (let i in line.mark) {
-                let mark = Elem.creat('div', this.mark, 'user-mark');
-                mark.innerHTML = line.mark[i];
-                mark.style.borderColor = Alert.colorFont();
-                this.marks[i] = mark;
+                Elem.creat('div', this.mark, 'user-mark');
+                Elem.text(null, line.mark[i]);
+                Elem.border(null, Alert.colorFont());
+                this.marks[i] = Elem.e;
             }
-            this.icon.style.backgroundColor = Alert.colorFont();
-            this.group.style.borderColor = Alert.colorFont();
-            if (line.isSponer)
-            Elem.color(this.group, 'white', Alert.colorFont());
-
-            this.name.innerHTML = line.name || line.inver;
-            this.ladd.innerHTML = (line.ladder || line.ladd || '??') + '阶';
-            this.group.innerHTML = line.group || '未知';
-            this.flex.setAttribute('margin', 'T5');
+            if (line.isSponer) 
+                Elem.color(this.group, 'white', Alert.colorFont());
+            Elem.border(this.group, Alert.colorFont());
+            Elem.text(this.icon, Parse.pick(Array.from(tempData.iconStr)));
+            Elem.color(this.icon, Alert.colorFont());
+            Elem.border(this.icon, Alert.colorFont());
+            Elem.text(this.group, line.group || '未知');
+            Elem.text(this.name, line.name || line.inver);
+            Elem.text(this.ladd, (line.ladder || line.ladd || '??') + '阶');
+            Elem.attr(this.flex, 'margin', 'T5');
             if (Alert.isAlert && Alert.curPanel.name == 'info')
                 return;
             let select = cfg.isHead ? this.body:this.flex;
@@ -399,26 +433,28 @@ function __Alert() {
             this.desc = Elem.creat('div', this.body, 'user-desc');
             if (line.tag) {
                 for (let i in line.tag) {
-                    let tag = Elem.creat('div', this.tag, 'user-tag');
-                    tag.style.backgroundColor = Alert.colorFont();
-                    tag.innerHTML = line.tag[i];
-                    tag.onclick = function() {
+                    Elem.creat('div', this.tag, 'user-tag');
+                    Elem.text(null, line.tag[i])
+                    Elem.e.onclick = function() {
                         Alert.showSearch(this);
                     }
-                    this.tags[i] = tag;
+                    Elem.page(null, Alert.colorFont());
+                    this.tags[i] = Elem.e;
                 }
             }
             this.desc.innerHTML = line.desc.replace(/\n/g, '<br/>');
-            this.desc.innerHTML += 'THE DESCRIBE OF ' + line.name + '<br/>';
-            this.desc.innerHTML += 'THE DESCRIBE OF ' + line.name + '<br/>';
-            this.desc.innerHTML += 'THE DESCRIBE OF ' + line.name + '<br/>';
+
+            for (let i=0; i<12; i++) {
+                this.desc.innerHTML += Parse.mix(line.name) + '的描述。<br/>';
+            }
+            this.desc.innerHTML += '</center>';
         }
     }
 
 
 
     this.bodySelect = function(flex) { 
-        if (Alert.curPanel) return;
+        if (Alert.isAlert) return;
         let old = document.body.flex;
         if (old) {
             old.setAttribute('select', 'not');
@@ -458,22 +494,14 @@ function __Alert() {
         let title = this.curPanel.title;
         let block = this.curPanel.block;
         title.innerHTML = Constant.string.titleSearch.replace("#0", button.innerHTML);
-        let names = Parse.mix(Array.from(tempData.searchCfg.name));
-        let ladds = Parse.mix(Array.from(tempData.searchCfg.ladd));
-        let marks = Parse.mix(Array.from(tempData.searchCfg.mark));
-        let tags = Parse.mix(Array.from(tempData.searchCfg.tag));
-        for (let z in names) {
-            let temp = {
-                ord: z,
-                name: Parse.pick(names, 6),
-                ladd: Parse.pick(ladds, 1),
-                val: Math.floor((Math.random()+40-z) * 2e3),
-                mark: [Parse.pick(marks, 3), Parse.pick(marks, 3)],
-                tag: [Parse.pick(tags, 3), Parse.pick(tags, 3), Parse.pick(tags, 3)],
-                nexu: 1,
-                valStr: '权值',
-            };
-            tempData.searchData[z] = temp;
+        let searchData = Parse.mix(tempData.searchData);
+        tempData.searchData = searchData;
+        for (let z in searchData) {
+            let temp = searchData[z];
+            temp.ord = z;
+            temp.valStr = '权值';
+            temp.val = Math.floor((Math.random()+40-z) * 2e3);
+            temp.nexu = 1;
             let body = Elem.creat("div", block, "user-block", 'tempData.searchData['+z+']');
             let line = new Alert.UserData();
             line.init(temp);
@@ -506,7 +534,7 @@ function __Alert() {
         let title = this.curPanel.title;
         let block = this.curPanel.block;
         let input = this.curPanel.input;
-        Elem.color(input, Alert.colorLight(), "");
+        Elem.color(input, Alert.colorLight());
         input.placeholder = "输入内容";
         title.innerHTML = line.name;
         // this.box.style.maxHeight = (Config.page.windHeight - 440) + "px";
@@ -536,7 +564,7 @@ function __Alert() {
                 time: Parse.getTime(),
                 isMine: 1,
             });
-        Elem.color(input, Alert.colorLight(), "");
+        Elem.color(input, Alert.colorLight());
         input.placeholder = "输入内容";
         input.value = "";
     }
@@ -572,8 +600,8 @@ function __Alert() {
         let block = this.curPanel.block;
         let input = this.curPanel.input;
         block.lastChild.scrollIntoView();
-        input.style.color = Alert.colorFont();
-        input.value = "";
+        Elem.text(input, '');
+        Elem.color(input, Alert.colorFont());
 
         // Style.height("detail-block", "550px");
     }

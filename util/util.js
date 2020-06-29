@@ -208,6 +208,7 @@ Elem.creat = function(type, parent, className, key) {
 		e.className = className;
 	if (key != null)
 		e.setAttribute('key', key);
+    Elem.e = e;
 	return e;
 }
 
@@ -247,7 +248,9 @@ Elem.addClass = function(e, cls) {
 }
 
 Elem.text = function(e, text) {
+    e = e || Elem.e;
     e.innerHTML = text; 
+    return e;
 }
 
 Elem.align = function(e, a) {
@@ -257,6 +260,18 @@ Elem.align = function(e, a) {
 Elem.color = function(e, c, bg) {
     Elem.css(e, 'color', c); 
     Elem.css(e, 'backgroundColor', bg); 
+}
+
+Elem.page = function(e, bg) {
+    if (Config.page.isPage)
+        Elem.css(e, 'backgroundColor', bg); 
+}
+
+Elem.border = function(e, b) {
+    if (b.indexOf('px') > -1)
+        Elem.css(e, 'border', b); 
+    else
+        Elem.css(e, 'borderColor', b); 
 }
 
 Elem.flex = function(e, a, f) {
@@ -285,6 +300,7 @@ Elem.hide = function(e) {
 }
 
 Elem.css = function(e, k, v) {
+    e = e || Elem.e;
     if (e && e.style && k && v) {
         e.style[k] = v; 
     } 
