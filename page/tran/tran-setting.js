@@ -124,7 +124,6 @@ function __Tran() {
 
             this.flex2 = new Alert.UserFlex();
             this.flex2.init(this.body, line.__digger);
-            this.flex2.select.onclick = function() {};
             this.flex3 = Elem.creat('div', this.body, 'user-flex');
             this.ladd  = Tran.creatText(this.flex3, 'L10', line.laddStr);
             this.piece = Tran.creatText(this.flex3, 'R20', line.pieceStr);
@@ -270,6 +269,7 @@ function __Tran() {
         let priceKey = 'priceAllList';
         let pieceKey = data.type != 'inve' ? 'pieceCurList' : 'pieceAllList';
         let timesKey = data.type != 'inve' ? 'timesCurList' : 'timesAllList';
+        let display = data.type != 'inve' ? 'flex' : 'none';
 
         for (let i = line.ladd; i > 0; i--) {
             if (this.isTask) {
@@ -294,12 +294,10 @@ function __Tran() {
         if(block.firstChild)
             block.firstChild.scrollIntoView();
         Task.logs.cur = data.logTips.replace('#inver', line.inver);
-        // if (data.type == 'mine') 
-        //     Elem.hide(Alert.buttons.doit);
-        // else
-        //     Elem.show(Alert.buttons.doit);
+        Elem.show(Alert.buttons.sponer.parentNode, display);
         Alert.buttons.doit.innerHTML = data.doitText;
         Alert.log(Task.logs.cur);
+
     }
 
 

@@ -308,6 +308,8 @@ function __Alert() {
         if (len > 1) {
             this.backList.pop();
             this.showPanel(this.backList.pop(), 1);
+        } else {
+            this.hidePanel();
         }
     }
 
@@ -410,19 +412,21 @@ function __Alert() {
             if (line.isSponer) 
                 Elem.color(this.group, 'white', Alert.colorFont());
             Elem.border(this.group, Alert.colorFont());
-            Elem.text(this.icon, Parse.pick(Array.from(tempData.iconStr)));
+            if (Config.page.isPage)
+                Elem.text(this.icon, line.name[0]);
+            else
+                Elem.text(this.icon, Parse.pick(Array.from(tempData.iconStr)));
             Elem.color(this.icon, Alert.colorFont());
             Elem.border(this.icon, Alert.colorFont());
             Elem.text(this.group, line.group || '未知');
             Elem.text(this.name, line.name || line.inver);
             Elem.text(this.ladd, (line.ladder || line.ladd || '??') + '阶');
             Elem.attr(this.flex, 'margin', 'T5');
-            if (this.isAlert && this.curPanel.name == 'info')
+            if (Alert.isAlert && Alert.curPanel.name == 'info')
                 return;
-            this.select = cfg.isHead ? this.body:this.flex;
-            this.select.onclick = function() {
+            this.body.onclick = function() {
                 Alert.bodySelect(this);
-                Alert.showUser(this);
+                Alert.showUser();
             } 
         }
     }
@@ -460,11 +464,12 @@ function __Alert() {
 
     this.bodySelect = function(flex) { 
         if (!Alert.isAlert) {
-            let old = document.body.flex;
+            let old = document.body.select;
             if (old) {
                 old.setAttribute('select', 'not');
             }
             if (flex) {
+                document.body.select = flex; 
                 flex.setAttribute('select', 'yes');
             }
         };
@@ -473,9 +478,9 @@ function __Alert() {
 
 
 
-    this.showUser = function(flex, isSponer) {
+    this.showUser = function(isSponer) {
         this.showPanel('info');
-        flex = flex || document.body.flex;
+        let flex = document.body.flex;
         console.log(flex);
         let data = Config.__list(flex);
         let temp = Config.__line(flex);
@@ -509,7 +514,7 @@ function __Alert() {
             let line = new Alert.UserData();
             line.init(temp);
             let flex = new Alert.UserFlex();
-            flex.init(body, line, true);
+            flex.init(body, line);
         }
         this.log('搜索成功!');
     }
