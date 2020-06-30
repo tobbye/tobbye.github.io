@@ -62,7 +62,7 @@ function __Tran() {
         };
 
         this.initTemp = function() {
-            this.ladd = this.__digger.ladd - Math.floor(5 * Math.random());
+            this.ladd = this.__digger.ladd - Math.floor(this.__digger.ladd * Math.random());
             this.multi = Math.floor(100 * Math.pow(Math.random(),8)) + 1;
             this.index = Math.floor((1547 + Math.random()) * 1e9);
             this.stamp = Parse.formatTime(this.index).replace(' ', '<br/>');
@@ -107,7 +107,6 @@ function __Tran() {
 
     this.GrabBody = function() {
         let that = this;
-
         this.init = function(block, data, line) {
             if (!line.ladd) return;
             line.initData = line.initData || new this.GrabData().initData;
@@ -125,21 +124,18 @@ function __Tran() {
 
             this.flex2 = new Alert.UserFlex();
             this.flex2.init(this.body, line.__digger);
+            this.flex2.select.onclick = function() {};
             this.flex3 = Elem.creat('div', this.body, 'user-flex');
             this.ladd  = Tran.creatText(this.flex3, 'L10', line.laddStr);
             this.piece = Tran.creatText(this.flex3, 'R20', line.pieceStr);
             this.price = Tran.creatText(this.flex3, 'R20', line.priceStr);
             this.times = Tran.creatText(this.flex3, 'R20', line.timesStr);
-            this.body.setAttribute('margin', 'B15');
             this.flex1.setAttribute('margin', 'T5');
-            this.flex1.onclick = function() {
-                Alert.bodySelect(this);
-                Alert.showUser(this.parentNode, true);
-            }
             this.flex3.setAttribute('margin', 'T0');
-            this.flex3.onclick = function() {
+            this.body.setAttribute('margin', 'B15');
+            this.body.onclick = function() {
                 Alert.bodySelect(this);
-                Tran.showDetail(this.parentNode);
+                Tran.showDetail(this);
             }
         }
     }

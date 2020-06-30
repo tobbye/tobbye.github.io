@@ -152,6 +152,23 @@
     <div id="alert">
         <div id="alert-mask"></div>
         <div id="alert-box">
+            <div class="alert-panel" name="info">
+                <div class="alert-flex">
+                    <div class="alert-button" onclick="Alert.backPanel()">返回</div>
+                    <div class="alert-title">个人资料</div>
+                    <div class="alert-button" onclick="Alert.hidePanel()">关闭</div>
+                </div>
+                <div class="alert-block"></div>
+                <div class="alert-flex">
+                    <button class="button" state="permit" name="send" onclick="Alert.showChat()">发消息</button>
+                    <button class="button" state="permit" name="like" onclick="Alert.showNexu(1)">添加关注</button>
+                    <button class="button" state="danger" name="hate" onclick="Alert.showNexu(0)">取消关注</button>
+                    <button class="button" state="defult" name="home" onclick="Alert.showHome()">查看主页</button>
+                    <button class="button" state="permit" name="look" onclick="Alert.showNexu(0)">前往领地</button>
+                    <button class="button" state="danger" name="leave" onclick="Alert.showChat()">解除占领</button>
+                </div>
+            </div>
+            
             <div class="alert-panel"  name="search">
                 <div class="alert-flex">
                     <div class="alert-button" onclick="Alert.hidePanel()">返回</div>
@@ -160,8 +177,22 @@
                 </div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
-                    <input placeholder="请输入标签">搜索</button>
+                    <input placeholder="请输入标签"></button>
                     <button class="button" state="danger" onclick="Alert.hidePanel()">搜索</button>
+                </div>
+            </div>
+
+            <div class="alert-panel"  name="chat">
+                <div class="alert-flex">
+                    <div class="alert-button" onclick="Alert.showUser()">返回</div>
+                    <div class="alert-title">查看详情</div>
+                    <div class="alert-button" onclick="Alert.hidePanel()">关闭</div>
+                </div>
+                <div class="alert-block" state="white"></div>
+                <div class="alert-flex">
+                    <button class="button-micro" id="btn-vocie" state="permit">语音</button>
+                    <textarea id="chat-textarea" onfocus="Alert.onChatFocus()"></textarea>
+                    <button class="button-micro" id="btn-send" state="permit">发送</button>
                 </div>
             </div>
 

@@ -70,6 +70,7 @@ function __Alert() {
 //初始化Alert
     this.init = function() {
         this.name = 'Alert';
+        this.backList = [];
         this.initAlert();
         this.btnClick('btn-quit', this.hidePanel);
         this.btnClick('btn-abon', this.hidePanel);
@@ -268,42 +269,46 @@ function __Alert() {
 
     //显示弹窗
     this.showPanel = function(name, save) {
-        if (this.curPanel) {
+        if (this.isAlert) {
             Elem.hide(this.curPanel.panel);
-            this.backName = this.curPanel.name;
         }
+        this.backList.push(name);
         this.curPanel = this.panels[name];
+        console.log(this.backList);
         if (!this.curPanel) return;
         this.setBox();
-        this.isAlert = true;
         // console.log(this.curPanel);
 
         Elem.show(this.alert);
         Elem.show(this.curPanel.panel);
         if (!save)
             Elem.text(this.curPanel.block, '');
+        this.isAlert = true;
     }
 
 
     //隐藏弹窗
-    this.hidePanel = function(name) {
-        this.isAlert = false;
-        this.backName = null;
+
+    this.hidePanel = function() {
         Elem.hide(this.alert);
+        this.backList = [];
         if (!this.alert || !this.box) return;
-        for (var i=0; i<this.box.children.length; i++) {
+        for (let i=0; i<this.box.children.length; i++) {
             let panel = this.box.children[i];
             Elem.hide(panel);
         }
         if (cfg.name == 'tran')
-            Task.clear();
+            Task.clear(); 
+        this.isAlert = false;
     }
 
     this.backPanel = function() {
-        console.log(this.curPanel);
         Elem.hide(this.curPanel.panel);
-        if (this.backName)
-            this.showPanel(this.backName, 1);
+        let len = this.backList.length;
+        if (len > 1) {
+            this.backList.pop();
+            this.showPanel(this.backList.pop(), 1);
+        }
     }
 
 
@@ -318,7 +323,7 @@ function __Alert() {
         console.log(text);
     }
 
-    this.printName = function(name) {
+    this.prinName = function(name) {
         console.log(this.prefix + name + this.suffix);
     }
 
@@ -397,10 +402,10 @@ function __Alert() {
             this.ladd = Elem.creat('div',  this.right, 'user-ladd');
             this.group = Elem.creat('div',  this.right, 'user-group');
             for (let i in line.mark) {
-                Elem.creat('div', this.mark, 'user-mark');
-                Elem.text(null, line.mark[i]);
-                Elem.border(null, Alert.colorFont());
-                this.marks[i] = Elem.e;
+                let mark = Elem.creat('div', this.mark, 'user-mark');
+                Elem.text(mark, line.mark[i]);
+                Elem.border(mark, Alert.colorFont());
+                this.marks[i] = mark;
             }
             if (line.isSponer) 
                 Elem.color(this.group, 'white', Alert.colorFont());
@@ -412,10 +417,10 @@ function __Alert() {
             Elem.text(this.name, line.name || line.inver);
             Elem.text(this.ladd, (line.ladder || line.ladd || '??') + '阶');
             Elem.attr(this.flex, 'margin', 'T5');
-            if (Alert.isAlert && Alert.curPanel.name == 'info')
+            if (this.isAlert && this.curPanel.name == 'info')
                 return;
-            let select = cfg.isHead ? this.body:this.flex;
-            select.onclick = function() {
+            this.select = cfg.isHead ? this.body:this.flex;
+            this.select.onclick = function() {
                 Alert.bodySelect(this);
                 Alert.showUser(this);
             } 
@@ -433,13 +438,13 @@ function __Alert() {
             this.desc = Elem.creat('div', this.body, 'user-desc');
             if (line.tag) {
                 for (let i in line.tag) {
-                    Elem.creat('div', this.tag, 'user-tag');
-                    Elem.text(null, line.tag[i])
-                    Elem.e.onclick = function() {
+                    let tag = Elem.creat('div', this.tag, 'user-tag');
+                    tag.onclick = function() {
                         Alert.showSearch(this);
                     }
-                    Elem.page(null, Alert.colorFont());
-                    this.tags[i] = Elem.e;
+                    Elem.text(tag, line.tag[i]);
+                    Elem.page(tag, Alert.colorFont());
+                    this.tags[i] = tag;
                 }
             }
             this.desc.innerHTML = line.desc.replace(/\n/g, '<br/>');
@@ -454,24 +459,24 @@ function __Alert() {
 
 
     this.bodySelect = function(flex) { 
-        if (Alert.isAlert) return;
-        let old = document.body.flex;
-        if (old) {
-            old.setAttribute('select', 'not');
-        }
-        if (flex) {
-            flex.setAttribute('select', 'yes');
-            document.body.flex = flex; 
-        }
+        if (!Alert.isAlert) {
+            let old = document.body.flex;
+            if (old) {
+                old.setAttribute('select', 'not');
+            }
+            if (flex) {
+                flex.setAttribute('select', 'yes');
+            }
+        };
+        document.body.flex = flex; 
     }
 
 
 
     this.showUser = function(flex, isSponer) {
-        this.hidePanel();
         this.showPanel('info');
         flex = flex || document.body.flex;
-        let x = flex.x;
+        console.log(flex);
         let data = Config.__list(flex);
         let temp = Config.__line(flex);
         let title = this.curPanel.title;
@@ -480,16 +485,14 @@ function __Alert() {
         line.init(temp);
         let user = isSponer ? temp.__sponer : temp.__digger;
         user = user || line;
-        console.log(user)
         let body = new this.UserBody();
         body.init(block, user);
         title.innerHTML = user.group + '资料';
         this.showButton(user.nexu);
-        this.print([user.name, user, body]);
+        console.log([user.name, user, body]);
     }
 
     this.showSearch = function(button) {
-        this.hidePanel();
         this.showPanel("search");
         let title = this.curPanel.title;
         let block = this.curPanel.block;
@@ -512,7 +515,6 @@ function __Alert() {
     }
 
     this.showNexu = function() {
-        this.hidePanel();
         let flex = document.body.flex;
         let childs = flex.parentNode.children;
         let line = Config.__line(flex);
@@ -527,7 +529,6 @@ function __Alert() {
 
 
     this.showChat = function() {
-        this.hidePanel();
         this.showPanel("chat");
         let flex = document.body.flex;
         let line = Config.__line(flex);
