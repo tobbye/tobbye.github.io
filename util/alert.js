@@ -311,6 +311,11 @@ function __Alert() {
         } else {
             this.hidePanel();
         }
+        document.body.flex.scrollIntoView();
+    }
+
+    this.inSearch = function() {
+        return this.backList.indexOf('search') > -1;
     }
 
 
@@ -415,7 +420,7 @@ function __Alert() {
             if (Config.page.isPage)
                 Elem.text(this.icon, line.name[0]);
             else
-                Elem.text(this.icon, Parse.pick(Array.from(tempData.iconStr)));
+                Elem.text(this.icon, line.icon);
             Elem.color(this.icon, Alert.colorFont());
             Elem.border(this.icon, Alert.colorFont());
             Elem.text(this.group, line.group || '未知');
@@ -437,7 +442,7 @@ function __Alert() {
             this.tags = [];
             this.body = Elem.creat('div', block, 'user-body');
             this.flex = new Alert.UserFlex();
-            this.flex.init(this.body, line);
+            this.flex.init(this.body, line, Alert.inSearch());
             this.tag = Elem.creat('div', this.body, 'user-tags');
             this.desc = Elem.creat('div', this.body, 'user-desc');
             if (line.tag) {
@@ -453,7 +458,7 @@ function __Alert() {
             }
             this.desc.innerHTML = line.desc.replace(/\n/g, '<br/>');
 
-            for (let i=0; i<12; i++) {
+            for (let i=0; i<9; i++) {
                 this.desc.innerHTML += Parse.mix(line.name) + '的描述。<br/>';
             }
             this.desc.innerHTML += '</center>';
@@ -478,22 +483,27 @@ function __Alert() {
 
 
 
-    this.showUser = function(isSponer) {
+    this.showUser = function(isMine) {
         this.showPanel('info');
-        let flex = document.body.flex;
-        console.log(flex);
+        let flex, user;
+        if (isMine == null) {
+            flex = document.body.flex;
+        } else {
+            flex = document.body.select;
+        }
         let data = Config.__list(flex);
         let temp = Config.__line(flex);
         let title = this.curPanel.title;
         let block = this.curPanel.block;
         let line = new this.UserData();
         line.init(temp);
-        let user = isSponer ? temp.__sponer : temp.__digger;
+        console.log(temp);
+        user = isMine ? temp.__digger : temp.__sponer;
         user = user || line;
         let body = new this.UserBody();
         body.init(block, user);
         title.innerHTML = user.group + '资料';
-        this.showButton(user.nexu);
+        this.showButton(isMine ? 0:user.nexu);
         console.log([user.name, user, body]);
     }
 
@@ -514,22 +524,31 @@ function __Alert() {
             let line = new Alert.UserData();
             line.init(temp);
             let flex = new Alert.UserFlex();
-            flex.init(body, line);
+            flex.init(body, line, true);
         }
         this.log('搜索成功!');
     }
 
-    this.showNexu = function() {
+    this.showNexu = function(isFollow) {
         let flex = document.body.flex;
         let childs = flex.parentNode.children;
         let line = Config.__line(flex);
         let lines = Config.__list(flex).lines;
+        if (isFollow) {
+            line.nexu = 2;
+            let idx = line.isSponer ? 1 : 2;
+            items[1].list[idx].lines.unshift(line);
+            let outer = Elem.get('outer-center');
+            let content = outer.children[1].children[idx].children[1];
+            content.insertBefore(flex, content.firstChild);
+        } else {
+            Elem.remove(flex);
+        }
         Parse.remove(lines, line);  
-        console.log(lines);
-        Elem.remove(flex);
         for (let i=0; i<childs.length; i++) {
             childs[i].setAttribute('key', 'lines['+i+']');
         }
+        this.hidePanel();
     }
 
 

@@ -46,6 +46,7 @@ function __Rank() {
 			let text = sponers[z].split('-');
 			let line = {
 				name: text[0],
+				icon: Parse.pick(Array.from(tempData.iconStr)),
 				uid: 's' + (80001 + ~~z),
 				mark: [text[1], text[2]],
 				tag: unit.tag,

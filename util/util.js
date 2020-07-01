@@ -467,8 +467,8 @@ function Fade() {
             e.setAttribute('fade', 'over');
             e.id = 'log';
         } 
-        if (Config.sett.colorType == 'page')
-            Elem.color(e, getColorBgd(), getColorType());
+        if (Config.page.isPage)
+            Elem.color(e, 'white', Alert.colorFont());
         else
             Elem.color(e, 'white', 'dodgerblue');
         return e;

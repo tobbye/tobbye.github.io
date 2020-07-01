@@ -54,7 +54,6 @@ list: [
 {title: '资金池', vice: '抢夺资金以提高可获收益上限',
 logTips: '抢夺淘金者资金<h5>完成的任务越多获得的资金越多</h5>',
 dot: 1, 
-buttonIdx: [0,1,3],
 type:'grab',
 group: '淘金者', 
 packType:'福袋', 
@@ -78,7 +77,6 @@ list: [
 {title: '红包池', vice: '抢夺投放的红包来获取收益',
 logTips: '获取赞助商红包<h5>完成的任务越多获得的红包金额越大</h5>',
 dot: 100, 
-buttonIdx: [0,1,3],
 type:'gain',
 group: '赞助商', 
 packType:'红包', 
@@ -137,8 +135,8 @@ lines: []},
 
 var instance = {
 	mine: [
-		{nexu:0, uid:'d50001', sid:'s40001'},
-		{nexu:0, uid:'d50001', sid:'s40002'},
+		{nexu:1, uid:'d50001', sid:'s40001'},
+		{nexu:2, uid:'d50001', sid:'s40002'},
 	],
 	grab: [
 		{nexu:1, uid:'d10001', sid:'s40001'},

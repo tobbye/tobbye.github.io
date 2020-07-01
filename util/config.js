@@ -92,11 +92,21 @@ function __Config() {
         this.action = {};
 
         this.getTemp();
-
         this.getLink();
+        this.setUserData();
         Container(this);
         window.onresize();
     }
+
+    this.setUserData = function() {
+        for (let x in tempData.userData) {
+            let user = tempData.userData[x];
+            if (user.name) {
+                user.icon = Parse.pick(Array.from(tempData.iconStr));
+            }
+        }
+    }
+
 
     this.getTemp = function() {
         let temp = Storage.get('Config') || {};

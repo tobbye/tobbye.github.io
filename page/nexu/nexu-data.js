@@ -36,11 +36,11 @@ list: [
 {title: '赞助商', vice: '强制关注的赞助商', buttonIdx: [0,1,3],
 lines: [
 	{nexu:1, uid:'s30001'}, 
-	{nexu:2, uid:'s30002'}, 
+	{nexu:1, uid:'s30002'}, 
 	{nexu:1, uid:'s30003'}, 
-	{nexu:2, uid:'s30004'}, 
+	{nexu:1, uid:'s30004'}, 
 	{nexu:1, uid:'s30005'}, 
-	{nexu:2, uid:'s30006'},
+	{nexu:1, uid:'s30006'},
 ]},
 
 {title: '赞助商', vice:'我关注的赞助商', buttonIdx: [0,2,3],
