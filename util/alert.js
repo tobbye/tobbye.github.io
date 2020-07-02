@@ -70,7 +70,8 @@ function __Alert() {
 //初始化Alert
     this.init = function() {
         this.name = 'Alert';
-        this.backList = [];
+        this.curList = [];
+        this.curWord = [];
         this.initAlert();
         this.btnClick('btn-quit', this.hidePanel);
         this.btnClick('btn-abon', this.hidePanel);
@@ -272,9 +273,9 @@ function __Alert() {
         if (this.isAlert) {
             Elem.hide(this.curPanel.panel);
         }
-        this.backList.push(name);
+        this.curList.push(name);
         this.curPanel = this.panels[name];
-        console.log(this.backList);
+        console.log(this.curList);
         if (!this.curPanel) return;
         this.setBox();
         // console.log(this.curPanel);
@@ -291,7 +292,7 @@ function __Alert() {
 
     this.hidePanel = function() {
         Elem.hide(this.alert);
-        this.backList = [];
+        this.curList = [];
         if (!this.alert || !this.box) return;
         for (let i=0; i<this.box.children.length; i++) {
             let panel = this.box.children[i];
@@ -304,18 +305,18 @@ function __Alert() {
 
     this.backPanel = function() {
         Elem.hide(this.curPanel.panel);
-        let len = this.backList.length;
+        let len = this.curList.length;
         if (len > 1) {
-            this.backList.pop();
-            this.showPanel(this.backList.pop(), 1);
+            this.curList.pop();
+            this.showPanel(this.curList.pop(), 1);
         } else {
             this.hidePanel();
         }
-        document.body.flex.scrollIntoView();
+        this.curFlex.scrollIntoView();
     }
 
     this.inSearch = function() {
-        return this.backList.indexOf('search') > -1;
+        return this.curList.indexOf('search') > -1;
     }
 
 
@@ -362,17 +363,15 @@ function __Alert() {
             this.uid = line.uid || line.sid;
             Config.getObject(this, line);
             Config.getObject(this, Config.__user(this.uid));
-            this.initTemp();
-            this.nexu = this.nexu || line.nexu;
- 
+            this.initTemp(line);
         }
 
 
 
-        this.initTemp = function() {
-            this.group = this.group || Config.getGroup(this);
-            this.order = this.order || Config.getOrder(this.ord);
-            this.value = this.value || (this.valStr + ': ' + Parse.sub4Num(this.val));
+        this.initTemp = function(line) {
+            this.group = Config.getGroup(this);
+            this.order = Config.getOrder(this);
+            this.value = Config.getValue(this);
             this.desc = '<div align="center"><h3>' + this.name + '的描述</h3></div>';
         }
     }
@@ -383,7 +382,7 @@ function __Alert() {
             cfg.isHead = cfg.isRank || isHead;
             this.body = body;
             this.initHead(line);
-            this.initBody(line);
+            this.initFlex(line);
         }
 
         this.initHead = function(line) {
@@ -397,7 +396,7 @@ function __Alert() {
             } 
         }
 
-        this.initBody = function(line) {
+        this.initFlex = function(line) {
             this.marks = [];
             this.flex = Elem.creat('div', this.body, 'user-flex');
             this.icon = Elem.creat('div',  this.flex, 'user-icon');
@@ -439,10 +438,14 @@ function __Alert() {
     this.UserBody = function() {
 
         this.init = function(block, line) {
-            this.tags = [];
             this.body = Elem.creat('div', block, 'user-body');
-            this.flex = new Alert.UserFlex();
+            this.flex = new Alert.UserFlex(); 
             this.flex.init(this.body, line, Alert.inSearch());
+            this.initBody(line);
+        }
+
+        this.initBody = function(line) {
+            this.tags = [];
             this.tag = Elem.creat('div', this.body, 'user-tags');
             this.desc = Elem.creat('div', this.body, 'user-desc');
             if (line.tag) {
@@ -459,7 +462,7 @@ function __Alert() {
             this.desc.innerHTML = line.desc.replace(/\n/g, '<br/>');
 
             for (let i=0; i<9; i++) {
-                this.desc.innerHTML += Parse.mix(line.name) + '的描述。<br/>';
+                this.desc.innerHTML += line.name + '的描述。<br/>';
             }
             this.desc.innerHTML += '</center>';
         }
@@ -469,42 +472,48 @@ function __Alert() {
 
     this.bodySelect = function(flex) { 
         if (!Alert.isAlert) {
-            let old = document.body.select;
-            if (old) {
-                old.setAttribute('select', 'not');
+            let oldSelect = this.curSelect;
+            if (oldSelect) {
+                oldSelect.setAttribute('select', 'not');
             }
             if (flex) {
-                document.body.select = flex; 
+                this.curSelect = flex; 
                 flex.setAttribute('select', 'yes');
             }
         };
-        document.body.flex = flex; 
+        this.curFlex = flex; 
     }
 
 
 
     this.showUser = function(isMine) {
         this.showPanel('info');
-        let flex, user;
+        let flex, temp;
         if (isMine == null) {
-            flex = document.body.flex;
+            flex = this.curFlex;
         } else {
-            flex = document.body.select;
+            flex = this.curSelect;
         }
         let data = Config.__list(flex);
-        let temp = Config.__line(flex);
+        let line = Config.__line(flex);  
         let title = this.curPanel.title;
         let block = this.curPanel.block;
-        let line = new this.UserData();
-        line.init(temp);
+        let user = new this.UserData();
+        user.init(line);
+        if (this.curUid) {
+            user = Config.__user(this.curUid);
+        } else {
+            temp = isMine ? line.__digger : line.__sponer;
+            temp = temp || user;
+            // this.curUid = user.uid;
+        }
         console.log(temp);
-        user = isMine ? temp.__digger : temp.__sponer;
-        user = user || line;
         let body = new this.UserBody();
-        body.init(block, user);
-        title.innerHTML = user.group + '资料';
-        this.showButton(isMine ? 0:user.nexu);
-        console.log([user.name, user, body]);
+        body.init(block, temp);
+        title.innerHTML = temp.group + '资料';
+        this.curUser = temp;
+        this.showButton(isMine ? 0:temp.nexu);
+        console.log([temp.name, temp, body]);
     }
 
     this.showSearch = function(button) {
@@ -515,16 +524,16 @@ function __Alert() {
         let searchData = Parse.mix(tempData.searchData);
         tempData.searchData = searchData;
         for (let z in searchData) {
-            let temp = searchData[z];
-            temp.ord = z;
-            temp.valStr = '权值';
-            temp.val = Math.floor((Math.random()+40-z) * 2e3);
-            temp.nexu = 1;
+            let line = searchData[z];
+            line.ord = z;
+            line.valStr = '权值';
+            line.val = Math.floor((Math.random()+40-z) * 2e3);
+            line.nexu = 1;
             let body = Elem.creat("div", block, "user-block", 'tempData.searchData['+z+']');
-            let line = new Alert.UserData();
-            line.init(temp);
+            let user = new Alert.UserData();
+            user.init(line);
             let flex = new Alert.UserFlex();
-            flex.init(body, line, true);
+            flex.init(body, user, true);
         }
         this.log('搜索成功!');
     }

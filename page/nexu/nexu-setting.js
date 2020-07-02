@@ -28,12 +28,13 @@ function __Nexu() {
 		let lines = data.lines;
 		let block = Elem.creat('div', content, 'block');
 		for (let z in lines) {
-			let line = new Alert.UserData();
-			line.init(lines[z]);
+			let line = lines[z];
+			let user = new Alert.UserData();
+			user.init(line);
 			let body = Elem.creat('div', block, 'user-block', 'lines['+z+']');
-            let flex = new Alert.UserFlex(body, line);
-            flex.init(body, line);
-			data.lines[z] = line;
+            let flex = new Alert.UserFlex();
+            flex.init(body, user);
+            data.lines[z] = user;
 		}
 	}
 

@@ -103,6 +103,7 @@ function __Config() {
             let user = tempData.userData[x];
             if (user.name) {
                 user.icon = Parse.pick(Array.from(tempData.iconStr));
+                user.icon = '<text emoji=1>' + user.icon + '</text>';
             }
         }
     }
@@ -177,11 +178,20 @@ function __Config() {
         }
     }
 
-    this.getOrder = function(idx) {
-        let ord = parseInt(idx) + 1 + 'th';
-        if (ord.length == 3)
-            ord = ord.replace('1th', '1st').replace('2th', '2nd').replace('3th', '3rd');
-        return ord;
+    this.getOrder = function(line) {
+        if (line.ord == null)
+            return line.order;
+        let order = parseInt(line.ord) + 1 + 'th';
+        if (order.length == 3)
+            order = order.replace('1th', '1st').replace('2th', '2nd').replace('3th', '3rd');
+        return order;
+    }
+
+    this.getValue = function(line) {
+        if (line.val == null)
+            return null;
+        else
+            return line.valStr + ': ' + Parse.sub4Num(line.val);
     }
 
     this.getGroup = function(temp) {

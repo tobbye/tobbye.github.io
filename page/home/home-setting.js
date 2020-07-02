@@ -29,19 +29,19 @@ function __Home() {
     this.creatLine = function(block, data) {
         let lines = data.lines;
         for (let z in lines) {
-            let temp = lines[z];
+            let line = lines[z];
             let pos = Parse.cutZero(Depot.tgtPos) || 'home';
-            temp.val = Math.floor((Math.random()+40-2*z) * 20);
-            temp.val = ~~(temp.val / 24) + '天' + temp.val % 24 + '时';
-            temp.order = temp.pos || pos + '-' + z;
-            temp.valStr = '已占领';
-            let line = new Alert.UserData();
-            line.init(lines[z]);
-            line.pos = temp.pos;
+            line.val = Math.floor((Math.random()+40-2*z) * 20);
+            line.val = ~~(line.val / 24) + '天' + line.val % 24 + '时';
+            line.order = line.pos || pos + '-' + z;
+            line.valStr = '已占领';
+            let user = new Alert.UserData();
+            user.init(line);
+            user.pos = line.pos;
             let body = Elem.creat('div', block, 'user-block', 'lines['+z+']');
-            let flex = new Alert.UserFlex(body, line);
-            flex.init(body, line);
-            data.lines[z] = line;
+            let flex = new Alert.UserFlex();
+            flex.init(body, user);
+            data.lines[z] = user;
         }
     }
 
