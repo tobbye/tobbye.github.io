@@ -31,9 +31,9 @@ function __Home() {
         for (let z in lines) {
             let line = lines[z];
             let pos = Parse.cutZero(Depot.tgtPos) || 'home';
+            line.order = line.pos || pos + '-' + z;
             line.val = Math.floor((Math.random()+40-2*z) * 20);
             line.val = ~~(line.val / 24) + '天' + line.val % 24 + '时';
-            line.order = line.pos || pos + '-' + z;
             line.valStr = '已占领';
             let user = new Alert.UserData();
             user.init(line);
@@ -162,7 +162,7 @@ function __Depot() {
 
     this.toLand = function(e) {
         Alert.hidePanel();
-        let flex = document.body.flex;
+        let flex = Alert.curFlex;
         let line = Config.__line(flex);
         let pos = Parse.fillZero(line.pos.split('-')[0], 6);
         this.creatPos(pos);
@@ -185,7 +185,7 @@ function __Depot() {
 
     this.toOccupt = function() {
         let pos = Parse.cutZero(this.tgtPos);
-        let flex = document.body.flex;
+        let flex = Alert.curFlex;
         let lines = items[0].list[0].lines;
         for (let x in lines) {
             if (lines[x].pos.split('-')[0] == pos) {

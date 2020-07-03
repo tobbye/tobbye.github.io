@@ -15,7 +15,7 @@ var items = [
 {title:"主页", 
 list: [
 
-{title:"我的领地", vice:"查询到#1条结果", buttonIdx: [0,1,3],
+{title:"我的领地", vice:"查询到#1条结果", 
 isResult:1,
 lines: [
 	{nexu:0, uid: 'd50001', pos: 'HELLO-217', val: '388h'},
@@ -35,7 +35,7 @@ btnStr: `
         <button class="button" state="permit" name="enter" onclick="Depot.toOccupt()">占领</button>
     </div>`,
 },
-{title:"公共领地", vice:"查询到#1条结果", buttonIdx: [0,1,3],
+{title:"公共领地", vice:"查询到#1条结果", 
 isResult:1,
 lines: [
 	{nexu:1, uid: 'd10001'},

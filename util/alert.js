@@ -275,7 +275,6 @@ function __Alert() {
         }
         this.curList.push(name);
         this.curPanel = this.panels[name];
-        console.log(this.curList);
         if (!this.curPanel) return;
         this.setBox();
         // console.log(this.curPanel);
@@ -293,6 +292,7 @@ function __Alert() {
     this.hidePanel = function() {
         Elem.hide(this.alert);
         this.curList = [];
+        this.curWord = [];
         if (!this.alert || !this.box) return;
         for (let i=0; i<this.box.children.length; i++) {
             let panel = this.box.children[i];
@@ -307,6 +307,7 @@ function __Alert() {
         Elem.hide(this.curPanel.panel);
         let len = this.curList.length;
         if (len > 1) {
+            this.curWord.pop();
             this.curList.pop();
             this.showPanel(this.curList.pop(), 1);
         } else {
@@ -325,6 +326,10 @@ function __Alert() {
 
     this.log = function(text) {
         Config.fade.setAnim(text);
+    }
+
+    this.copy = function(obj) {
+        return JSON.parse(JSON.stringify(obj));
     }
 
     this.print = function(text) {
@@ -487,8 +492,7 @@ function __Alert() {
 
 
     this.showUser = function(isMine) {
-        this.showPanel('info');
-        let flex, temp;
+        let flex, user;
         if (isMine == null) {
             flex = this.curFlex;
         } else {
@@ -496,27 +500,37 @@ function __Alert() {
         }
         let data = Config.__list(flex);
         let line = Config.__line(flex);  
-        let title = this.curPanel.title;
-        let block = this.curPanel.block;
-        let user = new this.UserData();
+
+        user = new this.UserData();
         user.init(line);
         if (this.curUid) {
             user = Config.__user(this.curUid);
         } else {
-            temp = isMine ? line.__digger : line.__sponer;
-            temp = temp || user;
+            user = (isMine ? line.__digger : line.__sponer) || user;
             // this.curUid = user.uid;
         }
-        console.log(temp);
+        this.curWord.push(user.uid);
+        this.curUser = user;
+        this.showPanel('info');
+
+        let title = this.curPanel.title;
+        let block = this.curPanel.block;
         let body = new this.UserBody();
-        body.init(block, temp);
-        title.innerHTML = temp.group + '资料';
-        this.curUser = temp;
-        this.showButton(isMine ? 0:temp.nexu);
-        console.log([temp.name, temp, body]);
+        body.init(block, user);
+        title.innerHTML = user.group + '资料';
+        this.showButton(isMine ? 0:user.nexu);
+        console.log([
+            this.curPanel.name,
+            user.uid, user.name, 
+            this.copy(this.curList), 
+            this.copy(this.curWord), 
+            user, 
+            body,
+        ]);
     }
 
     this.showSearch = function(button) {
+        this.curWord.push(button.innerHTML);
         this.showPanel("search");
         let title = this.curPanel.title;
         let block = this.curPanel.block;
@@ -536,22 +550,28 @@ function __Alert() {
             flex.init(body, user, true);
         }
         this.log('搜索成功!');
+        console.log([
+            this.curPanel.name,
+            button.innerHTML, 
+            this.copy(this.curList), 
+            this.copy(this.curWord), 
+        ]);
     }
 
     this.showNexu = function(isFollow) {
-        let flex = document.body.flex;
-        let childs = flex.parentNode.children;
-        let line = Config.__line(flex);
-        let lines = Config.__list(flex).lines;
+        let select = this.curSelect;
+        let childs = select.parentNode.children;
+        let line = Config.__line(select);
+        let lines = Config.__list(select).lines;
         if (isFollow) {
             line.nexu = 2;
             let idx = line.isSponer ? 1 : 2;
             items[1].list[idx].lines.unshift(line);
             let outer = Elem.get('outer-center');
             let content = outer.children[1].children[idx].children[1];
-            content.insertBefore(flex, content.firstChild);
+            content.insertBefore(select, content.firstChild);
         } else {
-            Elem.remove(flex);
+            Elem.remove(select);
         }
         Parse.remove(lines, line);  
         for (let i=0; i<childs.length; i++) {
@@ -563,8 +583,8 @@ function __Alert() {
 
     this.showChat = function() {
         this.showPanel("chat");
-        let flex = document.body.flex;
-        let line = Config.__line(flex);
+        let select = this.curSelect;
+        let line = Config.__line(select);
         let title = this.curPanel.title;
         let block = this.curPanel.block;
         let input = this.curPanel.input;
