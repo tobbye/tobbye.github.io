@@ -233,7 +233,7 @@ function __Tran() {
     }
 
     this.creatText = function(flex, attr, text) {
-        let elem = Elem.creat('text', flex, 'line');
+        let elem = Elem.creat('text', flex, 'cell');
         elem.setAttribute('margin', attr);
         elem.innerHTML = text;
         return elem;
@@ -325,11 +325,11 @@ function __Tran() {
         Task.ladd = Math.min(line.ladd, Task.ladd);
 
         let body = Elem.creat('div', block, 'padd-body');
-        let ladd = Elem.creat('div', body, 'line');
+        let ladd = Elem.creat('div', body, 'cell');
         ladd.innerHTML = line.inver + '的' + Task.ladd + '阶' + Task.pack;
         let pic = Elem.creat('img', body, 'img');
         pic.src = Path.ladd['ladd'+Task.ladd];
-        let price = Elem.creat('div', body, 'line');
+        let price = Elem.creat('div', body, 'cell');
         price.innerHTML = '<h1>￥' +  Parse.addSplit(line.priceAllList[Task.ladd - 1]);
         Alert.log('<h5>恭喜您获得了</h5>' + ladd.innerText);
     }

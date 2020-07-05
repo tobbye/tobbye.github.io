@@ -23,28 +23,49 @@ function __Stat() {
 
 	this.creatLine = function(content, data, x, y) {
 		if (!data.lines) return;
-		let block = Elem.creat('table', content, 'block', x);
+		let block = Elem.creat('div', content, 'block', x);
 		for (let z in data.lines) {
-			let _data = data.lines[z];
-			_data.seed = items[x].seed;
+			let line = data.lines[z];
+			line.seed = items[x].seed;
 
-			//BLOCK
-			let flex = Elem.creat('tr', block, 'flex', z);
-			let date = this.setCell(flex, _data, 'date', 'A', 0, 0);
-			let inve = this.setCell(flex, _data, 'inve', 'B', 1e3, 1e4);
-			let grab = this.setCell(flex, _data, 'grab', 'B', 1e3, 1e4);
-			let gain = this.setCell(flex, _data, 'gain', 'B', 1e1, 1e2);
+            let flex = new this.StatFlex();
+            flex.init(block, line);
 		}
 	}
 
-	this.setCell = function(flex, data, k, idx, a, b) {
-		let cell = Elem.creat('td', flex, 'cell'+idx);
-		let value = Math.floor(a + b* (Math.random() * 0.33 + 0.33) * data.seed * 5);
-		data[k] = data[k] || '￥' + Parse.sub4Num(value);
-		cell.innerHTML = data[k];
-		if (cell.innerHTML.replace('年', '') != cell.innerHTML)
-			cell.innerHTML = '<h4>' + cell.innerHTML.replace('年', '年</h4>');
-		return cell;
+
+
+	this.StatFlex = function() {
+
+		this.init = function(body, line) {
+			this.body = body;
+			this.line = line;
+			this.initFlex(line);
+		}
+
+		this.initFlex = function(line) {
+			this.top = Elem.creat('div', this.body, 'user-top');
+            this.order = Elem.creat('div', this.top, 'user-order');
+            this.value = Elem.creat('div', this.top, 'user-value');
+            Elem.text(this.order, line.date);
+            Elem.text(this.value, line.value || '');
+            Elem.page(this.order, Alert.colorFont());
+			Elem.border(this.top, Alert.colorBgd());
+
+			this.flex = Elem.creat('div', this.body, 'user-flex');
+			this.inve = this.initCell(this.flex, line, 'inve', 1e3, 1e4);
+			this.grab = this.initCell(this.flex, line, 'grab', 1e3, 1e4);
+			this.gain = this.initCell(this.flex, line, 'gain', 1e1, 1e2);
+		}
+
+		this.initCell = function(flex, line, k, a, b) {
+			let cell = Elem.creat('div', this.flex, 'cell');
+			let value = Math.floor(a + b* (Math.random() * 0.33 + 0.33) * line.seed * 5);
+			line[k] = cfg.string[k] + '<h3>￥' + Parse.sub4Num(value) + '</h3>';
+			cell.innerHTML = line[k];
+			Elem.border(cell, Alert.colorBgd());
+			return cell;
+		}
 	}
 
 

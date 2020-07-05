@@ -239,6 +239,23 @@ div[fade=over] {
 }
 
 
+.cell {
+    flex: 10;
+    padding: 10px 10px;
+    font-size: 0.9em; 
+}.cell[margin=L10] {
+    flex: 10;
+    margin-left: 10px;
+    text-align: left;
+}.cell[margin=R20] {
+    flex: 20;
+    margin-right: 10px;
+    text-align: right;
+}.cell[margin=F10] {
+    flex: 10;
+}.cell[margin=F20] {
+    flex: 20;
+}
 
 
 .select {
