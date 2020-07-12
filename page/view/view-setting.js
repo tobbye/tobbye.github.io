@@ -1,7 +1,7 @@
 
-var data, name;
+let data, name;
 
-var Setting = {
+let Setting = {
     mix: 0.9,
     leng: 100,
     name: "Item",
@@ -68,25 +68,25 @@ window.onload = function() {
 }
 
 function initText() {
-    var list = copyJson(data);
-    var outer = Elem.get("outer");
+    let list = copyJson(data);
+    let outer = Elem.get("outer");
     outer.innerHTML = JSON.stringify(list).replace(/,/g, ", ");
     window.onresize();
 }
 
 function initEdit() {
-    var outer = Elem.get("outer");
+    let outer = Elem.get("outer");
     outer.innerHTML = "";
-    var textarea = Elem.creat("textarea", outer);
+    let textarea = Elem.creat("textarea", outer);
     textarea.id = "textarea";
     textarea.innerHTML = JSON.stringify(data).replace(/,/g, ", ");
 }
 
 function initSave() {
     Setting.mode = "initText";
-    var textarea = Elem.get("textarea");
-    var str = "var Custom = #0;"
-    var val = textarea ? textarea.value : JSON.stringify(data);
+    let textarea = Elem.get("textarea");
+    let str = "let Custom = #0;"
+    let val = textarea ? textarea.value : JSON.stringify(data);
     console.log(val);
     str = str.replace("#0", val).replace(/[\t\n\s]/g, "");
     data = eval(str);
@@ -103,8 +103,8 @@ function initSave() {
 // initSplit: loopSplit - toElement - loopElement
 
 function initJoin() {
-    var list = copyJson(data);
-    var outer = Elem.get("outer");
+    let list = copyJson(data);
+    let outer = Elem.get("outer");
     outer.innerHTML = "";
     jsonToView(outer, list, name, 0);
     window.onresize();
@@ -112,8 +112,8 @@ function initJoin() {
 }
 
 function initSplit() {
-    var list = copyJson(data);
-    var outer = Elem.get("outer");
+    let list = copyJson(data);
+    let outer = Elem.get("outer");
     outer.innerHTML = "";
     loopSplit(outer, list, name, 0);
     window.onresize();
@@ -123,11 +123,11 @@ function initSplit() {
 
 function loopSplit(outer, list, path, layer) {
     layer ++;
-    var dict = "";
-    var lines = {};
+    let dict = "";
+    let lines = {};
     for (let y in list) {
         if (list[y] == null) continue;
-        var length = JSON.stringify(list[y]).length;
+        let length = JSON.stringify(list[y]).length;
         if (typeof (list[y]) == "object" && (length > Setting.leng * Setting.mix)) {
             lines[y] = copyJson(list[y]);
             list[y] = [y];
@@ -159,7 +159,7 @@ function jsonToView(outer, data, title, layer) {
 
 function toReplace(outer, data, title, layer) {
     // console.log(data);
-    var str = JSON.stringify(data);
+    let str = JSON.stringify(data);
     str = str.replace(/\\n/g, "<br/>").replace(/\\/g, "");
     str = str.replace(/{"originalStyleAttribute":"[^"]*"}/g, `["originalStyleAttribute"]`);
     //[,,]转换成[;;]
@@ -200,7 +200,7 @@ function toReplace(outer, data, title, layer) {
         str = "<h2 float='top'>" + title + "</h2>" + str;
     }
 
-	var inner = Elem.creat("div", outer, "inner");
+	let inner = Elem.creat("div", outer, "inner");
     inner.setAttribute("layer", layer);
 	inner.innerHTML = str;
 }
@@ -208,9 +208,9 @@ function toReplace(outer, data, title, layer) {
 
 
 function toElement(outer, data, title, layer) {
-    var inner = Elem.creat("div", outer, "inner");
+    let inner = Elem.creat("div", outer, "inner");
     inner.setAttribute("layer", layer);
-    var child = Elem.creat("div", inner, "title");
+    let child = Elem.creat("div", inner, "title");
     child.innerHTML = '<h2>' + title + '</h2>';
     loopElement(inner, data, 0);
 }
@@ -219,10 +219,10 @@ function loopElement(inner, data, idx) {
     if (data == null) 
         return;
     inner.innerHTML += toHead(idx);
-    var table = Elem.creat("table", inner, "table");
-    var tr = Elem.creat("tr", table, "row");
+    let table = Elem.creat("table", inner, "table");
+    let tr = Elem.creat("tr", table, "row");
     for (let y in data) {
-        var td = Elem.creat("td", tr, "col");
+        let td = Elem.creat("td", tr, "col");
         if (typeof (data[y]) === "object")
             loopElement(td, data[y], y);
         else
@@ -241,11 +241,11 @@ function toText(data) {
 
 
 function resetOuter(outer) {
-    for (var i=0;i<outer.children.length;i++) {
-        var inner = outer.children[i];
+    for (let i=0;i<outer.children.length;i++) {
+        let inner = outer.children[i];
         inner.id = inner.className + i;
-        var title = inner.children[0];
-        var table = inner.children[1];
+        let title = inner.children[0];
+        let table = inner.children[1];
 
         //居中
         if (!Setting.isCenter) {
@@ -255,15 +255,15 @@ function resetOuter(outer) {
         } 
         //堆叠
         while (!Setting.isFlex && inner.children.length > 2) {
-            var tableNext = inner.children[2];
-            var trNext = tableNext.children[0].children[0];
+            let tableNext = inner.children[2];
+            let trNext = tableNext.children[0].children[0];
             table.appendChild(trNext);
             inner.removeChild(tableNext);
         }
     } 
 
-    for (var i=0;i<outer.children.length;i++) {
-        var inner = outer.children[i];
+    for (let i=0;i<outer.children.length;i++) {
+        let inner = outer.children[i];
         if (Setting.isAlign) {
             resetAlign(inner);
         }
@@ -272,19 +272,19 @@ function resetOuter(outer) {
 
 //对齐
 function resetAlign(inner) {
-    var next = inner.nextSibling;
+    let next = inner.nextSibling;
     if (!next || !next.hasChildNodes()) 
         return;
     if (next.getAttribute("layer") == inner.getAttribute("layer")) {
-        var thisTitle = inner.children[0];
+        let thisTitle = inner.children[0];
         if (!thisTitle.innerHTML.endWith("]"))
             return;
-        var thisTbody = inner.children[1].children[0];
-        var nextTbody = next.children[1].children[0];
-        var thisLength = thisTbody.children[0].children.length;
-        var nextLength = nextTbody.children[0].children.length;
-        var count = (thisTbody.children.length + 1) / 2;
-        var between = thisTbody.innerHTML.length / nextTbody.innerHTML.length / count;
+        let thisTbody = inner.children[1].children[0];
+        let nextTbody = next.children[1].children[0];
+        let thisLength = thisTbody.children[0].children.length;
+        let nextLength = nextTbody.children[0].children.length;
+        let count = (thisTbody.children.length + 1) / 2;
+        let between = thisTbody.innerHTML.length / nextTbody.innerHTML.length / count;
         if (thisTbody.innerHTML.length < 4*thisTitle.innerHTML.length)
             return;
         if (nextLength < 10 && (between < 0.707 || between > 1.414))
@@ -292,9 +292,9 @@ function resetAlign(inner) {
         if (thisLength != nextLength)
             return;
 
-        var title = Elem.creat("tr", thisTbody);
-        var align = Setting.isCenter ? "center" : "left";
-        var tdstr = `<tr><td class='title' colspan='100'><h2 style='text-align:` + align + `';>`;
+        let title = Elem.creat("tr", thisTbody);
+        let align = Setting.isCenter ? "center" : "left";
+        let tdstr = `<tr><td class='title' colspan='100'><h2 style='text-align:` + align + `';>`;
         title.innerHTML = tdstr + next.children[0].innerHTML + "</h2></td></tr>";
 
         while (nextTbody.hasChildNodes())
@@ -314,9 +314,9 @@ function getJson(name) {
 }
 
 function setButton() {
-    var buttons = document.getElementsByClassName("button");
-    for (var i=0;i<buttons.length;i++) {
-        var btn = buttons[i];
+    let buttons = document.getElementsByClassName("button");
+    for (let i=0;i<buttons.length;i++) {
+        let btn = buttons[i];
         setButtonId(btn);
         togButton(btn);  
         btn.onclick = function() {
@@ -326,27 +326,27 @@ function setButton() {
 }
 
 function setButtonId(btn) {
-    var modeVal = btn.getAttribute("val-mode");
-    var viewVal = btn.getAttribute("val-view");
-    var lengVal = btn.getAttribute("val-leng");
-    var nameVal = btn.getAttribute("val-name");
+    let modeVal = btn.getAttribute("val-mode");
+    let viewVal = btn.getAttribute("val-view");
+    let lengVal = btn.getAttribute("val-leng");
+    let nameVal = btn.getAttribute("val-name");
     btn.id = modeVal || viewVal || lengVal || nameVal;
 }
 
 
 function tapButton(btn) {
-    var modeVal = btn.getAttribute("val-mode");
-    var viewVal = btn.getAttribute("val-view");
-    var lengVal = btn.getAttribute("val-leng");
-    var nameVal = btn.getAttribute("val-name");
+    let modeVal = btn.getAttribute("val-mode");
+    let viewVal = btn.getAttribute("val-view");
+    let lengVal = btn.getAttribute("val-leng");
+    let nameVal = btn.getAttribute("val-name");
     //run action
     if (modeVal) {
         Setting.mode = modeVal;
         Setting.isSplit = modeVal == "initSplit";
         Setting.isEdit = /initText|initEdit/i.test(modeVal);
         Setting.isText = /initText|initEdit|initSave/i.test(modeVal);
-        var block2 = Elem.get("flex2").parentNode;
-        var block3 = Elem.get("flex3").parentNode;
+        let block2 = Elem.get("flex2").parentNode;
+        let block3 = Elem.get("flex3").parentNode;
         togButtonHide(block2, Setting.isText, "block");
         togButtonHide(block3, Setting.isText, "block");
         togButtonHide(block3, !Setting.isSplit, "block");
@@ -375,7 +375,7 @@ function tapButton(btn) {
     Setting.isElement = name == "CONSTRUCTORS";
     // if (typeof(Setting.mode) == "function")
         eval(Setting.mode+"();");
-    var nodes = btn.parentNode.childNodes;
+    let nodes = btn.parentNode.childNodes;
     for (let x in nodes) {
         togButton(nodes[x]);            
     }
@@ -424,8 +424,8 @@ function togButtonHide(btn, hide, display) {
 
 
 function back() {
-    var Config = getJson("Config");
-    var href = Config ? Config.cfg.name : "home";
+    let Config = getJson("Config");
+    let href = Config ? Config.cfg.name : "home";
     window.location.href = "../#1/#1.html".replace(/#1/g, href);
 }
 
@@ -441,21 +441,21 @@ function setAgent() {
     Setting.zoom = Setting.isPhone ? Setting.zoomPhone : Setting.zoomPc;
     Setting.zoom = Setting.isPad ? Setting.zoomPad : Setting.zoom;
     document.body.style.zoom = Setting.zoom;
-    var agent = Setting.isPhone ? "mobile" : "computer";
-    var outerBot = Elem.get("outer-bot");
+    let agent = Setting.isPhone ? "mobile" : "computer";
+    let outerBot = Elem.get("outer-bot");
     outerBot.setAttribute("agent", agent);
-    var blocks = document.getElementsByClassName("block");
-    for (var i=0;i<blocks.length;i++) {
+    let blocks = document.getElementsByClassName("block");
+    for (let i=0;i<blocks.length;i++) {
         blocks[i].setAttribute("agent", agent);
     }
 }
 
 function setCenter() {
     //20 = outer.paddingTop + outer.paddingBot;
-    var height = window.innerHeight / Setting.zoom - 20;
-    var outer = Elem.get("outer");
-    var btnCenter = Elem.get("flex2").children[2];
-    var btnAlign = Elem.get("flex2").children[3];
+    let height = window.innerHeight / Setting.zoom - 20;
+    let outer = Elem.get("outer");
+    let btnCenter = Elem.get("flex2").children[2];
+    let btnAlign = Elem.get("flex2").children[3];
     //outer.scrollWidth超出body.inner,隐藏居中按钮
     Setting.isOver = outer.scrollWidth * Setting.zoom > window.innerWidth;
     Setting.isHide = Setting.isOver || !Setting.isPile;
@@ -469,13 +469,13 @@ function setCenter() {
 }
 
 function setCustom() {
-    var btnJoin = Elem.get("initJoin");
-    var btnSplit = Elem.get("initSplit");
+    let btnJoin = Elem.get("initJoin");
+    let btnSplit = Elem.get("initSplit");
     togButtonHide(btnJoin, Setting.isEdit, "inline");
     togButtonHide(btnSplit, Setting.isEdit, "inline");
 
-    var btnEdit = Elem.get("initEdit");
-    var btnSave = Elem.get("initSave");
+    let btnEdit = Elem.get("initEdit");
+    let btnSave = Elem.get("initSave");
     togButtonHide(btnEdit, !Setting.isEdit, "inline");
     togButtonHide(btnSave, !Setting.isEdit, "inline");
 }
@@ -486,12 +486,12 @@ String.prototype.endWith=function(str){
 } 
 
 
-var Elem = {
+let Elem = {
     get: function (name) {
         return document.getElementById(name);
     },
     creat: function (type, parent, className, idx) {
-        var data = document.createElement(type);
+        let data = document.createElement(type);
         if (className)
             data.className = className;
         if (parent)

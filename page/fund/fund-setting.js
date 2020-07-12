@@ -1,5 +1,4 @@
-
-var Fund = new __Fund();
+let Fund = new __Fund();
 
 function __Fund() {
 

@@ -1,6 +1,5 @@
-
-var Rank = new __Rank();
-var UserData = new Alert.UserData();
+let Rank = new __Rank();
+let UserData = new Alert.UserData();
 
 function __Rank() {
 

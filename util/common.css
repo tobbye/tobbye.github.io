@@ -54,12 +54,6 @@ td {
 	background-color: #fff;	
 }
 
-input {
-	flex: 30;
-	margin: 10px;
-	padding: 10px;
-	font-size: 1.2em;
-}
 
 form {
 	margin: 0px;
@@ -67,6 +61,7 @@ form {
 }
 
 
+@keyframes slide {0% {transform: translateY(-25%);} 100% {transform: translateY(25%);}}
 @keyframes fade-in  {0% {opacity: 0; top: -500px;} 100% {opacity: 1; top: 0px;}}
 @keyframes fade-out {0% {opacity: 1; top: 0px;} 100% {opacity: 0; top: -500px;}}
 @keyframes fade-tog {0% {opacity: 0; top: 0px;} 100% {opacity: 1; top: 0px;}}
@@ -421,8 +416,8 @@ div[fade=over] {
     top: 180px;
 	display: block;
 	position: absolute;
-
 }
+
 #alert-box[pos=top] {
 	border: solid 8px #fff;
 	border-radius: 30px;
@@ -465,6 +460,13 @@ div[fade=over] {
 	line-height: 80px;
 	font-size: 1.5em;
 	overflow: hidden;
+}
+
+.alert-input {
+	flex: 30;
+	margin: 10px;
+	padding: 10px;
+	font-size: 1.2em;
 }
 
 .alert-button {

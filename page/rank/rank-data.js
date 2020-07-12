@@ -4,7 +4,7 @@ window.onload = function() {
     Rank.init();
 }
 
-var cfg = {
+let cfg = {
     name: "rank",
     isRank: true,
     rankCount: 20,
@@ -18,7 +18,7 @@ var cfg = {
 };
 
 
-var items = [
+let items = [
 
 {title:"日榜",
 list:[
@@ -56,7 +56,7 @@ list:[
 ]},
 ];
 
-var sponer = [
+let sponer = [
 "德州扒鸡-德州特产-小吃",
 "山东煎饼-泰州特产-小吃",
 "龙山黑陶-济南特产-手工艺品",

@@ -4,7 +4,7 @@ window.onload = function() {
 	Fund.init();
 }
 
-var cfg = {
+let cfg = {
 	name: "fund",
 	isBlock: true,
 	radius: "30px",
@@ -13,7 +13,7 @@ var cfg = {
 
 };
 
-var items = [
+let items = [
 {title: "本金", 
 list:[
 {title:"我的本金", vice:"I.可以提现/H.充值本金 = ", check:"HIJKL", trrow: 3,

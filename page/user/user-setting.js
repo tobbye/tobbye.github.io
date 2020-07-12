@@ -1,4 +1,4 @@
-var User = new __User();
+let User = new __User();
 
 function __User() {
 

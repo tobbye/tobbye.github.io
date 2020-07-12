@@ -1,4 +1,4 @@
-var Task = new __Task();
+let Task = new __Task();
 
 function __Task() {
 
@@ -19,6 +19,8 @@ function __Task() {
         Alert.creatOuterBot(this);
         Alert.showInner();
         this.showTask();
+        this.setTask(0);
+        this.setTaskCfg(0);
     }
 
     

@@ -1,4 +1,4 @@
-var Sett = new __Sett();
+let Sett = new __Sett();
 
 function __Sett() {
 

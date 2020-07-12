@@ -4,7 +4,7 @@ window.onload = function() {
 	Stat.init();
 }
 
-var cfg = {
+let cfg = {
 	name: "stat",
 	list: ["-cur", "-rec"],
 	string: {
@@ -16,7 +16,7 @@ var cfg = {
 };
 
 
-var items = [
+let items = [
 
 {title:"日计", seed: 1,
 list: [

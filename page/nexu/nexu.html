@@ -34,7 +34,7 @@
                     <button class="button" state="permit" name="send" onclick="Alert.showChat()">发消息</button>
                     <button class="button" state="permit" name="like" onclick="Alert.showNexu(1)">添加关注</button>
                     <button class="button" state="danger" name="hate" onclick="Alert.showNexu(0)">取消关注</button>
-                    <button class="button" state="defult" name="home" onclick="Alert.showChat()">查看主页</button>
+                    <button class="button" state="defult" name="home" onclick="Alert.showHome()">查看主页</button>
                 </div>
             </div>
 
@@ -46,7 +46,7 @@
                 </div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
-                    <input placeholder="请输入标签"></button>
+                    <input class="alert-input" name="search" placeholder="请输入标签"></input>
                     <button class="button-min" state="permit" onclick="Alert.hidePanel()">搜索</button>
                 </div>
             </div>

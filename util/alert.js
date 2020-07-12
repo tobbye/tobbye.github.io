@@ -3,7 +3,7 @@ window.onresize = function() {
     Config.page = new Page();
 }
 
-var Page = function() {
+let Page = function() {
 
     Config.getConst(this, 'page');
     this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
@@ -42,7 +42,7 @@ var Page = function() {
     Elem.height(center, this.outerHeight);
 }
 
-var Panel = function() {
+let Panel = function() {
     this.init = function(panel, name) {
         this.name  = name;
         this.panel = panel;
@@ -64,7 +64,7 @@ var Panel = function() {
 }
 
 
-var Alert = new __Alert();
+let Alert = new __Alert();
 
 function __Alert() {
 //初始化Alert
@@ -78,6 +78,10 @@ function __Alert() {
         this.btnClick('btn-close', this.hidePanel);
         this.hidePanel();
         Container(this);
+    }
+
+    this.toPage = function(name) {
+        window.location.href = "../#0/#0.html".replace(/#0/g, name);
     }
 
 
@@ -94,6 +98,8 @@ function __Alert() {
         if (data.vice) {
             let vice = Elem.creat('div', center, 'vice');
             vice.innerHTML = data.viceStr || data.vice;
+            if (data.lines)
+                vice.innerHTML = vice.innerHTML.replace('#len', data.lines.length)
         }
 
         if (len > 1 && cfg.name == 'nexu' || cfg.name == 'rank') {
@@ -257,7 +263,7 @@ function __Alert() {
         let nexus = [[4,5], [0,1,3], [0,2,3], [0,3]][nexu];
         let buttons = this.curPanel.buttons;
         if (nexus) {
-            for (var i=0;i<buttons.length;i++) {
+            for (let i=0;i<buttons.length;i++) {
                 let name = buttons[i].getAttribute('name');
                 if (nexus.indexOf(i) > -1)
                     Elem.show(buttons[i]);
@@ -313,7 +319,8 @@ function __Alert() {
         } else {
             this.hidePanel();
         }
-        this.curFlex.scrollIntoView();
+        if (this.curFlex != this.curSelect)
+            this.curFlex.scrollIntoView();
     }
 
     this.inSearch = function() {
@@ -491,9 +498,9 @@ function __Alert() {
 
 
 
-    this.showUser = function(isMine) {
+    this.showUser = function(isDigger) {
         let flex, user;
-        if (isMine == null) {
+        if (isDigger == null) {
             flex = this.curFlex;
         } else {
             flex = this.curSelect;
@@ -506,7 +513,7 @@ function __Alert() {
         if (this.curUid) {
             user = Config.__user(this.curUid);
         } else {
-            user = (isMine ? line.__digger : line.__sponer) || user;
+            user = (isDigger ? line.__digger : line.__sponer) || user;
             // this.curUid = user.uid;
         }
         this.curWord.push(user.uid);
@@ -518,7 +525,7 @@ function __Alert() {
         let body = new this.UserBody();
         body.init(block, user);
         title.innerHTML = user.group + '资料';
-        this.showButton(isMine ? 0:user.nexu);
+        this.showButton(Config.isMine(user) ? 0:user.nexu);
         console.log([
             this.curPanel.name,
             user.uid, user.name, 
@@ -535,13 +542,24 @@ function __Alert() {
         let title = this.curPanel.title;
         let block = this.curPanel.block;
         title.innerHTML = Constant.string.titleSearch.replace("#0", button.innerHTML);
-        let searchData = Parse.mix(tempData.searchData);
+        let searchData = [];
+
+        for (let z in tempData.userData) {
+            let line = tempData.userData[z];
+            line.uid = z;
+            if (line.name)
+                searchData.push(line);
+        }
+        let rnd = Math.max(1, ~~(Math.random()*searchData.length+1));
+        let ans = rnd > 999 ? '999+' : rnd;
+        searchData = Parse.mix(searchData);
         tempData.searchData = searchData;
         for (let z in searchData) {
+            if (z > rnd-1) break;
             let line = searchData[z];
             line.ord = z;
             line.valStr = '权值';
-            line.val = Math.floor((Math.random()+40-z) * 2e3);
+            line.val = Math.floor((Math.random()+rnd+5-z) * 2e3);
             line.nexu = 1;
             let body = Elem.creat("div", block, "user-block", 'tempData.searchData['+z+']');
             let user = new Alert.UserData();
@@ -549,7 +567,9 @@ function __Alert() {
             let flex = new Alert.UserFlex();
             flex.init(body, user, true);
         }
-        this.log('搜索成功!');
+        block.firstChild.scrollIntoView();
+
+        this.log(`搜索: ${button.innerHTML}<h5>${ans}条结果按照标签分配的权重排序</h5>`);
         console.log([
             this.curPanel.name,
             button.innerHTML, 

@@ -1,7 +1,5 @@
-
-
-var Nexu = new __Nexu();
-var UserData = new Alert.UserData();
+let Nexu = new __Nexu();
+let UserData = new Alert.UserData();
 
 function __Nexu() {
 

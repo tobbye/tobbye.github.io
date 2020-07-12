@@ -1,6 +1,6 @@
 
 
-var testData = {
+let testData = {
 	logoSetting: {
 		multiX: 1,
 		multiY: 1,
