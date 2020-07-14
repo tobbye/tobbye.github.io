@@ -61,7 +61,7 @@ form {
 }
 
 
-@keyframes slide {0% {transform: translateY(-25%);} 100% {transform: translateY(25%);}}
+@keyframes slide {0% {transform: translateY(0%);} 100% {transform: translateY(70%);}}
 @keyframes fade-in  {0% {opacity: 0; top: -500px;} 100% {opacity: 1; top: 0px;}}
 @keyframes fade-out {0% {opacity: 1; top: 0px;} 100% {opacity: 0; top: -500px;}}
 @keyframes fade-tog {0% {opacity: 0; top: 0px;} 100% {opacity: 1; top: 0px;}}
