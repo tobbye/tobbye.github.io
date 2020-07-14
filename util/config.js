@@ -93,7 +93,6 @@ function __Config() {
         this.name = 'Config';
         this.fade = new Fade();
         this.action = {};
-        
         this.getTemp();
         this.getLink();
         this.setUserData();
@@ -113,6 +112,7 @@ function __Config() {
 
 
     this.getTemp = function() {
+        Storage.clear();
         let temp = Storage.get('Config') || {};
         if (cfg.name == 'sett')
             temp = {};
