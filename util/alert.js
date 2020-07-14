@@ -3,7 +3,7 @@ window.onresize = function() {
     Config.page = new Page();
 }
 
-let Page = function() {
+var Page = function() {
 
     Config.getConst(this, 'page');
     this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
@@ -31,16 +31,94 @@ let Page = function() {
     this.alertWidth =  this.alertFillWidth - this.alertPadding - this.alertBord;
     this.isWidth = this.windWidth > this.windHeight;
     this.isFlow = this.innerHeight > this.minHeight;
-    let box = Elem.get('alert-box');
+    var  box = Elem.get('alert-box');
     if (box) {
         box.setAttribute('pos', this.alertType);
         box.style.left = this.alertMargin + 'px';
         box.style.right = this.alertMargin + 'px';
     }
     document.body.style.zoom = this.zoom;
-    let center = Elem.get('outer-center');
+    var  center = Elem.get('outer-center');
     Elem.height(center, this.outerHeight);
 }
+
+
+//显示提醒信息
+var Fade = function() {
+    let that = this;
+    Config.getConst(this, 'fade');
+    
+    this.getElem = function(e) {
+        e = e || Elem.get('log');
+        if (!e) {
+            e = Elem.creat('div', document.body, 'log');
+            e.setAttribute('fade', 'over');
+            e.id = 'log';
+        } 
+        if (Config.page.isPage)
+            Elem.color(e, 'white', Alert.colorFont());
+        else
+            Elem.color(e, 'white', 'dodgerblue');
+        return e;
+    }
+
+    this.setAnim = function(text, e, timeOn) {
+        this.text = text;
+        this.elem = this.getElem(e);
+        this.timeOn = timeOn || this.timeOn;
+        if (this.elem.getAttribute('fade') != 'over') {
+            window.clearTimeout(this.fadeIn);
+            window.clearTimeout(this.fadeOn);
+            window.clearTimeout(this.fadeOut);
+            window.clearTimeout(this.fadeTog);
+            this.elem.setAttribute('fade', 'on');
+            this.animTog();
+        } else {
+            this.animIn();
+        }
+    }
+
+    this.animIn = function() {
+        if (this.text)
+            this.elem.innerHTML = this.text;
+        this.elem.setAttribute('fade', 'in');
+        this.fadeIn = setTimeout(function() {
+            that.fadeIn = null;
+            that.animOn();
+        }, this.timeIn);  
+    }
+
+    this.animOn = function() {
+        this.elem.setAttribute('fade', 'on');
+        this.fadeOn = setTimeout(function() {
+            that.fadeOn = null;    
+            that.animOut();
+        }, this.timeOn); 
+    }
+
+    this.animTog = function() {
+        if (this.text)
+            this.elem.innerHTML = this.text;
+        this.elem.setAttribute('fade', 'tog');
+        this.fadeTog = setTimeout(function() {
+            that.fadeTog = null;
+            that.animOn();
+        }, this.timeTog);  
+    }
+
+    this.animOut = function() {
+        this.elem.setAttribute('fade', 'out');
+        this.fadeOut = setTimeout(function() {
+            that.fadeOut = null;
+            that.animOver();
+        }, this.timeOut);  
+    }
+
+    this.animOver = function() {
+        this.elem.setAttribute('fade', 'over');
+    }  
+}
+
 
 let Panel = function() {
     this.init = function(panel, name) {
@@ -67,7 +145,6 @@ let Panel = function() {
 let Alert = new __Alert();
 
 function __Alert() {
-//初始化Alert
     this.init = function() {
         this.name = 'Alert';
         this.curList = [];
@@ -86,17 +163,17 @@ function __Alert() {
 
 
     this.creatTitle = function(content, data, len, y) {
-        let flex   = Elem.creat('div', content, 'flex');
-        let left   = Elem.creat('div', flex, 'guide', 'L');
-        let center = Elem.creat('div', flex, 'guide', 'C');
-        let right  = Elem.creat('div', flex, 'guide', 'R');
+        var  flex   = Elem.creat('div', content, 'flex');
+        var  left   = Elem.creat('div', flex, 'guide', 'L');
+        var  center = Elem.creat('div', flex, 'guide', 'C');
+        var  right  = Elem.creat('div', flex, 'guide', 'R');
         if (data.title) {
-            let title = Elem.creat('div', center, 'title');
+            var  title = Elem.creat('div', center, 'title');
             title.innerHTML = data.title;
         }
 
         if (data.vice) {
-            let vice = Elem.creat('div', center, 'vice');
+            var  vice = Elem.creat('div', center, 'vice');
             vice.innerHTML = data.viceStr || data.vice;
             if (data.lines)
                 vice.innerHTML = vice.innerHTML.replace('#len', data.lines.length)
@@ -104,23 +181,23 @@ function __Alert() {
 
         if (len > 1 && cfg.name == 'nexu' || cfg.name == 'rank') {
             if (y > 0) {
-                let guide = Elem.creat('div', left, 'button-min');
+                var  guide = Elem.creat('div', left, 'button-min');
                 Elem.text(guide, '↑');
                 Elem.color(guide, Alert.colorFont());
                 Elem.border(guide, 'solid 6px ' + Alert.colorFont());
                 guide.onclick = function() {
-                    let tgt = this.parentNode.parentNode.parentNode.previousSibling;
+                    var  tgt = this.parentNode.parentNode.parentNode.previousSibling;
                     console.log(tgt);
                     tgt.scrollIntoView();
                 }
             }
             if (y < len-1) {
-                let guide = Elem.creat('div', right, 'button-min');
+                var  guide = Elem.creat('div', right, 'button-min');
                 Elem.text(guide, '↓');
                 Elem.color(guide, Alert.colorFont());
                 Elem.border(guide, 'solid 6px ' + Alert.colorFont());
                 guide.onclick = function() {
-                    let tgt = this.parentNode.parentNode.parentNode.nextSibling;
+                    var  tgt = this.parentNode.parentNode.parentNode.nextSibling;
                     console.log(tgt);
                     tgt.scrollIntoView();
                 }
@@ -129,9 +206,9 @@ function __Alert() {
     }
 
     this.creatLink = function(outer, href) {
-        for (let x in href) {
-            let data = href[x];
-            let link = Elem.creat('a', outer, 'button-bot');
+        for (var  x in href) {
+            var  data = href[x];
+            var  link = Elem.creat('a', outer, 'button-bot');
             link.innerHTML = data.text;
             link.href = data.href;
             if (cfg.name == data.name) 
@@ -143,13 +220,13 @@ function __Alert() {
 
 
     this.creatOuterTop = function(that) {
-        let outer = Elem.get('outer-top');
+        var  outer = Elem.get('outer-top');
         if (items.length < 2) {
             this.creatLink(outer, Constant.hrefTop);
             return;
         }
-        for (let x in items) {
-            let btn = Elem.creat('div', outer, 'button-top');
+        for (var  x in items) {
+            var  btn = Elem.creat('div', outer, 'button-top');
             btn.innerHTML = items[x].title;
             btn.idx = x;
             btn.onclick = function() {
@@ -160,15 +237,15 @@ function __Alert() {
 
     this.creatOuterCenter = function(that) {
         window.onresize();
-        let outer = Elem.get('outer-center');
+        var  outer = Elem.get('outer-center');
         if (items.length > 0)
             outer.innerHTML = '';
-        for (let x in items) {
-            let inner = Elem.creat('div', outer, 'inner', 'items['+x+'].');
-            let list = items[x].list;
-            for (let y in list) {
-                let content = Elem.creat('div', inner, 'content', 'list['+y+'].');
-                let data = list[y];
+        for (var  x in items) {
+            var  inner = Elem.creat('div', outer, 'inner', 'items['+x+'].');
+            var  list = items[x].list;
+            for (var  y in list) {
+                var  content = Elem.creat('div', inner, 'content', 'list['+y+'].');
+                var  data = list[y];
                 if (that.setTitle)
                     that.setTitle(content, data);
                 this.creatTitle(content, data, list.length, y);
@@ -178,15 +255,15 @@ function __Alert() {
     }
 
     this.creatOuterBot = function(that) {
-        let outer = Elem.get('outer-bot');
+        var  outer = Elem.get('outer-bot');
         this.creatLink(outer, Constant.hrefBot);
     }
 
     this.creatContent = function(that, x, y) {
-        let outer = Elem.get('outer-center');
-        let inner = outer.children[x];
-        let content = inner.children[y];
-        let data = items[x].list[y];
+        var  outer = Elem.get('outer-center');
+        var  inner = outer.children[x];
+        var  content = inner.children[y];
+        var  data = items[x].list[y];
         content.innerHTML = '';
         if (that.setTitle)
             that.setTitle(content, data);
@@ -196,10 +273,10 @@ function __Alert() {
 
     //显示内页
     this.showInner = function(clickIdx) {
-        let idx = Config.sett.isInto ? Config.innerIdx : clickIdx || 0;
-        let outerTop = document.querySelectorAll('.button-top');
-        let outerCenter = document.querySelectorAll('.inner');
-        for (let i = 0; i < outerTop.length; i++) {
+        var  idx = Config.sett.isInto ? Config.innerIdx : clickIdx || 0;
+        var  outerTop = document.querySelectorAll('.button-top');
+        var  outerCenter = document.querySelectorAll('.inner');
+        for (var  i = 0; i < outerTop.length; i++) {
             this.setChild(outerTop[i], outerCenter[i], i == idx);
         }
         Config.sett.isInto = Config.innerIdx != clickIdx;
@@ -214,7 +291,7 @@ function __Alert() {
         } else if (Config.sett.debugType != 'close') {
             Config.sett.isInto = true;
             Storage.set('Config', Config);
-            jsonToTable(items[idx]); 
+            this.jsonToTable(items[idx]); 
         }
     }
 
@@ -236,24 +313,47 @@ function __Alert() {
         }
     }
 
+    this.fullScreen = function() {
+        if (Config.page.isMobile) {
+            let body = document.body;
+            if (body.requestFullScreen) body.requestFullScreen(); //W3C
+            if (body.msRequestFullScreen) body.msRequestFullScreen();  //IE11
+            if (body.mozRequestFullScreen) body.mozRequestFullScreen(); //FireFox
+            if (body.webkitRequestFullScreen) body.webkitRequestFullScreen(); //Chrome
+        }
+    }
 
 
+    this.jsonToAlert = function(data) {
+        alert(JSON.stringify(data));
+    }
+
+    this.jsonToTable = function(Item) {
+        if (Config.name == 'home') return;
+        console.log(Item);
+        Storage.set('Item', Item);
+        Storage.set('Config', Config);
+        Storage.set('Constant', Constant);
+        Storage.set('Instances', Instances);
+        Storage.set('Constrtctors', Constrtctors);
+        window.location.href = '../view/view.html';
+    }
 
     this.initAlert = function() {
         this.panels = {};
         this.buttons = {};
         this.alert = document.querySelector('#alert');
         this.box = document.querySelector('#alert-box');
-        let buttons = document.querySelectorAll('.button');
-            for (let i=0; i<buttons.length; i++) {
-            let name = buttons[i].getAttribute('name');
+        var  buttons = document.querySelectorAll('.button');
+            for (var  i=0; i<buttons.length; i++) {
+            var  name = buttons[i].getAttribute('name');
             this.buttons[name] = buttons[i];
         }
         if (!this.alert || !this.box) return;
-        let panels = this.box.querySelectorAll('.alert-panel');
-        for (let i=0; i<panels.length; i++) {
-            let name = panels[i].getAttribute('name');
-            let panel = new Panel();
+        var  panels = this.box.querySelectorAll('.alert-panel');
+        for (var  i=0; i<panels.length; i++) {
+            var  name = panels[i].getAttribute('name');
+            var  panel = new Panel();
             panel.init(panels[i], name);
         }
     }
@@ -261,11 +361,11 @@ function __Alert() {
 
 
     this.showButton = function(nexu) {
-        let nexus = [[4,5], [0,1,3], [0,2,3], [0,3]][nexu];
-        let buttons = this.curPanel.buttons;
+        var  nexus = [[4,5], [0,1,3], [0,2,3], [0,3]][nexu];
+        var  buttons = this.curPanel.buttons;
         if (nexus) {
-            for (let i=0;i<buttons.length;i++) {
-                let name = buttons[i].getAttribute('name');
+            for (var  i=0;i<buttons.length;i++) {
+                var  name = buttons[i].getAttribute('name');
                 if (nexus.indexOf(i) > -1)
                     Elem.show(buttons[i]);
                 else
@@ -301,8 +401,8 @@ function __Alert() {
         this.curList = [];
         this.curWord = [];
         if (!this.alert || !this.box) return;
-        for (let i=0; i<this.box.children.length; i++) {
-            let panel = this.box.children[i];
+        for (var  i=0; i<this.box.children.length; i++) {
+            var  panel = this.box.children[i];
             Elem.hide(panel);
         }
         if (cfg.name == 'tran')
@@ -312,7 +412,7 @@ function __Alert() {
 
     this.backPanel = function() {
         Elem.hide(this.curPanel.panel);
-        let len = this.curList.length;
+        var  len = this.curList.length;
         if (len > 1) {
             this.curWord.pop();
             this.curList.pop();
@@ -420,8 +520,8 @@ function __Alert() {
             this.mark = Elem.creat('div',  this.left, 'user-flex');
             this.ladd = Elem.creat('div',  this.right, 'user-ladd');
             this.group = Elem.creat('div',  this.right, 'user-group');
-            for (let i in line.mark) {
-                let mark = Elem.creat('div', this.mark, 'user-mark');
+            for (var  i in line.mark) {
+                var  mark = Elem.creat('div', this.mark, 'user-mark');
                 Elem.text(mark, line.mark[i]);
                 Elem.border(mark, Alert.colorFont());
                 this.marks[i] = mark;
@@ -462,8 +562,8 @@ function __Alert() {
             this.tag = Elem.creat('div', this.body, 'user-tags');
             this.desc = Elem.creat('div', this.body, 'user-desc');
             if (line.tag) {
-                for (let i in line.tag) {
-                    let tag = Elem.creat('div', this.tag, 'user-tag');
+                for (var  i in line.tag) {
+                    var  tag = Elem.creat('div', this.tag, 'user-tag');
                     tag.onclick = function() {
                         Alert.showSearch(this);
                     }
@@ -474,7 +574,7 @@ function __Alert() {
             }
             this.desc.innerHTML = line.desc.replace(/\n/g, '<br/>');
 
-            for (let i=0; i<9; i++) {
+            for (var  i=0; i<9; i++) {
                 this.desc.innerHTML += line.name + '的描述。<br/>';
             }
             this.desc.innerHTML += '</center>';
@@ -485,7 +585,7 @@ function __Alert() {
 
     this.bodySelect = function(flex) { 
         if (!Alert.isAlert) {
-            let oldSelect = this.curSelect;
+            var  oldSelect = this.curSelect;
             if (oldSelect) {
                 oldSelect.setAttribute('select', 'not');
             }
@@ -500,14 +600,14 @@ function __Alert() {
 
 
     this.showUser = function(isDigger) {
-        let flex, user;
+        var  flex, user;
         if (isDigger == null) {
             flex = this.curFlex;
         } else {
             flex = this.curSelect;
         }
-        let data = Config.__list(flex);
-        let line = Config.__line(flex);  
+        var  data = Config.__list(flex);
+        var  line = Config.__line(flex);  
 
         user = new this.UserData();
         user.init(line);
@@ -521,9 +621,9 @@ function __Alert() {
         this.curUser = user;
         this.showPanel('info');
 
-        let title = this.curPanel.title;
-        let block = this.curPanel.block;
-        let body = new this.UserBody();
+        var  title = this.curPanel.title;
+        var  block = this.curPanel.block;
+        var  body = new this.UserBody();
         body.init(block, user);
         title.innerHTML = user.group + '资料';
         this.showButton(Config.isMine(user) ? 0:user.nexu);
@@ -540,32 +640,32 @@ function __Alert() {
     this.showSearch = function(button) {
         this.curWord.push(button.innerHTML);
         this.showPanel("search");
-        let title = this.curPanel.title;
-        let block = this.curPanel.block;
+        var  title = this.curPanel.title;
+        var  block = this.curPanel.block;
         title.innerHTML = Constant.string.titleSearch.replace("#0", button.innerHTML);
-        let searchData = [];
+        var  searchData = [];
 
-        for (let z in tempData.userData) {
-            let line = tempData.userData[z];
+        for (var  z in tempData.userData) {
+            var  line = tempData.userData[z];
             line.uid = z;
             if (line.name)
                 searchData.push(line);
         }
-        let rnd = Math.max(1, ~~(Math.random()*searchData.length+1));
-        let ans = rnd > 999 ? '999+' : rnd;
+        var  rnd = Math.max(1, ~~(Math.random()*searchData.length+1));
+        var  ans = rnd > 999 ? '999+' : rnd;
         searchData = Parse.mix(searchData);
         tempData.searchData = searchData;
-        for (let z in searchData) {
+        for (var  z in searchData) {
             if (z > rnd-1) break;
-            let line = searchData[z];
+            var  line = searchData[z];
             line.ord = z;
             line.valStr = '权值';
             line.val = Math.floor((Math.random()+rnd+5-z) * 2e3);
             line.nexu = 1;
-            let body = Elem.creat("div", block, "user-block", 'tempData.searchData['+z+']');
-            let user = new Alert.UserData();
+            var  body = Elem.creat("div", block, "user-block", 'tempData.searchData['+z+']');
+            var  user = new Alert.UserData();
             user.init(line);
-            let flex = new Alert.UserFlex();
+            var  flex = new Alert.UserFlex();
             flex.init(body, user, true);
         }
         block.firstChild.scrollIntoView();
@@ -580,22 +680,22 @@ function __Alert() {
     }
 
     this.showNexu = function(isFollow) {
-        let select = this.curSelect;
-        let childs = select.parentNode.children;
-        let line = Config.__line(select);
-        let lines = Config.__list(select).lines;
+        var  select = this.curSelect;
+        var  childs = select.parentNode.children;
+        var  line = Config.__line(select);
+        var  lines = Config.__list(select).lines;
         if (isFollow) {
             line.nexu = 2;
-            let idx = line.isSponer ? 1 : 2;
+            var  idx = line.isSponer ? 1 : 2;
             items[1].list[idx].lines.unshift(line);
-            let outer = Elem.get('outer-center');
-            let content = outer.children[1].children[idx].children[1];
+            var  outer = Elem.get('outer-center');
+            var  content = outer.children[1].children[idx].children[1];
             content.insertBefore(select, content.firstChild);
         } else {
             Elem.remove(select);
         }
         Parse.remove(lines, line);  
-        for (let i=0; i<childs.length; i++) {
+        for (var  i=0; i<childs.length; i++) {
             childs[i].setAttribute('key', 'lines['+i+']');
         }
         this.hidePanel();
@@ -604,23 +704,23 @@ function __Alert() {
 
     this.showChat = function() {
         this.showPanel("chat");
-        let select = this.curSelect;
-        let line = Config.__line(select);
-        let title = this.curPanel.title;
-        let block = this.curPanel.block;
-        let input = this.curPanel.input;
+        var  select = this.curSelect;
+        var  line = Config.__line(select);
+        var  title = this.curPanel.title;
+        var  block = this.curPanel.block;
+        var  input = this.curPanel.input;
         Elem.color(input, Alert.colorLight());
         input.placeholder = "输入内容";
         title.innerHTML = line.name;
         // this.box.style.maxHeight = (Config.page.windHeight - 440) + "px";
         // block.style.maxHeight = (Config.page.windHeight - 703) + "px";
         block.innerHTML = "";
-        for (let i in tempData.chatData) {
-            let data = tempData.chatData[i];
-            let ctype = data.isMine ? "right" : "left";
+        for (var  i in tempData.chatData) {
+            var  data = tempData.chatData[i];
+            var  ctype = data.isMine ? "right" : "left";
             this.setChatText(block, ctype, data.text);
         }
-        let send = Elem.get("btn-send");
+        var  send = Elem.get("btn-send");
         send.block = block;
         send.onclick = function() {
             Alert.setChatSend();
@@ -630,7 +730,7 @@ function __Alert() {
     }
 
     this.setChatSend = function(send){
-        let input = this.curPanel.input;
+        var  input = this.curPanel.input;
         this.setChatText(send.block, "right", input.value);
         if (input.value != "")
             tempData.chatData.push({
@@ -650,8 +750,8 @@ function __Alert() {
             this.hidePanel();
             return;
         }
-        let flex = Elem.creat("div", block, "chat-flex");
-        let text = Elem.creat("div", flex, "chat-text");
+        var  flex = Elem.creat("div", block, "chat-flex");
+        var  text = Elem.creat("div", flex, "chat-text");
         Elem.attr(flex, "ctype", ctype);
         Elem.attr(text, "ctype", ctype);
         text.innerHTML = value.replace(/\n/g, "<br/>");
@@ -661,9 +761,9 @@ function __Alert() {
     }
 
     this.getChatLength = function(value) {
-        let len = 0;
-        let list = value.split('\n');
-        for (let idx in list) {
+        var  len = 0;
+        var  list = value.split('\n');
+        for (var  idx in list) {
             if (list[idx].length > len)
                 len = list[idx].length;
         }
@@ -672,8 +772,8 @@ function __Alert() {
 
 
     this.onChatFocus = function() {
-        let block = this.curPanel.block;
-        let input = this.curPanel.input;
+        var  block = this.curPanel.block;
+        var  input = this.curPanel.input;
         block.lastChild.scrollIntoView();
         Elem.text(input, '');
         Elem.color(input, Alert.colorFont());
