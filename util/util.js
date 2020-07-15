@@ -434,6 +434,26 @@ Parse.contentText = function(str) {
 
 
 
+
+
+
+
+
+
+
+
+let setFullScreen = function() {
+    if (Config.page.isMobile) {
+        let body = document.body;
+        if (body.requestFullScreen) body.requestFullScreen(); //W3C
+        if (body.msRequestFullScreen) body.msRequestFullScreen();  //IE11
+        if (body.mozRequestFullScreen) body.mozRequestFullScreen(); //FireFox
+        if (body.webkitRequestFullScreen) body.webkitRequestFullScreen(); //Chrome
+    }
+}
+
+
+
 //显示提醒信息
 function Fade() {
     let that = this;
@@ -511,12 +531,17 @@ function Fade() {
 }
 
 
+
+
+
 let addScript = function(src) {
     let script = document.createElement('script');
     script.type = 'text/javascript';
     script.src = src;
     document.head.appendChild(script);
 }
+
+
 
 
 
