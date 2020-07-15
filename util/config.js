@@ -83,7 +83,7 @@ let Constant = {
     },
 };
 
-let Config = new __Config();
+var Config = new __Config();
 
 function __Config() {
 
@@ -112,7 +112,6 @@ function __Config() {
 
 
     this.getTemp = function() {
-        Storage.clear();
         let temp = Storage.get('Config') || {};
         if (cfg.name == 'sett')
             temp = {};
