@@ -12,24 +12,13 @@
     <script src="../task/rect.js"> </script>
 	<style type="text/css"> 
 
-    marquee {
-        color: white;
-        font-size: 10vw;
-        /*animation: slide 2s ease-in-out infinite alternate;*/
-        background-image: linear-gradient(#6c3 50%, #09f 50%);
-    }
 
-    @keyframes slide {0% {transform: translateY(0%);} 100% {transform: translateY(70%);}}
 	</style>
 	
 </head>
 <body>
 	<div id="outer-top"></div>
-	<div id="outer-center">
-        <marquee scrollamount="40">
-            yield return new WaitForSeconds(365*24*3600*1e4);
-        </marquee>   
-    </div>
+	<div id="outer-center"></div>
 	<div id="outer-bot"></div>
 	<div id="alert">
 		<div id="alert-mask"></div>

@@ -161,8 +161,7 @@ function __Alert() {
     this.creatOuterCenter = function(that) {
         window.onresize();
         let outer = Elem.get('outer-center');
-        if (items.length > 0)
-            outer.innerHTML = '';
+        outer.innerHTML = '';
         for (let x in items) {
             let inner = Elem.creat('div', outer, 'inner', 'items['+x+'].');
             let list = items[x].list;
