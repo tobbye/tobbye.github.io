@@ -1,4 +1,4 @@
-var Recd = new __Recd();
+let Recd = new __Recd();
 
 function __Recd() {
 
@@ -51,8 +51,8 @@ function __Recd() {
 
 
     this.getjson = function() {
-        var sort = cfg.sort;
-        var json = Storage.get('recd-json') || [];
+        let sort = cfg.sort;
+        let json = Storage.get('recd-json') || [];
         json = json.reverse();
         for (let x in json) {
             for (let y in sort) {
@@ -66,14 +66,14 @@ function __Recd() {
     }
 
     this.pushdata = function(json, sort, y) {
-        var data = {
+        let data = {
             stamp: json.date.split('年')[1] + '<h3>' + json.time,
             left: json.value * sort[y].left,
             right: json.value * sort[y].right
         };
-        var order = cfg.order;
-        var idx = sort[y].idx;
-        var list = items[idx].list[0];
+        let order = cfg.order;
+        let idx = sort[y].idx;
+        let list = items[idx].list[0];
         if (items[idx].list.length == 1) {
             order[idx] = list;
         }
@@ -81,7 +81,7 @@ function __Recd() {
             order[idx].vice = json.date;
             order[idx].lines.push(data);
         } else {
-            var newlist = {
+            let newlist = {
                 title:'',
                 vice: json.date,
                 left: list.left,

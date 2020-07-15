@@ -100,7 +100,7 @@
         margin: 6px;
         padding: 10px 20px;
         height: 100px;
-        cell-height: 100px;
+        max-height: 100px;
         font-size: 1.8em;
         border: solid 6px transparent;
     }
@@ -152,8 +152,8 @@
                     <button class="button" state="permit" name="like" onclick="Alert.showNexu(1)">添加关注</button>
                     <button class="button" state="danger" name="hate" onclick="Alert.showNexu(0)">取消关注</button>
                     <button class="button" state="defult" name="home" onclick="Alert.showHome()">查看主页</button>
-                    <button class="button" state="permit" name="look" onclick="Alert.showNexu(0)">前往领地</button>
-                    <button class="button" state="danger" name="leave" onclick="Alert.showChat()">解除占领</button>
+                    <button class="button" state="defult" name="land" onclick="Alert.toPage('home')">我的领地</button>
+                    <button class="button" state="defult" name="mine" onclick="Alert.toPage('user')">我的主页</button>
                 </div>
             </div>
             
@@ -165,8 +165,8 @@
                 </div>
                 <div class="alert-block"></div>
                 <div class="alert-flex">
-                    <input placeholder="请输入标签"></button>
-                    <button class="button" state="danger" onclick="Alert.hidePanel()">搜索</button>
+                    <input class="alert-input" name="search" placeholder="请输入标签"></input>
+                    <button class="button" state="permit" onclick="Alert.hidePanel()">搜索</button>
                 </div>
             </div>
 

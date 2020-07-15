@@ -1,4 +1,4 @@
-var Sett = new __Sett();
+let Sett = new __Sett();
 
 function __Sett() {
 
@@ -52,7 +52,7 @@ function __Sett() {
 		this.setOptDefault(opt);
 		if (opt.key == 'debugType' && opt.optName == 'test') {
 	        Storage.set('Config', Config);
-	        jsonToTable(items[0]); 
+	        Alert.toTable(items[0]); 
 	        return;
 		}
 		Config.sett[opt.key] = opt.optName;

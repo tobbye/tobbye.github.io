@@ -4,7 +4,7 @@ window.onload = function() {
 	Nexu.init();
 }
 
-var cfg = {
+let cfg = {
     name: "nexu",
     isRank: false,
 };
@@ -12,7 +12,7 @@ var cfg = {
 
 
 
-var items = [
+let items = [
 {title: '消息', 
 list: [
 {title: '', vice:'', state: 'warn', buttonIdx: [0,3],
@@ -87,7 +87,7 @@ lines: [
 
 ];
 
-var industry = `
+let industry = `
 01-农,
 02-林,
 03-畜牧,

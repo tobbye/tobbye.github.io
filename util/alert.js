@@ -3,7 +3,8 @@ window.onresize = function() {
     Config.page = new Page();
 }
 
-var Page = function() {
+//页面
+let Page = function() {
 
     Config.getConst(this, 'page');
     this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
@@ -42,7 +43,86 @@ var Page = function() {
     Elem.height(center, this.outerHeight);
 }
 
-var Panel = function() {
+
+//提醒
+let Fade = function() {
+    let that = this;
+    Config.getConst(this, 'fade');
+    
+    this.getElem = function(e) {
+        e = e || Elem.get('log');
+        if (!e) {
+            e = Elem.creat('div', document.body, 'log');
+            e.setAttribute('fade', 'over');
+            e.id = 'log';
+        } 
+        if (Config.page.isPage)
+            Elem.color(e, 'white', Alert.colorFont());
+        else
+            Elem.color(e, 'white', 'dodgerblue');
+        return e;
+    }
+
+    this.setAnim = function(text, e, timeOn) {
+        this.text = text;
+        this.elem = this.getElem(e);
+        this.timeOn = timeOn || this.timeOn;
+        if (this.elem.getAttribute('fade') != 'over') {
+            window.clearTimeout(this.fadeIn);
+            window.clearTimeout(this.fadeOn);
+            window.clearTimeout(this.fadeOut);
+            window.clearTimeout(this.fadeTog);
+            this.elem.setAttribute('fade', 'on');
+            this.animTog();
+        } else {
+            this.animIn();
+        }
+    }
+
+    this.animIn = function() {
+        if (this.text)
+            this.elem.innerHTML = this.text;
+        this.elem.setAttribute('fade', 'in');
+        this.fadeIn = setTimeout(function() {
+            that.fadeIn = null;
+            that.animOn();
+        }, this.timeIn);  
+    }
+
+    this.animOn = function() {
+        this.elem.setAttribute('fade', 'on');
+        this.fadeOn = setTimeout(function() {
+            that.fadeOn = null;    
+            that.animOut();
+        }, this.timeOn); 
+    }
+
+    this.animTog = function() {
+        if (this.text)
+            this.elem.innerHTML = this.text;
+        this.elem.setAttribute('fade', 'tog');
+        this.fadeTog = setTimeout(function() {
+            that.fadeTog = null;
+            that.animOn();
+        }, this.timeTog);  
+    }
+
+    this.animOut = function() {
+        this.elem.setAttribute('fade', 'out');
+        this.fadeOut = setTimeout(function() {
+            that.fadeOut = null;
+            that.animOver();
+        }, this.timeOut);  
+    }
+
+    this.animOver = function() {
+        this.elem.setAttribute('fade', 'over');
+    }  
+}
+
+
+//弹窗
+let Panel = function() {
     this.init = function(panel, name) {
         this.name  = name;
         this.panel = panel;
@@ -80,6 +160,35 @@ function __Alert() {
         Container(this);
     }
 
+    this.toPage = function(name) {
+        window.location.href = "../#0/#0.html".replace(/#0/g, name);
+    }
+
+    this.toAlert = function(data) {
+        alert(JSON.stringify(data));
+    }
+
+
+    this.toTable = function(Item) {
+        if (Config.name == 'home') return;
+        console.log(Item);
+        Storage.set('Item', Item);
+        Storage.set('Config', Config);
+        Storage.set('Constant', Constant);
+        Storage.set('Instances', Instances);
+        Storage.set('Constrtctors', Constrtctors);
+        window.location.href = '../view/view.html';
+    }
+
+    this.fullScreen = function() {
+        if (Config.page.isMobile) {
+            let body = document.body;
+            if (body.requestFullScreen) body.requestFullScreen(); //W3C
+            if (body.msRequestFullScreen) body.msRequestFullScreen();  //IE11
+            if (body.mozRequestFullScreen) body.mozRequestFullScreen(); //FireFox
+            if (body.webkitRequestFullScreen) body.webkitRequestFullScreen(); //Chrome
+        }
+    }
 
     this.creatTitle = function(content, data, len, y) {
         let flex   = Elem.creat('div', content, 'flex');
@@ -94,6 +203,8 @@ function __Alert() {
         if (data.vice) {
             let vice = Elem.creat('div', center, 'vice');
             vice.innerHTML = data.viceStr || data.vice;
+            if (data.lines)
+                vice.innerHTML = vice.innerHTML.replace('#len', data.lines.length)
         }
 
         if (len > 1 && cfg.name == 'nexu' || cfg.name == 'rank') {
@@ -155,7 +266,8 @@ function __Alert() {
     this.creatOuterCenter = function(that) {
         window.onresize();
         let outer = Elem.get('outer-center');
-        outer.innerHTML = '';
+        if (items.length > 0)
+            outer.innerHTML = '';
         for (let x in items) {
             let inner = Elem.creat('div', outer, 'inner', 'items['+x+'].');
             let list = items[x].list;
@@ -193,7 +305,7 @@ function __Alert() {
         let outerTop = document.querySelectorAll('.button-top');
         let outerCenter = document.querySelectorAll('.inner');
         for (let i = 0; i < outerTop.length; i++) {
-            this.setChild(outerTop[i], outerCenter[i], i == idx);
+            this.setOuterTop(outerTop[i], outerCenter[i], i == idx);
         }
         Config.sett.isInto = Config.innerIdx != clickIdx;
         Config.innerIdx = idx;
@@ -207,11 +319,11 @@ function __Alert() {
         } else if (Config.sett.debugType != 'close') {
             Config.sett.isInto = true;
             Storage.set('Config', Config);
-            jsonToTable(items[idx]); 
+            Alert.toTable(items[idx]); 
         }
     }
 
-    this.setChild = function(top, center, isClick) {
+    this.setOuterTop = function(top, center, isClick) {
         if (top.className != 'button-top')
             return;
         if (isClick) {
@@ -257,7 +369,7 @@ function __Alert() {
         let nexus = [[4,5], [0,1,3], [0,2,3], [0,3]][nexu];
         let buttons = this.curPanel.buttons;
         if (nexus) {
-            for (var i=0;i<buttons.length;i++) {
+            for (let i=0;i<buttons.length;i++) {
                 let name = buttons[i].getAttribute('name');
                 if (nexus.indexOf(i) > -1)
                     Elem.show(buttons[i]);
@@ -313,7 +425,8 @@ function __Alert() {
         } else {
             this.hidePanel();
         }
-        this.curFlex.scrollIntoView();
+        if (this.curFlex != this.curSelect)
+            this.curFlex.scrollIntoView();
     }
 
     this.inSearch = function() {
@@ -491,9 +604,9 @@ function __Alert() {
 
 
 
-    this.showUser = function(isMine) {
+    this.showUser = function(isDigger) {
         let flex, user;
-        if (isMine == null) {
+        if (isDigger == null) {
             flex = this.curFlex;
         } else {
             flex = this.curSelect;
@@ -506,7 +619,7 @@ function __Alert() {
         if (this.curUid) {
             user = Config.__user(this.curUid);
         } else {
-            user = (isMine ? line.__digger : line.__sponer) || user;
+            user = (isDigger ? line.__digger : line.__sponer) || user;
             // this.curUid = user.uid;
         }
         this.curWord.push(user.uid);
@@ -518,7 +631,7 @@ function __Alert() {
         let body = new this.UserBody();
         body.init(block, user);
         title.innerHTML = user.group + '资料';
-        this.showButton(isMine ? 0:user.nexu);
+        this.showButton(Config.isMine(user) ? 0:user.nexu);
         console.log([
             this.curPanel.name,
             user.uid, user.name, 
@@ -535,13 +648,24 @@ function __Alert() {
         let title = this.curPanel.title;
         let block = this.curPanel.block;
         title.innerHTML = Constant.string.titleSearch.replace("#0", button.innerHTML);
-        let searchData = Parse.mix(tempData.searchData);
+        let searchData = [];
+
+        for (let z in tempData.userData) {
+            let line = tempData.userData[z];
+            line.uid = z;
+            if (line.name)
+                searchData.push(line);
+        }
+        let rnd = Math.max(1, ~~(Math.random()*searchData.length+1));
+        let ans = rnd > 999 ? '999+' : rnd;
+        searchData = Parse.mix(searchData);
         tempData.searchData = searchData;
         for (let z in searchData) {
+            if (z > rnd-1) break;
             let line = searchData[z];
             line.ord = z;
             line.valStr = '权值';
-            line.val = Math.floor((Math.random()+40-z) * 2e3);
+            line.val = Math.floor((Math.random()+rnd+5-z) * 2e3);
             line.nexu = 1;
             let body = Elem.creat("div", block, "user-block", 'tempData.searchData['+z+']');
             let user = new Alert.UserData();
@@ -549,7 +673,9 @@ function __Alert() {
             let flex = new Alert.UserFlex();
             flex.init(body, user, true);
         }
-        this.log('搜索成功!');
+        block.firstChild.scrollIntoView();
+
+        this.log(`搜索: ${button.innerHTML}<h5>${ans}条结果按照标签分配的权重排序</h5>`);
         console.log([
             this.curPanel.name,
             button.innerHTML, 
