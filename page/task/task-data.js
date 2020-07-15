@@ -8,13 +8,13 @@ window.onload = function() {
 
 
 
-let cfg = {
+var cfg = {
 	name: 'task',
 	desc: `自定义配置<h5>size=格子的尺寸, scale=缩放比例, col=列数, row=行数, gap=刷新间隔, word=使用的文本, src=使用的图片.
 	<br/>=== 其中size, scale在手机上设置无效 ===</h5>`
 }
 
-let items = [
+var items = [
 {
 list:[
 {name:'迷宫', 		typef:"labyrinth", 		size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/LABYRINTH'},

@@ -1,4 +1,4 @@
-let Stat = new __Stat();
+var Stat = new __Stat();
 
 function __Stat() {
 

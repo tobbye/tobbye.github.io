@@ -4,7 +4,7 @@ window.onload = function() {
     Sett.init();
 }
 
-let cfg = {
+var cfg = {
 	name: 'sett',
 	styleName: ['dark', 'bright', 'standard'],
 	styleText: ['暗色', '亮色', '标准色'],
@@ -12,7 +12,7 @@ let cfg = {
 	typeText: '黑红橙蓝紫青绿',	
 };
 
-let colors = [
+var colors = [
     {dark:'#333', bright:'#555', light:'#ddd', bgd:'#eee', standard:'black'},
     {dark:'#957', bright:'#e28', light:'#ecd', bgd:'#fde', standard:'red'},
     {dark:'#975', bright:'#e82', light:'#edc', bgd:'#fed', standard:'orange'},
@@ -25,7 +25,7 @@ let colors = [
 
 
 
-let items = [
+var items = [
 {title: '设置', 
 list: [
 {title: '连接', vice: '请选择一个连接', default: 0, key: 'linkType',

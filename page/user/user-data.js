@@ -4,14 +4,14 @@ window.onload = function() {
     User.init();
 }
 
-let cfg = {
+var cfg = {
 	name: "user",
     titleStr: "搜索:#0",
 
 };
 
 
-let items = [
+var items = [
 	
 {title:"资料", colorIdx: 1,
 list:[{

@@ -1,4 +1,4 @@
-let Help = new __Help();
+var Help = new __Help();
 
 function __Help() {
 

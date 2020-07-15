@@ -1,87 +1,64 @@
 window.onload = function() {
-    Config.init();
-    Alert.init();
-	Nexu.init();
+    getAgent();
+    setElems();
+    setAgent();
 }
 
-var cfg = {
+var config = {
     name: "nexu",
-    isRank: false,
+    titleStr: "搜索:#0",
+    buttons:[
+        { idx:0, text: '发消息', btype: 'permit'},
+        { idx:1, text: '添加关注', btype: 'permit'},
+        { idx:2, text: '取消关注', btype: 'danger'},
+        { idx:3, text: '查看主页', btype: 'defult'},
+    ],
+
 };
 
 
 
 
 var items = [
-{title: '消息', 
+{title: '农田', 
 list: [
-{title: '', vice:'', state: 'warn', buttonIdx: [0,3],
+{title: '', vice:'小麦', btype: 'warn', buttonIdx: [0,3],
 lines: [
-	{uid:'d10001', nexu:3}, 
-	{uid:'d10002', nexu:3}, 
-	{uid:'d10003', nexu:3}, 
-	{uid:'d10004', nexu:3}, 
-	{uid:'d10005', nexu:3}, 
-	{uid:'d10006', nexu:3}, 
-	{uid:'d10007', nexu:3}, 
-	{uid:'d10008', nexu:3}, 
-	{uid:'d10009', nexu:3}, 
-	{uid:'d10010', nexu:3},
+{uid: 'd310003', name: '青青', ladd: 13, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['阶层展示1', '阶层展示2']},
+]},
+{title: '', vice:'玉米', btype: 'warn', buttonIdx: [0,3],
+lines: [
+{uid: 'd310003', name: '青青', ladd: 13, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['阶层展示1', '阶层展示2']},
+]},
+{title: '', vice:'大豆', btype: 'warn', buttonIdx: [0,3],
+lines: [
+{uid: 'd310003', name: '青青', ladd: 13, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['阶层展示1', '阶层展示2']},
 ]},
 ]},
 
 
-{title: '关注', 
+{title: '水田', 
 list: [
-{title: '赞助商', vice: '强制关注的赞助商', buttonIdx: [0,1,3],
+{title: '', vice:'水稻', btype: 'warn', buttonIdx: [0,3],
 lines: [
-	{uid:'s30001', nexu:1}, 
-	{uid:'s30002', nexu:1}, 
-	{uid:'s30003', nexu:1}, 
-	{uid:'s30004', nexu:1}, 
-	{uid:'s30005', nexu:1}, 
-	{uid:'s30006', nexu:1},
-]},
-
-{title: '赞助商', vice:'我关注的赞助商', buttonIdx: [0,2,3],
-lines: [
-	{uid:'s40001', nexu:2}, 
-	{uid:'s40002', nexu:2}, 
-	{uid:'s40003', nexu:2}, 
-	{uid:'s40004', nexu:2}, 
-	{uid:'s40005', nexu:2}, 
-	{uid:'s40006', nexu:2}, 
-	{uid:'s40007', nexu:2}, 
-	{uid:'s40008', nexu:2}, 
-	{uid:'s40009', nexu:2}, 
-]},
-
-{title: '淘金者', vice:'我关注的淘金者', buttonIdx: [0,2,3],
-lines: [
-	{uid:'d50001', nexu:2}, 
-	{uid:'d50002', nexu:2}, 
-	{uid:'d50003', nexu:2}, 
-	{uid:'d50004', nexu:2}, 
-	{uid:'d50005', nexu:2}, 
-	{uid:'d50006', nexu:2}, 
-	{uid:'d50007', nexu:2}, 
-	{uid:'d50008', nexu:2}, 
+{uid: 'd310003', name: '青青', ladd: 13, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['阶层展示1', '阶层展示2']},
 ]},
 ]},
 
 
-{title: '粉丝', 
+{title: '果园', 
 list: [
-{title: '淘金者', vice:'关注我的淘金者', buttonIdx: [0,1,3],
+{title: '', vice:'苹果', btype: 'warn', buttonIdx: [0,3],
 lines: [
-	{uid:'d20001', nexu:1},
-	{uid:'d20002', nexu:2},
-	{uid:'d20003', nexu:1},
-	{uid:'d20004', nexu:2},
-	{uid:'d20005', nexu:1},
-	{uid:'d20006', nexu:1},
-	{uid:'d20007', nexu:1},
-	{uid:'d20008', nexu:1},
+{uid: 'd310003', name: '青青', ladd: 13, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['阶层展示1', '阶层展示2']},
+]},
+{title: '', vice:'葡萄', btype: 'warn', buttonIdx: [0,3],
+lines: [
+{uid: 'd310003', name: '青青', ladd: 13, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['阶层展示1', '阶层展示2']},
+]},
+{title: '', vice:'香蕉', btype: 'warn', buttonIdx: [0,3],
+lines: [
+{uid: 'd310003', name: '青青', ladd: 13, tag: ['自定义标签1', '自定义标签2', '自定义标签3'], mark: ['阶层展示1', '阶层展示2']},
 ]},
 ]},
 
@@ -187,3 +164,10 @@ var industry = `
 97-国际组织
 `;
 
+var digger = `
+张雄壮,
+李刚猛,
+王坚强,
+赵震撼,
+章威武,
+`;

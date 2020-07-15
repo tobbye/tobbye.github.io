@@ -7,7 +7,7 @@ window.onload = function() {
 
 
 
-let cfg = {
+var cfg = {
 	name: 'tran',
 	inveCount: 20,
 	laddCount: 25,
@@ -18,7 +18,7 @@ let cfg = {
 
 
 
-let items = [
+var items = [
 {title: '投入',
 list: [
 {title: '我的投入', vice: '投入的资金可被淘金者抢夺', 
@@ -26,7 +26,7 @@ logTips: '投入资金<h5>投入资金后可以抢夺等量的资金</h5>',
 dot: 1, 
 type: 'mine', 
 group: '淘金者',
-titleInfo: '我的资料', 
+titleInfo: '淘金者资料', 
 flexStr: '#0的投入',
 laddStr: '阶梯<br/><h3>#0阶</h3>',
 pieceStr: '剩余份数<br/><h3>#0份</h3>',
@@ -51,14 +51,13 @@ lines: []},
 
 {title: '抢夺', 
 list: [
-{title: '资金福袋', vice: '抢夺投入的资金以提高可获收益上限',
+{title: '资金池', vice: '抢夺资金以提高可获收益上限',
 logTips: '抢夺淘金者资金<h5>完成的任务越多获得的资金越多</h5>',
 dot: 1, 
 type:'grab',
 group: '淘金者', 
-packType:'资金福袋', 
-// taskTypes:['tetris', 'labyrinth', 'snake', 'puzzle', 'jigsaw'], 
-taskTypes:['puzzle'], 
+packType:'福袋', 
+taskTypes:['tetris', 'labyrinth', 'snake', 'puzzle', 'jigsaw'], 
 titlePack: '发现一个福袋', 
 titleTask:'任务#0-#1', 
 titleResult:'恭喜您获得了', 
@@ -75,14 +74,13 @@ lines: []},
 
 {title: '获取', 
 list: [
-{title: '收益红包', vice: '抢夺投放的红包来获取收益',
+{title: '红包池', vice: '抢夺投放的红包来获取收益',
 logTips: '获取赞助商红包<h5>完成的任务越多获得的红包金额越大</h5>',
 dot: 100, 
 type:'gain',
 group: '赞助商', 
-packType:'收益红包', 
-// taskTypes:['puzzle', 'jigsaw', 'snake', 'labyrinth', 'tetris'], 
-taskTypes:['puzzle'], 
+packType:'红包', 
+taskTypes:['puzzle', 'jigsaw', 'snake', 'labyrinth', 'tetris'], 
 titlePack: '发现一个红包', 
 titleTask:'任务#0-#1', 
 titleResult:'恭喜您获得了', 
@@ -97,7 +95,7 @@ lines: []},
 ]}
 ];
 
-let items_sponer = [
+var items_sponer = [
 {title: '投放', 
 list: [
 {title: '我的投放', vice: '投放的红包可被淘金者抢夺', 
@@ -135,7 +133,7 @@ lines: []},
 ]},
 ];
 
-let instance = {
+var instance = {
 	mine: [
 		{nexu:1, uid:'d50001', sid:'s40001'},
 		{nexu:2, uid:'d50001', sid:'s40002'},
@@ -161,21 +159,21 @@ let instance = {
 		{nexu:1, uid:'d20008', sid:'s40009'},
 	],
 	gain: [
-        {nexu:1, uid: 's40001'},
-        {nexu:1, uid: 's40002'},
-        {nexu:1, uid: 's40003'},
-        {nexu:1, uid: 's40004'},
-        {nexu:1, uid: 's40005'},
-        {nexu:1, uid: 's40006'},
-        {nexu:1, uid: 's40007'},
-        {nexu:1, uid: 's40008'},
-        {nexu:1, uid: 's40009'},
+		{nexu:1, uid:'s40001'},  
+		{nexu:1, uid:'s40002'},  
+		{nexu:1, uid:'s40003'},  
+		{nexu:1, uid:'s40004'},  
+		{nexu:1, uid:'s40005'},  
+		{nexu:1, uid:'s40006'},  
+		{nexu:1, uid:'s40007'},  
+		{nexu:1, uid:'s40008'},  
+		{nexu:1, uid:'s40009'},  
 	],
 };
 
 
 
-let items_ghost = [
+var items_ghost = [
 { id: 0, title: '修炼', 
 list: [
 {title: '修炼中', vice: '请勿打扰！谢谢！', 

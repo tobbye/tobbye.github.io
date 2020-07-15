@@ -4,7 +4,7 @@ window.onload = function() {
     Recd.init();
 }
 
-let cfg = {
+var cfg = {
 	name: "recd",
 	sort: [
 	    {type:201, idx:0, left:1, right:0},
@@ -18,13 +18,15 @@ let cfg = {
 };
 
 
-let items = [
+var items = [
+
 {title:"本金", 
 list: [
 {title:"本金记录", vice:"2019年1月",
 left: "充值<h3>￥#0", right: "提现<h3>￥#0",
 lines: [
 {stamp: "时间", left: "充值记录", right: "提现记录"},
+
 ]}
 ]},
 
@@ -35,6 +37,7 @@ list: [
 left: "投入<h3>￥#0", right: "抢夺<h3>￥#0",
 lines: [
 {stamp: "时间", left: "投入记录", right: "抢夺记录"},
+
 ]}
 ]},
 
@@ -45,6 +48,7 @@ list: [
 left: "获取<h3>￥#0", right: "提现<h3>￥#0",
 lines: [
 {stamp: "时间", left: "获取记录", right: "提现记录"},
+
 ]}
 ]},
 ];

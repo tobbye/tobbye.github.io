@@ -1,7 +1,7 @@
 
-let Tran = new __Tran();
-let Inve = new Tran.InveData();
-let Grab = new Tran.GrabData();
+var Tran = new __Tran();
+var Inve = new Tran.InveData();
+var Grab = new Tran.GrabData();
 
 function __Tran() {
 
@@ -249,33 +249,15 @@ function __Tran() {
         Alert.showPanel('detail');
         let data = Config.__list(body);
         let line = Config.__line(body);
-        let title = Alert.curPanel.title;
-        if (data.type == 'inve') {
-            title.innerHTML = data.flexStr;
-            console.log([
-                Alert.curPanel.name,
-                line.ladd+'阶',
-                Alert.copy(Alert.curList), 
-                Alert.copy(Alert.curWord), 
-                line, body.self,
-            ]);
-        } else {
+        this.isTask = this.isGrabOrGain(data);
+        if (data.type != 'inve') {
             let digger = line.__digger;
             let sponer = line.__sponer;  
-            Alert.curWord.push(digger.uid);
+            Alert.print([digger.name, line, body.self]);
+            let title = Alert.curPanel.title;
             title.innerHTML = data.flexStr.replace('#0', digger.name);
-            console.log([
-                Alert.curPanel.name,
-                digger.uid, digger.name, 
-                Alert.copy(Alert.curList), 
-                Alert.copy(Alert.curWord), 
-                line, body.self,
-            ]);
-            if (data.type == 'gain') {
-                Elem.hide(Alert.buttons.digger);
-            } else {
-                Elem.show(Alert.buttons.digger);
-            }
+        } else {
+            Alert.print([line.ladd+'阶', line, body.self]);
         }
         document.body.line = line;
         document.body.data = data;
@@ -289,7 +271,6 @@ function __Tran() {
         let timesKey = data.type != 'inve' ? 'timesCurList' : 'timesAllList';
         let display = data.type != 'inve' ? 'flex' : 'none';
 
-        this.isTask = this.isGrabOrGain(data);
         for (let i = line.ladd; i > 0; i--) {
             if (this.isTask) {
                 let flex = this.creatFlex(block, 'B0');
@@ -342,10 +323,10 @@ function __Tran() {
         let block = Alert.curPanel.block;
         Task.initRoll(line);
         Task.ladd = Math.min(line.ladd, Task.ladd);
-        console.log(line);
+
         let body = Elem.creat('div', block, 'padd-body');
         let ladd = Elem.creat('div', body, 'cell');
-        ladd.innerHTML = line.__digger.name + '的' + Task.ladd + '阶' + Task.pack;
+        ladd.innerHTML = line.inver + '的' + Task.ladd + '阶' + Task.pack;
         let pic = Elem.creat('img', body, 'img');
         pic.src = Path.ladd['ladd'+Task.ladd];
         let price = Elem.creat('div', body, 'cell');
