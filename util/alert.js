@@ -534,10 +534,7 @@ function __Alert() {
             if (line.isSponer) 
                 Elem.color(this.group, 'white', Alert.colorFont());
             Elem.border(this.group, Alert.colorFont());
-            if (Config.page.isPage)
-                Elem.text(this.icon, line.name[0]);
-            else
-                Elem.text(this.icon, line.icon);
+            Elem.text(this.icon, line.name.replace('萌萌','').replace('二狗子的', '')[0]);
             Elem.color(this.icon, Alert.colorFont());
             Elem.border(this.icon, Alert.colorFont());
             Elem.text(this.group, line.group || '未知');

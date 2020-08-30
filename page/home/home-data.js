@@ -11,7 +11,7 @@ let cfg = {
 
 
 let items = [
-{title:"主页", 
-list: [
-]},
+// {title:"主页", 
+// list: [
+// ]},
 ];
