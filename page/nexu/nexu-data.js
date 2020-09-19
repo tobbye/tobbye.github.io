@@ -27,8 +27,6 @@ lines: [
 	{uid:'d10008', nexu:3}, 
 	{uid:'d10009', nexu:3}, 
 	{uid:'d10010', nexu:3},
-	{uid:'d10011', nexu:3},
-	{uid:'d10012', nexu:3},
 ]},
 ]},
 

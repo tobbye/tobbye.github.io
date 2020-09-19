@@ -534,7 +534,7 @@ function __Alert() {
             if (line.isSponer) 
                 Elem.color(this.group, 'white', Alert.colorFont());
             Elem.border(this.group, Alert.colorFont());
-            Elem.text(this.icon, line.name.replace('萌萌','').replace('二狗子的', '')[0]);
+            Elem.text(this.icon, line.name.replace('萌萌','').replace('二狗子的', '')[0] || '萌');
             Elem.color(this.icon, Alert.colorFont());
             Elem.border(this.icon, Alert.colorFont());
             Elem.text(this.group, line.group || '未知');
@@ -791,6 +791,10 @@ function __Alert() {
 
     this.colorFont = function() {
         return Config.color.font;
+    }
+
+    this.colorDark = function() {
+        return Config.color.dark;
     }
 
     this.colorLight = function() {

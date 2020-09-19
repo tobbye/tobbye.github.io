@@ -34,7 +34,7 @@ Task.Labyrinth = function() {
         this.nextList = [[0, -1], [-1, 0], [0, 1], [1, 0]];
         this.tranList = [-1, -this.col, 1, this.col];
         this.arrowList = ['left', 'up', 'right', 'down'];
-        this.colorList = ['white', 'black', 'dodgerblue', 'red', 'green', 'green'];
+        this.colorList = ['white', 'black', 'dodgerblue', 'red', 'white', 'white'];
         this.roadType = {ROAD:0, WALL:1, PAST:2, COLL:3, START:4, END:5};
     }
 

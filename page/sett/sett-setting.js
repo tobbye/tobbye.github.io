@@ -109,6 +109,7 @@ function __Sett() {
 				let color = {
 					font: colors[typeIdx][styleName],
 					light: colors[typeIdx].light,
+					dark: colors[typeIdx].dark,
 					bgd: colors[typeIdx].bgd,
 					style: styleName,
 					type: colors[typeIdx].standard,
@@ -140,6 +141,7 @@ function __Sett() {
 		if (option.optName == 'black') {
 			color = {
 	            font: '#333',
+	            dark: '#888',
 	            light: '#ccc',
 	            bgd: '#eee',
 	            style: 'standard',
@@ -149,6 +151,7 @@ function __Sett() {
 		} else if (option.optName == 'white') {
 			color = {
 	            font: '#111',
+	            dark: '#888',
 	            light: '#666',
 	            bgd: '#999',
 	            style: 'standard',

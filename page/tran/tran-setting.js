@@ -345,9 +345,9 @@ function __Tran() {
         console.log(line);
         let body = Elem.creat('div', block, 'padd-body');
         let ladd = Elem.creat('div', body, 'cell');
-        ladd.innerHTML = line.__digger.name + '的' + Task.ladd + '阶' + Task.pack;
+        ladd.innerHTML = Task.ladd + '阶' + Task.pack;
         let pic = Elem.creat('img', body, 'img');
-        pic.src = Path.ladd['ladd'+Task.ladd];
+        pic.src = Path.ladd.replace('#ladd', Task.ladd);
         let price = Elem.creat('div', body, 'cell');
         price.innerHTML = '<h1>￥' +  Parse.addSplit(line.priceAllList[Task.ladd - 1]);
         Alert.log('<h5>恭喜您获得了</h5>' + ladd.innerText);
