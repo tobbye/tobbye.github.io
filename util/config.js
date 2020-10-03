@@ -286,8 +286,8 @@ let tempData = {
 
         s30001:{name:'苹果Apple',ladd:18,tag:['MacPro','XDRDisplay','ProStand'],mark:['科技公司','苹果不香吗']},
         s30002:{name:'腾讯Tencent',ladd:18,tag:['王者荣耀','英雄联盟','地下城与勇士'],mark:['游戏公司','氪金变强']},
-        s30003:{name:'鬼冢虎OnitsukaTiger',ladd:15,tag:['鬼冢虎','运动鞋','休闲鞋'],mark:['鬼冢虎','亚瑟士']},
-        s30004:{name:'悦诗风吟Innisfree',ladd:12,tag:['悦诗风吟','化妆品','韩国美妆'],mark:['韩国美妆','悦诗风吟']},
+        s30003:{name:'星巴克StarBuck',ladd:15,tag:['咖啡','咖啡','咖啡'],mark:['星巴克','星巴克']},
+        s30004:{name:'金拱门',ladd:12,tag:['炸鸡','汉堡','薯条'],mark:['麦当劳','麦香鸡']},
         s30005:{name:'百雀羚',ladd:15,tag:['百雀羚','化妆品','东方匠韵'],mark:['东方匠韵','百雀羚']},
         s30006:{name:'康师傅',ladd:15,tag:['康师傅','老坛酸菜','红烧牛肉面'],mark:['牛肉面','方便面']},
 

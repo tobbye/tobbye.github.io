@@ -17,10 +17,10 @@ let cfg = {
 let items = [
 {
 list:[
-{name:'迷宫', 		typef:"labyrinth", 		size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/LABYRINTH'},
-{name:'贪吃蛇', 		typef:"snake", 			size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/SNAKE'},
-{name:'拼字', 		typef:"puzzle", 		size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/PUZZLE'},
+{name:'迷宫', 		typef:"labyrinth", 		size:0, scale: 1, col: 10, row: 12, gap: 500, word:'TASK/LABYRINTH'},
+{name:'贪吃蛇', 		typef:"snake", 			size:0, scale: 1, col: 10, row: 12, gap: 500, word:'TASK/SNAKE'},
+{name:'拼字', 		typef:"puzzle", 		size:0, scale: 1, col: 10, row: 12, gap: 500, word:'TASK/PUZZLE'},
 {name:'拼图', 		typef:"jigsaw", 		size:0, scale: 1, col: 3, row: 3, gap: 500, src:'http://img04.sogoucdn.com/app/a/100520021/c7dc2f290b7c5e1639cb8a27a5d1237f'},
-{name:'俄罗斯方块', 	typef:"tetris", 		size:0, scale: 1, col: 12, row: 15, gap: 500, word:'TASK/TETRIS'},
+{name:'俄罗斯方块', 	typef:"tetris", 		size:0, scale: 1, col: 10, row: 12, gap: 500, word:'TASK/TETRIS'},
 ]},
 ];
