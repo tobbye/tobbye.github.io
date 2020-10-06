@@ -17,8 +17,10 @@ function __WORLD() {
         this.farPlane = 1000;
         this.camPos = [0, 0, 0];
         this.camScale = 1.0;
-        this.isLargeMap = Math.random() < .5;
-        this.isInBattle = Math.random() < .5;
+        this.worldScale = 60;
+        this.isLarge = 1;
+        this.isBattle = 1;
+        this.isFront = 0;
         this.initCfg();
         this.initScene();
     }
@@ -28,7 +30,7 @@ function __WORLD() {
     this.initCfg = function() {
         this.cfgSmallBattle = {
             name: '小型地图 | 战斗',
-            terrain: 'terrainSmall',
+            map: 'mapSmall',
             scale: .17, 
             camSize: 1.0,
             camMinScale: .6,
@@ -39,7 +41,7 @@ function __WORLD() {
 
         this.cfgSmallDevelop = {
             name: '小型地图 | 发展',
-            terrain: 'terrainSmall',
+            map: 'mapSmall',
             scale: .10, 
             camSize: 1.2,
             camMinScale: .4,
@@ -50,7 +52,7 @@ function __WORLD() {
 
         this.cfgLargeBattle = {
             name: '大型地图 | 战斗',
-            terrain: 'terrainLarge',
+            map: 'mapLarge',
             scale: .17, 
             camSize: 1.8,
             camMinScale: .6,
@@ -60,7 +62,7 @@ function __WORLD() {
         };
         this.cfgLargeDevelop = {
             name: '大型地图 | 发展',
-            terrain: 'terrainLarge',
+            map: 'mapLarge',
             scale: .10, 
             camSize: 1.5,
             camMinScale: .4,
@@ -72,18 +74,22 @@ function __WORLD() {
         this.scale = this.cfg.scale;
         this.offset = this.cfg.offset;
         this.camPos = this.cfg.camPos;
+        if (this.isFront) {
+            this.camPos[0] = 0;
+            // this.camPos[1] = 0;
+        }
         this.camSize = this.cfg.camSize;
         this.camMinScale = this.cfg.camMinScale;
         this.camMaxScale = this.cfg.camMaxScale;
-        this.terrainMap = eval(this.cfg.terrain);
+        mapRes = eval(this.cfg.map);
         document.title += ' | ' + this.cfg.name;
     }
 
     this.getCfg = function() {
-        if (this.isLargeMap && this.isInBattle) return this.cfgLargeBattle;
-        if (this.isLargeMap && !this.isInBattle) return this.cfgLargeDevelop;
-        if (!this.isLargeMap && !this.isInBattle) return this.cfgSmallDevelop;
-        if (!this.isLargeMap && this.isInBattle) return this.cfgSmallBattle;
+        if (this.isLarge && this.isBattle) return this.cfgLargeBattle;
+        if (this.isLarge && !this.isBattle) return this.cfgLargeDevelop;
+        if (!this.isLarge && !this.isBattle) return this.cfgSmallDevelop;
+        if (!this.isLarge && this.isBattle) return this.cfgSmallBattle;
     }
 
     this.initScene = function() {
@@ -107,33 +113,13 @@ function __WORLD() {
         document.body.appendChild(this.renderer.domElement);
 
         this.creatLight();
-        this.setCamera(1);
+        this.setZoom(1);
         this.camera.lookAt(new THREE.Vector3(0,0,0));
-        console.log(this.terrainMap);
+        console.log(mapRes);
         console.log(this);
     }
 
 
-
-    this.setCamera = function(scale) {
-        this.camScale += scale - 1;
-        if (this.camScale < this.camMinScale) {
-            this.camScale = this.camMinScale;
-            return;
-        }
-        if (this.camScale > this.camMaxScale) {
-            this.camScale = this.camMaxScale;
-            return;
-        }
-        this.camCurPos = Util.v3mult(this.camPos, this.camScale);
-
-        this.setPosition(this.camera, this.camCurPos);
-        this.camera.lookAt(new THREE.Vector3(
-            this.camCurPos[0] - this.camPos[0],
-            this.camSize,
-            this.camCurPos[1] - this.camPos[1]));
-        this.render();
-    }
 
 
 
@@ -144,35 +130,45 @@ function __WORLD() {
 
     this.creatGeometry = function(obj) {
         let geometry;
-        switch(obj.type) {
-            case 0:
-                geometry = new THREE.BoxGeometry(obj.size[0], obj.size[2], obj.size[1]);
-                break;
+        switch(obj.shape) {
             case 1:
-                geometry = new THREE.CylinderGeometry(obj.size[0], obj.size[1], obj.size[2]);
+                geometry = new THREE.BoxGeometry(
+                    obj.size[0], 
+                    obj.size[2], 
+                    obj.size[1]);
+                break;
+            case 2:
+                geometry = new THREE.CylinderGeometry(
+                    obj.size[0], 
+                    obj.size[1], 
+                    obj.size[2]);
                 break;
         }
         
         return geometry;
     }
 
-    this.creatMesh = function(obj) {
+    this.creatMesh = function(obj, parent) {
+        parent = parent || this.scene;
         let geometry = this.creatGeometry(obj);
-        let material = new THREE.MeshLambertMaterial({color: obj.color});
+        let material = new THREE.MeshLambertMaterial({color: obj.mater[0]});
         let mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(
             obj.pos[0], 
             obj.pos[2], 
             obj.pos[1]);
-        if (obj.rotate) mesh.rotateY(Math.PI/obj.rotate);
-        if (obj.rotate == 9) mesh.rotateY(Math.PI/~~(Math.random()*100));
+        if (obj.rotate && obj.rotate.length == 3) {
+            mesh.rotateX(Math.PI/180*obj.rotate[0]);
+            mesh.rotateY(Math.PI/180*obj.rotate[2]);
+            mesh.rotateZ(Math.PI/180*obj.rotate[1]);
+        };
         mesh.name = obj.name;
-        mesh.castShadow = obj.cast;
-        mesh.receiveShadow = obj.receive;
+        mesh.castShadow = obj.mater[2];
+        mesh.receiveShadow = obj.mater[3];
         this.scene.add(mesh);
 
-        if (!obj.opacity) return mesh;
-        let __material = new THREE.ShadowMaterial({opacity: obj.opacity});
+        if (!obj.mater[1]) return mesh;
+        let __material = new THREE.ShadowMaterial({opacity: obj.mater[1]});
         let __mesh = new THREE.Mesh(mesh.geometry, __material);
         __mesh.position.set(
             mesh.position.x, 
@@ -184,13 +180,13 @@ function __WORLD() {
     }
 
     this.creatLight = function() {
-        this.light = new THREE.AmbientLight( 0xffffff ,.5);
+        this.light = new THREE.AmbientLight(0xFFFFFF,.5);
 
-        this.shadowLight = new THREE.DirectionalLight(0xffffff, .5);
+        this.shadowLight = new THREE.DirectionalLight(0xFFFFFF, .4);
         this.shadowLight.position.set(200, 200, 200);
         this.shadowLight.castShadow = true;
 
-        this.backLight = new THREE.DirectionalLight(0xffffff, .2);
+        this.backLight = new THREE.DirectionalLight(0xFFFFFF, .3);
         this.backLight.position.set(-100, 200, 50);
         this.backLight.castShadow = true;
         this.scene.add(this.backLight);
@@ -198,87 +194,69 @@ function __WORLD() {
         this.scene.add(this.shadowLight);
     }
 
-    this.creatTree = function(x, y){
-        for (let i in modelRect.tree1) {
-            let $ = this.getMap(modelRect.tree1[i]);
-            $.pos = [$.pos[0]+x, $.pos[1]+y, $.pos[2]];
-            this.creatMesh($);
-        }
+
+    this.getMap = function(A, name) {
+        let $ = {
+            modelId:  A[0][0] || 1,
+            materId:  A[0][1] || 0,
+            colorId:  A[0][2] || 0,
+            name:   A[0][3] || name,
+            count:  A[0][4] || 1,
+            offset: A[1] || [0, 0, 0],
+            pos:    A[2] || [0, 0, 0],
+            size:   A[3] || [1, 1, 1],
+            rotate: A[4] || 0,
+        } 
+        $.modelId = name + $.modelId;
+        $.materId = name + $.materId;
+        $.colorId = name + $.colorId;
+        $.model = modelRes[$.modelId];
+        $.color = colorRes[$.colorId] || [];
+        return $;
     }
 
-    this.creatBridge = function(x, y, isRotate) {
-        for (let i in modelRect.bridge1) {
-            let $ = this.getMap(modelRect.bridge1[i]);
-            if (!isRotate) {
-                $.pos = [$.pos[0]+x, $.pos[1]+y, $.pos[2]];
-                this.creatMesh($);
-            } else {
-                $.pos = [$.pos[1]+x, $.pos[0]+y, $.pos[2]];
-                $.size = [$.size[1], $.size[0], $.size[2]];
-                this.creatMesh($);
-            }
-        }
-    }
-
-    this.getMap = function(rect) {
-        let $ = rect;
+    this.getModel = function(A) {
         return {
-            type: $[0],
-            pos: [$[1], $[2], $[3]],
-            size: [$[4], $[5], $[6]],
-            color: $[7], 
-            opacity: $[8], 
-            cast: $[9], 
-            receive: $[10], 
-            rotate: $[11]
-        }
+            shape:  A[0][0] || 0,
+            pos:    A[1] || [0, 0, 0],
+            size:   A[2] || [1, 1, 1],
+            rotate: A[3] || 0,
+            mater:  A[4] || [0x888888,.00,0,0],
+        }   
     }
 
 
+    //多个Mesh
+    this.creatJoint = function(name) {
+        for (let x in mapRes[name]) {
+            let A = this.getMap(mapRes[name][x], name);
+            console.log(A);
+            for (let y in A.model) {
+                let $ = this.getModel(A.model[y]);
+                console.log($);
+                if (A.rotate) {
+                    $.pos = Util.v3tranXY($.pos);
+                    $.size = Util.v3tranXY($.size);
+                }
+                $.pos = Util.v3cross($.pos, A.size);
+                $.pos = Util.v3plus($.pos, A.pos);
+                $.size = Util.v3cross($.size, A.size);
 
-    this.creatTerrain = function(type, isBridge) {
-        for (let x in this.terrainMap[type]) {
-            let $ = this.getMap(this.terrainMap[type][x]);
-
-            if (isBridge) {
-                this.creatBridge($.pos[0], $.pos[1], $.rotate);
-            } else {
-                this.creatMesh($);
+                $.name =  A.name;
+                $.mater[0] = A.color[y] || $.mater[0];
+                for (let z=0; z<A.count; z++) {
+                    if (z>0)
+                        $.pos = Util.v3plus($.pos, A.offset);
+                    this.creatMesh($);
+                }
             }
         }
     }
 
-    this.creatIsland = function() {
-        let $ = this.getMap(this.terrainMap.island[0]);
-        let mesh = this.creatMesh($);
-        mesh.rotateY(Math.PI/4);
-    }
-
-    this.creatShape = function() {
-        var shape = new THREE.Shape();
-        shape.moveTo(0,-.2,0);
-        shape.lineTo(1,-.2,1);
-        shape.lineTo(2,-.2,0);
-        shape.lineTo(0,-.2,0);
-        let settings = { 
-            steps: 10, 
-            depth: 10, 
-            bevelSize: 10, 
-            bevelEnabled: true, 
-            bevelSegments: 10, 
-            bevelThickness: 10 };
-
-        let material = new THREE.MeshLambertMaterial({color: 0xABD66A});
-        let mesh = new THREE.Mesh(new THREE.ExtrudeGeometry(shape, settings), material);
-                mesh.position.set(0,0,0);
-        mesh.castShadow = 1;
-        mesh.receiveShadow = 0;
-        this.scene.add(mesh);
-    }
 
     this.inMap = function(name, x, y) {
-        for (let i in this.terrainMap[name]) {
-            let $ = this.terrainMap[name][i];
+        for (let i in mapRes[name]) {
+            let $ = mapRes[name][i];
             if (x > $[1] - $[4]/2 + .00 && 
                 x < $[1] + $[4]/2 - .00 && 
                 y > $[2] - $[5]/2 + .00 && 
@@ -294,36 +272,115 @@ function __WORLD() {
     }
 
     this.instance = function() {
-        this.creatTerrain('land');
-        this.creatTerrain('hill');
-        this.creatTerrain('river');
-        this.creatTerrain('bridge', 1);
-        // this.creatTerrain('cylinder');
-        for (let i=0; i< 200; i++) {
-            let x, y;
-            if (!this.isLargeMap) {
-                x = 50*Math.random()-6;
-                y = 50*Math.random()-6;
-            } else {
-                x = 90*Math.random()-45;
-                y = 90*Math.random()-45;
-            }
-            if (this.inMap('land', x, y) && !this.inMap('hill', x, y))
-                this.creatTree(x, y);
-        }
+        this.creatJoint('land');
+        this.creatJoint('hill');
+        this.creatJoint('river');
+        this.creatJoint('bridge');
+        this.creatJoint('tower');
+        this.creatJoint('tree');
         // this.creatIsland();
 
         this.render(); 
     }
 
+
+    this.setCameraPos = function(x, y, z) {
+        this.camera.position.set(
+            this.camPos[0]*this.camScale + (x || 0), 
+            this.camPos[2]*this.camScale + (y || 0), 
+            this.camPos[1]*this.camScale + (z || 0)
+        ); 
+    }
+
+    this.setZoom = function(scale) {
+        this.camScale *= scale;
+        if (this.camScale < this.camMinScale) {
+            this.camScale = this.camMinScale;
+            return;
+        }
+        if (this.camScale > this.camMaxScale) {
+            this.camScale = this.camMaxScale;
+            return;
+        }
+        
+        this.setCameraPos();
+        this.camera.lookAt(new THREE.Vector3(
+            this.camPos[0] * (this.camScale - 1),
+            this.camSize,
+            this.camPos[1] * (this.camScale - 1)
+        ));
+        this.render();
+    }
+
+
+    this.setDrag = function(x, y) {
+        this.startX = this.startX || this.clientX;
+        this.startY = this.startY || this.clientY;
+        x = (x-this.startX)/20;
+        y = (y-this.startY)/20;
+        let dx = this.isFront ? x : .707*(y+x);
+        let dy = this.isFront ? y : .707*(y-x);
+        this.setCameraPos(-dx, this.camSize, -dy);
+        this.render();
+    }
 }
 
 document.onmousewheel = function(e) {
     e = e || window.event;
     e.wheelDelta = e.wheelDelta || 0;
     if (e.wheelDelta < 0) {
-        WORLD.setCamera(1.2);
+        WORLD.setZoom(1.1);
     } else if (e.wheelDelta > 0){
-        WORLD.setCamera(0.8);
+        WORLD.setZoom(0.9);
     }
 }
+
+
+
+document.ontouchstart = function(e) {
+    e = e || window.event;
+    e = e.touches ? e.touches[0] : e;
+    WORLD.startX = e.clientX;
+    WORLD.startY = e.clientY;
+}
+
+
+
+document.ontouchmove = function(e) {
+    e = e || window.event;
+    e = e.touches ? e.touches[0] : e;
+    WORLD.setDrag(e.clientX, e.clientY);
+    WORLD.clientX = e.clientX;
+    WORLD.clientY = e.clientY;
+}
+
+document.ontouchend = function(e) {
+    e = e || window.event;
+    e = e.touches ? e.touches[0] : e;  
+    // WORLD.setCameraPos();
+    // WORLD.render();
+}
+
+document.onmousedown = function(e) {
+    e = e || window.event;
+    e = e.touches ? e.touches[0] : e;
+    WORLD.startX = e.clientX;
+    WORLD.startY = e.clientY;
+    WORLD.onMove = 1;
+}
+
+document.onmouseup = function(e) {
+    WORLD.onMove = 0;
+    console.log(e);
+}
+
+document.onmousemove = function(e) {
+    if (!WORLD.onMove) return;
+    e = e || window.event;
+    e = e.touches ? e.touches[0] : e;
+    if (e.button > 0) return;
+    WORLD.setDrag(e.clientX, e.clientY);
+    WORLD.clientX = e.clientX;
+    WORLD.clientY = e.clientY;
+}
+
