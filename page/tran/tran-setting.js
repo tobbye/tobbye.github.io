@@ -65,7 +65,7 @@ function __Tran() {
             this.ladd = this.__digger.ladd - Math.floor(this.__digger.ladd * Math.random());
             this.multi = Math.floor(100 * Math.pow(Math.random(),8)) + 1;
             this.index = Math.floor((1547 + Math.random()) * 1e9);
-            this.stamp = Parse.formatTime(this.index).replace(' ', '<br/>');
+            this.stamp = Parse.formatTime(this.index);
 
         };
 
@@ -119,7 +119,7 @@ function __Tran() {
             this.stamp = Elem.creat('div', this.flex1, 'user-value');
             // this.index.innerHTML = '编号: ' + line.index;
             this.index.innerHTML = line.__sponer.name;
-            this.stamp.innerHTML = '时间: ' + line.stamp;
+            this.stamp.innerHTML = line.stamp;
             Elem.page(this.index, Alert.colorFont());
 
             this.flex2 = new Alert.UserFlex();

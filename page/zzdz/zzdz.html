@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <title>种族大战</title>
-<script src='three.min.js'></script>
+<script src="three.min.js"></script>
 <script src="zzdz-data.js"></script>
 <script src="zzdz-setting.js"></script>
 
@@ -17,11 +17,20 @@
 	#canvas {
 		background: #248079;
 	}  
+	.float {
+		display: block;
+		position: absolute;
+	}
 </style>
 
 </head>
 <body>
-
+<div class="float">
+	<button onclick="WORLD.toScene('smallDevelop')">小型发展</button>
+	<button onclick="WORLD.toScene('smallBattle')">小型战斗</button>
+	<button onclick="WORLD.toScene('largeDevelop')">大型发展</button>
+	<button onclick="WORLD.toScene('largeBattle')">大型战斗</button>
+</div>
 <canvas id="canvas"></canvas>
 
 

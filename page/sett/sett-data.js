@@ -14,12 +14,12 @@ let cfg = {
 
 let colors = [
     {dark:'#333', bright:'#555', light:'#ddd', bgd:'#eee', standard:'black'},
-    {dark:'#957', bright:'#e28', light:'#ecd', bgd:'#fde', standard:'red'},
-    {dark:'#975', bright:'#e82', light:'#edc', bgd:'#fed', standard:'orange'},
-    {dark:'#579', bright:'#28e', light:'#cde', bgd:'#def', standard:'blue'},
-    {dark:'#759', bright:'#82e', light:'#dce', bgd:'#edf', standard:'purple'},
-    {dark:'#597', bright:'#2b8', light:'#ced', bgd:'#dfe', standard:'seagreen'},
-    {dark:'#795', bright:'#8b2', light:'#dec', bgd:'#efd', standard:'green'},
+    {dark:'#957', bright:'#b57', light:'#ecd', bgd:'#fde', standard:'red'},
+    {dark:'#975', bright:'#b75', light:'#edc', bgd:'#fed', standard:'orange'},
+    {dark:'#579', bright:'#57b', light:'#cde', bgd:'#def', standard:'blue'},
+    {dark:'#759', bright:'#75b', light:'#dce', bgd:'#edf', standard:'purple'},
+    {dark:'#597', bright:'#597', light:'#ced', bgd:'#dfe', standard:'seagreen'},
+    {dark:'#795', bright:'#795', light:'#dec', bgd:'#efd', standard:'green'},
 ];
 
 

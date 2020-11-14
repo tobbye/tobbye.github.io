@@ -144,15 +144,16 @@ Parse.getStamp = function(stamp) {
 }
 
 
-Parse.formatTime = function(stamp) {
+Parse.formatTime = function(stamp, sec) {
     stamp = Parse.getStamp(stamp);
     let time = new Date(stamp);
     let str = time.getFullYear() + '-';
     str += Parse.fillZero(time.getMonth()+1) + '-';
     str += Parse.fillZero(time.getDate()) + ' ';
     str += Parse.fillZero(time.getHours()) + ':';
-    str += Parse.fillZero(time.getMinutes()) + ':';
-    str += Parse.fillZero(time.getSeconds());
+    str += Parse.fillZero(time.getMinutes());
+    if (sec) 
+        str += ':' + Parse.fillZero(time.getSeconds());
     return str;
 }
 
