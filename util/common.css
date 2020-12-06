@@ -108,6 +108,7 @@ div[fade=over] {
 
 #log {
 	padding: 30px;
+	max-height: 110px;
 	font-size: 1.2em;
 }
 
@@ -283,7 +284,7 @@ div[fade=over] {
 	padding: 10px 20px;
 	color: white;
 	height: 1.3em;
-	font-size: 1em;
+	font-size: 1.2em;
 	border-radius: 10px;
 	background-color: dodgerblue;
 }
