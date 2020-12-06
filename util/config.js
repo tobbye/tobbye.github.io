@@ -42,7 +42,7 @@ let Constant = {
         alertMinMargin: 10,
         alertPadding: 20,
         alertBord: 16,
-        alertOffset: 410,
+        alertOffset: 500,
         outerOffset: 220,
         innerOffset: 770, 
         minHeight: 700,

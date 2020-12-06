@@ -283,8 +283,8 @@ div[fade=over] {
 	margin: 5px;
 	padding: 10px 20px;
 	color: white;
-	height: 1.3em;
 	font-size: 1.2em;
+	line-height: 1.3em;
 	border-radius: 10px;
 	background-color: dodgerblue;
 }
