@@ -31,11 +31,11 @@ function __Setting() {
     this.zoom = 1.00;
     this.labyConfig = [
         {},
-        {col: 20, row: 10, size: 32, wallWidth: 15},
-        {col: 32, row: 16, size: 20, wallWidth: 9},
-        {col: 40, row: 20, size: 16, wallWidth: 7},
-        {col: 64, row: 32, size: 10, wallWidth: 4},
-        {col: 80, row: 40, size:  8, wallWidth: 3},
+        {col: 20, row: 10, size: 32, wallWidth: 15, spc: 40},
+        {col: 32, row: 16, size: 20, wallWidth: 9, spc: 25},
+        {col: 40, row: 20, size: 16, wallWidth: 7, spc: 20},
+        {col: 64, row: 32, size: 10, wallWidth: 4, spc: 12.5},
+        {col: 80, row: 40, size:  8, wallWidth: 3, spc: 10},
     ];
     this.batConfig = {
         S: {flex: 2, block: 2, col: 17, row: 24, size: 10, wallWidth: 4},
@@ -58,6 +58,7 @@ function __Setting() {
 
     this.refresh = function() {
         let data = this.labyConfig[this.scaleIdx];
+        let margin = this.canvasMargin - data.wallWidth;
         this.wallWidth = this.wallIdx == 2 ? 0 : data.wallWidth;
         this.inBat = 0;
         this.round = 0;
@@ -66,7 +67,7 @@ function __Setting() {
         this.outer.innerHTML = '';
         Laby = new __Labyrinth();
         Laby.init(this.outer, 'L00'); 
-        Laby.canvas.style.margin = this.canvasMargin - data.wallWidth;
+        Laby.canvas.style.margin = margin + 'px 0px';
     }
 
     this.download = function() {
@@ -89,9 +90,16 @@ function __Setting() {
         this.set_child(btn);
         this.scaleIdx = idx || this.scaleIdx;
         let data = this.labyConfig[this.scaleIdx];
-        this.col = data.col;;
-        this.row = data.row;;
-        this.size = data.size;
+        if (this.isPhone) {
+            this.col = data.row;
+            this.row = data.col;
+            this.size = data.spc;
+        } else {
+            this.col = data.col;;
+            this.row = data.row;;
+            this.size = data.size;
+        }
+
         this.refresh();
     }
 
@@ -142,9 +150,11 @@ function __Setting() {
         for (let i=0;i<blocks.length;i++) {
             blocks[i].setAttribute('agent', agent);
         }
+        this.os = this.isPhone ? 2.5 : 1;
         this.outerHeight = ~~(window.innerHeight - 1 - 90 * this.zoom);
-        this.canvasMargin = ~~(this.outerHeight / 2 - 321);
+        this.canvasMargin = ~~(this.outerHeight / 2 - 321 * this.os);
         this.outer.style.height = this.outerHeight + 'px';
+        this.outerBot.style.zoom = this.zoom;
         this.outerBot.style.display = 'flex';
     }
 
@@ -155,6 +165,8 @@ function __Setting() {
         this.col = data.col;
         this.row = data.row;;
         this.size = data.size;
+        if (this.isPhone)
+            this.size = ~~(data.size * 1.25);
         this.part = data.flex*data.block;
         this.count = data.flex*data.block*this.printCount;
         this.wallWidth = this.wallIdx == 2 ? 0 : data.wallWidth;
