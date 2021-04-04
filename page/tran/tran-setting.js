@@ -66,6 +66,7 @@ function __Tran() {
             this.multi = Math.floor(100 * Math.pow(Math.random(),8)) + 1;
             this.index = Math.floor((1547 + Math.random()) * 1e9);
             this.stamp = Parse.formatTime(this.index);
+            this.stamp = ~~(Math.random()*30) + '分钟前';
 
         };
 
@@ -101,6 +102,8 @@ function __Tran() {
             this.priceStr += '剩余金额<br/><h3>' +  Parse.sub4Num(this.priceCur) + '元';
             this.timesStr += '已传播<br/><h3>' +  Parse.sub4Num(this.timesCur) + '次';
             this.pieceEach = (this.priceCur / this.pieceCur).toFixed(2) + '元/份';
+            this.percent = (this.priceCur / this.priceAll * 100).toFixed(2);
+            this.percentStr = '剩余 ' + this.percent + '%';
         }
     }
 
@@ -118,7 +121,7 @@ function __Tran() {
             this.index = Elem.creat('div', this.flex1, 'user-order');
             this.stamp = Elem.creat('div', this.flex1, 'user-value');
             // this.index.innerHTML = '编号: ' + line.index;
-            this.index.innerHTML = line.__sponer.name;
+            this.index.innerHTML = line.percentStr;
             this.stamp.innerHTML = line.stamp;
             Elem.page(this.index, Alert.colorFont());
 
@@ -128,7 +131,7 @@ function __Tran() {
             this.ladd  = Tran.creatText(this.flex3, 'L10', line.laddStr);
             this.piece = Tran.creatText(this.flex3, 'R20', line.pieceStr);
             this.price = Tran.creatText(this.flex3, 'R20', line.priceStr);
-            this.times = Tran.creatText(this.flex3, 'R20', line.timesStr);
+            // this.times = Tran.creatText(this.flex3, 'R20', line.timesStr);
             this.flex1.setAttribute('margin', 'T5');
             this.flex3.setAttribute('margin', 'T0');
             this.body.setAttribute('margin', 'B15');
@@ -217,7 +220,7 @@ function __Tran() {
             this.ladd  = Tran.creatText(this.flex, 'L10', line.laddStr);
             this.piece = Tran.creatText(this.flex, 'R20', line.pieceStr);
             this.price = Tran.creatText(this.flex, 'R20', line.priceStr);
-            this.times = Tran.creatText(this.flex, 'R20', line.timesStr);
+            // this.times = Tran.creatText(this.flex, 'R20', line.timesStr);
             this.flex.setAttribute('margin', 'T5')
             if (z == 0) {
                 Alert.bodySelect(this.body);
@@ -307,7 +310,7 @@ function __Tran() {
             let ladd = this.creatText(flex2, 'L10', laddStr);
             let piece = this.creatText(flex2, 'R20', pieceStr);
             let price = this.creatText(flex2, 'R20', priceStr);
-            let times = this.creatText(flex2, 'R20', timesStr);
+            // let times = this.creatText(flex2, 'R20', timesStr);
         }
 
         if(block.firstChild)

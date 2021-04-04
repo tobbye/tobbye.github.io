@@ -1,0 +1,177 @@
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>迷宫100例</title>
+    <script src="laby.js"> </script>
+    <style type="text/css"> 
+        body {
+            font-family: Segoe UI, Helvetica, Consolas, Trebuchet MS;
+            margin: 0px;
+            padding: 0px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            background-color: #eee;
+        }
+
+        h1, h2, h3, h4, h5 {
+            margin: 0px;
+            padding: 0px;   
+        }
+
+        h1 {
+            font-size: 3em;
+        }
+
+        h2 {
+            font-size: 1.8em;
+        }
+
+        h3 {
+            font-size: 1.2em;
+        }
+
+        canvas {
+            margin: 10px;
+        }
+
+        #page1 {
+            height: 885px; 
+            padding-top: 200px; 
+        } 
+        #page2 {
+            height: 1085px; 
+        }
+
+        #qrcode {
+            width: 150px;
+            height: 150px;
+        }
+
+        .foot {
+            padding: 5px; 
+        } 
+            
+        .title-flex {
+            display: flex; 
+            justify-content: center; 
+        }
+        .title-block {
+            display: block; 
+        } 
+
+        .block {
+            flex: auto;
+        }.block[agent=mobile] {
+            border-top: solid 0px #eee;
+            border-left: solid 0px #eee;
+            border-bottom: solid 2px #888;
+        }.block[agent=computer] {
+            border-top: solid 2px #888;
+            border-left: solid 2px #888;
+        }
+
+        .flex {
+            display: flex;
+            flex-wrap: wrap;
+            color: dodgerblue;
+            text-align: center;
+        }
+
+        .vice {
+            height: 40px;
+            font-size: 1.1em;
+            line-height: 40px;
+            color: dodgerblue;
+            text-align: center;
+        }
+
+        .button {
+            flex: 10;
+            padding: 0px 20px;
+            font-size: 1.3em;
+            line-height: 50px;
+        }
+        .button[btype=dead] {
+            color: dodgerblue;
+            background-color: #eee;
+        }
+        .button[btype=live] {
+            color: #fff;
+            background-color: dodgerblue;
+        }
+
+        #outer {
+            overflow: auto;
+            font-size: 1em;
+        }
+
+        #outer-bot {
+            flex-wrap: wrap;
+            background-color: #eee;
+            zoom: 0.7;
+        }
+        #alert {
+            position: absolute;
+            left: 0;
+            right: 0;
+            color: white;
+            padding: 10px;
+            font-size: 1.2em;
+            text-align: center;
+            background-color: dodgerblue;
+        }
+    </style>
+</head>
+<body>
+    <div id="page1" style="display: none">
+        <h1>迷宫100例</h1>
+        <h2>100 LABYRINTH INSTANCES</h2>
+        <h2 class="vice"></h2>
+        <div style="height:400px"></div>
+
+        <h3>扫码获取更多资源</h3>
+        <img id="qrcode" src="qrcode.png"></img>
+        <h3>https://tobbye.github.io/page/task/task.html</h3>
+    </div>
+    <div id="page2" style="display: none"></div>
+    <div id="alert" style="display: none">正在解密中...</div>
+    <div id="outer"></div>
+    <div id="outer-bot" style="display: none">
+        <div class="block">
+            <div class="vice">操作</div>
+            <div class="flex" id="flex1">
+                <div class="button" onclick="Setting.back()">返回</div>
+                <div class="button" onclick="Setting.refresh()">刷新</div>
+                <div class="button" onclick="Setting.download()">下载</div>
+                <div class="button" onclick="Setting.bat()">批量</div>
+            </div>
+
+        </div>
+        <div class="block">
+            <div class="vice">尺寸</div>
+            <div class="flex" id="flex2">
+                <div class="button" onclick="Setting.set_scale(this, 1)">20</div>
+                <div class="button" onclick="Setting.set_scale(this, 2)">32</div>
+                <div class="button" onclick="Setting.set_scale(this, 3)">40</div>
+                <div class="button" onclick="Setting.set_scale(this, 4)">64</div>
+                <div class="button" onclick="Setting.set_scale(this, 5)">80</div>
+            </div>
+        </div>
+        <div class="block">
+            <div class="vice">边框</div>
+            <div class="flex" id="flex3">
+                <div class="button" onclick="Setting.set_wall(this, 1)">线条</div>
+                <div class="button" onclick="Setting.set_wall(this, 2)">方块</div>
+            </div>
+        </div>
+        <div class="block">
+            <div class="vice">解密</div>
+            <div class="flex" id="flex4">
+                <div class="button" onclick="Setting.set_explor(this, 1)">加密</div>
+                <div class="button" onclick="Setting.set_explor(this, 7)">解密</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
