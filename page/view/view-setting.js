@@ -426,7 +426,7 @@ function togButtonHide(btn, hide, display) {
 function back() {
     let Config = getJson("Config");
     let href = Config ? Config.cfg.name : "home";
-    window.location.href = "../#1/#1.html".replace(/#1/g, href);
+    window.location.href = "../#1/#1.html".replace(/#1/g, 'zzdz');
 }
 
 window.onresize = function() {

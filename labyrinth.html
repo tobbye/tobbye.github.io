@@ -1,0 +1,74 @@
+
+<html>
+<head>
+	<meta charset="utf-8">
+	<style type="text/css"> 
+		body {
+            font-family: Segoe UI, Helvetica, Consolas, Trebuchet MS;
+            margin: 0px;
+            padding: 0px;
+            font-size: 16px;
+            text-align: center;
+            background-color: #eee;
+        }
+
+		button {
+			font-size: 1.0em;
+		}
+
+		#outer {
+		}
+
+		#warn {
+			margin: 20px 0px;
+
+		}
+
+		#head {
+			font-size: 1.2em;
+			margin-top: 10px;
+			margin-bottom: 5px;
+		}
+
+	</style>
+	<script type="text/javascript">
+		window.onload = function() {
+			let outer = document.getElementById('outer');
+			let warn = document.getElementById('warn');
+			let head = document.getElementById('head');
+			let img = document.getElementById('img');
+			let url = location.search;
+			if (url.indexOf('?id=') == -1) {
+				warn.style.display = 'block';
+				outer.style.display = 'none';
+			} else {
+				warn.style.display = 'none';
+				outer.style.display = 'block';
+				let index = url.substr(4);
+				let count = parseInt(url.substr(5));
+				console.log(count);
+				if ('XYZ'.indexOf(index[0]) == -1)
+					return;
+				if (count < 1 || count > 100)
+					return;
+				console.log(count);
+				head.innerHTML = '迷宫 ' + index + ' 的解密路径';
+				img.src = 'page/laby/pic_' + 1 + '.png';
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id='outer'>
+		<div id='head'></div>
+		<img id='img'></img>
+	</div>
+	<div id='warn'>
+		迷宫解密：您输入的参数不合法
+		<br/>
+		请输入正确的index
+		<input id='index'/>
+	</div>
+	<button onclick="window.location.href = 'page/laby/laby.html'">前往迷宫页面</button>
+</body>
+</html>

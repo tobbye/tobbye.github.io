@@ -106,6 +106,10 @@ function __WORLD() {
 
 
     this.toScene = function(name) {
+        if (name == 'back') {
+            window.location.href = '../laby/laby.html';
+            return;
+        }
         localStorage.setItem('scene', name + '@' + new Date().getTime());
         window.location.reload();
     }

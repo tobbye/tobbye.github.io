@@ -16,15 +16,17 @@ const arrowType = ['left', 'up', 'right', 'down'];
 let Setting = new __Setting();
 function __Setting() {
 
+    this.hide = 0;
+    this.isLine = 0;        //是否线条边框
     this.isBack = 1;        //是否回头
     this.isColl = 1;        //是否碰撞
+    this.isMark = 1;        //是否标记
+    this.isPack = 0;        //是否加密
 
-    this.start = 100;
     this.round = 0;
-    this.wallIdx = 1;
     this.scaleIdx = 1;          //尺寸大小
     this.explorIdx = 1;         //寻路模式
-    this.printCount = 5;       
+    this.batCount = 1;       
     this.zoomPhone = 1.80;
     this.zoomPad = 1.00;
     this.zoomPc = 0.70;
@@ -38,35 +40,45 @@ function __Setting() {
         {col: 80, row: 40, size:  8, wallWidth: 3, spc: 10},
     ];
     this.batConfig = {
-        S: {flex: 2, block: 2, col: 17, row: 24, size: 10, wallWidth: 4},
-        M: {flex: 2, block: 1, col: 35, row: 24, size: 10, wallWidth: 4},
-        L: {flex: 1, block: 1, col: 35, row: 50, size: 10, wallWidth: 4},
-        X: {flex: 1, block: 1, col: 50, row: 70, size: 10, wallWidth: 4},
+        X: {flex: 2, block: 2, col: 17, row: 24, size: 10, wallWidth: 4},
+        Y: {flex: 2, block: 1, col: 35, row: 24, size: 10, wallWidth: 4},
+        Z: {flex: 1, block: 1, col: 35, row: 50, size: 10, wallWidth: 4},
+        U: {flex: 1, block: 1, col: 50, row: 70, size: 10, wallWidth: 4},
 
     };
+    this.btnKey = [
+        {key: 'isLine', ableText:'线条边框', unableText:'方块边框'},
+        {key: 'isBack', ableText:'回头YES', unableText:'回头NO'},
+        {key: 'isColl', ableText:'碰撞YES', unableText:'碰撞NO'},
+        {key: 'isMark', ableText:'标记YES', unableText:'标记NO'},
+        {key: 'isPack', ableText:'加密', unableText:'解密'},
+    ];
 
     this.init = function() {
         this.set_scale();
-        this.set_wall();
-        this.set_explor();
+        this.set_select(null, 0);
+        this.set_select(null, 1);
+        this.set_select(null, 2);
+        this.set_select(null, 3);
+        this.set_select(null, 4);
         console.log(this);
     };
 
     this.back = function() {
-        window.location.href = '../home/home.html';
+        window.location.href = '../view/view.html';
     }
 
     this.refresh = function() {
         let data = this.labyConfig[this.scaleIdx];
         let margin = this.canvasMargin - data.wallWidth;
-        this.wallWidth = this.wallIdx == 2 ? 0 : data.wallWidth;
+        this.wallWidth = !this.isLine ? 0 : data.wallWidth;
         this.inBat = 0;
         this.round = 0;
         this.labyData = [];
         this.pathData = {};
         this.outer.innerHTML = '';
         Laby = new __Labyrinth();
-        Laby.init(this.outer, 'L00'); 
+        Laby.init(this.outer, 'Z00'); 
         Laby.canvas.style.margin = margin + 'px 0px';
     }
 
@@ -74,15 +86,46 @@ function __Setting() {
         Laby.download();
     }
 
-    this.bat = function() {
+
+    this.bat_ready = function(idx) {
+        this.outer.innerHTML = '';
+        Elem.get('tips').style.display = idx ? 'block' : 'none';
+        if (idx == 0) {
+            let page1 = Elem.get('page1');
+            this.htmlStr = this.htmlStr || page1.innerHTML;
+            page1.innerHTML = this.htmlStr
+            .replace(/#0/g, this.batCount * 3)
+            .replace(/#1/g, this.batCount * 1)
+            .replace(/#2/g, fill_zero(this.batCount, 3));
+        }
+    }
+
+    this.bat = function(btn, count) {
         this.inBat = 1;
         this.round = 0;
         this.labyData = [];
         this.pathData = {};
-        this.outer.innerHTML = '';
-        this.init_bat('S');
-        this.init_bat('M');
-        this.init_bat('L');
+        this.batCount = count;
+        this.bat_ready(0);
+        this.init_bat('X');
+        this.init_bat('Y');
+        this.init_bat('Z');
+    }
+
+    this.bat_toggle = function() {
+        if (this.hide) {
+            this.hide = 0;
+            this.outerTop.style.display = 'block';
+            this.outerBot.style.display = 'none';
+            this.outer.style.height = 'auto';
+        } else {
+            this.hide = 1;
+            this.outerTop.style.display = 'none';
+            this.outerBot.style.display = 'flex';
+            this.outer.style.height = this.outerHeight + 'px';
+        }
+        if (this.inBat)
+            this.outer.scrollIntoView(true);
     }
 
     this.set_scale = function(btn, idx) {
@@ -95,26 +138,29 @@ function __Setting() {
             this.row = data.col;
             this.size = data.spc;
         } else {
-            this.col = data.col;;
-            this.row = data.row;;
+            this.col = data.col;
+            this.row = data.row;
             this.size = data.size;
         }
 
         this.refresh();
     }
 
-    this.set_wall = function(btn, idx) {
-        btn = btn || Elem.get('flex3').children[0];
-        this.set_child(btn);
-        this.wallIdx = idx || this.wallIdx;
-        this.refresh();
+    this.set_select = function(btn, idx) {
+        for (let i = 0; i < this.btnKey.length; i++) {
+            if (idx == i)
+                this.tog_child(i, this.btnKey[i]);
+        }
+        if (idx == 0) {
+            this.refresh();
+        }
+        if (idx == 4) {
+            btn = btn || Elem.get('flex3').children[0];
+            this.set_explor(btn, idx);
+        }
     }
 
     this.set_explor = function(btn, idx) {
-        btn = btn || Elem.get('flex4').children[0];
-        this.set_child(btn);
-        this.explorIdx = idx || this.explorIdx || 1;
-
         if (this.inBat) {
             this.alert.style.display = 'block';
             this.explor_bat();
@@ -122,6 +168,19 @@ function __Setting() {
             Laby.auto_explor();
             Laby.draw_path(); 
         }
+    }
+
+    this.tog_child = function(i, obj) {
+        let elem = Elem.get('flex3').children[i];
+        if (this[obj.key]) {
+            this[obj.key] = 0;
+            elem.innerHTML = obj.unableText;
+            elem.setAttribute('btype', 'dead');
+        } else {
+            this[obj.key] = 1;
+            elem.innerHTML = obj.ableText;
+            elem.setAttribute('btype', 'live');
+        } 
     }
 
     this.set_child = function(btn) {
@@ -140,6 +199,7 @@ function __Setting() {
         this.outer = Elem.get('outer');
         this.page1 = Elem.get('page1');
         this.page2 = Elem.get('page2');
+        this.outerTop = Elem.get('outer-top');
         this.outerBot = Elem.get('outer-bot');
         this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
         this.isPad = (/Pad/i.test(navigator.userAgent));
@@ -153,9 +213,8 @@ function __Setting() {
         this.os = this.isPhone ? 2.5 : 1;
         this.outerHeight = ~~(window.innerHeight - 1 - 90 * this.zoom);
         this.canvasMargin = ~~(this.outerHeight / 2 - 321 * this.os);
-        this.outer.style.height = this.outerHeight + 'px';
         this.outerBot.style.zoom = this.zoom;
-        this.outerBot.style.display = 'flex';
+        this.bat_toggle();
     }
 
     // 批量生成
@@ -168,17 +227,19 @@ function __Setting() {
         if (this.isPhone)
             this.size = ~~(data.size * 1.25);
         this.part = data.flex*data.block;
-        this.count = data.flex*data.block*this.printCount;
-        this.wallWidth = this.wallIdx == 2 ? 0 : data.wallWidth;
+        this.count = data.flex*data.block*this.batCount;
+        this.wallWidth = !this.isLine ? 0 : data.wallWidth;
         this.creat_bat(data);
     }
 
 
     this.creat_bat = function(data) {
 
-        for (let i=1; i<=this.printCount; i++) {
+        for (let i=1; i<=this.batCount; i++) {
+            let index = this.labyIdx + fill_zero(i, 3);
             let inner = Elem.creat('div', outer, 'inner');
-            let index = this.labyIdx + fill_zero(i+this.start-100, 3);
+            let head = Elem.creat('div', inner, 'head');
+            head.innerHTML = `index=${index} | size=${this.col}x${this.row}x${this.part}`;
             for (let x=0; x<data.flex; x++) {
                 let flex = Elem.creat('div', inner, 'title-flex');
 
@@ -192,7 +253,7 @@ function __Setting() {
                 }
             }
             let foot = Elem.creat('div', inner, 'foot');
-            foot.innerHTML = `index=${index} | size=${this.col}x${this.row}x${this.part}`;
+            foot.innerHTML = `http://tobbye.github.io/labyrinth.html`;
         }
     }
 
@@ -211,7 +272,7 @@ function __Setting() {
                 Setting.explor_bat(Setting.alert);
             }, 100);
         } else {
-            let str = this.explorIdx == 1 ? '加密' : '解密';
+            let str = this.isPack ? '加密' : '解密';
             this.draw_bat();
             this.alert.innerHTML = `正在${str}中...<br/>进度: ${this.round} | 总数: ${this.labyData.length}`;
             setTimeout(function() {
@@ -254,7 +315,7 @@ function __Labyrinth() {
         this.wallWidth = 0;
         this.nextList = [[0, -1], [-1, 0], [0, 1], [1, 0]];
         this.tranList = [-1, -this.col, 1, this.col];
-        this.word = 'file:///C:/Users/geeaf/Documents/GitHub/MyTools/html-MiniGame/Labyrinth.html';
+        this.word = 'http://tobbye.github.io/labyrinth.html';
 
         this.init_canvas(inner);
         this.init_map();
@@ -271,9 +332,11 @@ function __Labyrinth() {
         this.canvas.width = this.width*this.size;
         this.canvas.height = this.height*this.size;
         this.canvas.onclick = function(event){
-            if (Setting.inBat)
+            if (Setting.inBat) {
                 that.download();
-            else
+                return;
+            }
+            if (Setting.isMark)
                 that.mark_path(event);
         }
         this.ctx = this.canvas.getContext('2d');
@@ -300,16 +363,16 @@ function __Labyrinth() {
             }
         }
         this.dict = {
-            'S00':[[0, w-2],[h-1, 1]],
-            'S01':[[0, 1],[h-1, w-2]],
-            'S10':[[0, 1],[h-2, w-1]],
-            'S11':[[0, w-2],[h-2, 0]],
-            'M00':[[0, 1],[h-1, w-2]],
-            'M10':[[0, w-2],[h-1, 1]],
-            'L00':[[0, 1],[h-1, w-2]],
-            'X00':[[0, 1],[h-1, w-2]],
+            'X00':[[0, w-2],[h-1, 1]],
+            'X01':[[0, 1],[h-1, w-2]],
+            'X10':[[0, 1],[h-2, w-1]],
+            'X11':[[0, w-2],[h-2, 0]],
+            'Y00':[[0, 1],[h-1, w-2]],
+            'Y10':[[0, w-2],[h-1, 1]],
+            'Z00':[[0, 1],[h-1, w-2]],
+            'U00':[[0, 1],[h-1, w-2]],
         };
-        this.labyIdx =  this.labyIdx || 'L00';
+        this.labyIdx =  this.labyIdx || 'Z00';
         this.start = this.dict[this.labyIdx][0];
         this.end = this.dict[this.labyIdx][1];
         this.cur = [this.start[0], this.start[1]];
@@ -417,8 +480,6 @@ function __Labyrinth() {
         let y = ~~(e.offsetX / Setting.size);
         let x = ~~(e.offsetY / Setting.size);
         let val = this.map[x][y];
-        if (val == cellType.WALL)
-            this.fill_value([x, y], cellType.COLL);
         if (val == cellType.PATH || val == cellType.EXPLOR || val == cellType.AUTO)
             this.fill_value([x, y], cellType.MARK);
     };
@@ -435,7 +496,8 @@ function __Labyrinth() {
             this.cur = [i, j];
             let word = this.word[this.distance % this.word.length];
             this.fill_value(this.cur, cellType.PAST);
-            // this.fill_text(word, [i,j]); 
+            if (Setting.scaleIdx <= 3)
+                this.fill_text(word, [i,j]); 
             return;
         } 
         if (val == cellType.PAST) {
@@ -535,8 +597,8 @@ function __Labyrinth() {
 
 
     this.draw_path = function() {
+        this.explorIdx = Setting.isPack ? cellType.PATH : cellType.EXPLOR;
         this.autoTimes = 0;
-        this.explorIdx = Setting.explorIdx;
         this.draw_cell(); 
     };
 
@@ -561,6 +623,8 @@ window.onresize = function() {
 
 document.onkeydown = function(evt) { 
     let idx = evt.keyCode - 37;
+    if (idx == 27 - 37)
+        Setting.bat_toggle();
     if (idx < 0 || idx > 3) return;
     Laby.find_path(idx);
 };
