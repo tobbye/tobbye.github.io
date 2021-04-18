@@ -16,7 +16,13 @@
 			font-size: 1.0em;
 		}
 
-		#outer {
+		input {
+			margin: 5px;
+			padding: 5px;
+		}
+
+		.content {
+			margin: 5px;
 		}
 
 		#warn {
@@ -33,42 +39,37 @@
 	</style>
 	<script type="text/javascript">
 		window.onload = function() {
-			let outer = document.getElementById('outer');
-			let warn = document.getElementById('warn');
+
+		}
+
+		function jump() {
 			let head = document.getElementById('head');
 			let img = document.getElementById('img');
-			let url = location.search;
-			if (url.indexOf('?id=') == -1) {
-				warn.style.display = 'block';
-				outer.style.display = 'none';
-			} else {
-				warn.style.display = 'none';
-				outer.style.display = 'block';
-				let index = url.substr(4);
-				let count = parseInt(url.substr(5));
-				console.log(count);
-				if ('XYZ'.indexOf(index[0]) == -1)
-					return;
-				if (count < 1 || count > 100)
-					return;
-				console.log(count);
-				head.innerHTML = '迷宫 ' + index + ' 的解密路径';
-				img.src = 'page/laby/pic_' + 1 + '.png';
-			}
+			let input = document.getElementById('index');
+			let index = input.value;
+			let count = parseInt(index.substr(1));
+			if ('XYZ'.indexOf(index[0]) == -1)
+				return alert('输入的index不合法!');
+			if (count < 1 || count > 100)
+				return;
+			console.log(count);
+			head.innerHTML = '迷宫 ' + index + ' 的解密路径';
+			img.src = 'page/laby/pic_' + 1 + '.png';
 		}
 	</script>
 </head>
 <body>
-	<div id='outer'>
+
+	<div class='contents'>
+		请输入迷宫index
+		<input id='index'placeholder='如X007, Y018, Z096'/>
+		<button onclick='jump()'>迷宫解密</button>
+		<button onclick="window.location.href = 'page/laby/laby.html'">在线迷宫生成</button>
+	</div>
+	<div class='content'>
 		<div id='head'></div>
 		<img id='img'></img>
 	</div>
-	<div id='warn'>
-		迷宫解密：您输入的参数不合法
-		<br/>
-		请输入正确的index
-		<input id='index'/>
-	</div>
-	<button onclick="window.location.href = 'page/laby/laby.html'">前往迷宫页面</button>
+
 </body>
 </html>

@@ -1,12 +1,10 @@
 
 window.onload = function() {
-    Setting.agent();
-    Setting.init();
+    Setting.start();
 }
 
-const wallType = {LINE:1, BLOCK:2};
 const cellType = {WALL:0, PATH:1, PAST:2, COLL:3, START:4, END:5, MARK: 6, EXPLOR:7, AUTO:8};
-const cellColor = ['#111', 'white', 'green', 'red', 'green', 'green', 'green', 'dodgerblue', 'green'];
+const cellColor = ['#111', 'white', 'green', 'red', 'green', 'green', 'green', 'dodgerblue', 'dodgerblue'];
 const arrowType = ['left', 'up', 'right', 'down'];
 
 
@@ -16,12 +14,41 @@ const arrowType = ['left', 'up', 'right', 'down'];
 let Setting = new __Setting();
 function __Setting() {
 
+
+    this.start = function() {
+        this.pdf = Elem.get('pdf');
+        this.alert = Elem.get('alert');
+        this.outer = Elem.get('outer');
+        this.page1 = Elem.get('page1');
+        this.page2 = Elem.get('page2');
+        this.outerTop = Elem.get('outer-top');
+        this.outerBot = Elem.get('outer-bot');
+        this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
+        this.isPad = (/Pad/i.test(navigator.userAgent));
+        if (this.isPhone || this.isPad) {
+            this.outer.innerHTML = '';
+            this.outerTop.innerHTML = '';
+            this.outerBot.innerHTML = '';
+            this.pdf.style.display = 'block';
+        } else {
+            this.pdf.style.display = 'none';
+            this.resize();
+            this.init();
+        }
+    }
+
+    this.resize = function() {
+        this.outerHeight = ~~(window.innerHeight - 1 - 63);
+        this.canvasMargin = ~~(this.outerHeight / 2 - 321);
+        this.outer.style.height = this.outerHeight + 'px';
+    }
+
     this.hide = 0;
-    this.isLine = 0;        //是否线条边框
-    this.isBack = 1;        //是否回头
-    this.isColl = 1;        //是否碰撞
-    this.isMark = 1;        //是否标记
-    this.isPack = 0;        //是否加密
+    this.isLine = 1;        //是否线条边框
+    this.isBack = 0;        //是否回头
+    this.isColl = 0;        //是否碰撞
+    this.isMark = 0;        //是否标记
+    this.isPack = 1;        //是否加密
 
     this.round = 0;
     this.scaleIdx = 1;          //尺寸大小
@@ -47,25 +74,24 @@ function __Setting() {
 
     };
     this.btnKey = [
-        {key: 'isLine', ableText:'线条边框', unableText:'方块边框'},
-        {key: 'isBack', ableText:'回头YES', unableText:'回头NO'},
-        {key: 'isColl', ableText:'碰撞YES', unableText:'碰撞NO'},
-        {key: 'isMark', ableText:'标记YES', unableText:'标记NO'},
-        {key: 'isPack', ableText:'加密', unableText:'解密'},
+        {key: 'isLine', val: 1, ableText:'线条边框', unableText:'方块边框'},
+        {key: 'isBack', val: 0, ableText:'回头YES', unableText:'回头NO'},
+        {key: 'isColl', val: 0, ableText:'碰撞YES', unableText:'碰撞NO'},
+        {key: 'isMark', val: 0, ableText:'标记YES', unableText:'标记NO'},
+        {key: 'isPack', val: 1, ableText:'加密', unableText:'解密'},
     ];
 
     this.init = function() {
+        this.bat_toggle();
         this.set_scale();
-        this.set_select(null, 0);
-        this.set_select(null, 1);
-        this.set_select(null, 2);
-        this.set_select(null, 3);
-        this.set_select(null, 4);
+        for (let i = 0; i < this.btnKey.length; i++) {
+            this.tog_child(i, this.btnKey[i], !this.btnKey[i].val);
+        }
         console.log(this);
     };
 
     this.back = function() {
-        window.location.href = '../view/view.html';
+        window.location.href = '../home/home.html';
     }
 
     this.refresh = function() {
@@ -73,6 +99,9 @@ function __Setting() {
         let margin = this.canvasMargin - data.wallWidth;
         this.wallWidth = !this.isLine ? 0 : data.wallWidth;
         this.inBat = 0;
+        this.isPack = 0;
+        this.tog_child(4, this.btnKey[4], false);
+
         this.round = 0;
         this.labyData = [];
         this.pathData = {};
@@ -98,6 +127,8 @@ function __Setting() {
             .replace(/#1/g, this.batCount * 1)
             .replace(/#2/g, fill_zero(this.batCount, 3));
         }
+        this.isPack = 0;
+        this.tog_child(4, this.btnKey[4], false);
     }
 
     this.bat = function(btn, count) {
@@ -149,7 +180,7 @@ function __Setting() {
     this.set_select = function(btn, idx) {
         for (let i = 0; i < this.btnKey.length; i++) {
             if (idx == i)
-                this.tog_child(i, this.btnKey[i]);
+                this.tog_child(i, this.btnKey[i], this[this.btnKey[i].key]);
         }
         if (idx == 0) {
             this.refresh();
@@ -170,9 +201,9 @@ function __Setting() {
         }
     }
 
-    this.tog_child = function(i, obj) {
+    this.tog_child = function(i, obj, val) {
         let elem = Elem.get('flex3').children[i];
-        if (this[obj.key]) {
+        if (val) {
             this[obj.key] = 0;
             elem.innerHTML = obj.unableText;
             elem.setAttribute('btype', 'dead');
@@ -193,29 +224,6 @@ function __Setting() {
         }
     }
 
-
-    this.agent = function() {
-        this.alert = Elem.get('alert');
-        this.outer = Elem.get('outer');
-        this.page1 = Elem.get('page1');
-        this.page2 = Elem.get('page2');
-        this.outerTop = Elem.get('outer-top');
-        this.outerBot = Elem.get('outer-bot');
-        this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
-        this.isPad = (/Pad/i.test(navigator.userAgent));
-        this.zoom = this.isPhone ? this.zoomPhone : this.zoomPc;
-        this.zoom = this.isPad ? this.zoomPad : this.zoom;
-        let agent = this.isPhone ? 'mobile' : 'computer';
-        let blocks = document.getElementsByClassName('block');
-        for (let i=0;i<blocks.length;i++) {
-            blocks[i].setAttribute('agent', agent);
-        }
-        this.os = this.isPhone ? 2.5 : 1;
-        this.outerHeight = ~~(window.innerHeight - 1 - 90 * this.zoom);
-        this.canvasMargin = ~~(this.outerHeight / 2 - 321 * this.os);
-        this.outerBot.style.zoom = this.zoom;
-        this.bat_toggle();
-    }
 
     // 批量生成
     this.init_bat = function(labyIdx) {
@@ -315,7 +323,7 @@ function __Labyrinth() {
         this.wallWidth = 0;
         this.nextList = [[0, -1], [-1, 0], [0, 1], [1, 0]];
         this.tranList = [-1, -this.col, 1, this.col];
-        this.word = 'http://tobbye.github.io/labyrinth.html';
+        this.word = 'from:浙江Z金华J兰溪L to:浙江Z温州W文成W';
 
         this.init_canvas(inner);
         this.init_map();
@@ -331,13 +339,15 @@ function __Labyrinth() {
         this.height = 2*this.row+1;
         this.canvas.width = this.width*this.size;
         this.canvas.height = this.height*this.size;
-        this.canvas.onclick = function(event){
-            if (Setting.inBat) {
+        this.canvas.onclick = function(e){
+            if (Setting.inBat)
                 that.download();
-                return;
-            }
-            if (Setting.isMark)
-                that.mark_path(event);
+            else
+                that.mark_path(e);
+        }
+        this.canvas.onmousemove = function(e) {
+            if (Setting.isFollow)
+                Laby.mark_path(e);
         }
         this.ctx = this.canvas.getContext('2d');
         this.ctx.textAlign = 'center';
@@ -476,34 +486,46 @@ function __Labyrinth() {
         this.ctx.fillText(word, (pos[1]+0.5)*this.size, (pos[0]+0.5)*this.size+1); 
     };
 
+
+    this.fill_word = function(i, j) {
+        let word = this.word[this.distance % this.word.length];
+        this.fill_value(this.cur, cellType.PAST);
+        if (Setting.scaleIdx <= 3)
+            this.fill_text(word, [i,j]); 
+    };
+
+    //标记
     this.mark_path = function(e) {
         let y = ~~(e.offsetX / Setting.size);
         let x = ~~(e.offsetY / Setting.size);
         let val = this.map[x][y];
-        if (val == cellType.PATH || val == cellType.EXPLOR || val == cellType.AUTO)
-            this.fill_value([x, y], cellType.MARK);
+        if (val == cellType.PATH || val == cellType.EXPLOR || 
+            val == cellType.AUTO || val == cellType.MARK) {
+            if (Setting.isMark)
+                this.fill_value([x, y], cellType.MARK);
+            else
+                this.fill_value([x, y], cellType.PATH);
+        }
     };
 
+    //解密寻路
     this.find_path = function(idx) {
         this.next = this.nextList[idx];
         this.arrow = arrowType[idx];
         let i = this.cur[0] + this.next[0];
         let j = this.cur[1] + this.next[1];
         let val = this.map[i][j];
-        if (val == cellType.PATH || val == cellType.MARK || 
-            val == cellType.EXPLOR || val == cellType.AUTO) {
+        if (val == cellType.END) {
             this.distance ++;
             this.cur = [i, j];
-            let word = this.word[this.distance % this.word.length];
-            this.fill_value(this.cur, cellType.PAST);
-            if (Setting.scaleIdx <= 3)
-                this.fill_text(word, [i,j]); 
-            return;
-        } 
+            this.fill_word(i, j);
+            return this.alert('而今迈步从头越!')
+        }
         if (val == cellType.PAST) {
             if (Setting.isBack) {
                 this.fill_value(this.cur, cellType.PATH);
                 this.cur = [i, j];
+                this.distance --;
             }
             return;
         } 
@@ -515,12 +537,16 @@ function __Labyrinth() {
             this.check();
             return;
         }
-        if (val == cellType.END) {
-            return this.alert('而今迈步从头越!')
-        }
+        if (val == cellType.PATH || val == cellType.MARK || 
+            val == cellType.EXPLOR || val == cellType.AUTO) {
+            this.distance ++;
+            this.cur = [i, j];
+            this.fill_word(i, j);
+        } 
     };
 
 
+    //检查状态
     this.check = function() {
         this.wall = [];
         for (let idx in this.nextList) {
@@ -587,7 +613,7 @@ function __Labyrinth() {
             // console.log(path);
             return;
         }
-        if (val == cellType.PATH || val == cellType.MARK) {
+        if (val == cellType.PATH || val == cellType.PAST || val == cellType.MARK) {
             path.push(pos);
             this.map[px][py] = cellType.EXPLOR;
             this.explor_path([px, py], path);
@@ -617,16 +643,16 @@ function __Labyrinth() {
 };
 
 window.onresize = function() {
-    Setting.agent();
+    Setting.resize();
 }
 
 
-document.onkeydown = function(evt) { 
-    let idx = evt.keyCode - 37;
-    if (idx == 27 - 37)
+document.onkeydown = function(e) { 
+    if (e.keyCode == 27)
         Setting.bat_toggle();
-    if (idx < 0 || idx > 3) return;
-    Laby.find_path(idx);
+    Setting.isFollow = e.keyCode == 70 ? 1 : 0;
+    if (e.keyCode < 37 || e.keyCode > 40) return;
+    Laby.find_path(e.keyCode-37);
 };
 
 function fill_zero (num, count) {

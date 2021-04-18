@@ -1,5 +1,5 @@
-
-let data, name;
+let name = 'Item';
+let data = Item;
 
 let Setting = {
     mix: 0.9,
@@ -55,14 +55,8 @@ let Setting = {
 
 
 window.onload = function() {
-    if (localStorage.getItem("Item")) {
-        name = "Item";
+    if (localStorage.getItem("Item"))
         data = getJson(name);  
-    } else {
-        name = "Setting";
-        data = Setting;
-    }
-
     setButton();
     initSplit();
 }
@@ -426,7 +420,7 @@ function togButtonHide(btn, hide, display) {
 function back() {
     let Config = getJson("Config");
     let href = Config ? Config.cfg.name : "home";
-    window.location.href = "../#1/#1.html".replace(/#1/g, 'zzdz');
+    window.location.href = "../#1/#1.html".replace(/#1/g, href);
 }
 
 window.onresize = function() {
@@ -459,7 +453,7 @@ function setCenter() {
     //outer.scrollWidth超出body.inner,隐藏居中按钮
     Setting.isOver = outer.scrollWidth * Setting.zoom > window.innerWidth;
     Setting.isHide = Setting.isOver || !Setting.isPile;
-    outer.style.height = (height - 90) + "px";
+    outer.style.height = ~~(height - 92) + "px";
     togButtonHide(btnCenter, Setting.isHide, "inline");
     togButtonText(btnCenter, "isCenter");
     if (!Setting.isPile) 

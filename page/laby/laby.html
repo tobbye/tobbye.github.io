@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
-    <title>迷宫100例</title>
+    <title>在线迷宫生成</title>
     <script src="laby.js"> </script>
     <style type="text/css"> 
         body {
@@ -12,6 +12,11 @@
             font-weight: bold;
             text-align: center;
             background-color: #eee;
+        }
+
+        a {
+            padding: 10px;
+            font-size: 2em;
         }
 
         h1, h2, h3, h4, h5 {
@@ -59,12 +64,6 @@
 
         .block {
             flex: auto;
-        }.block[agent=mobile] {
-            min-width: 90%;
-            border-top: solid 0px #eee;
-            border-left: solid 0px #eee;
-            border-bottom: solid 2px #888;
-        }.block[agent=computer] {
             border-top: solid 2px #888;
             border-left: solid 2px #888;
         }
@@ -115,6 +114,7 @@
             display: none;
             flex-wrap: wrap;
             background-color: #eee;
+            zoom: 0.7;
         }
 
         #alert {
@@ -148,6 +148,12 @@
 </head>
 <body>
     <div id="alert" style="display: none">正在解密中...</div>
+    <div id= "pdf">
+        <a href="laby15.pdf">下载解密PDF</a>
+        <iframe src="laby15.pdf" width="100%" height="100%">
+            该浏览器无法支持PDF，请点击查看：
+        </iframe>
+    </div>
     <div id="outer-top" style="display: none">
         <div id="page1">
             <h1>迷宫#0例</h1>
@@ -179,7 +185,7 @@
 
         </div>
         <div class="block">
-            <div class="vice">尺寸</div>
+            <div class="vice">难度</div>
             <div class="flex" id="flex2">
                 <div class="button" onclick="Setting.set_scale(this, 1)">新手</div>
                 <div class="button" onclick="Setting.set_scale(this, 2)">入门</div>

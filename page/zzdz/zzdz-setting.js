@@ -107,7 +107,7 @@ function __WORLD() {
 
     this.toScene = function(name) {
         if (name == 'back') {
-            window.location.href = '../laby/laby.html';
+            window.location.href = '../home/home.html';
             return;
         }
         localStorage.setItem('scene', name + '@' + new Date().getTime());
