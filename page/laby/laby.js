@@ -14,35 +14,6 @@ const arrowType = ['left', 'up', 'right', 'down'];
 let Setting = new __Setting();
 function __Setting() {
 
-
-    this.start = function() {
-        this.pdf = Elem.get('pdf');
-        this.alert = Elem.get('alert');
-        this.outer = Elem.get('outer');
-        this.page1 = Elem.get('page1');
-        this.page2 = Elem.get('page2');
-        this.outerTop = Elem.get('outer-top');
-        this.outerBot = Elem.get('outer-bot');
-        this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
-        this.isPad = (/Pad/i.test(navigator.userAgent));
-        if (this.isPhone || this.isPad) {
-            this.outer.innerHTML = '';
-            this.outerTop.innerHTML = '';
-            this.outerBot.innerHTML = '';
-            this.pdf.style.display = 'block';
-        } else {
-            this.pdf.style.display = 'none';
-            this.resize();
-            this.init();
-        }
-    }
-
-    this.resize = function() {
-        this.outerHeight = ~~(window.innerHeight - 1 - 63);
-        this.canvasMargin = ~~(this.outerHeight / 2 - 321);
-        this.outer.style.height = this.outerHeight + 'px';
-    }
-
     this.hide = 0;
     this.isLine = 1;        //是否线条边框
     this.isBack = 0;        //是否回头
@@ -54,10 +25,6 @@ function __Setting() {
     this.scaleIdx = 1;          //尺寸大小
     this.explorIdx = 1;         //寻路模式
     this.batCount = 1;       
-    this.zoomPhone = 1.80;
-    this.zoomPad = 1.00;
-    this.zoomPc = 0.70;
-    this.zoom = 1.00;
     this.labyConfig = [
         {},
         {col: 20, row: 10, size: 32, wallWidth: 15, spc: 40},
@@ -80,6 +47,30 @@ function __Setting() {
         {key: 'isMark', val: 0, ableText:'标记YES', unableText:'标记NO'},
         {key: 'isPack', val: 1, ableText:'加密', unableText:'解密'},
     ];
+
+    this.start = function() {
+        this.phone = Elem.get('phone');
+        this.alert = Elem.get('alert');
+        this.outer = Elem.get('outer');
+        this.page1 = Elem.get('page1');
+        this.page2 = Elem.get('page2');
+        this.outerTop = Elem.get('outer-top');
+        this.outerBot = Elem.get('outer-bot');
+        this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
+        this.isPad = (/Pad/i.test(navigator.userAgent));
+        if (this.isPhone || this.isPad) {
+            window.location.href = '../../labyrinth.html';
+        } else {
+            this.resize();
+            this.init();
+        }
+    }
+
+    this.resize = function() {
+        this.outerHeight = ~~(window.innerHeight - 1 - 63);
+        this.canvasMargin = ~~(this.outerHeight / 2 - 321);
+        this.outer.style.height = this.outerHeight + 'px';
+    }
 
     this.init = function() {
         this.bat_toggle();

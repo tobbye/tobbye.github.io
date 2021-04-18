@@ -12,6 +12,11 @@
             background-color: #eee;
         }
 
+        a {
+            padding: 10px 0px;
+            font-size: 1.5em;
+        }
+
 		button {
 			font-size: 1.0em;
 		}
@@ -21,14 +26,10 @@
 			padding: 5px;
 		}
 
-		.content {
-			margin: 5px;
-		}
-
-		#warn {
-			margin: 20px 0px;
-
-		}
+        #phone {
+            margin: 10px 20px;
+            text-align: left;
+        }
 
 		#head {
 			font-size: 1.2em;
@@ -60,16 +61,34 @@
 </head>
 <body>
 
-	<div class='contents'>
+<!-- 	<div class='content'>
 		请输入迷宫index
 		<input id='index'placeholder='如X007, Y018, Z096'/>
-		<button onclick='jump()'>迷宫解密</button>
-		<button onclick="window.location.href = 'page/laby/laby.html'">在线迷宫生成</button>
-	</div>
-	<div class='content'>
+		<button onclick='jump()'>解密</button>
+	</div> -->
+<!-- 	<div class='content'>
 		<div id='head'></div>
 		<img id='img'></img>
-	</div>
+	</div> -->
+    <div id= "phone">
+        <h3>使用电脑进入此页面可在线生成迷宫</h3>
+        <a href="page/laby/laby.html">迷宫在线生成</a><br/>
+        <br/>
+        <h3>迷宫下载</h3>
+        <a href="page/laby/laby_15p.pdf">下载迷宫15p.pdf (共15页)</a><br/>
+        <a href="page/laby/laby_30p.pdf">下载迷宫30p.pdf (共30页)</a><br/>
+        <a href="page/laby/laby_60p.pdf">下载迷宫60p.pdf (共60页)</a><br/>
+        <a href="page/laby/laby_90p.pdf">下载迷宫90p.pdf (共90页)</a><br/>
+        <a href="page/laby/laby_150p.pdf">下载迷宫150p.pdf (共150页)</a><br/>
+        <a href="page/laby/laby_300p.pdf">下载迷宫300p.pdf (共300页)</a><br/>
 
+        <h3>迷宫解密版下载</h3>
+        <a href="page/laby/laby_15p_jiemi.pdf">下载迷宫解密版15p.pdf (共15页)</a><br/>
+        <a href="page/laby/laby_30p_jiemi.pdf">下载迷宫解密版30p.pdf (共30页)</a><br/>
+        <a href="page/laby/laby_60p_jiemi.pdf">下载迷宫解密版60p.pdf (共60页)</a><br/>
+        <a href="page/laby/laby_90p_jiemi.pdf">下载迷宫解密版90p.pdf (共90页)</a><br/>
+        <a href="page/laby/laby_150p_jiemi.pdf">下载迷宫解密版150p.pdf (共150页)</a><br/>
+        <a href="page/laby/laby_300p_jiemi.pdf">下载迷宫解密版300p.pdf (共300页)</a><br/>
+    </div>
 </body>
 </html>
