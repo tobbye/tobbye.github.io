@@ -9,19 +9,20 @@ let Source = {
         code: '600295',
         href:'http://static.tdx.com.cn:7615/site/tdxf10/gg_jyds/#code.html?vertype=1&style=black&gp=#code&ispc=1&8517=5390',
         content: function(code) {
-            this.code = code || this.code;
             return this.href
-            .replace('#code', this.code)
-            .replace('#code', this.code);
+            .replace('#code', code)
+            .replace('#code', code);
         },
     },
-    catchtop: {
-        preDay: 1,
-        aftDay: 1,
-
+    today: {
+        href:'http://hq.sinajs.cn/list=#code',
+        content: function(code) {
+            Stock.codeStr = (code[0] == '0' ? 'sz' : 'sh') + code;;
+            return this.href.replace('#code', Stock.codeStr);
+        },
     },
     history: {
-        rateTemp: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        rateTemp: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         href: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=#start&end=#end&stat=1&order=D&period=d&callback=Stock.getHistory&rt=jsonp',
         code: '600295',
         start: 20200501,
@@ -36,16 +37,14 @@ let Source = {
             LOW: 5, 
             HIGH: 6, 
             VOLUME: 7, 
-            FUNDS: 8, 
-            SWAP: 9,
-            MLOW: 10,
-            MHIGH: 11,
-            DAY: 12,
-            SELL_OPEN: 13,
-            SELL_CLOSE: 14,
-            SELL_HIGH: 15,
-            SELL_LOW: 16,
-            BUY: 17,
+            MLOW: 8,
+            MHIGH: 9,
+            DAY: 10,
+            SELL_OPEN: 11,
+            SELL_CLOSE: 12,
+            SELL_HIGH: 13,
+            SELL_LOW: 14,
+            BUY: 15,
         },
         headStr: `
             <td>日期</td> 
@@ -55,9 +54,7 @@ let Source = {
             <td>涨跌幅</td> 
             <td>最低</td> 
             <td>最高</td> 
-            <td>成交量</td> 
-            <td>成交额</td> 
-            <td>换手率</td>`,
+            <td>成交额/万</td>`,
         headStrAnd: `
             <td>持股天数</td> 
             <td>开盘卖出</td> 
@@ -153,8 +150,13 @@ function __Stock() {
         }
         let dargon = Elem.get('dargon');
         dargon.href = Source.dargon.content(this.code);
-        let src = Source[key].content(this.code);
-        this.addScript(src);
+        this.addScript(Source.today.content(this.code));
+        this.addScript(Source[key].content(this.code));
+        setTimeout(function() {
+            let rt = eval('hq_str_'+Stock.codeStr);
+            Stock.codeName = rt ? rt.split(',')[0] : '无此股票!';
+            Elem.get('code-name').innerHTML = Stock.codeName;
+        },500);
     }
 
     this.addScript = function(src) {
@@ -180,6 +182,7 @@ function __Stock() {
 
 
     this.showData = function(data) {
+        let thead = Elem.get('thead');
         let tbody = Elem.get('tbody');
         let tr = Elem.creat('tr', tbody, 'tr');
         tr.setAttribute('head', 1);
@@ -188,6 +191,14 @@ function __Stock() {
         tbody.appendChild(tr);
         for (let i in data) {
             tr = Elem.creat('tr', tbody, 'tr');
+            if (data[i].length == 1) {
+                let td = Elem.creat('td', tr, 'td');
+                td.innerHTML = '';
+                tr = Elem.creat('tr', tbody, 'tr');
+                tr.setAttribute('head', 1);
+                tr.innerHTML = headStr;
+                continue;
+            }
             for (let j in data[i]) {
                 if (j == VAL.MHIGH || j == VAL.MLOW)
                     continue;
