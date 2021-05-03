@@ -1,0 +1,113 @@
+<!DOCVAL>
+<html> 
+<head> 
+<title>HELLO WORLD</title> 
+<meta charset="UTF-8">
+<script type="text/javascript" src="stock.js"></script>
+<style> 
+
+    body {
+        margin: 0px;
+        padding: 0px;
+        font-family: sans-serif, Arial, Segoe UI, Helvetica;
+        font-size: 15px;
+        font-weight: 500;
+        background: black;
+        color:#eee;
+    }
+
+    button {
+        font-size: 1em;
+    }
+
+    input {
+        margin: 3px;
+        width: 480px;
+        font-size: 1.2em;
+    }
+
+    table {
+        font-size: 1em;
+        margin-left: auto;
+        margin-right: auto;
+        border-collapse:collapse;
+    }
+
+    tr {
+        min-height: 10px;
+    }
+
+    tr[head] {
+        font-weight: 700;
+    }
+
+
+    td {
+        padding: 2px 5px 2px 10px;
+        text-align: right;
+        border: solid 1px #666;
+        background-color: transparent;
+        color: #aaa;
+    }
+    [bg='up'] {
+        color: #ff3333 !important;
+    }
+    [bg='down'] {
+        color: #0bab5b !important;
+    }
+    [bg='day'] {
+        color: dodgerblue;
+    }
+    [bg='times'] {
+        color: darkorange;
+    } 
+
+    [align='left'] {
+        text-align: left;
+    }
+    [align='right'] {
+        text-align: right;
+    }
+    [align='middle'] {
+        text-align: middle;
+    }
+    a {
+        color: #a69;
+    }
+
+    a:hover {
+        color: red;
+    }
+
+    #outer-top {
+        margin: 3px;
+        text-align: center;
+    }
+
+    #outer {
+        margin-bottom: 20px;
+    }
+
+</style> 
+</head> 
+    <body> 
+        <div id="outer-top">
+            <a id="topbot" target="_blank" href="http://push2ex.eastmoney.com/getTopicZTPool?cb=&ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=200&sort=fbt%3Aasc&date=20210430">今日涨跌停</a>
+            <a id="dargon" target="_blank" href="http://static.tdx.com.cn:7615/site/tdxf10/gg_jyds/002382.html?vertype=1&style=black&gp=002382&ispc=1&8517=5390">龙虎榜</a>
+            <a id="hisjson" target="_blank" href="https://q.stock.sohu.com/hisHq?code=cn_600295&start=20200427&end=20210427">历史行情JSON</a>
+            <a id="hiscsv" target="_blank" href="http://quotes.money.163.com/service/chddata.html?code=0600295&start=20210101&end=20880808&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP">历史行情CSV</a>
+            <br/>
+            <input id="input" value="code=600295&aftDay=4&range=[9]" placeholder="请输入股票代码" title="code=查询的股票代码。aftDay=买入后持股天数，根据此计算盈亏。range=查询的条件范围。[999]表示连续三日每天的涨幅超过9%; [0, 555]表示三日内每天的涨跌幅均为0~5%; [-23, 67]也可以写成[[-2,6],[-3,7]] 表示第一日涨幅为-2%~6%,第二日涨跌幅为-3%~7%;"></input>
+            <button id="submit2" onclick='Stock.getJson("history")'>获取数据</button> 
+            <button id="submit10" onclick='Stock.calcHistory("sideway", 1)'>执行操作</button> 
+        </div>
+
+        <div id="outer">
+            <table>
+                <tbody id="tbody">
+
+                </tbody>
+            </table>
+        </div>
+    </body> 
+</html> 
