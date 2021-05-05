@@ -6,25 +6,21 @@ window.onload = function() {
 
 let Source = {
     dargon: {
-        code: '600295',
         href:'http://static.tdx.com.cn:7615/site/tdxf10/gg_jyds/#code.html?vertype=1&style=black&gp=#code&ispc=1&8517=5390',
         content: function(code) {
-            return this.href
-            .replace('#code', code)
-            .replace('#code', code);
+            return this.href.replace('#code', code).replace('#code', code);
         },
     },
     today: {
         href:'http://hq.sinajs.cn/list=#code',
         content: function(code) {
-            Stock.codeStr = (code[0] == '0' ? 'sz' : 'sh') + code;;
+            Stock.codeStr = (code[0] == '6' ? 'sh' : 'sz') + code;;
             return this.href.replace('#code', Stock.codeStr);
         },
     },
     history: {
         rateTemp: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        href: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=#start&end=#end&stat=1&order=D&period=d&callback=Stock.getHistory&rt=jsonp',
-        code: '600295',
+        href: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=#start&end=#end&stat=1&order=D&period=d&callback=Stock.queryBack&rt=jsonp',
         start: 20200501,
         end: 20880808,
 
@@ -65,10 +61,8 @@ let Source = {
 
         content: function(code) {
             this.code = code || this.code;
-            return this.href
-            .replace('#code', this.code)
-            .replace('#start', this.start)
-            .replace('#end', this.end);
+            return this.href.replace('#code', this.code)
+            .replace('#start', this.start).replace('#end', this.end);
         },
     },
 
@@ -129,17 +123,26 @@ function __Stock() {
         this.inner = Elem.get('inner');
         this.outer = Elem.get('outer');
         this.input = Elem.get('input');
+        this.initVAL('history');
     }
 
-    //获取JSON数据
-    this.getJson = function(key) {
-        let str = this.input.value;
-        if (str.length > 100) {
-            this.preDay = Source[this.mode].preDay;
-            this.aftDay = Source[this.mode].aftDay; 
-            this.getHistory(eval(str));
-            return;
+    this.initVAL = function(key) {
+
+        VAL = Source[key].VAL;
+        headStr = Source[key].headStr;
+        headStr += Source[key].headStrAnd;
+
+        this.move = {
+            days: [5,10,15],
+            LOW: {func:'getLOW', key:'LOW', find:VAL.LOW, pos:VAL.MLOW},
+            HIGH: {func:'getHIGH', key:'HIGH', find:VAL.HIGH, pos:VAL.MHIGH},
         }
+    }
+
+
+    this.initHREF = function() {
+        let str = this.input.value;
+        let oldCode = this.code;
         str = str.split('&');
         for (let i=0; i<str.length; i++) {
             let kv = str[i].split('=');
@@ -148,40 +151,66 @@ function __Stock() {
             else
                 this[kv[0]] = eval(kv[1]);
         }
-        let dargon = Elem.get('dargon');
-        dargon.href = Source.dargon.content(this.code);
-        this.addScript(Source.today.content(this.code));
-        this.addScript(Source[key].content(this.code));
-        setTimeout(function() {
-            let rt = eval('hq_str_'+Stock.codeStr);
-            Stock.codeName = rt ? rt.split(',')[0] : '无此股票!';
-            Elem.get('code-name').innerHTML = Stock.codeName;
-        },500);
+        this.range = this.fillRange(this.range);
+        console.log(this.range);
+        this.preDay = this.range.length;
+
+        if (this.code != oldCode) {
+            let dargon = Elem.get('dargon');
+            dargon.href = Source.dargon.content(this.code);
+            this.addScript(Source.today.content(this.code));
+            this.addScript(Source.history.content(this.code));
+            setTimeout(function() {
+                let rt = eval('hq_str_'+Stock.codeStr);
+                Stock.codeName = rt ? rt.split(',')[0] : '无此股票!';
+                Elem.get('code-name').innerHTML = Stock.codeName;
+            },500);
+        }
     }
+
 
     this.addScript = function(src) {
         console.log(src);
+        if (this.script) 
+            this.script.parentNode.removeChild(this.script);
         let head = document.getElementsByTagName('head')[0];
-        let script = Elem.creat("script", head);  
-        script.type = "text/javascript";
-        script.src = src;
+        this.script = Elem.creat("script", head);  
+        this.script.type = "text/javascript";
+        this.script.src = src;
     }
 
-    //callback历史数据
-    this.getHistory = function(res) {
+    this.queryBack = function(res) {
         if (eval(res.status) == 2) 
             return alert('股票代码' + this.code + '不存在!');
-        this.setStr('history');
         this.origin = res[0].hq;
+
         this.origin = this.calcMOVE(this.origin, 'HIGH');
         this.origin = this.calcMOVE(this.origin, 'LOW');
-        this.data = this.copy(this.origin);
-        this.showData(this.data);
+        this.data = this.copy(this.origin); 
+        this.queryData(this.isQuery, 1);
+    }
+
+    this.queryData = function(isQuery, isHref) {
+        this.isQuery = isQuery;
+        if (!isHref)
+            this.initHREF();
+        if (isQuery) {
+            this.calcQuery(1.0);
+        } else {
+            this.showQuery(this.data);
+        }
     }
 
 
 
-    this.showData = function(data) {
+
+    this.batHistory = function() {
+
+    }
+
+
+
+    this.showQuery = function(data) {
         let thead = Elem.get('thead');
         let tbody = Elem.get('tbody');
         let tr = Elem.creat('tr', tbody, 'tr');
@@ -191,14 +220,7 @@ function __Stock() {
         tbody.appendChild(tr);
         for (let i in data) {
             tr = Elem.creat('tr', tbody, 'tr');
-            if (data[i].length == 1) {
-                let td = Elem.creat('td', tr, 'td');
-                td.innerHTML = '';
-                tr = Elem.creat('tr', tbody, 'tr');
-                tr.setAttribute('head', 1);
-                tr.innerHTML = headStr;
-                continue;
-            }
+
             for (let j in data[i]) {
                 if (j == VAL.MHIGH || j == VAL.MLOW)
                     continue;
@@ -214,6 +236,7 @@ function __Stock() {
                 }
 
                 if (data[i][j]) {
+                    data[i][j] = data[i][j].toString();
                     td.innerHTML = data[i][j];
                     if (data[i][j].indexOf('col10') > -1)
                         td.colSpan = 10; 
@@ -231,6 +254,12 @@ function __Stock() {
                 } else {
                     td.innerHTML = '';
                 }
+            }
+            if (data[i].length == 1) {
+                tr = Elem.creat('tr', tbody, 'tr');
+                tr.setAttribute('head', 1);
+                tr.innerHTML = headStr;
+                continue;
             }
         }  
         console.log(this);
@@ -289,45 +318,26 @@ function __Stock() {
     }
 
 
-    this.setStr = function(key, mode) {
-        this.count = 1;
+
+
+    this.calcQuery = function(multi) {
+        this.multi = multi;
+        this.count = 0;
         this.inAm = 0;
         this.rate = [];
         this.list = [];
-        VAL = Source[key].VAL;
-        headStr = Source[key].headStr;
-        headStr += Source[key].headStrAnd;
-        this.range = this.fillRange(this.range);
-        console.log(this.range);
-        this.preDay = this.range.length;
-
-        if (mode) {
-            this.aftDay = this.aftDay || Source[mode].aftDay;  
-        }
+        this.markIdx = - this.preDay;
         for (let i=0; i<this.aftDay; i++) {
-            let rateTemp = this.copy(Source[key].rateTemp)
+            let rateTemp = this.copy(Source.history.rateTemp)
             this.rate.push(rateTemp);
         }
-        this.markIdx = - this.preDay;
-        this.move = {
-            days: [5,10,15],
-            LOW: {func:'getLOW', key:'LOW', find:VAL.LOW, pos:VAL.MLOW},
-            HIGH: {func:'getHIGH', key:'HIGH', find:VAL.HIGH, pos:VAL.MHIGH},
-        }
-    }
-
-    this.calcHistory = function(mode, multi) {
-        this.mode = mode;
-        this.multi = multi;
-        this.setStr('history', mode);
         this.data = this.reverse(this.origin);
         this.ableDay = this.data.length-this.preDay-this.aftDay;
         for (let i=0; i < this.ableDay; i++) {
             //过滤已经选择的，下次操作需间隔preDay+aftDay
             if (i < this.markIdx+this.preDay+this.aftDay) 
                 continue;
-            if (this.modeSelect(this.data, i)) {
-                this.list.push([0]);
+            if (this.checkSideWay(this.data, i)) {
                 for (let j=0; j < this.preDay; j++) {
                     let startDay = this.data[i+j];
                     this.list.push(startDay);
@@ -337,36 +347,38 @@ function __Stock() {
                     endDay = this.calcRate(endDay, i, k, this.cost);
                     this.list.push(endDay);
                 }
+                this.list.push([0]);
                 this.markIdx = i;
                 this.count ++;
             }
         }
         this.avgRate();
-        this.showData(this.list);
-    }
-
-    //模式选择
-    this.modeSelect = function(data, i) {
-        if (this.mode == 'sideway') {
-            return this.checkSideWay(data, i);
-        }
-        return false;
+        this.showQuery(this.list);
     }
 
 
-    //检查横盘震荡条件
+    //检查震荡条件
     this.checkSideWay = function(data, i) {
         //过滤当日跌幅过大的
-        let startDay = data[i+this.range.length-1];
+        let startDay = this.data[i+this.range.length-1];
         for (let j=0; j < this.range.length; j++) {
-            let deg = this.toval(data[i+j][VAL.DEGREE]);
-            if (deg < this.range[j][0] || deg > this.range[j][1]) {
+            let theDay = data[i+j];
+            let cost = data[i+j-1][VAL.CLOSE];
+            let close = this.topct(theDay[VAL.CLOSE], cost);
+            if (close < this.range[j][0] || close > this.range[j][1]) {
                 return false;
             }
+            theDay[VAL.DAY] = '第' + (this.count+1) + '次';
+            theDay[VAL.SELL_OPEN] = '查询条件: 涨幅∈[' + this.range[j][0] + '%, ' + this.range[j][1] + '%];';
 
-            data[i+j][VAL.DAY] = '第' + this.count + '次';
-            data[i+j][VAL.SELL_OPEN] = '查询条件: ' + this.range[j][0] 
-            + '% <涨跌幅< ' + this.range[j][1] + '%';
+            if (this.range[j][2] && this.range[j][3]) {
+                let low = this.topct(theDay[VAL.LOW], cost);
+                let high = this.topct(theDay[VAL.HIGH], cost);
+                if (low > this.range[j][2] || high < this.range[j][3])
+                    return false;
+                else 
+                    theDay[VAL.SELL_OPEN] += ' 振幅∈[' + this.range[j][2] + '%, ' + this.range[j][3] + '%];'; 
+            }
         }
         if (this.inAm) {
             startDay = this.data[i+this.range.length];
@@ -381,10 +393,10 @@ function __Stock() {
     this.calcRate = function(day, i, k, cost) {
         day = this.copy(day);
         let rate = this.rate[k];
-        let r1 = this.to2f((day[VAL.OPEN]    - cost) / cost * 100);
-        let r2 = this.to2f((day[VAL.CLOSE]  - cost) / cost * 100);
-        let r3 = this.to2f((day[VAL.HIGH]  - cost) / cost * 100);
-        let r4 = this.to2f((day[VAL.LOW] - cost) / cost * 100);
+        let r1 = this.topct(day[VAL.OPEN], cost);
+        let r2 = this.topct(day[VAL.CLOSE], cost);
+        let r3 = this.topct(day[VAL.HIGH], cost);
+        let r4 = this.topct(day[VAL.LOW], cost);
         day[VAL.DAY] = '第' + (k+1) + '天';
         day[VAL.SELL_OPEN]   =  r1 + '%';
         day[VAL.SELL_CLOSE] =  r2 + '%';
@@ -393,15 +405,14 @@ function __Stock() {
         day[VAL.BUY] =  this.to2f(eval(cost));
 
         rate[VAL.DAY] = (k+1) + '天平均';
-        rate[VAL.SELL_OPEN]    += eval(r1);
-        rate[VAL.SELL_CLOSE]  += eval(r2);
-        rate[VAL.SELL_HIGH]  += eval(r3);
-        rate[VAL.SELL_LOW]  += eval(r4);
+        rate[VAL.SELL_OPEN]    += r1;
+        rate[VAL.SELL_CLOSE]  += r2;
+        rate[VAL.SELL_HIGH]  += r3;
+        rate[VAL.SELL_LOW]  += r4;
         return day;
     }
 
     this.avgRate = function(dayCount) {
-        console.log(this.rate);
         for (let k=0; k<this.rate.length; k++) {
             let rate = this.rate[k];
             rate[VAL.SELL_OPEN]     = this.to2f(rate[VAL.SELL_OPEN]  / this.count / (k+1)) + '%';
@@ -409,9 +420,8 @@ function __Stock() {
             rate[VAL.SELL_HIGH]   = this.to2f(rate[VAL.SELL_HIGH]  / this.count / (k+1)) + '%';
             rate[VAL.SELL_LOW]   = this.to2f(rate[VAL.SELL_LOW]   / this.count / (k+1)) + '%';
         }
-        this.list = this.reverse(this.list);
-        this.rate = this.reverse(this.rate);
         this.list.push.apply(this.list, this.rate);
+        this.list = this.reverse(this.list);
     }
 
 
@@ -468,13 +478,9 @@ function __Stock() {
 
 
     this.upperList = function() {
-        this.setStr('upper');
+        this.initVAL('upper');
         this.data = this.bubbleSort(this.origin);
-        this.showData(this.data);
-    }
-
-    this.toval = function(str) {
-        return eval(str.replace('%',''))
+        this.showQuery(this.data);
     }
 
 
@@ -483,8 +489,18 @@ function __Stock() {
     }
 
     this.to2f = function(val) {
-        return val.toFixed(2);
+        return ~~(val * 100) / 100;
     }
+
+    this.topct = function(val, cost) {
+
+        return ~~((val - cost) / cost * 10000) / 100;
+    }
+
+    this.toval = function(str) {
+        return eval(str.replace('%',''))
+    }
+
 
     this.copy = function(json) {
         return JSON.parse(JSON.stringify(json));
