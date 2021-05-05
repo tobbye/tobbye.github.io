@@ -3,6 +3,7 @@
 <head> 
 <title>Stock Query</title> 
 <meta charset="UTF-8">
+<script type="text/javascript" src="stock-name.js"></script>
 <script type="text/javascript" src="stock.js"></script>
 <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
 <style> 
@@ -108,8 +109,8 @@
 </head> 
     <body> 
         <div id="outer-top">
-            <a id="lasa1" target="_blank" href="http://static.tdx.com.cn:7615/site/tdxf10/gg_jyds_yybmx.html?mmbz=m&ispc=1&yybname=%E4%B8%9C%E6%96%B9%E8%B4%A2%E5%AF%8C%E8%AF%81%E5%88%B8%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E6%8B%89%E8%90%A8%E5%9B%A2%E7%BB%93%E8%B7%AF%E7%AC%AC%E4%B8%80%E8%AF%81%E5%88%B8%E8%90%A5%E4%B8%9A%E9%83%A8&tdxmyietitle=%E4%B8%9C%E6%96%B9%E8%B4%A2%E5%AF%8C%E8%AF%81%E5%88%B8%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E6%8B%89%E8%90%A8%E5%9B%A2%E7%BB%93%E8%B7%AF%E7%AC%AC%E4%B8%80%E8%AF%81%E5%88%B8%E8%90%A5%E4%B8%9A%E9%83%A8&tdxmyiewidth=1020&tdxmyieheight=700">拉萨一部</a>
-            <a id="lasa2" target="_blank" href="http://static.tdx.com.cn:7615/site/tdxf10/gg_jyds_yybmx.html?mmbz=m&ispc=1&yybname=%E4%B8%9C%E6%96%B9%E8%B4%A2%E5%AF%8C%E8%AF%81%E5%88%B8%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E6%8B%89%E8%90%A8%E5%9B%A2%E7%BB%93%E8%B7%AF%E7%AC%AC%E4%BA%8C%E8%AF%81%E5%88%B8%E8%90%A5%E4%B8%9A%E9%83%A8&tdxmyietitle=%E4%B8%9C%E6%96%B9%E8%B4%A2%E5%AF%8C%E8%AF%81%E5%88%B8%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E6%8B%89%E8%90%A8%E5%9B%A2%E7%BB%93%E8%B7%AF%E7%AC%AC%E4%BA%8C%E8%AF%81%E5%88%B8%E8%90%A5%E4%B8%9A%E9%83%A8&tdxmyiewidth=1020&tdxmyieheight=700">拉萨二部</a>
+<!--             <a id="lasa1" target="_blank" href="http://static.tdx.com.cn:7615/site/tdxf10/gg_jyds_yybmx.html?mmbz=m&ispc=1&yybname=%E4%B8%9C%E6%96%B9%E8%B4%A2%E5%AF%8C%E8%AF%81%E5%88%B8%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E6%8B%89%E8%90%A8%E5%9B%A2%E7%BB%93%E8%B7%AF%E7%AC%AC%E4%B8%80%E8%AF%81%E5%88%B8%E8%90%A5%E4%B8%9A%E9%83%A8&tdxmyietitle=%E4%B8%9C%E6%96%B9%E8%B4%A2%E5%AF%8C%E8%AF%81%E5%88%B8%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E6%8B%89%E8%90%A8%E5%9B%A2%E7%BB%93%E8%B7%AF%E7%AC%AC%E4%B8%80%E8%AF%81%E5%88%B8%E8%90%A5%E4%B8%9A%E9%83%A8&tdxmyiewidth=1020&tdxmyieheight=700">拉萨一部</a>
+            <a id="lasa2" target="_blank" href="http://static.tdx.com.cn:7615/site/tdxf10/gg_jyds_yybmx.html?mmbz=m&ispc=1&yybname=%E4%B8%9C%E6%96%B9%E8%B4%A2%E5%AF%8C%E8%AF%81%E5%88%B8%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E6%8B%89%E8%90%A8%E5%9B%A2%E7%BB%93%E8%B7%AF%E7%AC%AC%E4%BA%8C%E8%AF%81%E5%88%B8%E8%90%A5%E4%B8%9A%E9%83%A8&tdxmyietitle=%E4%B8%9C%E6%96%B9%E8%B4%A2%E5%AF%8C%E8%AF%81%E5%88%B8%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E6%8B%89%E8%90%A8%E5%9B%A2%E7%BB%93%E8%B7%AF%E7%AC%AC%E4%BA%8C%E8%AF%81%E5%88%B8%E8%90%A5%E4%B8%9A%E9%83%A8&tdxmyiewidth=1020&tdxmyieheight=700">拉萨二部</a> -->
             <a href="http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=sz002095&scale=240&ma=no&datalen=103&callback=jsonsp">新浪接口</a>
             <a id="topbot" target="_blank" href="http://push2ex.eastmoney.com/getTopicZTPool?cb=&ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=200&sort=fbt%3Aasc&date=20210430">今日涨跌停</a>
             <a id="dargon" target="_blank" href="http://static.tdx.com.cn:7615/site/tdxf10/gg_jyds/002382.html?vertype=1&style=black&gp=002382&ispc=1&8517=5390">龙虎榜</a>
@@ -117,10 +118,10 @@
             <a id="hiscsv" target="_blank" href="http://quotes.money.163.com/service/chddata.html?code=0600295&start=20210101&end=20880808&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP">历史行情CSV</a>
             <br/>
             <span id="code-name">鄂尔多斯</span>
-            <input id="input" value="code=600295&aftDay=5&range=[[-5,5],[8,11]]" placeholder="请输入股票代码" title="code=查询的股票代码。aftDay=买入后持股天数，根据此计算盈亏。range=查询的条件范围。[999]表示连续三日每天的涨幅大于9%; [0, 555]表示连续三日每天的涨幅均为0~5%; [-33, 33]也可以写成[[-3,3],[-3,3]],表示连续两日每天的涨幅均为-3%~3%;[[3,5,1,7]]表示当日涨幅为3%~5%,振幅为1%~7%（最低跌破1%,最高突破7%);"></input>
+            <input id="input" value="code=600295&aftDay=3&range=[9]" placeholder="请输入股票代码" title="code=查询的股票代码。aftDay=买入后持股天数，根据此计算盈亏。range=查询的条件范围。[999]表示连续三日每天的涨幅大于9%; [0, 555]表示连续三日每天的涨幅均为0~5%; [-33, 33]也可以写成[[-3,3],[-3,3]],表示连续两日每天的涨幅均为-3%~3%;[[3,5,1,7]]表示当日涨幅为3%~5%,振幅为1%~7%（最低跌破1%,最高突破7%);"></input>
             <button id="submit1" onclick='Stock.queryData(0)'>获取数据</button> 
             <button id="submit2" onclick='Stock.queryData(1)'>查询数据</button> 
-            <button id="submit2" onclick='Stock.batHistory("sideway", 1)'>批量处理</button> 
+            <button id="submit2" onclick='Stock.autoQuery(100)'>批量处理</button> 
         </div>
         <div id="outer-head">
             <table>

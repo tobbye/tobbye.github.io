@@ -120,10 +120,12 @@ function __Stock() {
 
 
     this.init = function() {
+        stockName = stockName.split(',');
         this.inner = Elem.get('inner');
         this.outer = Elem.get('outer');
         this.input = Elem.get('input');
         this.initVAL('history');
+        console.log(this);
     }
 
     this.initVAL = function(key) {
@@ -158,13 +160,13 @@ function __Stock() {
         if (this.code != oldCode) {
             let dargon = Elem.get('dargon');
             dargon.href = Source.dargon.content(this.code);
-            this.addScript(Source.today.content(this.code));
+            // this.addScript(Source.today.content(this.code));
             this.addScript(Source.history.content(this.code));
-            setTimeout(function() {
-                let rt = eval('hq_str_'+Stock.codeStr);
-                Stock.codeName = rt ? rt.split(',')[0] : '无此股票!';
-                Elem.get('code-name').innerHTML = Stock.codeName;
-            },500);
+            // setTimeout(function() {
+            //     let rt = eval('hq_str_'+Stock.codeStr);
+            //     Stock.codeName = rt ? rt.split(',')[0] : '无此股票!';
+            //     Elem.get('code-name').innerHTML = Stock.codeName;
+            // },500);
         }
     }
 
@@ -184,8 +186,6 @@ function __Stock() {
             return alert('股票代码' + this.code + '不存在!');
         this.origin = res[0].hq;
 
-        this.origin = this.calcMOVE(this.origin, 'HIGH');
-        this.origin = this.calcMOVE(this.origin, 'LOW');
         this.data = this.copy(this.origin); 
         this.queryData(this.isQuery, 1);
     }
@@ -202,10 +202,22 @@ function __Stock() {
     }
 
 
+    this.autoQuery = function(start) {
+        this.batIndex = ~~(Math.random()*4000);
+        this.autoLoop();
+    }
 
 
-    this.batHistory = function() {
-
+    this.autoLoop = function() {
+        let str = stockName[this.batIndex].split('=');
+        Elem.get('code-name').innerHTML = str[1];
+        this.inputStr = this.input.value.replace(/code=\d*/, 'code=' + str[0]);
+        this.input.value = this.inputStr;
+        this.queryData(1);
+        this.batIndex ++;;
+        setTimeout(function() {
+            Stock.autoLoop();
+        },3000);
     }
 
 
@@ -247,10 +259,6 @@ function __Stock() {
                     }
                     if (data[i][j].indexOf('次') > -1)
                         td.setAttribute('bg', 'times');
-                    if (j == VAL.HIGH)
-                        td.setAttribute('title', this.conStr(data[i], 'HIGH'));
-                    if (j == VAL.LOW)
-                        td.setAttribute('title', this.conStr(data[i], 'LOW'));
                 } else {
                     td.innerHTML = '';
                 }
@@ -262,61 +270,7 @@ function __Stock() {
                 continue;
             }
         }  
-        console.log(this);
     }
-
-    this.conStr = function(data, key) {
-        let pos = this.move[key].pos;
-        let move = this.move.days.join(', ');
-        return key + '[' + move + '] = [' + data[pos].join(', ') + ']';
-
-    }
-
-    this.calcMOVE = function(data, key) {
-        let pos = this.move[key].pos;
-        for (let i=0; i<data.length;i++) {
-            let move = [];
-            for (let j in this.move.days) {
-                move.push(this.fillMOVE(data, key, i, j));
-            }
-            data[i][pos] = move;
-        }
-        return data;
-    }
-
-    this.fillMOVE = function(data, key, i, j) {
-        let func = this.move[key].func;
-        let d = this.move.days[j];
-        if (i<data.length - d)
-            return this[func](data, i, d);
-        else
-            return this[func](data, i, data.length-i);
-    }
-
-    this.getMA = function(data, i, d) {
-        let ma = 0;
-        for (k=0; k<d; k++) {
-            ma += eval(data[i+k][VAL.CLOSE]);
-        }
-        return (ma/d).toFixed(2);
-    }
-
-    this.getHIGH = function(data, i, d) {
-        let high = 0;
-        for (k=0; k<d; k++) {
-            high = Math.max(data[i+k][VAL.HIGH], high);
-        }
-        return high.toString();
-    }
-
-    this.getLOW = function(data, i, d) {
-        let high = 0;
-        for (k=0; k<d; k++) {
-            high = Math.max(data[i+k][VAL.LOW], high);
-        }
-        return high.toString();
-    }
-
 
 
 
@@ -419,6 +373,7 @@ function __Stock() {
             rate[VAL.SELL_CLOSE]   = this.to2f(rate[VAL.SELL_CLOSE] / this.count / (k+1)) + '%';
             rate[VAL.SELL_HIGH]   = this.to2f(rate[VAL.SELL_HIGH]  / this.count / (k+1)) + '%';
             rate[VAL.SELL_LOW]   = this.to2f(rate[VAL.SELL_LOW]   / this.count / (k+1)) + '%';
+            rate[VAL.BUY]  = '-';
         }
         this.list.push.apply(this.list, this.rate);
         this.list = this.reverse(this.list);
@@ -455,7 +410,6 @@ function __Stock() {
             for (let i=0; i<arr2.length; i++)
                 arr.push([arr1[0], arr2[i]]);
         }
-        console.log(arr1, arr2);
         return arr;
     }
 
