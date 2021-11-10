@@ -12,7 +12,7 @@
         margin: 0px;
         padding: 0px;
         font-family: sans-serif, Arial, Segoe UI, Helvetica;
-        font-size: 15px;
+        font-size: 18px;
         text-align: center;
         background: black;
         color:#eee;
@@ -20,7 +20,7 @@
 
     button {
         font-size: 1em;
-        padding: 3px 20px;
+        padding: 3px 10px;
     }
 
     input {
@@ -30,10 +30,31 @@
         font-size: 1.5em;
     }
 
-    canvas {
-        margin: 10px;
-        width: 600px;
-        height: 300px;
+    table {
+        font-size: 1em;
+        margin-left: auto;
+        margin-right: auto;
+        border-collapse:collapse;
+        word-break: keep-all;
+        text-align: center;
+    }
+
+    tr[idx=C6] {
+        color: #aaaaaa;
+        border: solid 1px #aaaaaa66;
+    }
+    tr[idx=C7] {
+        color: dodgerblue;
+        font-size: 1.1em;
+        border: solid 1px #1e90ff66;
+    }
+    tr[idx=C8] {
+        color: darkorange;
+        font-size: 1.2em;
+        border: solid 1px #ff8c0066;
+    }
+    td {
+        padding: 5px 10px;
     }
 
     [bg='up'] {
@@ -82,7 +103,7 @@
 
     #outer {
         margin: 60px auto 10px auto;
-        padding: 20px
+        padding: 20px;
         overflow: auto;
     }
 
@@ -91,19 +112,6 @@
         font-weight: bold;
     }
 
-    .six {
-        color: #aaaaaa;
-    }
-
-    .seven {
-        color: dodgerblue;
-        font-size: 1.1em;
-    }
-
-    .eight {
-        color: darkorange;
-        font-size: 1.2em;
-    }
 
 
 </style> 
@@ -127,6 +135,10 @@
         </div>
 
         <div id="outer">
+            <table>
+                <tbody id="tbody">
+                </tbody>
+            </table>
             <div id="log"></div>
         </div>
     </body> 

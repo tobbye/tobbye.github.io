@@ -5,6 +5,8 @@ window.onload = function() {
 
 
 let Source = {
+    head: ['', '', '开盘', '收盘', '最低', '最高', '阳', '九周期', 'N阳', '三阳'],
+    periodStr: ['前一月','前一周','前一日'],
     period: ['hrefName', 'hrefDay', 'hrefWeek', 'hrefMonth'],
     href: 'http://q.stock.sohu.com/hisHq?code=cn_#code&',
     hrefName: 'http://hq.sinajs.cn/list=#code',
@@ -26,9 +28,18 @@ let VAL = {
     SWAPE:9,
 }
 
-let dateDay = []; 
-let dateWeek = []; 
-let dateMonth = []; 
+let TAL = {
+    DATE:0,
+    OPEN:1,
+    CLOSE:2,
+    LOW:3,
+    HIGH:4,
+    STATE:5,
+    NINESTATE:6,
+    NINECOUNT:7,
+    CURRSTATE:8,
+}
+
 let Stock = new __Stock();
 function __Stock() {
 
@@ -37,16 +48,14 @@ function __Stock() {
         this.inner = Elem.get('inner');
         this.outer = Elem.get('outer');
         this.input = Elem.get('input');
+        this.tbody = Elem.get('tbody');
         this.name = Elem.get('name');
-        this.log = Elem.get('log');
+        this.dateMonth = [];
+        this.dateWeek = [];
+        this.dateDay = [];
+        this.loop = 280;
         this.initHREF();
         console.log(this);
-    }
-
-
-    this.reload = function(isAuto) {
-        localStorage.setItem('query-code',this.input.value);
-        window.location.reload();
     }
 
     this.initHREF = function() {
@@ -55,7 +64,7 @@ function __Stock() {
         this.head = document.getElementsByTagName('head')[0];
         this.code = localStorage.getItem('query-code');
         this.input.value = this.code;
-        this.log.innerHTML = '';
+        this.tbody.innerHTML = '';
         this.market = this.code[0] == '6'?'sh':'sz';
         this.nameEval = 'hq_str_' + this.market + this.code;
         for (let i in Source.period) {
@@ -71,103 +80,112 @@ function __Stock() {
         }
         setTimeout(function() {
             Stock.name.innerHTML = eval(Stock.nameEval).split(',')[0];
-        }, 200);
+            Source.head[0] = Stock.code;
+            Source.head[1] = Stock.name.innerHTML;
+            Stock.tbody.innerHTML += '<tr idx=C6><td>' + Source.head.join('</td><td>') + '</td></tr>';
+        }, 500);
         setTimeout(function() {
-            Stock.curIdx = dateDay.length;
+            Stock.curIdx = Stock.dateDay.length;
             Stock.calcData();
         }, 2000);
     }
 
 
+
+    this.reload = function(isAuto) {
+        localStorage.setItem('query-code',this.input.value);
+        window.location.reload();
+    }
+
     this.queryDay = function(res) {
-        this.orgDay = res[0].hq;
         this.queryData(res[0].hq, 1);
     }
 
     this.queryWeek= function(res) {
-        this.orgWeek = res[0].hq;
         this.queryData(res[0].hq, 2);
     }
 
     this.queryMonth = function(res) {
         if (eval(res.status) == 2) 
             return alert('股票代码' + this.code + '不存在!');
-        this.orgMonth = res[0].hq;
         this.queryData(res[0].hq, 3);
     }
 
-    this.queryData = function(res, idx) {
-        this.origin = this.copy(res); 
-        for (let i in this.origin) {
+    this.queryData = function(origin, idx) {
+        for (let i in origin) {
             let temp = [
-            this.origin[i][VAL.DATE],
-            parseFloat(this.origin[i][VAL.OPEN]),
-            parseFloat(this.origin[i][VAL.CLOSE]),
-            parseFloat(this.origin[i][VAL.LOW]),
-            parseFloat(this.origin[i][VAL.HIGH])];
+                origin[i][VAL.DATE],
+                parseFloat(origin[i][VAL.OPEN]),
+                parseFloat(origin[i][VAL.CLOSE]),
+                parseFloat(origin[i][VAL.LOW]),
+                parseFloat(origin[i][VAL.HIGH])];
             temp.push(temp[2]>=temp[1]);
             if (idx == 1) {
-                dateDay.push(temp);
+                this.dateDay.push(temp);
             }
             if (idx == 2) {
-                dateWeek.push(temp);
+                this.dateWeek.push(temp);
             }
             if (idx == 3) {
-                dateMonth.push(temp);
+                this.dateMonth.push(temp);
             }
         }
     }
 
-    this.arrow = [-1, -10, 1, 10];
-    this.periodStr = ['前一日','前一周','前一月'];
-    this.preSum =[];
-    this.curPeriod =[];
-
-    this.calcAuto = function() {
-
-    }
 
     this.calcData = function() {
         this.curIdx += -1;
-        this.curIdx = Math.max(10, Math.min(dateDay.length-1, this.curIdx));
         this.curDay = this.curIdx;
-        for (let i in dateWeek) {
-            if (this.compary(dateDay[this.curIdx][VAL.DATE], dateWeek[i][VAL.DATE])) {
+        for (let i in this.dateWeek) {
+            if (this.compary(this.dateDay[this.curIdx][VAL.DATE], this.dateWeek[i][VAL.DATE])) {
                 this.curWeek = ~~i;
                 break;
             }
         }
-        for (let i in dateMonth) {
-            if (this.compary(dateDay[this.curIdx][VAL.DATE], dateMonth[i][VAL.DATE])) {
+        for (let i in this.dateMonth) {
+            if (this.compary(this.dateDay[this.curIdx][VAL.DATE], this.dateMonth[i][VAL.DATE])) {
                 this.curMonth = ~~i;
                 break;
             }
         }
-        this.curDate = dateDay[this.curDay][VAL.DATE];
-        this.content = '<br/>----------------' + this.curDate + '----------------<br/>';
-        this.countYang(dateDay, this.curDay, 0);
-        this.countYang(dateWeek, this.curWeek, 1);
-        this.countYang(dateMonth, this.curMonth,2);
-        if (this.getMin(this.curPeriod) == 1) {
-            if (this.getMin(this.preSum) >= 6) {
-                let node = Elem.creat('div', this.log);
-                node.className = 'six';
-                node.innerHTML = this.content +'<br/>';
-                node.scrollIntoView();
-                if (this.getMin(this.preSum) == 7) {
-                    node.className = 'seven';
-                }
-                if (this.getMin(this.preSum) == 8) {
-                    node.className = 'eight';
-                }
-            }
-        }
 
+        this.nineState = [];
+        this.nineCount = [];
+        this.currState = [];
+        this.conString = [];
+        this.getCount(this.dateMonth, this.curMonth,0);
+        if (this.nineCount[0] < 6 || this.currState[0] == 0)
+            return this.calcNext();
+        this.getCount(this.dateWeek, this.curWeek, 1);
+        if (this.nineCount[1] < 6 || this.currState[1] == 0)
+            return this.calcNext();
+        this.getCount(this.dateDay, this.curDay, 2);
+        if (this.nineCount[2] < 6 || this.currState[2] == 0)
+            return this.calcNext();
+
+        this.content = '<tr><td></td></tr><tr><td></td><td>';
+        this.content += this.dateDay[this.curDay].slice(0,6).join('</td><td>') + '</td></tr>';
+        this.content += this.reverse(this.conString).join('');
+        if (this.getMin(this.nineCount) == 6)
+            this.content = this.content.replace(/<tr/g, '<tr idx=C6');
+        if (this.getMin(this.nineCount) == 7)
+            this.content = this.content.replace(/<tr/g, '<tr idx=C7');
+        if (this.getMin(this.nineCount) == 8) 
+            this.content = this.content.replace(/<tr/g, '<tr idx=C8');
+        this.tbody.innerHTML += this.content;
+        this.tbody.lastChild.scrollIntoView();
 
         setTimeout(function() {
-            if (dateDay.length - Stock.curIdx < 200)
-                Stock.calcData();
-        },20);
+            Stock.calcNext();
+        },20);  
+    }
+
+    this.calcNext = function() {
+        if (this.dateDay.length - this.curIdx < 200) {
+            this.calcData();
+        } else {
+            this.tbody.innerHTML += '<tr idx=C6><td>' + Source.head.join('</td><td>') + '</td></tr>';
+        }
     }
 
     this.getMin = function(arr) {
@@ -180,16 +198,21 @@ function __Stock() {
     }
 
 
-    this.countYang = function(data, idx, p) {
-        this.content += this.periodStr[p] + ': ' + data[idx-1].join(', ') + ' || ';
-        this.preSum[p] = 0;
+    this.getCount = function(data, idx, k) {
+        let temp = data[idx-1];
+        this.nineState[k] = '';
+        this.nineCount[k] = 0;
         for (i=idx-9;i<idx;i++) {
-            this.content += ~~data[i][5];
-            if (data[i][5])
-                this.preSum[p]++;
+            this.nineState[k] += ~~data[i][TAL.STATE];
+            if (data[i][TAL.STATE])
+                this.nineCount[k] ++;
         }
-        this.curPeriod[p] = dateDay[this.curDay][VAL.CLOSE]>=data[idx][VAL.OPEN];
-        this.content += ' || ' + this.curPeriod[p] + ' || ' + this.preSum[p] + '<br/>';
+        this.currState[k] = this.dateDay[this.curDay][VAL.CLOSE]>=data[idx][VAL.OPEN];
+        data[idx-1][TAL.NINESTATE] = this.nineState[k];
+        data[idx-1][TAL.NINECOUNT] = this.nineCount[k];
+        data[idx-1][TAL.CURRSTATE] = this.currState[k];
+        this.conString[k] = '<tr><td>' + Source.periodStr[k] + '</td><td>';
+        this.conString[k] += data[idx-1].join('</td><td>') + '</td></tr>';
     }
 
 
