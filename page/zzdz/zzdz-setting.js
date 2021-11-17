@@ -37,15 +37,12 @@ function __WORLD() {
     }
 
     this.rotate = function() {
-        this.degree = (this.degree + 5) % 360;
+        this.degree = 360;
         this.camPos[0] = this.camRad * Math.cos(this.degree/180*Math.PI);
         this.camPos[1] = this.camRad * Math.sin(this.degree/180*Math.PI);
         this.camera.lookAt(new THREE.Vector3(0,0,0));
         this.setCameraPos();
         this.render();
-        setTimeout(function() {
-            WORLD.rotate();
-        }, 10);
     }
 
 
