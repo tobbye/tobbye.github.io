@@ -5,14 +5,15 @@ window.onload = function() {
 
 
 let Source = {
-    head: ['', '', '开盘', '收盘', '最低', '最高', '阳', '九周期', 'N阳', '三阳'],
+    head: ['', '', '开盘', '收盘', '最低', '最高', '涨跌幅','九周期', 'N阳', '三阳'],
     periodStr: ['前一月','前一周','前一日'],
-    period: ['hrefName', 'hrefDay', 'hrefWeek', 'hrefMonth'],
-    href: 'http://q.stock.sohu.com/hisHq?code=cn_#code&',
-    hrefName: 'http://hq.sinajs.cn/list=#code',
-    hrefDay: 'start=20200101&end=20880808&stat=1&order=A&period=d&callback=Stock.queryDay&rt=jsonp',
-    hrefWeek: 'start=20190101&end=20880808&stat=1&order=A&period=w&callback=Stock.queryWeek&rt=jsonp',
-    hrefMonth: 'start=20190101&end=20880808&stat=1&order=A&period=m&callback=Stock.queryMonth&rt=jsonp',
+    period: ['hrefName', 'hrefDay', 'hrefWeek', 'hrefMonth', 'href30Min', 'href60Min'],
+    hrefName: 'http://hq.sinajs.cn/list=#market#code',
+    hrefDay: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=20200101&end=20880808&stat=1&order=A&period=d&callback=Stock.queryDay&rt=jsonp',
+    hrefWeek: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=20190101&end=20880808&stat=1&order=A&period=w&callback=Stock.queryWeek&rt=jsonp',
+    hrefMonth: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=20160101&end=20880808&stat=1&order=A&period=m&callback=Stock.queryMonth&rt=jsonp',
+    href30Min: 'http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=#market#code&scale=30&datalen=1023&callback=Stock.query30Min&rt=jsonp',
+    href60Min: 'http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=#market#code&scale=60&datalen=1023&callback=Stock.query60Min&rt=jsonp',
 }
 
 let VAL = {
@@ -34,11 +35,19 @@ let TAL = {
     CLOSE:2,
     LOW:3,
     HIGH:4,
-    STATE:5,
-    NINESTATE:6,
-    NINECOUNT:7,
-    CURRSTATE:8,
+    DEG:5,    
+
+    MA5:6,
+    MA10:7,
+    MA20:8,
+    MA30:9,
+    MA60:10,
+    NINESTATE:11,
+    NINECOUNT:12,
+    CURRSTATE:13,
 }
+
+
 
 let Stock = new __Stock();
 function __Stock() {
@@ -53,6 +62,7 @@ function __Stock() {
         this.dateMonth = [];
         this.dateWeek = [];
         this.dateDay = [];
+        this.ninePeriod = [];
         this.loop = 280;
         this.initHREF();
         console.log(this);
@@ -68,10 +78,10 @@ function __Stock() {
         this.market = this.code[0] == '6'?'sh':'sz';
         this.nameEval = 'hq_str_' + this.market + this.code;
         for (let i in Source.period) {
-            if (i == 0)
-                this.src[i] = Source.hrefName.replace('#code', this.market + this.code);
-            else
-                this.src[i] = Source.href.replace('#code', this.code) + Source[Source.period[i]];
+            this.src[i] = Source[Source.period[i]]
+            .replace('#market', this.market)
+            .replace('#code', this.code);
+
             if (this.script[i]) 
                 this.script[i].parentNode.removeChild(this.script);
             this.script[i] = Elem.creat("script", this.head);  
@@ -92,7 +102,8 @@ function __Stock() {
 
 
 
-    this.reload = function(isAuto) {
+    this.reload = function(isAll) {
+    	this.isAll = isAll;
         localStorage.setItem('query-code',this.input.value);
         window.location.reload();
     }
@@ -111,15 +122,33 @@ function __Stock() {
         this.queryData(res[0].hq, 3);
     }
 
+    this.query30Min = function(res) {
+        console.log(res);
+        this.queryData(res, 4);
+    }
+
+    this.query60Min = function(res) {
+        this.queryData(res, 5);
+    }
+
     this.queryData = function(origin, idx) {
+
         for (let i in origin) {
+        	if (i==0) continue;
+        	let zdf = this.zdf(origin,i);
             let temp = [
                 origin[i][VAL.DATE],
-                parseFloat(origin[i][VAL.OPEN]),
-                parseFloat(origin[i][VAL.CLOSE]),
-                parseFloat(origin[i][VAL.LOW]),
-                parseFloat(origin[i][VAL.HIGH])];
-            temp.push(temp[2]>=temp[1]);
+                eval(origin[i][VAL.OPEN]),
+                eval(origin[i][VAL.CLOSE]),
+                eval(origin[i][VAL.LOW]),
+                eval(origin[i][VAL.HIGH]),
+                ~~(10000*zdf-10000)/100 + '%',
+                this.getMA(origin, i, 5),
+                this.getMA(origin, i, 10),
+                this.getMA(origin, i, 20),
+                this.getMA(origin, i, 30),
+                this.getMA(origin, i, 60),
+            ];
             if (idx == 1) {
                 this.dateDay.push(temp);
             }
@@ -130,6 +159,35 @@ function __Stock() {
                 this.dateMonth.push(temp);
             }
         }
+    }
+
+    this.getMA = function(data, i, day) {
+	    if (i >= day-1) {
+	    	let sum = 0;
+	    	for (let j=0; j<day; j++) {
+	    		sum += eval(data[i-j][VAL.CLOSE]);
+	    	}
+	    	return ~~(100*sum / day)/100;
+	    }
+	    return 0;
+    }
+
+    this.Qtds = function(data,i) {
+    	let ha = Math.max(data[i][TAL.MA20],data[i][TAL.MA30])<data[i][TAL.MA60];
+    	let hb = data[i-1][TAL.CLOSE]<data[i-1][TAL.MA60];
+    	let hc = data[i][TAL.CLOSE]>data[i][TAL.MA60] && this.zdf(data,i)>1.12;
+    }
+
+    this.zdf = function(data, i) {
+    	return data[i][TAL.CLOSE]/data[i-1][TAL.CLOSE];
+    }
+
+    this.everyLess = function(data, i, a, b, day) {
+    	for (let j=0; j<day; j++) {
+    		if (Math.max(data[i-j][TAL.MA5],data[i][TAL.MA10])>data[i][TAL.MA60])
+    			return 0;
+    	}
+    	return 1;
     }
 
 
@@ -153,6 +211,8 @@ function __Stock() {
         this.nineCount = [];
         this.currState = [];
         this.conString = [];
+        if (!this.isAll && !this.isZtb(this.dateDay[this.curDay]))
+        	return this.calcNext();
         this.getCount(this.dateMonth, this.curMonth,0);
         if (this.nineCount[0] < 6 || this.currState[0] == 0)
             return this.calcNext();
@@ -164,9 +224,13 @@ function __Stock() {
             return this.calcNext();
 
         this.content = '<tr><td></td></tr><tr><td></td><td>';
-        this.content += this.dateDay[this.curDay].slice(0,6).join('</td><td>') + '</td></tr>';
+        this.content += this.dateDay[this.curDay].slice(0,6).join('</td><td>');
+        if (!this.isZtb(this.dateDay[this.curDay-1]))
+        	this.content += '</td><td>FIRST</td></tr>';
+        else
+        	this.content += '</td><td>SECOND</td></tr>';
         this.content += this.reverse(this.conString).join('');
-        if (this.getMin(this.nineCount) == 6)
+        if (this.getMin(this.nineCount) <= 6)
             this.content = this.content.replace(/<tr/g, '<tr idx=C6');
         if (this.getMin(this.nineCount) == 7)
             this.content = this.content.replace(/<tr/g, '<tr idx=C7');
@@ -199,20 +263,30 @@ function __Stock() {
 
 
     this.getCount = function(data, idx, k) {
-        let temp = data[idx-1];
         this.nineState[k] = '';
         this.nineCount[k] = 0;
         for (i=idx-9;i<idx;i++) {
-            this.nineState[k] += ~~data[i][TAL.STATE];
-            if (data[i][TAL.STATE])
+            this.nineState[k] += ~~this.isYang(data[i]);
+            if (this.isYang(data[i]))
                 this.nineCount[k] ++;
         }
-        this.currState[k] = this.dateDay[this.curDay][VAL.CLOSE]>=data[idx][VAL.OPEN];
-        data[idx-1][TAL.NINESTATE] = this.nineState[k];
-        data[idx-1][TAL.NINECOUNT] = this.nineCount[k];
-        data[idx-1][TAL.CURRSTATE] = this.currState[k];
+        this.currState[k] = this.isYang(this.dateDay[this.curDay]);
+        let temp = data[idx-1].slice(0,6);
+        temp.push(this.nineState[k]);
+        temp.push(this.nineCount[k]);
+        temp.push(this.currState[k]);
         this.conString[k] = '<tr><td>' + Source.periodStr[k] + '</td><td>';
-        this.conString[k] += data[idx-1].join('</td><td>') + '</td></tr>';
+        this.conString[k] += temp.join('</td><td>') + '</td></tr>';
+    }
+
+
+
+    this.isYang = function(data) {
+    	return data[TAL.CLOSE]>=data[TAL.OPEN];
+    }
+
+    this.isZtb = function(data) {
+    	return data[TAL.CLOSE]==data[TAL.HIGH];
     }
 
 
@@ -229,6 +303,7 @@ function __Stock() {
         }
         return [h, l];
     }
+
 
 
     this.compary = function(a, b) {
