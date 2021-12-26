@@ -14,7 +14,6 @@
 	        font-size: 18px;
 	        text-align: center;
 	        background: #ddd;
-	        color:#eee;
 		}
 
 		table {
@@ -25,12 +24,16 @@
 			flex: 10;
 			margin: 2px;
 			padding: 10px 10px;
+			color: darkorange;
 			font-size: 1em;
+			font-weight: bold;
+        	vertical-align: top;
 			background-color: #eee;	
 		}
 
 		a {
 			color: dodgerblue;
+			font-weight: normal;
 		}
 		a:visited {
 			color: indigo;
@@ -46,13 +49,25 @@
 		#inner {
 
 		}
+
+		#msgbox {
+			position: sticky;
+			float: right;
+			top: 10px;
+			right: 50px;
+			bottom: 10px;
+			width: 320px;
+			min-height: 600px;
+		}
 	</style>
 	
 </head>
 <body>
 	<div id="outer">
 		<div id="inner"></div>
-		<table id="table"></table>
+		<table id="table1"></table>
+		<table id="table2"></table>
 	</div>
+	<div id="msgbox"></div>
 </body>
 </html>

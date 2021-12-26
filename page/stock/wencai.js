@@ -1,38 +1,98 @@
 
 window.onload = function() {
+	Wencai.agent();
 	Wencai.init();
 }
 
 let Wencai = new __Wencai();
 function __Wencai() {
 
-	this.href = "<a href='http://www.iwencai.com/unifiedwap/result?w=#word'>#text</a><br/>";
+	this.href = 'http://www.iwencai.com/unifiedwap/result?w=#word';
 
 	this.init = function() {
 		this.outer = this.getElem('outer');
 		this.inner = this.getElem('inner');
-		this.table = this.getElem('table');
-		this.parse();
-
+		this.table1 = this.getElem('table1');
+		this.table2 = this.getElem('table2');
+		this.msgbox = this.getElem('msgbox');
+		this.season();
+		this.detail();
 	}
 
-	this.parse = function() {
+	this.season = function() {
+		for (let i in seasonData) {
+			let temp = seasonData[i];
+			temp.push(this.advanceStr(temp));
+			let tr = this.creatElem('tr', table1, 'tr', temp[0]);
+			for (let j=0; j<4; j++) {
+				let td = this.creatElem('td', tr, 'td', temp[j]);
+				if (j == 0) {
+					td.innerHTML  = temp[1] + temp[0] + '<br/>';
+					this.link(td, temp[6],'预告净利润');
+				} else {
+					td.innerHTML  = temp[1] + temp[j+2][0] + '月<br/>';
+					this.link(td, temp[j+2][1],'蜻蜓点水');
+					this.link(td, temp[j+2][2],'卧龙凤雏');
+					this.link(td, temp[j+2][3],'尖尖角');
+				}
+			}
+		}
+	}
+
+	this.advanceStr = function(data) {
+		return data[1] + data[0] + '预告净利润/' + data[1] + data[2] + '市值前20';
+	}
+
+	this.link = function(td, word, text) {
+		let a = this.creatElem('a', td);
+		a.href = this.href.replace('#word', word);
+		a.innerHTML = text + '<br/>';
+		a.word = text + '<br/>' + word;
+		if (this.isPhone)
+			return;
+		a.onmouseover = function() {
+			Wencai.isclear = 0;
+			msgbox.innerHTML = this.word;
+		}
+		a.onmouseout = function() {
+			Wencai.isclear = 1;
+			setTimeout(function() {
+				if (Wencai.isclear)
+					msgbox.innerHTML = '';
+			},3000);
+		}
+	}
+
+	this.detail = function() {
 		this.data = [];
-		let list = data.split('\n');
+		let list = detailData.split('\n');
 		let tr;
 		for (let i in list) {
 			let temp = this.split(list[i]);
-			temp.push(this.conDayStr(temp));
-			temp.push(this.conWeekStr(temp));
-			temp.push(this.conMonthStr(temp));
+			temp.push(this.huatuoDayStr(temp));
+			temp.push(this.huatuoWeekStr(temp));
+			temp.push(this.huatuoMonthStr(temp));
+			temp.push(this.xinqijiDayStr(temp));
+			temp.push(this.huoqubingDayStr(temp));
 			if (!temp[1])
 				continue;
 			if (temp[6] == 1)
-				tr = this.creatElem('tr', table, 'tr', temp[1]);
+				tr = this.creatElem('tr', table2, 'tr', temp[1]);
 			let td = this.creatElem('td', tr, 'td', temp[0]);
-			td.innerHTML  = this.href.replace('#word', temp[16]).replace('#text', temp[0] + '·日');
-			td.innerHTML += this.href.replace('#word', temp[17]).replace('#text', temp[0] + '·周');
-			td.innerHTML += this.href.replace('#word', temp[18]).replace('#text', temp[0] + '·月');
+			td.innerHTML  = temp[0] + '<br/>';
+			this.link(td, temp[16],'华佗·日');
+			this.link(td, temp[17],'华佗·周');
+			this.link(td, temp[18],'华佗·月');
+			this.link(td, temp[19],'辛弃疾');
+			this.link(td, temp[20],'霍去病');
+			if (temp[6] == 1) {
+				temp.push(this.lishizhenWeekStr(temp));
+				this.link(td, temp[21],'李时珍');
+			}
+			if (temp[6] == 5) {
+				temp.push(this.sickWeekStr(temp));
+				this.link(td, temp[21],'病变');
+			}
 			this.data[i] = temp;
 		}
 		console.log(this.data);
@@ -52,7 +112,7 @@ function __Wencai() {
 		return data;
 	}
 
-	this.conDayStr = function(data) {
+	this.huatuoDayStr = function(data) {
 		return data[0] + word[0] + 
 		data[5] + word[1] + 
 		data[5] + word[3] + data[3] + word[5] + 
@@ -61,7 +121,7 @@ function __Wencai() {
 		data[5] + word[4] + data[0] + word[5]; 
 	}
 
-	this.conWeekStr = function(data) {
+	this.huatuoWeekStr = function(data) {
 		return data[0] + word[0] + 
 		data[10] + word[2] + 
 		data[10] + word[3] + data[8] + word[5] + 
@@ -70,13 +130,41 @@ function __Wencai() {
 		data[10] + word[4] + data[0] + word[5]; 
 	}
 
-	this.conMonthStr = function(data) {
+	this.huatuoMonthStr = function(data) {
 		return data[0] + word[0] + 
 		data[15] + word[1] + 
 		data[15] + word[3] + data[13] + word[5] + 
 		data[15] + word[3] + data[14] + word[5] + 
 		data[15] + word[3] + data[2] + word[5] + 
 		data[15] + word[4] + data[0] + word[5]; 
+	}
+
+
+	this.sickDayStr = function(data) {
+		return data[0] + word[8] + data[0] + word[9] + 
+		data[0] + word[6];
+	}
+
+	this.sickWeekStr = function(data) {
+		return data[0] + word[10] + data[0] + word[11] + 
+		data[0] + word[6];
+	}
+
+	this.lishizhenWeekStr = function(data) {
+		return data[8] + word[10] + data[8] + word[11] + 
+		data[8] + word[6] + 
+		data[0] + word[7] + 
+		data[0] + word[12] + data[8] + word[13];
+	}
+
+	this.xinqijiDayStr = function(data) {
+		return data[0] + word[0] +  
+		data[2] + word[14] + data[2] + word[15];
+	}
+
+	this.huoqubingDayStr = function(data) {
+		return data[0] + word[0] +  
+		data[0] + word[16] + data[0] + word[17];
 	}
 
 	this.creatElem = function(type, parent, className, id) {
@@ -97,18 +185,43 @@ function __Wencai() {
 	        return e;
 	    return null;
 	}
+
+	this.agent = function() {
+    	this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|Mobile|MIX/i.test(navigator.userAgent));
+    	document.body.style.zoom = this.isPhone ? 1.2 : 1.0;
+
+	}
 }
 
-let word = [
-	'的涨停,换手率<15,主板非st,',
-	'的涨跌幅>0,',
-	'的周涨跌幅>0,',
-	'的收盘价>',
-	'的收盘价<',
-	'的收盘价,',
+let seasonData = [
+	['一季度', '2021年', '3月31日', [1],[2],[3]],
+	['二季度', '2021年', '6月30日', [4],[5],[6]],
+	['三季度', '2021年', '9月30日', [7],[8],[9]],
+	['四季度', '2021年', '12月31日', [10],[11],[12]],
 ];
 
-let data=`
+let word = [
+	'涨停,换手率小于15,主板非st,',
+	'的涨跌幅大于0,',
+	'的周涨跌幅大于0,',
+	'的收盘价大于',
+	'的收盘价小于',
+	'的收盘价,',
+	'至今涨跌幅,主板非st,',
+	'开盘涨跌幅大于5,',
+	'的20日均线大于10日均线大于30日均线,',
+	'的30日均线大于5日均线大于60日均线,',
+	'的20周均线大于10周均线大于30周均线,',
+	'的30周均线大于5周均线大于60周均线,',
+	'的开盘价/',
+	'的收盘价大于1.2,',
+	'的20日均线大于10日均线大于5日均线,',
+	'的20日均线大于30日均线大于60日均线,',
+	'的20日均线小于10日均线小于5日均线,',
+	'的20日均线小于30日均线小于60日均线,',
+];
+
+let detailData =`
 1月25日,2021,1月22日,1月21日,1月20日,1月19日,1,1月22日,1月15日,1月8日,1月1日,1,12,11,10,9
 1月26日,2021,1月25日,1月22日,1月21日,1月20日,2,1月22日,1月15日,1月8日,1月1日,1,12,11,10,9
 1月27日,2021,1月26日,1月25日,1月22日,1月21日,3,1月22日,1月15日,1月8日,1月1日,1,12,11,10,9
