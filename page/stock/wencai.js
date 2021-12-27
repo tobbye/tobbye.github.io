@@ -1,6 +1,5 @@
 
 window.onload = function() {
-	Wencai.agent();
 	Wencai.init();
 }
 
@@ -186,9 +185,9 @@ function __Wencai() {
 	    return null;
 	}
 
-	this.agent = function() {
+	this.zoom = function(z) {
     	this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|Mobile|MIX/i.test(navigator.userAgent));
-    	document.body.style.zoom = this.isPhone ? 1.2 : 1.0;
+    	document.body.style.zoom = z;
 
 	}
 }
