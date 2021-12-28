@@ -7,15 +7,39 @@ let Wencai = new __Wencai();
 function __Wencai() {
 
 	this.href = 'http://www.iwencai.com/unifiedwap/result?w=#word';
+	this.texts = {
+		YGJLR: '预告净利润',
+		QTDS: '蜻蜓点水',
+		WLFC: '卧龙凤雏',
+		JJJ: '尖尖角',
+		JJG: '节节高',
+		HTD: '华佗·日',
+		HTW: '华佗·周',
+		HTM: '华佗·月',
+		HQB: '霍去病',
+		XQJ: '辛弃疾',
+		LSZ: '李时珍',
+		BB: '病变',
+	};
 
 	this.init = function() {
 		this.outer = this.getElem('outer');
 		this.inner = this.getElem('inner');
 		this.table1 = this.getElem('table1');
 		this.table2 = this.getElem('table2');
+		this.table3 = this.getElem('table3');
 		this.msgbox = this.getElem('msgbox');
+		this.write = this.getElem('write');
+		this.save = this.getElem('save');
 		this.season();
-		this.detail();
+		this.daily();
+    	document.body.style.zoom = this.getDaily(0, 'zoom');
+	}
+
+	this.load = function() {
+		let lastIdx = this.getDaily(0, 'lastIdx');
+		let lastKey = this.getDaily(0, 'lastKey');
+
 	}
 
 	this.season = function() {
@@ -26,13 +50,15 @@ function __Wencai() {
 			for (let j=0; j<4; j++) {
 				let td = this.creatElem('td', tr, 'td', temp[j]);
 				if (j == 0) {
-					td.innerHTML  = temp[1] + temp[0] + '<br/>';
-					this.link(td, temp[6],'预告净利润');
+					let date = this.creatElem('div', td, 'date');
+					date.innerHTML  = temp[1] + temp[0];
+					this.link(td, temp[6],'YGJLR');
 				} else {
-					td.innerHTML  = temp[1] + temp[j+2][0] + '月<br/>';
-					this.link(td, temp[j+2][1],'蜻蜓点水');
-					this.link(td, temp[j+2][2],'卧龙凤雏');
-					this.link(td, temp[j+2][3],'尖尖角');
+					let date = this.creatElem('div', td, 'date');
+					date.innerHTML  = temp[1] + temp[j+2][0] + '月';
+					this.link(td, temp[j+2][1],'QTDS');
+					this.link(td, temp[j+2][2],'WLFC');
+					this.link(td, temp[j+2][3],'JJJ');
 				}
 			}
 		}
@@ -42,29 +68,54 @@ function __Wencai() {
 		return data[1] + data[0] + '预告净利润/' + data[1] + data[2] + '市值前20';
 	}
 
-	this.link = function(td, word, text) {
-		let a = this.creatElem('a', td);
+	this.link = function(td, word, key) {
+		let a = this.creatElem('a', td, key, td.idx);
 		a.href = this.href.replace('#word', word);
-		a.innerHTML = text + '<br/>';
-		a.word = text + '<br/>' + word;
+		a.word = this.texts[key] + '<br/>' + word;
+		a.idx = td.idx;
+		a.key = key;
+		a.innerHTML = this.texts[key]+ '(' + this.getDaily(td.idx, key, 1) + ')<br/>';
+		let lastIdx = this.getDaily(0, 'lastIdx');
+		let lastKey = this.getDaily(0, 'lastKey');
+		if (a.idx == lastIdx && a.key == lastKey) {
+			td.scrollIntoView(1);
+			td.appendChild(this.save.parentNode);
+			this.save.onclick = function() {
+				let array = Wencai.toArray(Wencai.write.value);
+				Wencai.setDaily(lastIdx, lastKey, array);
+				let a = Wencai.getElem(lastKey + '_' + lastIdx);
+				a.innerHTML = Wencai.texts[key]+ '(' + Wencai.getDaily(a.idx, a.key, 1) + ')<br/>';
+				Wencai.outer.appendChild(Wencai.save.parentNode);
+			}
+		}
+
+		a.onmouseup = function(e) {
+			Wencai.setDaily(0, 'lastIdx', this.idx);
+			Wencai.setDaily(0, 'lastKey', this.key);
+			Wencai.write.value = '';
+		}
 		if (this.isPhone)
 			return;
 		a.onmouseover = function() {
-			Wencai.isclear = 0;
-			msgbox.innerHTML = this.word;
+			Wencai.msgbox.innerHTML = Wencai.getDaily(this.idx, 'date') + ' ' + this.word;
+			let array = Wencai.getDaily(this.idx, this.key);
+			for (let i in array) {
+				let tr = Wencai.creatElem('tr', Wencai.table3, this.key);
+				for (let j in array[i]) {
+					let td = Wencai.creatElem('td', tr, this.key);
+					td.innerHTML = array[i][j];
+				}
+			}
 		}
 		a.onmouseout = function() {
-			Wencai.isclear = 1;
-			setTimeout(function() {
-				if (Wencai.isclear)
-					msgbox.innerHTML = '';
-			},3000);
+			Wencai.msgbox.innerHTML = '';
+			Wencai.table3.innerHTML = '';
 		}
 	}
 
-	this.detail = function() {
+	this.daily = function() {
 		this.data = [];
-		let list = detailData.split('\n');
+		let list = dailyData.split('\n');
 		let tr;
 		for (let i in list) {
 			let temp = this.split(list[i]);
@@ -78,19 +129,22 @@ function __Wencai() {
 			if (temp[6] == 1)
 				tr = this.creatElem('tr', table2, 'tr', temp[1]);
 			let td = this.creatElem('td', tr, 'td', temp[0]);
-			td.innerHTML  = temp[0] + '<br/>';
-			this.link(td, temp[16],'华佗·日');
-			this.link(td, temp[17],'华佗·周');
-			this.link(td, temp[18],'华佗·月');
-			this.link(td, temp[19],'辛弃疾');
-			this.link(td, temp[20],'霍去病');
+			let date = this.creatElem('div', td, 'date');
+			date.innerHTML = temp[0];
+			td.idx = i;
+			this.setDaily(i, 'date', temp[0]);
+			this.link(td, temp[16],'HTD');
+			this.link(td, temp[17],'HTW');
+			this.link(td, temp[18],'HTM');
+			this.link(td, temp[19],'XQJ');
+			this.link(td, temp[20],'HQB');
 			if (temp[6] == 1) {
 				temp.push(this.lishizhenWeekStr(temp));
-				this.link(td, temp[21],'李时珍');
+				this.link(td, temp[21],'LSZ');
 			}
 			if (temp[6] == 5) {
 				temp.push(this.sickWeekStr(temp));
-				this.link(td, temp[21],'病变');
+				this.link(td, temp[21],'BB');
 			}
 			this.data[i] = temp;
 		}
@@ -110,6 +164,7 @@ function __Wencai() {
 		}
 		return data;
 	}
+
 
 	this.huatuoDayStr = function(data) {
 		return data[0] + word[0] + 
@@ -166,6 +221,32 @@ function __Wencai() {
 		data[0] + word[16] + data[0] + word[17];
 	}
 
+	this.toArray = function(str) {
+		if (str.length < 10) return str;
+		str = str.replace(/(?<=[^a-zA-Z0-9 ]) /g, ',');
+		let array = str.split(',');
+		for (let i in array) {
+			array[i] = array[i].split(' ');
+		}
+		return array;
+	}
+
+	this.getDaily = function(idx, key, islen) {
+		let daily = JSON.parse(localStorage.getItem('daily')) || [];
+    	daily[idx] = daily[idx] || {};
+    	if (typeof(daily[idx][key]) === 'object' && islen)
+    		return daily[idx][key].length;
+    	else
+			return daily[idx][key] || '-';
+	}
+
+	this.setDaily = function(idx, key, val) {
+		let daily = JSON.parse(localStorage.getItem('daily')) || [];
+    	daily[idx] = daily[idx] || {};
+    	daily[idx][key] = val;
+    	localStorage.setItem('daily', JSON.stringify(daily));
+	}
+
 	this.creatElem = function(type, parent, className, id) {
 	    var e = document.createElement(type);
 	    if (parent)
@@ -187,8 +268,8 @@ function __Wencai() {
 
 	this.zoom = function(z) {
     	this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|Mobile|MIX/i.test(navigator.userAgent));
+    	this.setDaily(0, 'zoom', z);
     	document.body.style.zoom = z;
-
 	}
 }
 
@@ -220,7 +301,7 @@ let word = [
 	'的20日均线小于30日均线小于60日均线,',
 ];
 
-let detailData =`
+let dailyData =`
 1月25日,2021,1月22日,1月21日,1月20日,1月19日,1,1月22日,1月15日,1月8日,1月1日,1,12,11,10,9
 1月26日,2021,1月25日,1月22日,1月21日,1月20日,2,1月22日,1月15日,1月8日,1月1日,1,12,11,10,9
 1月27日,2021,1月26日,1月25日,1月22日,1月21日,3,1月22日,1月15日,1月8日,1月1日,1,12,11,10,9
