@@ -32,27 +32,42 @@
 		td {
 			flex: 10;
 			margin: 2px;
-			padding: 10px 10px;
         	vertical-align: top;
 			background-color: #eee;	
 		}
 
 		a {
 			font-size: 1.2em;
-			color: dodgerblue;
+			color: darkorange;
 			text-decoration: none;
 		}
 		a:visited {
-			color: indigo;
+			color: transparent;
 		}
 		a:hover {
 			color: magenta;
 		}
 
+		td[type=normal] {
+			padding: 10px;
+		}
+
+		td[type=mini]{
+			padding: 5px;
+		}
+
+		[year='2021'] {
+			color: dodgerblue;
+		}
+
+		[year='2022'] {
+			color: purple;
+		}
+
 		.date {
-			color: darkorange;
 			font-size: 1.3em;
 			font-weight: bold;
+
 		}
 
 		#outer {
@@ -63,9 +78,8 @@
 		}
 
 		#float {
-			position: sticky;
+			position: fixed;
 			float: right;
-			top: 10px;
 			right: 50px;
 			bottom: 10px;
 			width: 320px;
@@ -76,6 +90,7 @@
 <body>
 	<div id="outer">
 		<div id="topper">
+			<button onclick='Wencai.zoom(1.0)'>zoom=1.0</button>
 			<button onclick='Wencai.zoom(1.2)'>zoom=1.2</button>
 			<button onclick='Wencai.zoom(1.4)'>zoom=1.4</button>
 			<button onclick='Wencai.zoom(1.6)'>zoom=1.6</button>
@@ -84,15 +99,16 @@
 		</div>
 		<table id="table1"></table>
 		<table id="table2"></table>
+		<div id="float">
+			<div id="msgbox"></div>
+			<table id="table3"></table>
+		</div>
 	</div>
-	<div>
-		<input id='write'></input>
+	<div id='write'>
+		<input id='input'></input>
 		<br/>
 		<button id='save'>录入</button>
 	</div>
-	<div id="float">
-		<div id="msgbox"></div>
-		<table id="table3"></table>
-	</div>
+
 </body>
 </html>
