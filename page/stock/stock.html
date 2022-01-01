@@ -39,21 +39,12 @@
         text-align: center;
     }
 
-    tr[idx=C6] {
+    tr {
         color: #aaaaaa;
         border: solid 1px #aaaaaa;
         
     }
-    tr[idx=C7] {
-        color: dodgerblue;
-        font-size: 1.1em;
-        border: solid 1px #1e90ff;
-    }
-    tr[idx=C8] {
-        color: darkorange;
-        font-size: 1.2em;
-        border: solid 1px #ff8c00;
-    }
+
     td {
         padding: 5px 10px;
     }
@@ -88,29 +79,15 @@
         color: red;
     }
 
-    .k {
-        display: flex;
-    }
-
-    #outer-top {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        margin: 3px;
-        text-align: center;
-        background-color: black;
-    }
-
     #outer {
-        margin: 60px auto 10px auto;
-        padding: 20px;
+        margin: 10px auto 10px auto;
         overflow: auto;
     }
 
-    #name {
-        font-size: 1.5em;
+    #thead {
+        font-size: 1.3em;
         font-weight: bold;
+        padding-bottom: 10px;
     }
 
 
@@ -123,19 +100,9 @@
             <a id="hisjson" target="_blank" href="https://q.stock.sohu.com/hisHq?code=cn_600295&start=20200101&end=20211027">历史行情JSON</a>
             <a id="hiscsv" target="_blank" href="http://quotes.money.163.com/service/chddata.html?code=0600295&start=20210101&end=20880808&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP">历史行情CSV</a>
             <br/>
-            <span id="name">股票名称</span>
-            <input id="input" value="002487" placeholder="请输入股票代码"></input>
-            <button id="submit1" onclick='Stock.reload()'>获取</button> 
-            <button id="submit2" onclick='Stock.reload(1)'>所有</button> 
         </div>
-        <div id="outer-head">
-            <table>
-                <tbody id="thead">
-                </tbody>  
-            </table>
-        </div>
-        <div id="hha"></div>
         <div id="outer">
+            <div id="thead"></div>
             <table>
                 <tbody id="tbody">
                 </tbody>
