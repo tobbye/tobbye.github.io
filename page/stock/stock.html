@@ -12,72 +12,64 @@
         margin: 0px;
         padding: 0px;
         font-family: sans-serif, Arial, Segoe UI, Helvetica;
-        font-size: 18px;
+        font-size: 16px;
         text-align: center;
-        background: black;
-        color:#eee;
+        background: #ddd;
     }
 
     button {
+        margin-top: 5px;
         font-size: 1em;
-        padding: 3px 10px;
     }
 
     input {
-        margin: 3px;
-        padding-left: 3px;
-        width: 360px;
-        font-size: 1.5em;
+        margin:5px;
+        width: 60px;
     }
 
     table {
-        font-size: 1em;
-        margin-left: auto;
-        margin-right: auto;
-        border-collapse:collapse;
-        word-break: keep-all;
-        text-align: center;
+        padding: 10px;
+        margin: 0px auto;
     }
 
-    tr {
-        color: #aaaaaa;
-        border: solid 1px #aaaaaa;
-        
+    tr[head] {
+        color:darkred;
+        font-weight: bold;
     }
 
     td {
+        margin: 0px;
         padding: 5px 10px;
-    }
-
-    [bg='up'] {
-        color: #ff3333 !important;
-    }
-    [bg='down'] {
-        color: #0bab5b !important;
-    }
-    [bg='day'] {
-        color: dodgerblue;
-    }
-    [bg='times'] {
-        color: darkorange;
-    } 
-
-    [align='left'] {
-        text-align: left;
-    }
-    [align='right'] {
         text-align: right;
-    }
-    [align='middle'] {
-        text-align: middle;
-    }
-    a {
-        color: #a69;
+        background-color: #eee; 
     }
 
-    a:hover {
-        color: red;
+    a {
+        font-size: 1.2em;
+        color: darkorange;
+        text-decoration: none;
     }
+    a:visited {
+        color: darkred;
+    }
+    a:hover {
+        color: magenta;
+    }
+
+    .date {
+        font-size: 1.3em;
+        font-weight: bold;
+
+    }
+
+    #outer {
+    }
+
+    #topper {
+
+    }
+
+
 
     #outer {
         margin: 10px auto 10px auto;
@@ -85,9 +77,10 @@
     }
 
     #thead {
+        padding: 5px;
+        color:darkred;
         font-size: 1.3em;
         font-weight: bold;
-        padding-bottom: 10px;
     }
 
 
@@ -95,11 +88,17 @@
 </style> 
 </head> 
     <body> 
-        <div id="outer-top">
-            <a id="dargon" target="_blank" href="http://static.tdx.com.cn:7615/site/tdxf10/gg_jyds/002382.html?vertype=1&style=black&gp=002382&ispc=1&8517=5390">龙虎榜</a>
+<!--             <a id="dargon" target="_blank" href="http://static.tdx.com.cn:7615/site/tdxf10/gg_jyds/002382.html?vertype=1&style=black&gp=002382&ispc=1&8517=5390">龙虎榜</a>
             <a id="hisjson" target="_blank" href="https://q.stock.sohu.com/hisHq?code=cn_600295&start=20200101&end=20211027">历史行情JSON</a>
             <a id="hiscsv" target="_blank" href="http://quotes.money.163.com/service/chddata.html?code=0600295&start=20210101&end=20880808&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP">历史行情CSV</a>
-            <br/>
+            <br/> -->
+        <div id="topper">
+            <button onclick='Stock.zoom(1.0)'>zoom=1.0</button>
+            <button onclick='Stock.zoom(1.2)'>zoom=1.2</button>
+            <button onclick='Stock.zoom(1.4)'>zoom=1.4</button>
+            <button onclick='Stock.zoom(1.6)'>zoom=1.6</button>
+            <button onclick='Stock.zoom(1.8)'>zoom=1.8</button>
+            <button onclick='Stock.zoom(2.0)'>zoom=2.0</button>    
         </div>
         <div id="outer">
             <div id="thead"></div>

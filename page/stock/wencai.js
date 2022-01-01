@@ -9,6 +9,7 @@ function __Wencai() {
 
 	this.href = 'http://www.iwencai.com/unifiedwap/result?w=#word';
 	this.texts = {
+		base: '1101',
 		YGJLR: '预告净利润',
 		QTDS: '蜻蜓点水',
 		WLFC: '卧龙凤雏',
@@ -70,7 +71,7 @@ function __Wencai() {
 	}
 
 	this.advanceStr = function(data) {
-		return data[1] + data[0] + '预告净利润/' + data[1] + data[3] + '市值前20';
+		return data[1] + data[0] + '预告净利润/' + data[1] + '年' + data[2] + '市值前20';
 	}
 
 	this.link = function(td, word, key) {
@@ -82,8 +83,8 @@ function __Wencai() {
 		a.idx = td.idx;
 		a.key = key;
 		a.innerHTML = a.text + '(' + this.getDaily(a.idx, a.key, 1) + ')<br/>';
-		let lastIdx = this.getDaily(0, 'lastIdx');
-		let lastKey = this.getDaily(0, 'lastKey');
+		let lastIdx = this.getDaily('1101', 'lastIdx');
+		let lastKey = this.getDaily('1101', 'lastKey');
 		if (a.idx == lastIdx && a.key == lastKey) {
 			td.scrollIntoView(1);
 			td.appendChild(this.save.parentNode);
@@ -99,8 +100,8 @@ function __Wencai() {
 		if (this.isPhone)
 			return;
 		a.onmouseup = function(e) {
-			Wencai.setDaily(0, 'lastIdx', this.idx);
-			Wencai.setDaily(0, 'lastKey', this.key);
+			Wencai.setDaily('1101', 'lastIdx', this.idx);
+			Wencai.setDaily('1101', 'lastKey', this.key);
 			Wencai.input.value = '';
 		}
 
@@ -284,10 +285,10 @@ function __Wencai() {
 	this.zoom = function(z) {
     	this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|Mobile|MIX/i.test(navigator.userAgent));
     	if (z) {
-    		this.setDaily(0, 'zoom', z);
+    		this.setDaily('1101', 'zoom', z);
 			document.body.style.zoom = z;
     	} else {
-    		document.body.style.zoom = this.getDaily(0, 'zoom');
+    		document.body.style.zoom = this.getDaily('1101', 'zoom');
     	}
 	}
 }

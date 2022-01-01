@@ -5,7 +5,7 @@ window.onload = function() {
 
 
 let Source = {
-    head: ['序号', '代码', '名称', '开盘', '收盘', '涨跌幅', '压力位', '上穿'],
+    head: ['序号', '代码', '名称', '开盘', '收盘', '涨跌幅', '压力位', '上穿','日期'],
     periodStr: ['前一月','前一周','前一日'],
     period: ['hrefName', 'hrefDay', 'hrefWeek', 'hrefMonth', 'href30Min', 'href60Min'],
     hrefName: 'http://hq.sinajs.cn/list=#market#code',
@@ -36,7 +36,7 @@ let VAL = {
 }
 
 
-
+let daily;
 
 let Stock = new __Stock();
 function __Stock() {
@@ -167,6 +167,7 @@ function __Stock() {
         curCode.push(this.curDay[VAL.DEGREE]);
         curCode.push(this.curWeek[VAL.LINE]);
         curCode.push(this.curWeek[VAL.CROSS]);
+        curCode.push(json.date);
         json.codes[json.cur] = curCode;
         json.cur += 1;
         localStorage.setItem('queryCodes',JSON.stringify(json));
@@ -176,9 +177,11 @@ function __Stock() {
 
     this.showData = function() {
         this.thead.innerHTML = this.toDate(this.json.date) + ' · 涨停分析';
-        this.tbody.innerHTML += '<tr><td>' + Source.head.join('</td><td>') + '</td></tr>';
+        this.tbody.innerHTML += '<tr head=1><td>' + Source.head.join('</td><td>') + '</td></tr>';
         for (let i in this.json.codes) {
             let tr = Elem.creat('tr', this.tbody, 'tr');
+            if (this.json.codes[i][7])
+                tr.setAttribute('head', '2');
             for (let j in this.json.codes[i]) {
                 let td = Elem.creat('td', tr, 'td');
                 td.innerHTML = this.json.codes[i][j];
@@ -314,6 +317,31 @@ function __Stock() {
         return s1 > s2;
     }
 
+    this.getDaily = function(idx, key, islen) {
+        daily[idx] = daily[idx] || {};
+        let val = daily[idx][key];
+        if (typeof(val) === 'object' && islen)
+            return val.length;
+        else
+            return val || '-';
+    }
+
+    this.setDaily = function(idx, key, val) {
+        daily[idx] = daily[idx] || {};
+        daily[idx][key] = val;
+        localStorage.setItem('daily', JSON.stringify(daily));
+    }
+
+    this.zoom = function(z) {
+        daily = JSON.parse(localStorage.getItem('daily')) || [];
+        this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|Mobile|MIX/i.test(navigator.userAgent));
+        if (z) {
+            this.setDaily('1101', 'zoom', z);
+            document.body.style.zoom = z;
+        } else {
+            document.body.style.zoom = this.getDaily('1101', 'zoom');
+        }
+    }
 }
 
  //元素
