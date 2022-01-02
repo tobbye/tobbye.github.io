@@ -1,19 +1,16 @@
 window.onload = function() {
-    Elem.agent();
     Stock.init();
 }
 
 
 let Source = {
-    head: ['序号', '代码', '名称', '开盘', '收盘', '涨跌幅', '压力位', '上穿','日期'],
+    head: ['序号', '代码', '名称', '开盘', '收盘', '涨跌幅', '压力位', '突破','日期'],
     periodStr: ['前一月','前一周','前一日'],
-    period: ['hrefName', 'hrefDay', 'hrefWeek', 'hrefMonth', 'href30Min', 'href60Min'],
+    period: ['hrefName', 'hrefDay', 'hrefWeek', 'hrefMonth'],
     hrefName: 'http://hq.sinajs.cn/list=#market#code',
-    hrefDay: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=20200101&end=#end&stat=1&order=A&period=d&callback=Stock.queryDay&rt=jsonp',
-    hrefWeek: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=20190101&end=#end&stat=1&order=A&period=w&callback=Stock.queryWeek&rt=jsonp',
-    hrefMonth: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=20180101&end=#end&stat=1&order=A&period=m&callback=Stock.queryMonth&rt=jsonp',
-    href30Min: 'http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=#market#code&scale=30&datalen=1023&callback=Stock.query30Min&rt=jsonp',
-    href60Min: 'http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=#market#code&scale=60&datalen=1023&callback=Stock.query60Min&rt=jsonp',
+    hrefDay: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=#start&end=#end&stat=1&order=A&period=d&callback=Stock.queryDay&rt=jsonp',
+    hrefWeek: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=#start&end=#end&stat=1&order=A&period=w&callback=Stock.queryWeek&rt=jsonp',
+    hrefMonth: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=#start&end=#end&stat=1&order=A&period=m&callback=Stock.queryMonth&rt=jsonp',
 }
 
 let VAL = {
@@ -41,34 +38,46 @@ let daily;
 let Stock = new __Stock();
 function __Stock() {
 
-
     this.init = function() {
-        this.inner = Elem.get('inner');
-        this.outer = Elem.get('outer');
-        this.input = Elem.get('input');
-        this.tbody = Elem.get('tbody');
-        this.thead = Elem.get('thead');
+        this.cfg();
+        this.zoom();
+        console.log(this);
+    }
+
+    this.cfg = function() {
+        this.inner = this.getElem('inner');
+        this.outer = this.getElem('outer');
+        this.input = this.getElem('input');
+        this.tbody = this.getElem('tbody');
+        this.thead = this.getElem('thead');
         this.head = document.getElementsByTagName('head')[0];
         this.dateMonth = [];
         this.dateWeek = [];
         this.dateDay = [];
-        this.loop = 280;
-        this.getCode();
-        console.log(this);
+        this.getCodes();
     }
 
-    this.getCode = function() {
+    this.getCodes = function() {
+        daily = JSON.parse(localStorage.getItem('daily')) || [];
         let json = JSON.parse(localStorage.getItem('queryCodes'));
         this.json = json;
         if (json.codes.length > json.cur) {
             this.cur = json.cur;
             this.end = json.date;
+            this.start = [this.end-10000, this.end-20000, this.end-30000];
             this.code = json.codes[json.cur][1];
             this.codeName = json.codes[json.cur][2]; 
             this.initHREF();
+            this.getElem('btn1').innerHTML = '复盘进行中... ' + this.codeName;
+        } else {
+            this.setDaily(json.date, 'cur', json.cur);
+            this.setDaily(json.date, 'ZT', json.codes);   
+            this.getElem('btn1').innerHTML = '复盘完成';
         }
-        this.showData();
+        this.creatDetail();
     }
+
+
 
     this.initHREF = function() {
         this.src = [];
@@ -78,13 +87,13 @@ function __Stock() {
         for (let i in Source.period) {
             this.src[i] = Source[Source.period[i]]
             .replace('#market', this.market)
-            .replace('#start', this.start)
+            .replace('#start', this.start[i])
             .replace('#code', this.code)
             .replace('#end', this.end);
 
             if (this.script[i]) 
                 this.script[i].parentNode.removeChild(this.script);
-            this.script[i] = Elem.creat("script", this.head);  
+            this.script[i] = this.creatElem("script", this.head);  
             this.script[i].type = "text/javascript";
             this.script[i].src = this.src[i];
         }
@@ -92,9 +101,6 @@ function __Stock() {
             Stock.judge();
         }, 2000);
     }
-
-
-
 
 
     this.queryDay = function(res) {
@@ -155,65 +161,50 @@ function __Stock() {
         }
         this.curDay = curDay;
         this.curWeek = curWeek;
-        this.reload();
+        this.next();
     }
 
 
-    this.reload = function() {
-        let json = JSON.parse(localStorage.getItem('queryCodes'));
-        let curCode = json.codes[json.cur];
-        curCode.push(this.curDay[VAL.OPEN]);
-        curCode.push(this.curDay[VAL.CLOSE]);
-        curCode.push(this.curDay[VAL.DEGREE]);
-        curCode.push(this.curWeek[VAL.LINE]);
-        curCode.push(this.curWeek[VAL.CROSS]);
-        curCode.push(json.date);
-        json.codes[json.cur] = curCode;
-        json.cur += 1;
-        localStorage.setItem('queryCodes',JSON.stringify(json));
+    this.next = function() {
+        if (this.curDay[VAL.OPEN]) {
+            let json = JSON.parse(localStorage.getItem('queryCodes'));
+            let curCode = json.codes[json.cur];
+            curCode.push(this.curDay[VAL.OPEN]);
+            curCode.push(this.curDay[VAL.CLOSE]);
+            curCode.push(this.curDay[VAL.DEGREE]);
+            curCode.push(this.curWeek[VAL.LINE]);
+            curCode.push(this.curWeek[VAL.CROSS]);
+            curCode.push(json.date);
+            json.codes[json.cur] = curCode;
+            json.cur += 1;
+            localStorage.setItem('queryCodes',JSON.stringify(json)); 
+        }
         window.location.reload();
     }
 
 
-    this.showData = function() {
-        this.thead.innerHTML = this.toDate(this.json.date) + ' · 涨停分析';
+    this.reload = function() {
+
+    }
+
+
+    this.creatDetail = function() {
+        this.thead.innerHTML = this.toDate(this.json.date) + ' · 涨停突破';
         this.tbody.innerHTML += '<tr head=1><td>' + Source.head.join('</td><td>') + '</td></tr>';
         for (let i in this.json.codes) {
-            let tr = Elem.creat('tr', this.tbody, 'tr');
-            if (this.json.codes[i][7])
-                tr.setAttribute('head', '2');
+            let tr = this.creatElem('tr', this.tbody, 'tr');
+            if (this.json.codes[i][7] == true)
+                tr.setAttribute('head', 1)
+            let mix = this.json.codes[i][4] / this.json.codes[i][6];
+            if (this.json.codes[i][6] && mix >1.1)
+                this.json.codes[i][7] = 'yes';
             for (let j in this.json.codes[i]) {
-                let td = Elem.creat('td', tr, 'td');
+                let td = this.creatElem('td', tr, 'td');
                 td.innerHTML = this.json.codes[i][j];
+                if (j == 7)
+                    td.setAttribute('head',1);
             }
         }
-    }
-
-    this.toDate = function(date) {
-        return date.substring(0,4) + '年' + date[4]+date[5] + '月' + date[6]+date[7] + '日';
-    }
-
-
-    this.zdf = function(data, i) {
-        return data[i][TAL.CLOSE]/data[i-1][TAL.CLOSE];
-    }
-
-    this.isYang = function(data) {
-    	return data[TAL.CLOSE]>=data[TAL.OPEN];
-    }
-
-    this.isZtb = function(data) {
-    	return this.zdf > 1.096 && data[TAL.CLOSE]==data[TAL.HIGH];
-    }
-
-
-    this.getMin = function(arr) {
-        let min = arr[0];
-        for (let i in arr) {
-            if (arr[i] < min)
-                min = arr[i]
-        }
-        return min;
     }
 
 
@@ -262,15 +253,10 @@ function __Stock() {
         data[idx].push(mid);
         data[idx].push(bot);
         if (high < top*1.15 && data[idx-1][VAL.TOP] == data[idx-9][VAL.TOP])
-            data[idx].push(this.to2f(top*1.1));
+            data[idx][VAL.LINE] = this.to2f(top*1.1);
         if (!data[idx][VAL.LINE] && data[idx-1][VAL.LINE] && top <= data[idx-1][VAL.TOP])
-            data[idx].push(data[idx-1][VAL.LINE]);
+            data[idx][VAL.LINE] = (data[idx-1][VAL.LINE]);
     }
-
-    this.getLine = function() {
-
-    }
-
 
 
     this.compary = function(a, b) {
@@ -278,7 +264,6 @@ function __Stock() {
         b = ~~b.replace(/-/g, '');
         return a<= b;
     }
-
 
     this.to2f = function(val) {
         return ~~(val * 100) / 100;
@@ -317,6 +302,19 @@ function __Stock() {
         return s1 > s2;
     }
 
+    this.toDate = function(date) {
+        return date.substring(0,4) + '年' + date[4]+date[5] + '月' + date[6]+date[7] + '日';
+    }
+    
+    this.toIdx = function(year, date) {
+        date = date.replace('日','').split('月');
+        return year+(date[0]>9?date[0]:'0'+date[0]) + (date[1]>9?date[1]:'0'+date[1]);
+    }
+
+    this.ztDone = function(idx) {
+        return this.getDaily(idx, 'cur') == this.getDaily(idx, 'ZT').length;
+    }
+
     this.getDaily = function(idx, key, islen) {
         daily[idx] = daily[idx] || {};
         let val = daily[idx][key];
@@ -332,47 +330,34 @@ function __Stock() {
         localStorage.setItem('daily', JSON.stringify(daily));
     }
 
+    this.creatElem = function(type, parent, className, id) {
+        var e = document.createElement(type);
+        if (parent)
+            parent.appendChild(e);
+        if (className)
+            e.className = className;
+        if (id != null)
+            e.id = className + '_' + id;
+        return e;
+    }
+
+    this.getElem = function (e) {
+        if (typeof(e) === 'string')
+            return this.getElem(document.getElementById(e));
+        if (e &&  e.style)
+            return e;
+        return null;
+    }
+
     this.zoom = function(z) {
-        daily = JSON.parse(localStorage.getItem('daily')) || [];
         this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|Mobile|MIX/i.test(navigator.userAgent));
         if (z) {
-            this.setDaily('1101', 'zoom', z);
+            this.setDaily('base', 'zoom', z);
             document.body.style.zoom = z;
         } else {
-            document.body.style.zoom = this.getDaily('1101', 'zoom');
+            document.body.style.zoom = this.getDaily('base', 'zoom');
         }
     }
 }
 
- //元素
-var  Elem = {};
-
-//创建一个元素
-Elem.creat = function(type, parent, className, id) {
-    var e = document.createElement(type);
-    if (parent)
-        parent.appendChild(e);
-    if (className)
-        e.className = className;
-    if (id != null)
-        e.id = className + '_' + id;
-    return e;
-}
-
-//获取当个元素
-Elem.get = function (e) {
-    if (typeof(e) === 'string')
-        return Elem.get(document.getElementById(e));
-    if (e &&  e.style)
-        return e;
-    return null;
-}
-
-Elem.agent = function() {
-    let isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|MIX/i.test(navigator.userAgent));
-    if (isPhone)
-        document.body.style.fontSize = '24px';
-    else
-        document.body.style.fontSize = '15px';
-}
 

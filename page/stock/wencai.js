@@ -9,7 +9,7 @@ function __Wencai() {
 
 	this.href = 'http://www.iwencai.com/unifiedwap/result?w=#word';
 	this.texts = {
-		base: '1101',
+		base: 'base',
 		YGJLR: '预告净利润',
 		QTDS: '蜻蜓点水',
 		WLFC: '卧龙凤雏',
@@ -23,14 +23,15 @@ function __Wencai() {
 		BB: '病变',
 	};
 
+	this.doneText = ['缺少数据', '未完成', '复盘完成'];
+
 	this.init = function() {
-		this.load();
+		this.cfg();
 		this.zoom();
-		this.season();
-		this.daily();
+		console.log(this);
 	}
 
-	this.load = function() {
+	this.cfg = function() {
 		this.outer = this.getElem('outer');
 		this.inner = this.getElem('inner');
 		this.table1 = this.getElem('table1');
@@ -41,41 +42,169 @@ function __Wencai() {
 		this.input = this.getElem('input');
 		this.save = this.getElem('save');
 		daily = JSON.parse(localStorage.getItem('daily')) || [];
+		daily.base = daily.base || {};
+		this.year = daily.base.year || 2021;
+		this.month = daily.base.month || 8;
+		this.creatYear();
+		this.setMonth();
+		this.creatMonth();
 	}
 
 
 
-	this.season = function() {
-		for (let i in seasonData) {
-			let temp = seasonData[i];
-			this.year = temp[1];
-			temp.push(this.advanceStr(temp));
-			let tr = this.creatElem('tr', table1, 'tr', temp[0]);
+	this.setYear = function(year) {
+		this.setDaily('base', 'year', year);
+        window.location.reload();
+	}
+
+	this.creatYear = function() {
+		for (let i in yearData) {
+			let data = yearData[i];
+			data.push(this.advanceStr(data));
+			let tr = this.creatElem('tr', table1, 'tr', data[0]);
 			for (let j=0; j<4; j++) {
-				let td = this.creatElem('td', tr, 'td', temp[j]);
+				let td = this.creatElem('td', tr, 'td', data[j]);
 				td.setAttribute('type', 'normal');
 				td.setAttribute('year', this.year);
 				if (j == 0) {
 					let date = this.creatElem('div', td, 'date');
-					date.innerHTML  = temp[1] + '年' + temp[0];
-					this.link(td, temp[6],'YGJLR');
+					date.innerHTML  = this.year + '年' + data[0];
+					this.link(td, data, this.advanceStr(data),'YGJLR');
 				} else {
 					let date = this.creatElem('div', td, 'date');
-					date.innerHTML  = temp[1] + '年' + temp[j+2][0] + '月';
-					this.link(td, temp[j+2][1],'QTDS');
-					this.link(td, temp[j+2][2],'WLFC');
-					this.link(td, temp[j+2][3],'JJJ');
+					date.innerHTML  = this.year + '年' + data[j+1][0] + '月';
+					this.link(td, data[j+1], 1,'QTDS');
+					this.link(td, data[j+1], 2,'WLFC');
+					let btn = this.creatElem('button',td, 'btn');
+					btn.setAttribute('big', 1);
+					btn.innerHTML = data[j+1][0] + '月详情';
+					btn.month = data[j+1][0];
+					btn.onclick = function() {
+						Wencai.month = this.month;
+						Wencai.setMonth();
+						Wencai.creatMonth();
+						Wencai.setDaily('base', 'month', this.month);
+					}
 				}
+
 			}
 		}
 	}
 
+
+
 	this.advanceStr = function(data) {
-		return data[1] + data[0] + '预告净利润/' + data[1] + '年' + data[2] + '市值前20';
+		return this.year+ data[0] + '预告净利润/' + this.year + '年' + data[1] + '市值前20';
 	}
 
-	this.link = function(td, word, key) {
+	this.monthCount = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+
+	this.setMonth = function() {
+		this.days = [];
+		this.holiday = holiday.split('\n');
+		if ((this.year % 400 === 0) || (this.year % 100 !== 0 && this.year % 4 === 0))
+			this.monthCount[1] = 29;
+		let preDays = [];
+		let curDays = [];
+		let preYear = this.year;
+		let preMonth = this.month-1;
+
+		if (this.month == 1) {
+			preMonth = 12;
+			preYear = this.year-1;
+		}
+
+		let date = new Date(preYear, preMonth-1, 1);
+		for (let i=0;i <date.getDay(); i++) {
+			preDays.push(0);
+		}
+		for (let i=1;i <=this.monthCount[preMonth-1]; i++) {
+			preDays.push(preMonth + '月' + i + '日');
+		}
+		for (let i=1;i <=this.monthCount[this.month-1]; i++) {
+			preDays.push(this.month + '月' + i + '日');
+		}
+		for (let i in preDays) {
+			let week = i%7; 
+			if (week>0 && week<6) {
+				curDays.push([preDays[i], week]); 
+			}
+		}
+		for (let i in curDays) {
+			if (!curDays[i][0])
+				continue;
+			 if(~~(curDays[i][0].split('月')[0]) == this.month) {
+				let json = {
+					date: curDays[i][0], 
+					week: curDays[i][1], 
+					preDate: curDays[i-1][0], 
+					preWeek: curDays[i-5-curDays[i][1]][0],
+					holiday: '',
+				};
+				for (let j in this.holiday) {
+					if (this.year + '年' + curDays[i][0] == this.holiday[j].split(',')[0]) {
+						json.holiday = this.holiday[j].split(',')[1];
+						break;
+					}
+				}
+				this.days.push(json);
+			}
+		}
+		console.log(this.days);
+	}
+
+
+
+	this.creatMonth = function() {
+		table2.innerHTML = '';
+		let tr = this.creatElem('tr', table2, 'tr');
+		for (let i=1;i<this.days[0].week;i++) {
+			let td = this.creatElem('td', tr, 'td');
+		}
+		for (let i in this.days) {
+			let data = this.days[i];
+			if (data.week == 1)
+				tr = this.creatElem('tr', table2, 'tr', data.week);
+			let td = this.creatElem('td', tr, 'td', data.date);
+			td.setAttribute('type', 'normal');
+			td.setAttribute('year', this.year);
+			td.idx = this.toIdx(this.year, data.date);
+			let date = this.creatElem('div', td, 'date');
+			date.innerHTML = data.date;
+			if (data.holiday) {
+				this.link(td, data, data.holiday, data.holiday);
+				continue;
+			}
+			let div = this.creatElem('div', td, 'button');
+			let btn = this.creatElem('button', div, 'btn');
+			btn.setAttribute('big', 1);
+			btn.innerHTML = this.doneText[this.ztDone(td.idx)] + '<br/>';
+			btn.idx = td.idx;
+			btn.onclick = function() {
+				Wencai.queryCode(this);
+			}
+			this.link(td, data, this.zhangtingStr(data),'ZT');
+			this.link(td, data, this.huatuoDayStr(data),'ZJL');
+			this.link(td, data, this.xinqijiDayStr(data),'XQJ');
+			this.link(td, data, this.huoqubingDayStr(data),'HQB');
+
+			// this.setDaily(i, 'date', this.year + '年'+ data.date);
+			if (data.week == 1) {
+				this.link(td, data, this.lishizhenWeekStr(data), 'LSZ');
+			}
+			if (data.week == 5) {
+				this.link(td, data, this.sickWeekStr(data),'BB');
+			}
+		}
+	}
+
+
+
+	this.link = function(td, data, word, key) {
+		data[key] = word;
 		let a = this.creatElem('a', td, key, td.idx);
+
 		a.setAttribute('year', this.year);
 		a.href = this.href.replace('#word', word);
 		a.text = this.texts[key] || key;
@@ -83,150 +212,73 @@ function __Wencai() {
 		a.idx = td.idx;
 		a.key = key;
 		a.innerHTML = a.text + '(' + this.getDaily(a.idx, a.key, 1) + ')<br/>';
-		let lastIdx = this.getDaily('1101', 'lastIdx');
-		let lastKey = this.getDaily('1101', 'lastKey');
+		a.onclick = function() {
+			Wencai.setDaily('base', 'lastIdx', this.idx);
+			Wencai.setDaily('base', 'lastKey', this.key);
+		}
+		let lastIdx = this.getDaily('base', 'lastIdx');
+		let lastKey = this.getDaily('base', 'lastKey');
 		if (a.idx == lastIdx && a.key == lastKey) {
 			td.scrollIntoView(1);
 			td.appendChild(this.save.parentNode);
 			this.save.parentNode.style.display = 'block';
 			this.save.onclick = function() {
 				let array = Wencai.toArray(Wencai.input.value);
+				if (lastKey == 'ZT')
+					Wencai.setDaily(lastIdx, 'cur', 0);
 				Wencai.setDaily(lastIdx, lastKey, array);
 				let a = Wencai.getElem(lastKey + '_' + lastIdx);
 				a.innerHTML = Wencai.texts[key]+ '(' + Wencai.getDaily(a.idx, a.key, 1) + ')<br/>';
+				Wencai.input.value = '';
 				Wencai.save.parentNode.style.display = 'none';
 			}
 		}
-		if (this.isPhone)
-			return;
-		a.onmouseup = function(e) {
-			Wencai.setDaily('1101', 'lastIdx', this.idx);
-			Wencai.setDaily('1101', 'lastKey', this.key);
-			Wencai.input.value = '';
-		}
 
-		a.onmouseover = function() {
-			Wencai.msgbox.innerHTML = Wencai.getDaily(this.idx, 'date') + ' ' + this.text;
-			let array = Wencai.getDaily(this.idx, this.key);
-			if (JSON.stringify(array).length < 10) array = [['空']];
-			for (let i in array) {
-				let tr = Wencai.creatElem('tr', Wencai.table3, this.key);
-				for (let j in array[i]) {
-					let td = Wencai.creatElem('td', tr, 'td');
-					td.setAttribute('type', 'mini');
-					td.innerHTML = array[i][j];
-				}
-			}
-		}
-		a.onmouseout = function() {
-			Wencai.msgbox.innerHTML = '';
-			Wencai.table3.innerHTML = '';
-		}
 	}
 
-	this.daily = function() {
-		this.data = [];
-		let list = dailyData.split('\n');
-		let tr = this.creatElem('tr', table2, 'tr');
-		for (let i in list) {
-			let temp = this.split(list[i]);
-			this.year = temp[1];
-			if (!temp[1])
-				continue;
-			if (temp[3] == 1)
-				tr = this.creatElem('tr', table2, 'tr', temp[1]);
-			let td = this.creatElem('td', tr, 'td', temp[0]);
-			td.setAttribute('type', 'normal');
-			td.setAttribute('year', this.year);
-			td.idx = this.getIdx(temp[1], temp[0]);
-			let date = this.creatElem('div', td, 'date');
-			date.innerHTML = temp[0];
-			if (temp[16]) {
-				this.link(td, temp[6], temp[6]);
-				continue;
-			}
-			let div = this.creatElem('div', td, 'button');
-			let btn = this.creatElem('button', div, 'btn');
-			btn.innerHTML = '涨停分析<br/>';
-			btn.idx = td.idx;
-			btn.onclick = function() {
-				Wencai.queryCode(this);
-			}
-			temp.push(this.zhangtingStr(temp));
-			temp.push(this.huatuoDayStr(temp));
-			temp.push(this.xinqijiDayStr(temp));
-			temp.push(this.huoqubingDayStr(temp));
-			this.link(td, temp[7],'ZT');
-			this.link(td, temp[8],'ZJL');
-			this.link(td, temp[9],'XQJ');
-			this.link(td, temp[10],'HQB');
-
-			// this.setDaily(i, 'date', temp[1] + '年'+ temp[0]);
-
-			if (temp[3] == 1) {
-				temp.push(this.lishizhenWeekStr(temp));
-				this.link(td, temp[11],'LSZ');
-			}
-			if (temp[3] == 5) {
-				temp.push(this.sickWeekStr(temp));
-				this.link(td, temp[11],'BB');
-			}
-			this.data[i] = temp;
-		}
-		console.log(this.data);
-	}
-
-	this.split = function(str) {
-		let data = str.split(',');
-		data[1] = ~~data[1];
-		data[2] = ~~data[2];
-		return data;
-	}
 
 	this.zhangtingStr = function(data) {
-		return data[0] + word[0] + data[0] + word[1];
+		return data.date + word[0] + data.date + word[1];
 	}
 
-
 	this.sickDayStr = function(data) {
-		return data[0] + word[8] + data[0] + word[9] + 
-		data[0] + word[6];
+		return data.date + word[8] + data.date + word[9] + 
+		data.date + word[6];
 	}
 
 	this.sickWeekStr = function(data) {
-		return data[0] + word[10] + data[0] + word[11] + 
-		data[0] + word[6];
+		return data.date + word[10] + data.date + word[11] + 
+		data.date + word[6];
 	}
 
 	this.lishizhenWeekStr = function(data) {
-		return data[5] + word[10] + data[5] + word[11] + 
-		data[5] + word[6] + 
-		data[0] + word[7] + 
-		data[0] + word[12] + data[5] + word[13];
+		return data.preWeek + word[10] + data.preWeek + word[11] + 
+		data.preWeek + word[6] + 
+		data.date + word[7] + 
+		data.date + word[12] + data.preWeek + word[13];
 	}
 
 	this.xinqijiDayStr = function(data) {
-		return data[0] + word[0] +  
-		data[4] + word[14] + data[4] + word[15];
+		return data.date + word[0] +  
+		data.preDate + word[14] + data.preDate + word[15];
 	}
 
 	this.huoqubingDayStr = function(data) {
-		return data[0] + word[0] +  
-		data[0] + word[16] + data[0] + word[17];
+		return data.date + word[0] +  
+		data.date + word[16] + data.date + word[17];
 	}
 
 	this.huatuoDayStr = function(data) {
-		return data[0] + word[18] + 
-		data[4] + word[19] + data[4] + word[20] +  
-		data[4] + word[21];  
+		return data.date + word[18] + 
+		data.preDate + word[19] + data.preDate + word[20] +  
+		data.preDate + word[21];  
 	}
 
 	this.queryCode = function(btn) {
-		let codes = this.getDaily(btn.idx, 'ZT');
 		let json = {
 			date: btn.idx,
-			cur: 0,
-			codes: codes,
+			cur: ~~this.getDaily(btn.idx, 'cur'),
+			codes: this.getDaily(btn.idx, 'ZT'),
 		}
 		localStorage.setItem('queryCodes',JSON.stringify(json));
 		window.location.href = "stock.html";
@@ -243,18 +295,34 @@ function __Wencai() {
 		return array;
 	}
 
-	this.getIdx = function(year, md) {
-		md = md.replace('日','').split('月');
-		return year+(md[0]>9?md[0]:'0'+md[0]) + (md[1]>9?md[1]:'0'+md[1]);
+    this.toDate = function(date) {
+        return date.substring(0,4) + '年' + date[4]+date[5] + '月' + date[6]+date[7] + '日';
+    }
+
+	this.toIdx = function(year, date) {
+		date = date.replace('日','').split('月');
+		return year+(date[0]>9?date[0]:'0'+date[0]) + (date[1]>9?date[1]:'0'+date[1]);
+	}
+
+	this.ztDone = function(idx) {
+		if (!this.getDaily(idx, 'ZT'))
+			return 0;
+		if (this.getDaily(idx, 'cur') == this.getDaily(idx, 'ZT').length)
+			return 2;
+		else
+			return 1;
 	}
 
 	this.getDaily = function(idx, key, islen) {
     	daily[idx] = daily[idx] || {};
     	let val = daily[idx][key];
-    	if (typeof(val) === 'object' && islen)
-    		return val.length;
-    	else
-			return val || '-';
+    	if (islen) {
+    		if (typeof(val) === 'object')
+    			return val.length;
+    		if (typeof(val) === 'undefined')
+    			return '-';
+    	}
+		return val || 0;
 	}
 
 	this.setDaily = function(idx, key, val) {
@@ -285,27 +353,23 @@ function __Wencai() {
 	this.zoom = function(z) {
     	this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|Mobile|MIX/i.test(navigator.userAgent));
     	if (z) {
-    		this.setDaily('1101', 'zoom', z);
+    		this.setDaily('base', 'zoom', z);
 			document.body.style.zoom = z;
     	} else {
-    		document.body.style.zoom = this.getDaily('1101', 'zoom');
+    		document.body.style.zoom = daily.base.zoom;
     	}
 	}
 }
 
-let seasonData = [
-	['一季度', 2021, '3月31日', [1],[2],[3]],
-	['二季度', 2021, '6月30日', [4],[5],[6]],
-	['三季度', 2021, '9月30日', [7],[8],[9]],
-	['四季度', 2021, '12月31日', [10],[11],[12]],
-	['一季度', 2022, '3月31日', [1],[2],[3]],
-	['二季度', 2022, '6月30日', [4],[5],[6]],
-	['三季度', 2022, '9月30日', [7],[8],[9]],
-	['四季度', 2022, '12月31日', [10],[11],[12]],
+let yearData = [
+	['一季度', '3月31日', [1],[2],[3]],
+	['二季度', '6月30日', [4],[5],[6]],
+	['三季度', '9月30日', [7],[8],[9]],
+	['四季度', '12月31日', [10],[11],[12]],
 ];
 
 let word = [
-	'涨停,换手率小于15,主板非st,',
+	'涨停,涨跌幅<11,换手率小于15,主板非st,',
 	'的市值<100亿,',
 	'的周涨跌幅大于0,',
 	'的收盘价大于',
@@ -329,395 +393,38 @@ let word = [
 	'收盘价>20日均线>30日均线>60日均线,',
 ];
 
-let dailyData =`
-1月4日,2021,1,1,1月1日,12月25日,
-1月5日,2021,1,2,1月4日,12月25日,
-1月6日,2021,1,3,1月5日,12月25日,
-1月7日,2021,1,4,1月6日,12月25日,
-1月8日,2021,1,5,1月7日,12月25日,
-1月11日,2021,1,1,1月8日,1月1日,
-1月12日,2021,1,2,1月11日,1月1日,
-1月13日,2021,1,3,1月12日,1月1日,
-1月14日,2021,1,4,1月13日,1月1日,
-1月15日,2021,1,5,1月14日,1月1日,
-1月18日,2021,1,1,1月15日,1月8日,
-1月19日,2021,1,2,1月18日,1月8日,
-1月20日,2021,1,3,1月19日,1月8日,
-1月21日,2021,1,4,1月20日,1月8日,
-1月22日,2021,1,5,1月21日,1月8日,
-1月25日,2021,1,1,1月22日,1月15日,
-1月26日,2021,1,2,1月25日,1月15日,
-1月27日,2021,1,3,1月26日,1月15日,
-1月28日,2021,1,4,1月27日,1月15日,
-1月29日,2021,1,5,1月28日,1月15日,
-2月1日,2021,2,1,1月29日,1月22日,
-2月2日,2021,2,2,2月1日,1月22日,
-2月3日,2021,2,3,2月2日,1月22日,
-2月4日,2021,2,4,2月3日,1月22日,
-2月5日,2021,2,5,2月4日,1月22日,
-2月8日,2021,2,1,2月5日,1月29日,
-2月9日,2021,2,2,2月8日,1月29日,
-2月10日,2021,2,3,2月9日,1月29日,春节
-2月11日,2021,2,4,2月10日,1月29日,春节
-2月12日,2021,2,5,2月11日,1月29日,春节
-2月15日,2021,2,1,2月12日,2月5日,春节
-2月16日,2021,2,2,2月15日,2月5日,春节
-2月17日,2021,2,3,2月16日,2月5日,春节
-2月18日,2021,2,4,2月17日,2月5日,春节
-2月19日,2021,2,5,2月18日,2月5日,
-2月22日,2021,2,1,2月19日,2月12日,
-2月23日,2021,2,2,2月22日,2月12日,
-2月24日,2021,2,3,2月23日,2月12日,
-2月25日,2021,2,4,2月24日,2月12日,
-2月26日,2021,2,5,2月25日,2月12日,
-3月1日,2021,3,1,2月26日,2月19日,
-3月2日,2021,3,2,3月1日,2月19日,
-3月3日,2021,3,3,3月2日,2月19日,
-3月4日,2021,3,4,3月3日,2月19日,
-3月5日,2021,3,5,3月4日,2月19日,
-3月8日,2021,3,1,3月5日,2月26日,
-3月9日,2021,3,2,3月8日,2月26日,
-3月10日,2021,3,3,3月9日,2月26日,
-3月11日,2021,3,4,3月10日,2月26日,
-3月12日,2021,3,5,3月11日,2月26日,
-3月15日,2021,3,1,3月12日,3月5日,
-3月16日,2021,3,2,3月15日,3月5日,
-3月17日,2021,3,3,3月16日,3月5日,
-3月18日,2021,3,4,3月17日,3月5日,
-3月19日,2021,3,5,3月18日,3月5日,
-3月22日,2021,3,1,3月19日,3月12日,
-3月23日,2021,3,2,3月22日,3月12日,
-3月24日,2021,3,3,3月23日,3月12日,
-3月25日,2021,3,4,3月24日,3月12日,
-3月26日,2021,3,5,3月25日,3月12日,
-3月29日,2021,3,1,3月26日,3月19日,
-3月30日,2021,3,2,3月29日,3月19日,
-3月31日,2021,3,3,3月30日,3月19日,
-4月1日,2021,4,4,3月31日,3月19日,
-4月2日,2021,4,5,4月1日,3月19日,
-4月5日,2021,4,1,4月2日,3月26日,清明节
-4月6日,2021,4,2,4月5日,3月26日,
-4月7日,2021,4,3,4月6日,3月26日,
-4月8日,2021,4,4,4月7日,3月26日,
-4月9日,2021,4,5,4月8日,3月26日,
-4月12日,2021,4,1,4月9日,4月2日,
-4月13日,2021,4,2,4月12日,4月2日,
-4月14日,2021,4,3,4月13日,4月2日,
-4月15日,2021,4,4,4月14日,4月2日,
-4月16日,2021,4,5,4月15日,4月2日,
-4月19日,2021,4,1,4月16日,4月9日,
-4月20日,2021,4,2,4月19日,4月9日,
-4月21日,2021,4,3,4月20日,4月9日,
-4月22日,2021,4,4,4月21日,4月9日,
-4月23日,2021,4,5,4月22日,4月9日,
-4月26日,2021,4,1,4月23日,4月16日,
-4月27日,2021,4,2,4月26日,4月16日,
-4月28日,2021,4,3,4月27日,4月16日,
-4月29日,2021,4,4,4月28日,4月16日,
-4月30日,2021,4,5,4月29日,4月16日,
-5月3日,2021,5,1,4月30日,4月23日,劳动节
-5月4日,2021,5,2,5月3日,4月23日,劳动节
-5月5日,2021,5,3,5月4日,4月23日,劳动节
-5月6日,2021,5,4,5月5日,4月23日,
-5月7日,2021,5,5,5月6日,4月23日,
-5月10日,2021,5,1,5月7日,4月30日,
-5月11日,2021,5,2,5月10日,4月30日,
-5月12日,2021,5,3,5月11日,4月30日,
-5月13日,2021,5,4,5月12日,4月30日,
-5月14日,2021,5,5,5月13日,4月30日,
-5月17日,2021,5,1,5月14日,5月7日,
-5月18日,2021,5,2,5月17日,5月7日,
-5月19日,2021,5,3,5月18日,5月7日,
-5月20日,2021,5,4,5月19日,5月7日,
-5月21日,2021,5,5,5月20日,5月7日,
-5月24日,2021,5,1,5月21日,5月14日,
-5月25日,2021,5,2,5月24日,5月14日,
-5月26日,2021,5,3,5月25日,5月14日,
-5月27日,2021,5,4,5月26日,5月14日,
-5月28日,2021,5,5,5月27日,5月14日,
-5月31日,2021,5,1,5月28日,5月21日,
-6月1日,2021,6,2,5月31日,5月21日,
-6月2日,2021,6,3,6月1日,5月21日,
-6月3日,2021,6,4,6月2日,5月21日,
-6月4日,2021,6,5,6月3日,5月21日,
-6月7日,2021,6,1,6月4日,5月28日,
-6月8日,2021,6,2,6月7日,5月28日,
-6月9日,2021,6,3,6月8日,5月28日,
-6月10日,2021,6,4,6月9日,5月28日,
-6月11日,2021,6,5,6月10日,5月28日,
-6月14日,2021,6,1,6月11日,6月4日,端午节
-6月15日,2021,6,2,6月14日,6月4日,
-6月16日,2021,6,3,6月15日,6月4日,
-6月17日,2021,6,4,6月16日,6月4日,
-6月18日,2021,6,5,6月17日,6月4日,
-6月21日,2021,6,1,6月18日,6月11日,
-6月22日,2021,6,2,6月21日,6月11日,
-6月23日,2021,6,3,6月22日,6月11日,
-6月24日,2021,6,4,6月23日,6月11日,
-6月25日,2021,6,5,6月24日,6月11日,
-6月28日,2021,6,1,6月25日,6月18日,
-6月29日,2021,6,2,6月28日,6月18日,
-6月30日,2021,6,3,6月29日,6月18日,
-7月1日,2021,7,4,6月30日,6月18日,
-7月2日,2021,7,5,7月1日,6月18日,
-7月5日,2021,7,1,7月2日,6月25日,
-7月6日,2021,7,2,7月5日,6月25日,
-7月7日,2021,7,3,7月6日,6月25日,
-7月8日,2021,7,4,7月7日,6月25日,
-7月9日,2021,7,5,7月8日,6月25日,
-7月12日,2021,7,1,7月9日,7月2日,
-7月13日,2021,7,2,7月12日,7月2日,
-7月14日,2021,7,3,7月13日,7月2日,
-7月15日,2021,7,4,7月14日,7月2日,
-7月16日,2021,7,5,7月15日,7月2日,
-7月19日,2021,7,1,7月16日,7月9日,
-7月20日,2021,7,2,7月19日,7月9日,
-7月21日,2021,7,3,7月20日,7月9日,
-7月22日,2021,7,4,7月21日,7月9日,
-7月23日,2021,7,5,7月22日,7月9日,
-7月26日,2021,7,1,7月23日,7月16日,
-7月27日,2021,7,2,7月26日,7月16日,
-7月28日,2021,7,3,7月27日,7月16日,
-7月29日,2021,7,4,7月28日,7月16日,
-7月30日,2021,7,5,7月29日,7月16日,
-8月2日,2021,8,1,7月30日,7月23日,
-8月3日,2021,8,2,8月2日,7月23日,
-8月4日,2021,8,3,8月3日,7月23日,
-8月5日,2021,8,4,8月4日,7月23日,
-8月6日,2021,8,5,8月5日,7月23日,
-8月9日,2021,8,1,8月6日,7月30日,
-8月10日,2021,8,2,8月9日,7月30日,
-8月11日,2021,8,3,8月10日,7月30日,
-8月12日,2021,8,4,8月11日,7月30日,
-8月13日,2021,8,5,8月12日,7月30日,
-8月16日,2021,8,1,8月13日,8月6日,
-8月17日,2021,8,2,8月16日,8月6日,
-8月18日,2021,8,3,8月17日,8月6日,
-8月19日,2021,8,4,8月18日,8月6日,
-8月20日,2021,8,5,8月19日,8月6日,
-8月23日,2021,8,1,8月20日,8月13日,
-8月24日,2021,8,2,8月23日,8月13日,
-8月25日,2021,8,3,8月24日,8月13日,
-8月26日,2021,8,4,8月25日,8月13日,
-8月27日,2021,8,5,8月26日,8月13日,
-8月30日,2021,8,1,8月27日,8月20日,
-8月31日,2021,8,2,8月30日,8月20日,
-9月1日,2021,9,3,8月31日,8月20日,
-9月2日,2021,9,4,9月1日,8月20日,
-9月3日,2021,9,5,9月2日,8月20日,
-9月6日,2021,9,1,9月3日,8月27日,
-9月7日,2021,9,2,9月6日,8月27日,
-9月8日,2021,9,3,9月7日,8月27日,
-9月9日,2021,9,4,9月8日,8月27日,
-9月10日,2021,9,5,9月9日,8月27日,
-9月13日,2021,9,1,9月10日,9月3日,
-9月14日,2021,9,2,9月13日,9月3日,
-9月15日,2021,9,3,9月14日,9月3日,
-9月16日,2021,9,4,9月15日,9月3日,
-9月17日,2021,9,5,9月16日,9月3日,
-9月20日,2021,9,1,9月17日,9月10日,中秋节
-9月21日,2021,9,2,9月20日,9月10日,中秋节
-9月22日,2021,9,3,9月21日,9月10日,
-9月23日,2021,9,4,9月22日,9月10日,
-9月24日,2021,9,5,9月23日,9月10日,
-9月27日,2021,9,1,9月24日,9月17日,
-9月28日,2021,9,2,9月27日,9月17日,
-9月29日,2021,9,3,9月28日,9月17日,
-9月30日,2021,9,4,9月29日,9月17日,
-10月1日,2021,10,5,9月30日,9月17日,国庆节
-10月4日,2021,10,1,10月1日,9月24日,国庆节
-10月5日,2021,10,2,10月4日,9月24日,国庆节
-10月6日,2021,10,3,10月5日,9月24日,国庆节
-10月7日,2021,10,4,10月6日,9月24日,国庆节
-10月8日,2021,10,5,10月7日,9月24日,
-10月11日,2021,10,1,10月8日,10月1日,
-10月12日,2021,10,2,10月11日,10月1日,
-10月13日,2021,10,3,10月12日,10月1日,
-10月14日,2021,10,4,10月13日,10月1日,
-10月15日,2021,10,5,10月14日,10月1日,
-10月18日,2021,10,1,10月15日,10月8日,
-10月19日,2021,10,2,10月18日,10月8日,
-10月20日,2021,10,3,10月19日,10月8日,
-10月21日,2021,10,4,10月20日,10月8日,
-10月22日,2021,10,5,10月21日,10月8日,
-10月25日,2021,10,1,10月22日,10月15日,
-10月26日,2021,10,2,10月25日,10月15日,
-10月27日,2021,10,3,10月26日,10月15日,
-10月28日,2021,10,4,10月27日,10月15日,
-10月29日,2021,10,5,10月28日,10月15日,
-11月1日,2021,11,1,10月29日,10月22日,
-11月2日,2021,11,2,11月1日,10月22日,
-11月3日,2021,11,3,11月2日,10月22日,
-11月4日,2021,11,4,11月3日,10月22日,
-11月5日,2021,11,5,11月4日,10月22日,
-11月8日,2021,11,1,11月5日,10月29日,
-11月9日,2021,11,2,11月8日,10月29日,
-11月10日,2021,11,3,11月9日,10月29日,
-11月11日,2021,11,4,11月10日,10月29日,
-11月12日,2021,11,5,11月11日,10月29日,
-11月15日,2021,11,1,11月12日,11月5日,
-11月16日,2021,11,2,11月15日,11月5日,
-11月17日,2021,11,3,11月16日,11月5日,
-11月18日,2021,11,4,11月17日,11月5日,
-11月19日,2021,11,5,11月18日,11月5日,
-11月22日,2021,11,1,11月19日,11月12日,
-11月23日,2021,11,2,11月22日,11月12日,
-11月24日,2021,11,3,11月23日,11月12日,
-11月25日,2021,11,4,11月24日,11月12日,
-11月26日,2021,11,5,11月25日,11月12日,
-11月29日,2021,11,1,11月26日,11月19日,
-11月30日,2021,11,2,11月29日,11月19日,
-12月1日,2021,12,3,11月30日,11月19日,
-12月2日,2021,12,4,12月1日,11月19日,
-12月3日,2021,12,5,12月2日,11月19日,
-12月6日,2021,12,1,12月3日,11月26日,
-12月7日,2021,12,2,12月6日,11月26日,
-12月8日,2021,12,3,12月7日,11月26日,
-12月9日,2021,12,4,12月8日,11月26日,
-12月10日,2021,12,5,12月9日,11月26日,
-12月13日,2021,12,1,12月10日,12月3日,
-12月14日,2021,12,2,12月13日,12月3日,
-12月15日,2021,12,3,12月14日,12月3日,
-12月16日,2021,12,4,12月15日,12月3日,
-12月17日,2021,12,5,12月16日,12月3日,
-12月20日,2021,12,1,12月17日,12月10日,
-12月21日,2021,12,2,12月20日,12月10日,
-12月22日,2021,12,3,12月21日,12月10日,
-12月23日,2021,12,4,12月22日,12月10日,
-12月24日,2021,12,5,12月23日,12月10日,
-12月27日,2021,12,1,12月24日,12月17日,
-12月28日,2021,12,2,12月27日,12月17日,
-12月29日,2021,12,3,12月28日,12月17日,
-12月30日,2021,12,4,12月29日,12月17日,
-12月31日,2021,12,5,12月30日,12月17日,
-1月3日,2022,1,1,12月31日,12月24日,元旦
-1月4日,2022,1,2,1月3日,12月24日,
-1月5日,2022,1,3,1月4日,12月24日,
-1月6日,2022,1,4,1月5日,12月24日,
-1月7日,2022,1,5,1月6日,12月24日,
-1月10日,2022,1,1,1月7日,12月31日,
-1月11日,2022,1,2,1月10日,12月31日,
-1月12日,2022,1,3,1月11日,12月31日,
-1月13日,2022,1,4,1月12日,12月31日,
-1月14日,2022,1,5,1月13日,12月31日,
-1月17日,2022,1,1,1月14日,1月7日,
-1月18日,2022,1,2,1月17日,1月7日,
-1月19日,2022,1,3,1月18日,1月7日,
-1月20日,2022,1,4,1月19日,1月7日,
-1月21日,2022,1,5,1月20日,1月7日,
-1月24日,2022,1,1,1月21日,1月14日,
-1月25日,2022,1,2,1月24日,1月14日,
-1月26日,2022,1,3,1月25日,1月14日,
-1月27日,2022,1,4,1月26日,1月14日,
-1月28日,2022,1,5,1月27日,1月14日,
-1月31日,2022,1,1,1月28日,1月21日,春节
-2月1日,2022,2,2,1月31日,1月21日,春节
-2月2日,2022,2,3,2月1日,1月21日,春节
-2月3日,2022,2,4,2月2日,1月21日,春节
-2月4日,2022,2,5,2月3日,1月21日,春节
-2月7日,2022,2,1,2月4日,1月28日,
-2月8日,2022,2,2,2月7日,1月28日,
-2月9日,2022,2,3,2月8日,1月28日,
-2月10日,2022,2,4,2月9日,1月28日,
-2月11日,2022,2,5,2月10日,1月28日,
-2月14日,2022,2,1,2月11日,2月4日,
-2月15日,2022,2,2,2月14日,2月4日,
-2月16日,2022,2,3,2月15日,2月4日,
-2月17日,2022,2,4,2月16日,2月4日,
-2月18日,2022,2,5,2月17日,2月4日,
-2月21日,2022,2,1,2月18日,2月11日,
-2月22日,2022,2,2,2月21日,2月11日,
-2月23日,2022,2,3,2月22日,2月11日,
-2月24日,2022,2,4,2月23日,2月11日,
-2月25日,2022,2,5,2月24日,2月11日,
-2月28日,2022,2,1,2月25日,2月18日,
-3月1日,2022,3,2,2月28日,2月18日,
-3月2日,2022,3,3,3月1日,2月18日,
-3月3日,2022,3,4,3月2日,2月18日,
-3月4日,2022,3,5,3月3日,2月18日,
-3月7日,2022,3,1,3月4日,2月25日,
-3月8日,2022,3,2,3月7日,2月25日,
-3月9日,2022,3,3,3月8日,2月25日,
-3月10日,2022,3,4,3月9日,2月25日,
-3月11日,2022,3,5,3月10日,2月25日,
-3月14日,2022,3,1,3月11日,3月4日,
-3月15日,2022,3,2,3月14日,3月4日,
-3月16日,2022,3,3,3月15日,3月4日,
-3月17日,2022,3,4,3月16日,3月4日,
-3月18日,2022,3,5,3月17日,3月4日,
-3月21日,2022,3,1,3月18日,3月11日,
-3月22日,2022,3,2,3月21日,3月11日,
-3月23日,2022,3,3,3月22日,3月11日,
-3月24日,2022,3,4,3月23日,3月11日,
-3月25日,2022,3,5,3月24日,3月11日,
-3月28日,2022,3,1,3月25日,3月18日,
-3月29日,2022,3,2,3月28日,3月18日,
-3月30日,2022,3,3,3月29日,3月18日,
-3月31日,2022,3,4,3月30日,3月18日,
-4月1日,2022,4,5,3月31日,3月18日,
-4月4日,2022,4,1,4月1日,3月25日,清明节
-4月5日,2022,4,2,4月4日,3月25日,清明节
-4月6日,2022,4,3,4月5日,3月25日,
-4月7日,2022,4,4,4月6日,3月25日,
-4月8日,2022,4,5,4月7日,3月25日,
-4月11日,2022,4,1,4月8日,4月1日,
-4月12日,2022,4,2,4月11日,4月1日,
-4月13日,2022,4,3,4月12日,4月1日,
-4月14日,2022,4,4,4月13日,4月1日,
-4月15日,2022,4,5,4月14日,4月1日,
-4月18日,2022,4,1,4月15日,4月8日,
-4月19日,2022,4,2,4月18日,4月8日,
-4月20日,2022,4,3,4月19日,4月8日,
-4月21日,2022,4,4,4月20日,4月8日,
-4月22日,2022,4,5,4月21日,4月8日,
-4月25日,2022,4,1,4月22日,4月15日,
-4月26日,2022,4,2,4月25日,4月15日,
-4月27日,2022,4,3,4月26日,4月15日,
-4月28日,2022,4,4,4月27日,4月15日,
-4月29日,2022,4,5,4月28日,4月15日,
-5月2日,2022,5,1,4月29日,4月22日,劳动节
-5月3日,2022,5,2,5月2日,4月22日,劳动节
-5月4日,2022,5,3,5月3日,4月22日,劳动节
-5月5日,2022,5,4,5月4日,4月22日,
-5月6日,2022,5,5,5月5日,4月22日,
-5月9日,2022,5,1,5月6日,4月29日,
-5月10日,2022,5,2,5月9日,4月29日,
-5月11日,2022,5,3,5月10日,4月29日,
-5月12日,2022,5,4,5月11日,4月29日,
-5月13日,2022,5,5,5月12日,4月29日,
-5月16日,2022,5,1,5月13日,5月6日,
-5月17日,2022,5,2,5月16日,5月6日,
-5月18日,2022,5,3,5月17日,5月6日,
-5月19日,2022,5,4,5月18日,5月6日,
-5月20日,2022,5,5,5月19日,5月6日,
-5月23日,2022,5,1,5月20日,5月13日,
-5月24日,2022,5,2,5月23日,5月13日,
-5月25日,2022,5,3,5月24日,5月13日,
-5月26日,2022,5,4,5月25日,5月13日,
-5月27日,2022,5,5,5月26日,5月13日,
-5月30日,2022,5,1,5月27日,5月20日,
-5月31日,2022,5,2,5月30日,5月20日,
-6月1日,2022,6,3,5月31日,5月20日,
-6月2日,2022,6,4,6月1日,5月20日,
-6月3日,2022,6,5,6月2日,5月20日,端午节
-6月6日,2022,6,1,6月3日,5月27日,
-6月7日,2022,6,2,6月6日,5月27日,
-6月8日,2022,6,3,6月7日,5月27日,
-6月9日,2022,6,4,6月8日,5月27日,
-6月10日,2022,6,5,6月9日,5月27日,
-6月13日,2022,6,1,6月10日,6月3日,
-6月14日,2022,6,2,6月13日,6月3日,
-6月15日,2022,6,3,6月14日,6月3日,
-6月16日,2022,6,4,6月15日,6月3日,
-6月17日,2022,6,5,6月16日,6月3日,
-6月20日,2022,6,1,6月17日,6月10日,
-6月21日,2022,6,2,6月20日,6月10日,
-6月22日,2022,6,3,6月21日,6月10日,
-6月23日,2022,6,4,6月22日,6月10日,
-6月24日,2022,6,5,6月23日,6月10日,
-6月27日,2022,6,1,6月24日,6月17日,
-6月28日,2022,6,2,6月27日,6月17日,
-6月29日,2022,6,3,6月28日,6月17日,
-6月30日,2022,6,4,6月29日,6月17日,
-7月1日,2022,7,5,6月30日,6月17日,
+
+
+let holiday =`
+2021年2月10日,春节
+2021年2月11日,春节
+2021年2月12日,春节
+2021年2月15日,春节
+2021年2月16日,春节
+2021年2月17日,春节
+2021年2月18日,春节
+2021年4月5日,清明节
+2021年5月3日,劳动节
+2021年5月4日,劳动节
+2021年5月5日,劳动节
+2021年6月14日,端午节
+2021年9月20日,中秋节
+2021年9月21日,中秋节
+2021年10月1日,国庆节
+2021年10月4日,国庆节
+2021年10月5日,国庆节
+2021年10月6日,国庆节
+2021年10月7日,国庆节
+2022年1月3日,元旦
+2022年1月31日,春节
+2022年2月1日,春节
+2022年2月2日,春节
+2022年2月3日,春节
+2022年2月4日,春节
+2022年4月4日,清明节
+2022年4月5日,清明节
+2022年5月2日,劳动节
+2022年5月3日,劳动节
+2022年5月4日,劳动节
+2022年6月3日,端午节
 `;
