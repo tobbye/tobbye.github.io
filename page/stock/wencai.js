@@ -41,10 +41,11 @@ function __Wencai() {
 		this.write = this.getElem('write');
 		this.input = this.getElem('input');
 		this.save = this.getElem('save');
-		daily = JSON.parse(localStorage.getItem('daily')) || [];
-		daily.base = daily.base || {};
-		this.year = daily.base.year || 2021;
-		this.month = daily.base.month || 8;
+		this.base = this.getItem('base');
+		this.year = this.base.year || 2021;
+		this.month = this.base.month || 8;
+		daily = this.getItem(this.year);
+		console.log(daily);
 		this.creatYear();
 		this.setMonth();
 		this.creatMonth();
@@ -52,8 +53,9 @@ function __Wencai() {
 
 
 
+
 	this.setYear = function(year) {
-		this.setDaily('base', 'year', year);
+		this.setBase('year', year);
         window.location.reload();
 	}
 
@@ -83,7 +85,7 @@ function __Wencai() {
 						Wencai.month = this.month;
 						Wencai.setMonth();
 						Wencai.creatMonth();
-						Wencai.setDaily('base', 'month', this.month);
+						Wencai.setBase('month', this.month);
 					}
 				}
 
@@ -151,7 +153,7 @@ function __Wencai() {
 				this.days.push(json);
 			}
 		}
-		console.log(this.days);
+		this.setItem('days', this.days);
 	}
 
 
@@ -182,14 +184,12 @@ function __Wencai() {
 			btn.innerHTML = this.doneText[this.ztDone(td.idx)] + '<br/>';
 			btn.idx = td.idx;
 			btn.onclick = function() {
-				Wencai.queryCode(this);
+				Wencai.setQuery(this.idx);
 			}
 			this.link(td, data, this.zhangtingStr(data),'ZT');
 			this.link(td, data, this.huatuoDayStr(data),'ZJL');
 			this.link(td, data, this.xinqijiDayStr(data),'XQJ');
 			this.link(td, data, this.huoqubingDayStr(data),'HQB');
-
-			// this.setDaily(i, 'date', this.year + '年'+ data.date);
 			if (data.week == 1) {
 				this.link(td, data, this.lishizhenWeekStr(data), 'LSZ');
 			}
@@ -209,31 +209,41 @@ function __Wencai() {
 		a.href = this.href.replace('#word', word);
 		a.text = this.texts[key] || key;
 		a.word = word;
-		a.idx = td.idx;
-		a.key = key;
-		a.innerHTML = a.text + '(' + this.getDaily(a.idx, a.key, 1) + ')<br/>';
-		a.onclick = function() {
-			Wencai.setDaily('base', 'lastIdx', this.idx);
-			Wencai.setDaily('base', 'lastKey', this.key);
+		if (td.idx) {
+			a.idx = td.idx;
+			a.key = key;
+			a.innerHTML = a.text + '(' + this.getDaily(a.idx, a.key, 1) + ')<br/>';
+		} else {
+			a.innerHTML = a.text + '(-)<br/>';
+			return;
 		}
-		let lastIdx = this.getDaily('base', 'lastIdx');
-		let lastKey = this.getDaily('base', 'lastKey');
-		if (a.idx == lastIdx && a.key == lastKey) {
+
+		a.onclick = function() {
+			Wencai.setBase('lastIdx', this.idx);
+			Wencai.setBase('lastKey', this.key);
+		}
+		if (a.idx == this.base.lastIdx && a.key == this.base.lastKey) {
 			td.scrollIntoView(1);
 			td.appendChild(this.save.parentNode);
 			this.save.parentNode.style.display = 'block';
 			this.save.onclick = function() {
-				let array = Wencai.toArray(Wencai.input.value);
-				if (lastKey == 'ZT')
-					Wencai.setDaily(lastIdx, 'cur', 0);
-				Wencai.setDaily(lastIdx, lastKey, array);
-				let a = Wencai.getElem(lastKey + '_' + lastIdx);
-				a.innerHTML = Wencai.texts[key]+ '(' + Wencai.getDaily(a.idx, a.key, 1) + ')<br/>';
-				Wencai.input.value = '';
-				Wencai.save.parentNode.style.display = 'none';
+				Wencai.saveInput(this);
 			}
 		}
+	}
 
+	this.saveInput =  function() {
+		let array = this.toArray(this.input.value);
+		let lastIdx = this.base.lastIdx;
+		let lastKey = this.base.lastKey;
+		if (lastKey == 'ZT') 
+			this.setDaily('cur', 0);
+		this.setDaily(lastKey, array);
+		let a = this.getElem(lastKey + '_' + lastIdx);
+		a.innerHTML = this.texts[a.key]+ '(' + this.getDaily(lastIdx, lastKey, 1) + ')<br/>';
+
+		this.input.value = '';
+		this.save.parentNode.style.display = 'none';
 	}
 
 
@@ -274,13 +284,13 @@ function __Wencai() {
 		data.preDate + word[21];  
 	}
 
-	this.queryCode = function(btn) {
-		let json = {
-			date: btn.idx,
-			cur: ~~this.getDaily(btn.idx, 'cur'),
-			codes: this.getDaily(btn.idx, 'ZT'),
+	this.setQuery = function(date) {
+		let query = {
+			date: date,
+			cur: ~~this.getDaily(date, 'cur'),
+			codes: this.getDaily(date, 'ZT'),
 		}
-		localStorage.setItem('queryCodes',JSON.stringify(json));
+		this.setItem('query', query);
 		window.location.href = "stock.html";
 	}
 
@@ -295,8 +305,8 @@ function __Wencai() {
 		return array;
 	}
 
-    this.toDate = function(date) {
-        return date.substring(0,4) + '年' + date[4]+date[5] + '月' + date[6]+date[7] + '日';
+    this.toDate = function(idx) {
+        return idx.substring(0,4) + '年' + idx[4]+idx[5] + '月' + idx[6]+idx[7] + '日';
     }
 
 	this.toIdx = function(year, date) {
@@ -313,8 +323,10 @@ function __Wencai() {
 			return 1;
 	}
 
+
+
 	this.getDaily = function(idx, key, islen) {
-    	daily[idx] = daily[idx] || {};
+    	daily[idx] = daily[idx] || {date: this.toDate(idx)};
     	let val = daily[idx][key];
     	if (islen) {
     		if (typeof(val) === 'object')
@@ -325,11 +337,29 @@ function __Wencai() {
 		return val || 0;
 	}
 
-	this.setDaily = function(idx, key, val) {
-    	daily[idx] = daily[idx] || {};
-    	daily[idx][key] = val;
-    	localStorage.setItem('daily', JSON.stringify(daily));
-	}
+    this.setDaily = function(key, val) {
+        if (!key) return;
+        let idx = this.base.lastIdx;
+        daily[idx] = daily[idx] || {};
+        daily[idx][key] = val;
+        this.setItem(this.year, daily);
+    }
+
+    this.setBase = function(key, val) {
+        if (!key) return;
+        this.base[key] = val;
+        this.setItem('base', this.base);
+    }
+
+    this.getItem = function(key) {
+        key = 'daily' + key;
+        return JSON.parse(eval(key) || localStorage.getItem(key)) || {};
+    }
+
+    this.setItem = function(key, item) {
+        key = 'daily' + key;
+        localStorage.setItem(key, JSON.stringify(item));
+    }
 
 	this.creatElem = function(type, parent, className, id) {
 	    var e = document.createElement(type);
@@ -353,10 +383,10 @@ function __Wencai() {
 	this.zoom = function(z) {
     	this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|Mobile|MIX/i.test(navigator.userAgent));
     	if (z) {
-    		this.setDaily('base', 'zoom', z);
+    		this.setBase('zoom', z);
 			document.body.style.zoom = z;
     	} else {
-    		document.body.style.zoom = daily.base.zoom;
+    		document.body.style.zoom = this.base.zoom;
     	}
 	}
 }
@@ -369,7 +399,7 @@ let yearData = [
 ];
 
 let word = [
-	'涨停,涨跌幅<11,换手率小于15,主板非st,',
+	'涨停,涨跌幅<11,换手率小于20,主板非st,',
 	'的市值<100亿,',
 	'的周涨跌幅大于0,',
 	'的收盘价大于',

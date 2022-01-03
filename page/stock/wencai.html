@@ -4,7 +4,8 @@
 	<meta charset="UTF-8"/>
 	<title>问财</title>
 
-	<script src="wencai.js"> </script>
+	<script type="text/javascript" src="daily.js"></script>
+	<script type="text/javascript" src="wencai.js"></script>
 	<style type="text/css">
 
 		body {
@@ -47,11 +48,11 @@
 
 		a {
 			font-size: 1.2em;
-			color: darkorange;
+			color: #f46;
 			text-decoration: none;
 		}
 		a:visited {
-			color: darkred;
+			color: indigo;
 		}
 		a:hover {
 			color: magenta;
@@ -65,10 +66,10 @@
 			padding: 5px;
 		}
 
-		[year='2019'] {color: #f64; }
-		[year='2020'] {color: #f46; }
-		[year='2021'] {color: #48f; }
-		[year='2022'] {color: #84f; }
+		[year='2019'] {color: dodgerblue; }
+		[year='2020'] {color: #ff4466; }
+		[year='2021'] {color: dodgerblue; }
+		[year='2022'] {color: #ff4466; }
 		.date {
 			font-size: 1.3em;
 			font-weight: bold;
@@ -95,12 +96,12 @@
 <body>
 	<div id="outer">
         <div id="topper">
-            <button onclick='Stock.zoom(1.0)'>zoom=1.0</button>
-            <button onclick='Stock.zoom(1.2)'>zoom=1.2</button>
-            <button onclick='Stock.zoom(1.4)'>zoom=1.4</button>
-            <button onclick='Stock.zoom(1.6)'>zoom=1.6</button>
-            <button onclick='Stock.zoom(1.8)'>zoom=1.8</button>
-            <button onclick='Stock.zoom(2.0)'>zoom=2.0</button>    
+            <button onclick='Wencai.zoom(1.0)'>zoom=1.0</button>
+            <button onclick='Wencai.zoom(1.2)'>zoom=1.2</button>
+            <button onclick='Wencai.zoom(1.4)'>zoom=1.4</button>
+            <button onclick='Wencai.zoom(1.6)'>zoom=1.6</button>
+            <button onclick='Wencai.zoom(1.8)'>zoom=1.8</button>
+            <button onclick='Wencai.zoom(2.0)'>zoom=2.0</button>    
         </div>
 		<div id="topper">
 			<button big=1 onclick='Wencai.setYear(2019)'>year=2019</button>

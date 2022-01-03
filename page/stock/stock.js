@@ -38,6 +38,8 @@ let daily;
 let Stock = new __Stock();
 function __Stock() {
 
+    this.doneText = ['自动复盘进行中...', '复盘进行中...', '自动复盘完成', '复盘完成', '缺少数据'];
+
     this.init = function() {
         this.cfg();
         this.zoom();
@@ -54,30 +56,65 @@ function __Stock() {
         this.dateMonth = [];
         this.dateWeek = [];
         this.dateDay = [];
-        this.getCodes();
+        this.getQuery();
     }
 
-    this.getCodes = function() {
-        daily = JSON.parse(localStorage.getItem('daily')) || [];
-        let json = JSON.parse(localStorage.getItem('queryCodes'));
-        this.json = json;
-        if (json.codes.length > json.cur) {
-            this.cur = json.cur;
-            this.end = json.date;
+    this.getQuery = function() {
+        this.days = this.getItem('days');
+        this.base = this.getItem('base');
+        this.year = this.base.year || 2021;
+        daily = this.getItem(this.year);
+        let query = this.getItem('query');
+        this.query = query;
+
+        if (query.codes.length > query.cur) {
+            this.cur = query.cur;
+            this.end = query.date;
             this.start = [this.end-10000, this.end-20000, this.end-30000];
-            this.code = json.codes[json.cur][1];
-            this.codeName = json.codes[json.cur][2]; 
+            this.code = query.codes[query.cur][1];
+            this.codeName = query.codes[query.cur][2]; 
             this.initHREF();
-            this.getElem('btn1').innerHTML = '复盘进行中... ' + this.codeName;
+            this.getElem('btn1').innerHTML = this.doneText[this.base.auto?0:1] + this.codeName;
         } else {
-            this.setDaily(json.date, 'cur', json.cur);
-            this.setDaily(json.date, 'ZT', json.codes);   
-            this.getElem('btn1').innerHTML = '复盘完成';
+            this.base.lastIdx = query.date;
+            this.setDaily('cur', query.cur);
+            this.setDaily('ZT', query.codes);   
+            this.getElem('btn1').innerHTML = this.doneText[this.base.auto?2:3];
+            if (this.base.auto)
+                this.autoNext(1);
         }
+        if (!query.codes)
+            this.getElem('btn1').innerHTML = this.doneText[4];
         this.creatDetail();
     }
 
+    this.autoNext = function(offset, auto) {
+        if (auto) {
+            this.setBase('auto', !this.base.auto);
+            return;
+        }
+        let date = this.query.date;
+        for (let i in this.days) {
+            let curDate = this.toIdx(this.year, this.days[~~i].date);
+            if (this.days[~~i+offset] && curDate == date) {
+                curDate = this.toIdx(this.year, this.days[~~i+offset].date);
+                return this.setQuery(curDate);
+            }
+        }
+    }
 
+
+    this.setQuery = function(date) {
+        let query = {
+            date: date,
+            cur: ~~this.getDaily(date, 'cur'),
+            codes: this.getDaily(date, 'ZT'),
+        }
+        this.setItem('query', query);
+        setTimeout(function(){
+            window.location.href = "stock.html";
+        },this.base.auto?500:0);
+    }
 
     this.initHREF = function() {
         this.src = [];
@@ -167,42 +204,38 @@ function __Stock() {
 
     this.next = function() {
         if (this.curDay[VAL.OPEN]) {
-            let json = JSON.parse(localStorage.getItem('queryCodes'));
-            let curCode = json.codes[json.cur];
+            let query = this.getItem('query');
+            let curCode = query.codes[query.cur];
             curCode.push(this.curDay[VAL.OPEN]);
             curCode.push(this.curDay[VAL.CLOSE]);
             curCode.push(this.curDay[VAL.DEGREE]);
             curCode.push(this.curWeek[VAL.LINE]);
             curCode.push(this.curWeek[VAL.CROSS]);
-            curCode.push(json.date);
-            json.codes[json.cur] = curCode;
-            json.cur += 1;
-            localStorage.setItem('queryCodes',JSON.stringify(json)); 
+            curCode.push(query.date);
+            query.codes[query.cur] = curCode;
+            query.cur += 1;
+            this.setItem('query', query);
         }
         window.location.reload();
     }
 
 
-    this.reload = function() {
-
-    }
-
-
     this.creatDetail = function() {
-        this.thead.innerHTML = this.toDate(this.json.date) + ' · 涨停突破';
+        let codes = this.query.codes;
+        this.thead.innerHTML = this.toDate(this.query.date) + ' · 涨停突破';
         this.tbody.innerHTML += '<tr head=1><td>' + Source.head.join('</td><td>') + '</td></tr>';
-        for (let i in this.json.codes) {
+        for (let i in codes) {
             let tr = this.creatElem('tr', this.tbody, 'tr');
-            if (this.json.codes[i][7] == true)
+            if (codes[i][7] == true)
                 tr.setAttribute('head', 1)
-            let mix = this.json.codes[i][4] / this.json.codes[i][6];
-            if (this.json.codes[i][6] && mix >1.1)
-                this.json.codes[i][7] = 'yes';
-            for (let j in this.json.codes[i]) {
+            let mix = codes[i][4] / codes[i][6];
+            if (codes[i][6] && mix >1.1) {
+                tr.setAttribute('head', 2)
+                codes[i][7] = 'yes';
+            }
+            for (let j in codes[i]) {
                 let td = this.creatElem('td', tr, 'td');
-                td.innerHTML = this.json.codes[i][j];
-                if (j == 7)
-                    td.setAttribute('head',1);
+                td.innerHTML = codes[i][j];
             }
         }
     }
@@ -224,7 +257,7 @@ function __Stock() {
 
     this.tDay = 30;
     this.bDay = 30; 
-    this.lDay = 50; 
+    this.lDay = 30; 
     this.setLadd = function(data, idx) {
         if (idx <= this.lDay)
             return [0,0,0,0];
@@ -252,7 +285,7 @@ function __Stock() {
         data[idx].push(top);
         data[idx].push(mid);
         data[idx].push(bot);
-        if (high < top*1.15 && data[idx-1][VAL.TOP] == data[idx-9][VAL.TOP])
+        if (high < top*1.15 && data[idx][VAL.TOP] == data[idx-8][VAL.TOP])
             data[idx][VAL.LINE] = this.to2f(top*1.1);
         if (!data[idx][VAL.LINE] && data[idx-1][VAL.LINE] && top <= data[idx-1][VAL.TOP])
             data[idx][VAL.LINE] = (data[idx-1][VAL.LINE]);
@@ -302,32 +335,60 @@ function __Stock() {
         return s1 > s2;
     }
 
-    this.toDate = function(date) {
-        return date.substring(0,4) + '年' + date[4]+date[5] + '月' + date[6]+date[7] + '日';
+    this.toDate = function(idx) {
+        return idx.substring(0,4) + '年' + idx[4]+idx[5] + '月' + idx[6]+idx[7] + '日';
     }
-    
+
     this.toIdx = function(year, date) {
         date = date.replace('日','').split('月');
         return year+(date[0]>9?date[0]:'0'+date[0]) + (date[1]>9?date[1]:'0'+date[1]);
     }
 
     this.ztDone = function(idx) {
-        return this.getDaily(idx, 'cur') == this.getDaily(idx, 'ZT').length;
+        if (!this.getDaily(idx, 'ZT'))
+            return 0;
+        if (this.getDaily(idx, 'cur') == this.getDaily(idx, 'ZT').length)
+            return 2;
+        else
+            return 1;
     }
+
+
 
     this.getDaily = function(idx, key, islen) {
-        daily[idx] = daily[idx] || {};
+        daily[idx] = daily[idx] || {date: this.toDate(idx)};
         let val = daily[idx][key];
-        if (typeof(val) === 'object' && islen)
-            return val.length;
-        else
-            return val || '-';
+        if (islen) {
+            if (typeof(val) === 'object')
+                return val.length;
+            if (typeof(val) === 'undefined')
+                return '-';
+        }
+        return val || 0;
     }
 
-    this.setDaily = function(idx, key, val) {
+    this.setDaily = function(key, val) {
+        if (!key) return;
+        let idx = this.base.lastIdx;
         daily[idx] = daily[idx] || {};
         daily[idx][key] = val;
-        localStorage.setItem('daily', JSON.stringify(daily));
+        this.setItem(this.year, daily);
+    }
+
+    this.setBase = function(key, val) {
+        if (!key) return;
+        this.base[key] = val;
+        this.setItem('base', this.base);
+    }
+
+    this.getItem = function(key) {
+        key = 'daily' + key;
+        return JSON.parse(eval(key) || localStorage.getItem(key)) || {};
+    }
+
+    this.setItem = function(key, item) {
+        key = 'daily' + key;
+        localStorage.setItem(key, JSON.stringify(item));
     }
 
     this.creatElem = function(type, parent, className, id) {
@@ -352,10 +413,10 @@ function __Stock() {
     this.zoom = function(z) {
         this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|Mobile|MIX/i.test(navigator.userAgent));
         if (z) {
-            this.setDaily('base', 'zoom', z);
+            this.setBase('zoom', z);
             document.body.style.zoom = z;
         } else {
-            document.body.style.zoom = this.getDaily('base', 'zoom');
+            document.body.style.zoom = this.base.zoom;
         }
     }
 }

@@ -3,7 +3,7 @@
 <head> 
 <title>涨停突破</title> 
 <meta charset="UTF-8">
-<script type="text/javascript" src="stock-name.js"></script>
+<script type="text/javascript" src="daily.js"></script>
 <script type="text/javascript" src="stock.js"></script>
 <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
 <style> 
@@ -36,11 +36,14 @@
         margin: 0px auto;
     }
 
-    [head] {
+    [head='1'] {
         color:darkred;
         font-weight: bold;
     }
-
+    [head='2'] {
+        color:darkblue;
+        font-weight: bold;
+    }
     td {
         margin: 0px;
         padding: 5px 10px;
@@ -102,7 +105,9 @@
         </div>
         <div id="outer">
             <div id="thead"></div>
-            <button id="btn1" big=1 onclick='Stock.reload(1)'>复盘完成</button>
+            <button id="btn0" big=1 onclick='Stock.autoNext(-1)'>前一天</button>
+            <button id="btn1" big=1 onclick='Stock.autoNext(1, 1)'>复盘完成</button>
+            <button id="btn2" big=1 onclick='Stock.autoNext(1)'>后一天</button>
             <table>
                 <tbody id="tbody">
                 </tbody>
