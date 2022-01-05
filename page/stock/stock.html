@@ -1,11 +1,11 @@
 <!DOCVAL>
 <html> 
 <head> 
-<title>涨停突破</title> 
+<title>查询</title> 
 <meta charset="UTF-8">
 <script type="text/javascript" src="daily.js"></script>
+<script type="text/javascript" src="tools.js"></script>
 <script type="text/javascript" src="stock.js"></script>
-<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
 <style> 
 
     body {
@@ -18,11 +18,12 @@
     }
 
     button {
-        margin-top: 5px;
+        margin: 5px 0px;
         font-size: 1em;
     }
 
     button[big] {
+        margin: 5px;
         padding: 5px 10px;
     }
 
@@ -96,12 +97,12 @@
 </head> 
     <body> 
         <div id="topper">
-            <button onclick='Stock.zoom(1.0)'>zoom=1.0</button>
-            <button onclick='Stock.zoom(1.2)'>zoom=1.2</button>
-            <button onclick='Stock.zoom(1.4)'>zoom=1.4</button>
-            <button onclick='Stock.zoom(1.6)'>zoom=1.6</button>
-            <button onclick='Stock.zoom(1.8)'>zoom=1.8</button>
-            <button onclick='Stock.zoom(2.0)'>zoom=2.0</button>    
+            <button onclick='Tools.zoom(1.0)'>zoom=1.0</button>
+            <button onclick='Tools.zoom(1.2)'>zoom=1.2</button>
+            <button onclick='Tools.zoom(1.4)'>zoom=1.4</button>
+            <button onclick='Tools.zoom(1.6)'>zoom=1.6</button>
+            <button onclick='Tools.zoom(1.8)'>zoom=1.8</button>
+            <button onclick='Tools.zoom(2.0)'>zoom=2.0</button>    
         </div>
         <div id="outer">
             <div id="thead"></div>

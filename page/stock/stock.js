@@ -1,11 +1,13 @@
 window.onload = function() {
+    Tools.init();
     Stock.init();
 }
 
 
 let Source = {
-    head: ['序号', '代码', '名称', '开盘', '收盘', '涨跌幅', '压力位', '突破','日期'],
-    periodStr: ['前一月','前一周','前一日'],
+    head: ['序号', '代码', '名称', '开盘', '收盘', '涨跌幅', '压力位','类型', '突破','日期'],
+    doneTexts: ['自动复盘进行中...', '复盘进行中...', '自动复盘完成', '复盘完成', '缺少数据'],
+    periodTexts: ['前一月','前一周','前一日'],
     period: ['hrefName', 'hrefDay', 'hrefWeek', 'hrefMonth'],
     hrefName: 'http://hq.sinajs.cn/list=#market#code',
     hrefDay: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=#start&end=#end&stat=1&order=A&period=d&callback=Stock.queryDay&rt=jsonp',
@@ -28,93 +30,85 @@ let VAL = {
     TOP:11,
     MID:12,
     BOT:13,
-    LINE:14,
-    CROSS:15,
+    PRESS:14,
+    PTYPE:15,
+    CROSS:16,
 }
 
-
-let daily;
+let TAL = {
+    INDEX:0,
+    CODE:1,
+    NAME:2,
+    OPEN:3,
+    CLOSE:4,
+    DEGREE:5,
+    PRESS:6,
+    PTYPE:7,
+    CROSS:8,
+    DATE:9,
+    FUT1:10,
+    FUT2:11,
+    FUT3:12,
+    FUT4:13,
+    FUT5:14,
+}
 
 let Stock = new __Stock();
 function __Stock() {
 
-    this.doneText = ['自动复盘进行中...', '复盘进行中...', '自动复盘完成', '复盘完成', '缺少数据'];
-
     this.init = function() {
-        this.cfg();
-        this.zoom();
-        console.log(this);
-    }
-
-    this.cfg = function() {
-        this.inner = this.getElem('inner');
-        this.outer = this.getElem('outer');
-        this.input = this.getElem('input');
-        this.tbody = this.getElem('tbody');
-        this.thead = this.getElem('thead');
-        this.head = document.getElementsByTagName('head')[0];
+        this.load();
         this.dateMonth = [];
         this.dateWeek = [];
         this.dateDay = [];
         this.getQuery();
+        console.log(this);
+    }
+
+    this.load = function() {
+        this.inner = Tools.getElem('inner');
+        this.outer = Tools.getElem('outer');
+        this.input = Tools.getElem('input');
+        this.tbody = Tools.getElem('tbody');
+        this.thead = Tools.getElem('thead');
+        this.head = document.getElementsByTagName('head')[0];
     }
 
     this.getQuery = function() {
-        this.days = this.getItem('days');
-        this.base = this.getItem('base');
-        this.year = this.base.year || 2021;
-        daily = this.getItem(this.year);
-        let query = this.getItem('query');
-        this.query = query;
-
+        let query = Tools.query;
         if (query.codes.length > query.cur) {
             this.cur = query.cur;
-            this.end = query.date;
-            this.start = [this.end-10000, this.end-20000, this.end-30000];
+            this.end = query.end;
+            this.start = [query.date, query.date-10000, query.date-20000, query.date-30000];
             this.code = query.codes[query.cur][1];
             this.codeName = query.codes[query.cur][2]; 
             this.initHREF();
-            this.getElem('btn1').innerHTML = this.doneText[this.base.auto?0:1] + this.codeName;
+            Tools.getElem('btn1').innerHTML = Source.doneTexts[Tools.base.auto?0:1] + this.codeName;
         } else {
-            this.base.lastIdx = query.date;
-            this.setDaily('cur', query.cur);
-            this.setDaily('ZT', query.codes);   
-            this.getElem('btn1').innerHTML = this.doneText[this.base.auto?2:3];
-            if (this.base.auto)
+            Tools.base.lastIdx = query.date;
+            Tools.setDaily('cur', query.cur);
+            Tools.setDaily('ZT', query.codes);   
+            Tools.getElem('btn1').innerHTML = Source.doneTexts[Tools.base.auto?2:3];
+            if (Tools.base.auto)
                 this.autoNext(1);
         }
         if (!query.codes)
-            this.getElem('btn1').innerHTML = this.doneText[4];
+            Tools.getElem('btn1').innerHTML = Source.doneTexts[4];
         this.creatDetail();
     }
 
     this.autoNext = function(offset, auto) {
         if (auto) {
-            this.setBase('auto', !this.base.auto);
+            Tools.setBase('auto', !Tools.base.auto);
             return;
         }
-        let date = this.query.date;
-        for (let i in this.days) {
-            let curDate = this.toIdx(this.year, this.days[~~i].date);
-            if (this.days[~~i+offset] && curDate == date) {
-                curDate = this.toIdx(this.year, this.days[~~i+offset].date);
-                return this.setQuery(curDate);
-            }
+        let query = Tools.query;
+        query.idx += offset;
+        if (query.idx > -1 && query.idx < Tools.days.length) {
+            Tools.setQuery(query.idx);
         }
     }
 
-
-    this.setQuery = function(date) {
-        let query = {
-            date: date,
-            cur: ~~this.getDaily(date, 'cur'),
-            codes: this.getDaily(date, 'ZT'),
-        }
-        this.setItem('query', query);
-        setTimeout(function(){
-            window.location.href = "stock.html";
-        },this.base.auto?500:0);
-    }
 
     this.initHREF = function() {
         this.src = [];
@@ -124,19 +118,19 @@ function __Stock() {
         for (let i in Source.period) {
             this.src[i] = Source[Source.period[i]]
             .replace('#market', this.market)
-            .replace('#start', this.start[i])
             .replace('#code', this.code)
+            .replace('#start', this.start[i])
             .replace('#end', this.end);
 
             if (this.script[i]) 
                 this.script[i].parentNode.removeChild(this.script);
-            this.script[i] = this.creatElem("script", this.head);  
+            this.script[i] = Tools.creatElem("script", this.head);  
             this.script[i].type = "text/javascript";
             this.script[i].src = this.src[i];
         }
         setTimeout(function() {
             Stock.judge();
-        }, 2000);
+        }, 1000);
     }
 
 
@@ -178,7 +172,7 @@ function __Stock() {
                 this.dateDay = origin;
             }
             if (idx == 2) {
-                this.setLadd(origin,i);
+                this.setLadder(origin,i);
                 this.dateWeek = origin;
             }
             if (idx == 3) {
@@ -188,53 +182,88 @@ function __Stock() {
     }
 
     this.judge = function() {
-        let curDay = this.dateDay[this.dateDay.length-1] || [];
-        let preDay = this.dateDay[this.dateDay.length-2] || [];
-        let curWeek = this.dateWeek[this.dateWeek.length-1] || [];
-        if (curWeek[VAL.LINE] && 
-            curDay[VAL.CLOSE] > curWeek[VAL.LINE] && 
-            preDay[VAL.CLOSE] < curWeek[VAL.LINE]) {
+        let curDay = [];
+        let preDay = [];
+        let curWeek = [];
+        for (i = this.dateDay.length-1; i>=0; i--) {
+            let day = this.dateDay[i];
+            if (Tools.compare(day[VAL.DATE], Tools.query.date)) {
+                this.dayIdx = i;
+                curDay = this.dateDay[i] || curDay;
+                preDay = this.dateDay[i-1] || preDay;
+                break;
+            }
+        }
+        for (i = this.dateWeek.length-1; i>=0; i--) {
+            let week = this.dateWeek[i];
+            if (Tools.compare(week[VAL.DATE], Tools.query.date)) {
+                this.weekIdx = i;
+                curWeek = this.dateWeek[i] || curWeek;
+                break;
+            }
+        }
+        if (curWeek[VAL.PRESS] && 
+            curDay[VAL.CLOSE] > curWeek[VAL.PRESS] && 
+            preDay[VAL.CLOSE] < curWeek[VAL.PRESS]) {
             curWeek[VAL.CROSS] = true;
         }
         this.curDay = curDay;
         this.curWeek = curWeek;
-        this.next();
+        this.nextCode();
+    }
+
+    this.futureDegree = function() {
+        this.future = [];
+        for (let i=1; i<6; i++) {
+            let day = this.dateDay[this.dayIdx+i];
+            if (day)
+                this.future.push(day[VAL.DEGREE]);
+        }
     }
 
 
-    this.next = function() {
+    this.nextCode = function() {
         if (this.curDay[VAL.OPEN]) {
-            let query = this.getItem('query');
+            this.futureDegree();
+            let query = Tools.query;
             let curCode = query.codes[query.cur];
-            curCode.push(this.curDay[VAL.OPEN]);
-            curCode.push(this.curDay[VAL.CLOSE]);
-            curCode.push(this.curDay[VAL.DEGREE]);
-            curCode.push(this.curWeek[VAL.LINE]);
-            curCode.push(this.curWeek[VAL.CROSS]);
-            curCode.push(query.date);
+            curCode[TAL.OPEN]   = this.curDay[VAL.OPEN];
+            curCode[TAL.CLOSE]  = this.curDay[VAL.CLOSE];
+            curCode[TAL.DEGREE] = this.curDay[VAL.DEGREE];
+            curCode[TAL.PRESS]  = this.curWeek[VAL.PRESS];
+            curCode[TAL.PTYPE]  = this.curWeek[VAL.PTYPE];
+            curCode[TAL.CROSS]  = this.curWeek[VAL.CROSS];
+            curCode[TAL.DATE]   = query.date;
+            if (this.isFuture) {
+                curCode[TAL.FUT1]  = this.future[0];
+                curCode[TAL.FUT2]  = this.future[1];
+                curCode[TAL.FUT3]  = this.future[2];
+                curCode[TAL.FUT4]  = this.future[3];
+                curCode[TAL.FUT5]  = this.future[4];
+            }
             query.codes[query.cur] = curCode;
             query.cur += 1;
-            this.setItem('query', query);
+            Tools.setItem('query', query);
         }
         window.location.reload();
     }
 
 
     this.creatDetail = function() {
-        let codes = this.query.codes;
-        this.thead.innerHTML = this.toDate(this.query.date) + ' · 涨停突破';
+        let codes = Tools.query.codes;
+        this.thead.innerHTML = Tools.toDate(Tools.query.date) + ' · 涨停突破';
         this.tbody.innerHTML += '<tr head=1><td>' + Source.head.join('</td><td>') + '</td></tr>';
         for (let i in codes) {
-            let tr = this.creatElem('tr', this.tbody, 'tr');
-            if (codes[i][7] == true)
+            let tr = Tools.creatElem('tr', this.tbody, 'tr');
+            if (codes[i][TAL.CROSS] == true)
                 tr.setAttribute('head', 1)
-            let mix = codes[i][4] / codes[i][6];
-            if (codes[i][6] && mix >1.1) {
+            let upper = codes[i][TAL.CLOSE] / codes[i][TAL.PRESS];
+            if (codes[i][TAL.PRESS] && upper >1.1) {
                 tr.setAttribute('head', 2)
-                codes[i][7] = 'yes';
+                codes[i][TAL.CROSS] = 'YES';
             }
             for (let j in codes[i]) {
-                let td = this.creatElem('td', tr, 'td');
+                let td = Tools.creatElem('td', tr, 'td');
                 td.innerHTML = codes[i][j];
             }
         }
@@ -249,7 +278,7 @@ function __Stock() {
                 sum += eval(data[i-j][VAL.HIGH])/3;
                 sum += eval(data[i-j][VAL.LOW])/3;
             }
-            return this.to2f(sum / day);
+            return Tools.to2f(sum / day);
         }
         return 0;
     }
@@ -258,10 +287,10 @@ function __Stock() {
     this.tDay = 30;
     this.bDay = 30; 
     this.lDay = 30; 
-    this.setLadd = function(data, idx) {
+    this.setLadder = function(data, idx) {
         if (idx <= this.lDay)
             return [0,0,0,0];
-        data[idx].push(this.getAVG(data, idx, 3));
+        data[idx][VAL.MA3] = this.getAVG(data, idx, 3);
         let top = 0;
         for (let i=idx-this.tDay; i<=idx; i++) {
             if (top < data[i][VAL.MA3]) {
@@ -281,143 +310,28 @@ function __Stock() {
             }
         }
 
-        let mid = this.to2f(top/2 + bot/2);
-        data[idx].push(top);
-        data[idx].push(mid);
-        data[idx].push(bot);
-        if (high < top*1.15 && data[idx][VAL.TOP] == data[idx-8][VAL.TOP])
-            data[idx][VAL.LINE] = this.to2f(top*1.1);
-        if (!data[idx][VAL.LINE] && data[idx-1][VAL.LINE] && top <= data[idx-1][VAL.TOP])
-            data[idx][VAL.LINE] = (data[idx-1][VAL.LINE]);
-    }
-
-
-    this.compary = function(a, b) {
-        a = ~~a.replace(/-/g, '');
-        b = ~~b.replace(/-/g, '');
-        return a<= b;
-    }
-
-    this.to2f = function(val) {
-        return ~~(val * 100) / 100;
-    }
-
-
-    this.copy = function(json) {
-        return JSON.parse(JSON.stringify(json));
-    }
-
-    this.reverse = function(array){
-       let newArr = [];
-       for(let i=array.length-1; i>=0; i--){
-           newArr[newArr.length] = this.copy(array[i]);
-       }
-       return newArr;
-   }
-
-    this.bubbleSort = function(arr) {
-        let len = arr.length;
-        for (let i = 0; i < len-1; i++) {
-            for (let j = 0; j < len-1-i; j++) {
-                if (this.earlyTime(arr[j].first_time, arr[j+1].first_time)) { 
-                    let temp = this.copy(arr[j+1]);       
-                    arr[j+1] = this.copy(arr[j]);
-                    arr[j] = temp;
-                }
+        let mid = Tools.to2f(top/2 + bot/2);
+        data[idx][VAL.TOP] = top;
+        data[idx][VAL.MID] = mid;
+        data[idx][VAL.BOT] = bot;
+        if (high < top*1.15 && data[idx][VAL.TOP] == data[idx-8][VAL.TOP]) {
+            data[idx][VAL.PRESS] = Tools.to2f(top*1.1);
+            data[idx][VAL.PTYPE] = 1;
+        }
+        //压力位向后传递
+        if (!data[idx][VAL.PRESS] && data[idx-1][VAL.PRESS]) {
+            //收盘小于前压力位,压力位向后传递
+            if (data[idx][VAL.CLOSE] <= data[idx-1][VAL.PRESS]) {
+                data[idx][VAL.PRESS] = (data[idx-1][VAL.PRESS]);
+                data[idx][VAL.PTYPE] = 2;
+            }
+            //顶部小于前顶部,压力位向后传递
+            if (data[idx][VAL.TOP] <= data[idx-1][VAL.TOP]) {
+                data[idx][VAL.PRESS] = (data[idx-1][VAL.PRESS]);
+                data[idx][VAL.PTYPE] = 3;   
             }
         }
-        return arr;
-    }
-
-    this.earlyTime = function(t1, t2) {
-        let s1 = parseInt(t1.replace(/:/g, ''));
-        let s2 = parseInt(t2.replace(/:/g, ''));
-        return s1 > s2;
-    }
-
-    this.toDate = function(idx) {
-        return idx.substring(0,4) + '年' + idx[4]+idx[5] + '月' + idx[6]+idx[7] + '日';
-    }
-
-    this.toIdx = function(year, date) {
-        date = date.replace('日','').split('月');
-        return year+(date[0]>9?date[0]:'0'+date[0]) + (date[1]>9?date[1]:'0'+date[1]);
-    }
-
-    this.ztDone = function(idx) {
-        if (!this.getDaily(idx, 'ZT'))
-            return 0;
-        if (this.getDaily(idx, 'cur') == this.getDaily(idx, 'ZT').length)
-            return 2;
-        else
-            return 1;
-    }
-
-
-
-    this.getDaily = function(idx, key, islen) {
-        daily[idx] = daily[idx] || {date: this.toDate(idx)};
-        let val = daily[idx][key];
-        if (islen) {
-            if (typeof(val) === 'object')
-                return val.length;
-            if (typeof(val) === 'undefined')
-                return '-';
-        }
-        return val || 0;
-    }
-
-    this.setDaily = function(key, val) {
-        if (!key) return;
-        let idx = this.base.lastIdx;
-        daily[idx] = daily[idx] || {};
-        daily[idx][key] = val;
-        this.setItem(this.year, daily);
-    }
-
-    this.setBase = function(key, val) {
-        if (!key) return;
-        this.base[key] = val;
-        this.setItem('base', this.base);
-    }
-
-    this.getItem = function(key) {
-        key = 'daily' + key;
-        return JSON.parse(eval(key) || localStorage.getItem(key)) || {};
-    }
-
-    this.setItem = function(key, item) {
-        key = 'daily' + key;
-        localStorage.setItem(key, JSON.stringify(item));
-    }
-
-    this.creatElem = function(type, parent, className, id) {
-        var e = document.createElement(type);
-        if (parent)
-            parent.appendChild(e);
-        if (className)
-            e.className = className;
-        if (id != null)
-            e.id = className + '_' + id;
-        return e;
-    }
-
-    this.getElem = function (e) {
-        if (typeof(e) === 'string')
-            return this.getElem(document.getElementById(e));
-        if (e &&  e.style)
-            return e;
-        return null;
-    }
-
-    this.zoom = function(z) {
-        this.isPhone = (/Android|webOS|iPhone|iPod|BlackBerry|Mobile|MIX/i.test(navigator.userAgent));
-        if (z) {
-            this.setBase('zoom', z);
-            document.body.style.zoom = z;
-        } else {
-            document.body.style.zoom = this.base.zoom;
-        }
+        return [top, mid, bot];
     }
 }
 
