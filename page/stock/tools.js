@@ -86,12 +86,13 @@ function __Tools() {
         let array = str.split(',');
         for (let i in array) {
             array[i] = array[i].split(' ');
+            if (this.base.isMobile) {
+                let code = array[i][2].replace('.SH','').replace('.SZ', '').replace('.BJ','');
+                array[i][2] = array[i][1];
+                array[i][1] = code;
+            }
         }
-        if (this.base.isMobile) {
-            let code = array[2].replace('SH','').replace('SZ', '').replace('BJ','');
-            array[2] = array[1];
-            array[1] = code;
-        }
+
         return array;
     }
 

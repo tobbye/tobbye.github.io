@@ -5,14 +5,15 @@ window.onload = function() {
 
 
 let Source = {
-    head: ['序号', '代码', '名称', '开盘', '收盘', '涨跌幅', '压力位','类型', '突破','日期'],
+    head: ['序号', '代码', '名称', '开盘', '收盘', '涨跌幅', '压力位','类型', '突破'],
     doneTexts: ['自动复盘进行中...', '复盘进行中...', '自动复盘完成', '复盘完成', '缺少数据'],
     periodTexts: ['前一月','前一周','前一日'],
-    period: ['hrefName', 'hrefDay', 'hrefWeek', 'hrefMonth'],
+    period: ['hrefName', 'hrefDay', 'hrefWeek', 'hrefMonth', 'href30Min'],
     hrefName: 'http://hq.sinajs.cn/list=#market#code',
     hrefDay: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=#start&end=#end&stat=1&order=A&period=d&callback=Stock.queryDay&rt=jsonp',
     hrefWeek: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=#start&end=#end&stat=1&order=A&period=w&callback=Stock.queryWeek&rt=jsonp',
     hrefMonth: 'http://q.stock.sohu.com/hisHq?code=cn_#code&start=#start&end=#end&stat=1&order=A&period=m&callback=Stock.queryMonth&rt=jsonp',
+    href30Min: 'http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=#market#code&scale=30&datalen=1023&ma=no&callback=Stock.query30Min',
 }
 
 let VAL = {
@@ -250,6 +251,8 @@ function __Stock() {
 
 
     this.creatDetail = function() {
+        if (!Tools.base.isMobile) 
+            Source.head.push('日期');
         let codes = Tools.query.codes;
         this.thead.innerHTML = Tools.toDate(Tools.query.date) + ' · 涨停突破';
         this.tbody.innerHTML += '<tr head=1><td>' + Source.head.join('</td><td>') + '</td></tr>';
@@ -263,6 +266,8 @@ function __Stock() {
                 codes[i][TAL.CROSS] = 'YES';
             }
             for (let j in codes[i]) {
+                if (Tools.base.isMobile && j == TAL.DATE)
+                    continue;
                 let td = Tools.creatElem('td', tr, 'td');
                 td.innerHTML = codes[i][j];
             }
