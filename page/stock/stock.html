@@ -104,9 +104,11 @@
         </div>
         <div id="outer">
             <div id="thead"></div>
-            <button id="btn0" big=1 onclick='Stock.autoNext(-1)'>前一天</button>
-            <button id="btn1" big=1 onclick='Stock.autoNext(1, 1)'>复盘完成</button>
-            <button id="btn2" big=1 onclick='Stock.autoNext(1)'>后一天</button>
+            <button id="btn-clear" big=1 onclick='Stock.toggleState("clear", this)'>重新#</button>
+            <button id="btn-back" big=1 onclick='Stock.autoNext(-1)'>前一天</button>
+            <button id="btn-auto" big=1 onclick='Stock.toggleState("auto")'>复盘完成</button>
+            <button id="btn-next" big=1 onclick='Stock.autoNext(1)'>后一天</button>
+            <button id="btn-order" big=1 onclick='Stock.toggleState("order", this)'>排序#</button>
             <table>
                 <tbody id="tbody">
                 </tbody>

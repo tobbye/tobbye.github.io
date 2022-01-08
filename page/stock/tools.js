@@ -39,21 +39,21 @@ function __Tools() {
        for(let i=array.length-1; i>=0; i--){
            newArr[newArr.length] = this.copy(array[i]);
        }
-       return newArr;
+       return this.copy(newArr);
    }
 
-    this.bubbleSort = function(arr) {
+    this.bubbleSort = function(arr, key, order) {
         let len = arr.length;
         for (let i = 0; i < len-1; i++) {
             for (let j = 0; j < len-1-i; j++) {
-                if (this.earlyTime(arr[j].first_time, arr[j+1].first_time)) { 
+                if (arr[j][key] > arr[j+1][key]) { 
                     let temp = this.copy(arr[j+1]);       
                     arr[j+1] = this.copy(arr[j]);
                     arr[j] = temp;
                 }
             }
         }
-        return arr;
+        return order?this.reverse(arr) : this.copy(arr);
     }
 
     this.earlyTime = function(t1, t2) {
@@ -70,7 +70,7 @@ function __Tools() {
             idx: idx,
             end: end,
             date: date,
-            cur: ~~this.getDaily(date, 'cur'),
+            cur: this.base.clear ? 0:~~this.getDaily(date, 'cur'),
             codes: this.getDaily(date, 'ZT'),
         }
         this.setItem('query', query);

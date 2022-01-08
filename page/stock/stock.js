@@ -5,7 +5,7 @@ window.onload = function() {
 
 
 let Source = {
-    head: ['序号', '代码', '名称', '开盘', '收盘', '涨跌幅', '压力位','类型', '突破'],
+    head: ['序号', '代码', '名称', '开盘', '收盘', '涨跌幅', '压力位','类', '突破'],
     doneTexts: ['自动复盘进行中...', '复盘进行中...', '自动复盘完成', '复盘完成', '缺少数据'],
     periodTexts: ['前一月','前一周','前一日'],
     period: ['hrefName', 'hrefDay', 'hrefWeek', 'hrefMonth', 'href30Min'],
@@ -46,12 +46,13 @@ let TAL = {
     PRESS:6,
     PTYPE:7,
     CROSS:8,
-    DATE:9,
-    FUT1:10,
-    FUT2:11,
-    FUT3:12,
-    FUT4:13,
-    FUT5:14,
+    GAP:9,
+    ZTC:10,
+    FUT1:11,
+    FUT2:12,
+    FUT3:13,
+    FUT4:14,
+    FUT5:15,
 }
 
 let Stock = new __Stock();
@@ -84,32 +85,31 @@ function __Stock() {
             this.code = query.codes[query.cur][1];
             this.codeName = query.codes[query.cur][2]; 
             this.initHREF();
-            Tools.getElem('btn1').innerHTML = Source.doneTexts[Tools.base.auto?0:1] + this.codeName;
+            Tools.getElem('btn-auto').innerHTML = Source.doneTexts[Tools.base.auto?0:1] + this.codeName;
+            Tools.getElem('btn-clear').innerHTML = '重新=' + (Tools.base.clear?'Y':'N');
+            Tools.getElem('btn-order').innerHTML = '排序=' + (Tools.base.order?'Y':'N');
         } else {
             Tools.base.lastIdx = query.date;
             Tools.setDaily('cur', query.cur);
             Tools.setDaily('ZT', query.codes);   
-            Tools.getElem('btn1').innerHTML = Source.doneTexts[Tools.base.auto?2:3];
+            Tools.getElem('btn-auto').innerHTML = Source.doneTexts[Tools.base.auto?2:3];
             if (Tools.base.auto)
                 this.autoNext(1);
         }
         if (!query.codes)
-            Tools.getElem('btn1').innerHTML = Source.doneTexts[4];
+            Tools.getElem('btn-auto').innerHTML = Source.doneTexts[4];
         this.creatDetail();
     }
 
-    this.autoNext = function(offset, auto) {
-        if (auto) {
-            Tools.setBase('auto', !Tools.base.auto);
-            return;
-        }
+    this.autoNext = function(offset) {
         let query = Tools.query;
         query.idx += offset;
-        if (query.idx > -1 && query.idx < Tools.days.length) {
-            Tools.setQuery(query.idx);
-        }
+        if (query.idx <= 0) 
+            query.idx = 0;
+        if (query.idx >= Tools.days.length) 
+            query.idx = Tools.days.length - 1;
+        Tools.setQuery(query.idx);
     }
-
 
     this.initHREF = function() {
         this.src = [];
@@ -222,10 +222,22 @@ function __Stock() {
         }
     }
 
+    this.ZTcount = function() {
+        let count = 0;
+        for (let i = this.dayIdx; i>=0; i--) {
+            let day = this.dateDay[i];
+            if (~~(day[VAL.DEGREE].replace('%','')*100)>980 && day[VAL.HIGH] == day[VAL.CLOSE]) {
+                count ++;
+            } else {
+                return count;
+            }
+        }  
+        return count;
+    }
+
 
     this.nextCode = function() {
         if (this.curDay[VAL.OPEN]) {
-            this.futureDegree();
             let query = Tools.query;
             let curCode = query.codes[query.cur];
             curCode[TAL.OPEN]   = this.curDay[VAL.OPEN];
@@ -234,14 +246,7 @@ function __Stock() {
             curCode[TAL.PRESS]  = this.curWeek[VAL.PRESS];
             curCode[TAL.PTYPE]  = this.curWeek[VAL.PTYPE];
             curCode[TAL.CROSS]  = this.curWeek[VAL.CROSS];
-            curCode[TAL.DATE]   = query.date;
-            if (this.isFuture) {
-                curCode[TAL.FUT1]  = this.future[0];
-                curCode[TAL.FUT2]  = this.future[1];
-                curCode[TAL.FUT3]  = this.future[2];
-                curCode[TAL.FUT4]  = this.future[3];
-                curCode[TAL.FUT5]  = this.future[4];
-            }
+            curCode[TAL.ZTC]   = this.ZTcount();
             query.codes[query.cur] = curCode;
             query.cur += 1;
             Tools.setItem('query', query);
@@ -251,12 +256,25 @@ function __Stock() {
 
 
     this.creatDetail = function() {
-        if (!Tools.base.isMobile) 
-            Source.head.push('日期');
+        if (!Tools.base.isMobile) {
+            Source.head.push('超越');
+            Source.head.push('板');
+        }
         let codes = Tools.query.codes;
+        for (let i in codes) {
+            codes[i].splice(11,5);
+            if (~~codes[i][TAL.INDEX] < 10)
+                codes[i][TAL.INDEX] = '0' + ~~codes[i][TAL.INDEX];
+            codes[i][TAL.GAP] = Tools.to2f(codes[i][TAL.CLOSE]/codes[i][TAL.PRESS]*100-100);
+        }
+        if (Tools.base.order)
+            codes = Tools.bubbleSort(Tools.query.codes, TAL.GAP, 1);
+        else
+            codes = Tools.bubbleSort(Tools.query.codes, TAL.INDEX);
         this.thead.innerHTML = Tools.toDate(Tools.query.date) + ' · 涨停突破';
         this.tbody.innerHTML += '<tr head=1><td>' + Source.head.join('</td><td>') + '</td></tr>';
         for (let i in codes) {
+            codes[i][TAL.GAP] = Tools.to2f(codes[i][TAL.CLOSE]/codes[i][TAL.PRESS]*100-100) + '%';
             let tr = Tools.creatElem('tr', this.tbody, 'tr');
             if (codes[i][TAL.CROSS] == true)
                 tr.setAttribute('head', 1)
@@ -266,12 +284,15 @@ function __Stock() {
                 codes[i][TAL.CROSS] = 'YES';
             }
             for (let j in codes[i]) {
-                if (Tools.base.isMobile && j == TAL.DATE)
-                    continue;
                 let td = Tools.creatElem('td', tr, 'td');
                 td.innerHTML = codes[i][j];
             }
         }
+    }
+
+    this.toggleState = function(key, btn) {
+        Tools.setBase(key, !Tools.base[key]);
+        window.location.reload();
     }
 
 
@@ -321,19 +342,19 @@ function __Stock() {
         data[idx][VAL.BOT] = bot;
         if (high < top*1.15 && data[idx][VAL.TOP] == data[idx-8][VAL.TOP]) {
             data[idx][VAL.PRESS] = Tools.to2f(top*1.1);
-            data[idx][VAL.PTYPE] = 1;
+            data[idx][VAL.PTYPE] = 'A';
         }
         //压力位向后传递
         if (!data[idx][VAL.PRESS] && data[idx-1][VAL.PRESS]) {
             //收盘小于前压力位,压力位向后传递
             if (data[idx][VAL.CLOSE] <= data[idx-1][VAL.PRESS]) {
                 data[idx][VAL.PRESS] = (data[idx-1][VAL.PRESS]);
-                data[idx][VAL.PTYPE] = 2;
+                data[idx][VAL.PTYPE] = 'B';
             }
             //顶部小于前顶部,压力位向后传递
             if (data[idx][VAL.TOP] <= data[idx-1][VAL.TOP]) {
                 data[idx][VAL.PRESS] = (data[idx-1][VAL.PRESS]);
-                data[idx][VAL.PTYPE] = 3;   
+                data[idx][VAL.PTYPE] = 'C';   
             }
         }
         return [top, mid, bot];
