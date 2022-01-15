@@ -16,6 +16,7 @@ let Source = {
 		JJG: '节节高',
 		ZT: '涨停',
 		FZ: '反转',
+		EFF: '二分法',
 		XQJ: '辛弃疾',
 		HQB: '霍去病',
 		LSZ: '李时珍',
@@ -137,6 +138,8 @@ function __Wencai() {
 					week: curDays[i][1], 
 					preDate: curDays[i-1][0], 
 					preWeek: curDays[i-5-curDays[i][1]][0],
+					preMonday: curDays[i-4-curDays[i][1]][0],
+					preFriday: curDays[i-0-curDays[i][1]][0],
 					nextMonth: Tools.toDate(nextYear, nextMonth, Tools.monthCount[nextMonth-1]),
 					holiday: '',
 				};
@@ -184,8 +187,9 @@ function __Wencai() {
 			}
 			this.link(td, data, this.zhangtingStr(data),'ZT');
 			this.link(td, data, this.huatuoDayStr(data),'FZ');
-			this.link(td, data, this.xinqijiDayStr(data),'XQJ');
-			this.link(td, data, this.huoqubingDayStr(data),'HQB');
+			this.link(td, data, this.erfenStr(data),'EFF');
+			// this.link(td, data, this.xinqijiDayStr(data),'XQJ');
+			// this.link(td, data, this.huoqubingDayStr(data),'HQB');
 			if (data.week == 1) {
 				this.link(td, data, this.lishizhenWeekStr(data), 'LSZ');
 			}
@@ -244,40 +248,57 @@ function __Wencai() {
 
 
 	this.zhangtingStr = function(data) {
-		return data.date + word[0] + data.date + word[1];
+		return word.zhangting.
+		replace(/{\n|\r|\t}/g,'').
+		replace(/今天/g, data.date); 
 	}
 
 	this.sickDayStr = function(data) {
-		return data.date + word[8] + data.date + word[9] + 
-		data.date + word[6];
+		return word.sickDay.
+		replace(/{\n|\r|\t}/g,'').
+		replace(/今天/g, data.date); 
 	}
 
 	this.sickWeekStr = function(data) {
-		return data.date + word[10] + data.date + word[11] + 
-		data.date + word[6];
+		return word.sickWeek.
+		replace(/{\n|\r|\t}/g,'').
+		replace(/今天/g, data.date); 
 	}
 
 	this.lishizhenWeekStr = function(data) {
-		return data.preWeek + word[10] + data.preWeek + word[11] + 
-		data.preWeek + word[6] + 
-		data.date + word[7] + 
-		data.date + word[12] + data.preWeek + word[13];
+		return word.lishizhen.
+		replace(/{\n|\r|\t}/g,'').
+		replace(/今天/g, data.date).
+		replace(/上上周/g, data.preWeek); 
 	}
 
 	this.xinqijiDayStr = function(data) {
-		return data.date + word[0] +  
-		data.preDate + word[14] + data.preDate + word[15];
+		return word.xinqiji.
+		replace(/{\n|\r|\t}/g,'').
+		replace(/今天/g, data.date).
+		replace(/昨天/g, data.preDate);  
 	}
 
 	this.huoqubingDayStr = function(data) {
-		return data.date + word[0] +  
-		data.date + word[16] + data.date + word[17];
+		return word.huoqubing.
+		replace(/{\n|\r|\t}/g,'').
+		replace(/今天/g, data.date).
+		replace(/昨天/g, data.preDate);  
 	}
 
 	this.huatuoDayStr = function(data) {
-		return data.date + word[18] + 
-		data.preDate + word[19] + data.preDate + word[20] +  
-		data.preDate + word[21];  
+		return word.huatuo.
+		replace(/{\n|\r|\t}/g,'').
+		replace(/今天/g, data.date).
+		replace(/昨天/g, data.preDate);  
+	}
+
+	this.erfenStr = function(data) {
+		return word.erfen.
+		replace(/{\n|\r|\t}/g,'').
+		replace(/今天/g, data.date).
+		replace(/上周一/g, data.preMonday).
+		replace(/上周五/g, data.preFriday);
 	}
 }
 	
@@ -289,30 +310,43 @@ let yearData = [
 	['四季度', '12月31日', [10],[11],[12]],
 ];
 
-let word = [
-	'涨停,涨跌幅<11,主板非st,',
-	'的市值<100亿,',
-	'的周涨跌幅大于0,',
-	'的收盘价大于',
-	'的收盘价小于',
-	'的收盘价,',
-	'至今涨跌幅,主板非st,',
-	'开盘涨跌幅大于5,',
-	'的20日均线大于10日均线大于30日均线,',
-	'的30日均线大于5日均线大于60日均线,',
-	'的20周均线大于10周均线大于30周均线,',
-	'的30周均线大于5周均线大于60周均线,',
-	'的开盘价/',
-	'的收盘价大于1.2,',
-	'的20日均线大于10日均线大于5日均线,',
-	'的20日均线大于30日均线大于60日均线,',
-	'的20日均线小于10日均线小于5日均线,',
-	'的20日均线小于30日均线小于60日均线,',
-	'的涨停,主板非st,',
-	'开盘价>5日均线>收盘价,',
-	'开盘价>10日均线>收盘价,',
-	'收盘价>20日均线>30日均线>60日均线,',
-];
+let word = {
+	zhangting: `
+		今天涨停,涨跌幅小于11,主板非st,
+		今天的市值小于100亿`,
+	sickDay: `
+		今天的20日均线大于10日均线大于30日均线,
+		今天的30日均线大于5日均线大于60日均线,
+		今天至今涨跌幅,主板非st`,
+	sickWeek: `
+		今天的20周均线大于10周均线大于30周均线,
+		今天的30周均线大于5周均线大于60周均线,
+		今天至今涨跌幅,主板非st`,
+	lishizhen: `
+		上上周的20周均线大于10周均线大于30周均线,
+		上上周的30周均线大于5周均线大于60周均线,
+		上上周至今涨跌幅, 主板非st,今天开盘涨跌幅大于5,
+		今天收盘价/上上周收盘价大于1.2`,
+	xinqiji: `
+		今天的涨停,涨跌幅小于11,主板非st, 
+		昨天的20日均线大于10日均线大于5日均线, 
+		昨天的20日均线大于30日均线大于60日均线`,
+	huoqubing: `
+		今天涨停,涨跌幅小于11,主板非st, 
+		昨天的20日均线小于10日均线小于5日均线, 
+		昨天的20日均线小于30日均线小于60日均线`,
+	huatuo: `
+		今天涨停,涨跌幅小于11,主板非st, 
+		昨天的开盘价大于5日均线大于收盘价,
+		昨天的开盘价大于10日均线大于收盘价,
+		昨天的收盘价大于20日均线大于30日均线大于60日均线`,
+	erfen: `
+		上周一开盘涨跌幅大于2,
+		上周五周涨跌幅大于20,
+		今天涨跌幅,
+		主板非st`,
+}
+
 
 
 

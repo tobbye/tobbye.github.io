@@ -5,7 +5,7 @@ window.onload = function() {
 
 
 let Source = {
-    head: ['序号', '代码', '名称', '开盘', '收盘', '涨跌幅', '压力位','类', '突破'],
+    head: ['序号', '代码', '名称', '开盘', '收盘', '涨跌幅', '压力位','类', '突破','超越','板'],
     doneTexts: ['自动复盘进行中...', '复盘进行中...', '自动复盘完成', '复盘完成', '缺少数据'],
     periodTexts: ['前一月','前一周','前一日'],
     period: ['hrefName', 'hrefDay', 'hrefWeek', 'hrefMonth', 'href30Min'],
@@ -86,8 +86,8 @@ function __Stock() {
             this.codeName = query.codes[query.cur][2]; 
             this.initHREF();
             Tools.getElem('btn-auto').innerHTML = Source.doneTexts[Tools.base.auto?0:1] + this.codeName;
-            Tools.getElem('btn-clear').innerHTML = '重新=' + (Tools.base.clear?'Y':'N');
-            Tools.getElem('btn-order').innerHTML = '排序=' + (Tools.base.order?'Y':'N');
+            Tools.getElem('btn-clear').innerHTML = '重新=' + (Tools.base.clear?'是':'否');
+            Tools.getElem('btn-order').innerHTML = '排序=' + (Tools.base.order?'是':'否');
         } else {
             Tools.base.lastIdx = query.date;
             Tools.setDaily('cur', query.cur);
@@ -98,7 +98,7 @@ function __Stock() {
         }
         if (!query.codes)
             Tools.getElem('btn-auto').innerHTML = Source.doneTexts[4];
-        this.creatDetail();
+        this.creatCell();
     }
 
     this.autoNext = function(offset) {
@@ -255,11 +255,7 @@ function __Stock() {
     }
 
 
-    this.creatDetail = function() {
-        if (!Tools.base.isMobile) {
-            Source.head.push('超越');
-            Source.head.push('板');
-        }
+    this.creatCell = function() {
         let codes = Tools.query.codes;
         for (let i in codes) {
             codes[i].splice(11,5);
@@ -286,6 +282,8 @@ function __Stock() {
             for (let j in codes[i]) {
                 let td = Tools.creatElem('td', tr, 'td');
                 td.innerHTML = codes[i][j];
+                if (codes[i][TAL.OPEN] == codes[i][TAL.CLOSE] && (j == TAL.OPEN || j == TAL.CLOSE))
+                    td.setAttribute('back', 1);
             }
         }
     }
