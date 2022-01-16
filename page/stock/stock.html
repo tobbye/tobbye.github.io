@@ -56,16 +56,40 @@
         color: magenta;
     }
 
-    [head='1'] {
-        color:darkred;
+    [head] {
         font-weight: bold;
     }
-    [head='2'] {
-        color:darkblue;
+    [head='red'] {
+        border: solid 2px darkorange;
+    }
+    [head='orange'] {
+        border: solid 2px dodgerblue;
+    }
+
+    [back] {
         font-weight: bold;
     }
-    [back='1'] {
+    [back='blue'] {
+        color: blue;
         background-color: #aaccee; 
+    }
+    [back='red'] {
+        color: red;
+        background-color: #eeaacc; 
+    }
+    [back='red2'] {
+        color: red;
+    }
+    [back='green'] {
+        color: green;
+        background-color: #aaeecc; 
+    }
+    [back='green2'] {
+        color: green;
+    }
+    [back='black'] {
+        color: black;
+        background-color: #aaaaaa; 
     }
     .date {
         font-size: 1.3em;
@@ -89,7 +113,7 @@
 
     #thead {
         padding: 5px;
-        color:darkred;
+        color: darkred;
         font-size: 1.3em;
         font-weight: bold;
     }
@@ -112,7 +136,7 @@
             <button id="btn-back" big=1 onclick='Stock.autoNext(-1)'>前一天</button>
             <button id="btn-auto" big=1 onclick='Stock.toggleState("auto")'>复盘完成</button>
             <button id="btn-next" big=1 onclick='Stock.autoNext(1)'>后一天</button>
-            <button id="btn-order" big=1 onclick='Stock.toggleState("order", this)'>排序#</button>
+            <button id="btn-order" big=1 onclick='Stock.toggleState("future", this)'>未来#</button>
             <table>
                 <tbody id="tbody">
                 </tbody>

@@ -15,7 +15,7 @@ let Source = {
 		JJJ: '尖尖角',
 		JJG: '节节高',
 		ZT: '涨停',
-		FZ: '反转',
+		FZ: '反包',
 		EFF: '二分法',
 		XQJ: '辛弃疾',
 		HQB: '霍去病',
@@ -187,9 +187,9 @@ function __Wencai() {
 			}
 			this.link(td, data, this.zhangtingStr(data),'ZT');
 			this.link(td, data, this.huatuoDayStr(data),'FZ');
-			this.link(td, data, this.erfenStr(data),'EFF');
-			// this.link(td, data, this.xinqijiDayStr(data),'XQJ');
-			// this.link(td, data, this.huoqubingDayStr(data),'HQB');
+			// this.link(td, data, this.erfenStr(data),'EFF');
+			this.link(td, data, this.xinqijiDayStr(data),'XQJ');
+			this.link(td, data, this.huoqubingDayStr(data),'HQB');
 			if (data.week == 1) {
 				this.link(td, data, this.lishizhenWeekStr(data), 'LSZ');
 			}
@@ -221,6 +221,32 @@ function __Wencai() {
 		a.onclick = function() {
 			Tools.setBase('lastIdx', this.idx);
 			Tools.setBase('lastKey', this.key);
+		}
+		a.onmouseover = function() {
+			Wencai.isclear = 0;
+			msgbox.innerHTML = this.word;
+			Wencai.msgbox.innerHTML = Tools.getDaily(this.idx, 'date') + ' ' + this.text;
+			let array = Tools.getDaily(this.idx, this.key);
+			for (let i in array) {
+				let tr = Tools.creatElem('tr', Wencai.table3, this.key);
+				for (let j in array[i]) {
+					if (j > 2) continue;
+					let td = Tools.creatElem('td', tr, this.key);
+					td.setAttribute('type', 'mini');
+					td.innerHTML = array[i][j];
+				}
+			}
+		}
+		a.onmouseout = function() {
+			if (Tools.base.isMoblie) 
+				return;
+			Wencai.isclear = 1;
+			setTimeout(function() {
+				if (Wencai.isclear)
+					msgbox.innerHTML = '';
+			},3000);
+			Wencai.msgbox.innerHTML = '';
+			Wencai.table3.innerHTML = '';
 		}
 		if (a.idx == Tools.base.lastIdx && a.key == Tools.base.lastKey) {
 			td.scrollIntoView(1);
@@ -297,6 +323,7 @@ function __Wencai() {
 		return word.erfen.
 		replace(/{\n|\r|\t}/g,'').
 		replace(/今天/g, data.date).
+		replace(/昨天/g, data.preDate).
 		replace(/上周一/g, data.preMonday).
 		replace(/上周五/g, data.preFriday);
 	}
@@ -341,10 +368,9 @@ let word = {
 		昨天的开盘价大于10日均线大于收盘价,
 		昨天的收盘价大于20日均线大于30日均线大于60日均线`,
 	erfen: `
+		今天最低价,(上周一开盘价＋上周五收盘价)/2,
 		上周一开盘涨跌幅大于2,
-		上周五周涨跌幅大于20,
-		今天涨跌幅,
-		主板非st`,
+		上周五周涨跌幅大于20,主板非st,`,
 }
 
 

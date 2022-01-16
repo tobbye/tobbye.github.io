@@ -44,9 +44,10 @@ function __Tools() {
 
     this.bubbleSort = function(arr, key, order) {
         let len = arr.length;
+        let copy = this.copy(arr);
         for (let i = 0; i < len-1; i++) {
             for (let j = 0; j < len-1-i; j++) {
-                if (arr[j][key] > arr[j+1][key]) { 
+                if (parseFloat(arr[j][key]) > parseFloat(arr[j+1][key])) { 
                     let temp = this.copy(arr[j+1]);       
                     arr[j+1] = this.copy(arr[j]);
                     arr[j] = temp;
@@ -62,6 +63,9 @@ function __Tools() {
         return s1 > s2;
     }
 
+    this.setOrder = function(codes, order) {
+        return this.bubbleSort(this.query.codes, this.base.orderIdx, this.base.order);
+    }
 
     this.setQuery = function(idx) {
         let date = this.toIdx(this.days[idx].date);

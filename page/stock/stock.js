@@ -5,7 +5,7 @@ window.onload = function() {
 
 
 let Source = {
-    head: ['序号', '代码', '名称', '开盘', '收盘', '涨跌幅', '压力位','类', '突破','超越','板'],
+    head: ['序号', '代码', '名称', '开盘', '收盘', '涨跌幅','祝福', '压力位','类', '超越','板','未来1','未来2','未来3','未来4','未来5'],
     doneTexts: ['自动复盘进行中...', '复盘进行中...', '自动复盘完成', '复盘完成', '缺少数据'],
     periodTexts: ['前一月','前一周','前一日'],
     period: ['hrefName', 'hrefDay', 'hrefWeek', 'hrefMonth', 'href30Min'],
@@ -34,7 +34,20 @@ let VAL = {
     PRESS:14,
     PTYPE:15,
     CROSS:16,
+
+    MA5:10,
+    MA10:11,
+    MA20:12,
+    MA30:13,
+    MA60:14,
+    HCLOSE:15,
+    HIHIGH:16,
+    NEXIST:17,
+    FEXIST:18,
+    EXIST:19,
+    LUCKY:20,
 }
+
 
 let TAL = {
     INDEX:0,
@@ -43,11 +56,11 @@ let TAL = {
     OPEN:3,
     CLOSE:4,
     DEGREE:5,
-    PRESS:6,
-    PTYPE:7,
-    CROSS:8,
+    CROSS:6,
+    PRESS:7,
+    PTYPE:8,
     GAP:9,
-    ZTC:10,
+    BAN:10,
     FUT1:11,
     FUT2:12,
     FUT3:13,
@@ -79,6 +92,7 @@ function __Stock() {
     this.getQuery = function() {
         let query = Tools.query;
         if (query.codes.length > query.cur) {
+            this.inQuery = 1;
             this.cur = query.cur;
             this.end = query.end;
             this.start = [query.date, query.date-10000, query.date-20000, query.date-30000];
@@ -87,8 +101,9 @@ function __Stock() {
             this.initHREF();
             Tools.getElem('btn-auto').innerHTML = Source.doneTexts[Tools.base.auto?0:1] + this.codeName;
             Tools.getElem('btn-clear').innerHTML = '重新=' + (Tools.base.clear?'是':'否');
-            Tools.getElem('btn-order').innerHTML = '排序=' + (Tools.base.order?'是':'否');
+            Tools.getElem('btn-order').innerHTML = '未来=' + (Tools.base.order?'是':'否');
         } else {
+            this.inQuery = 0;
             Tools.base.lastIdx = query.date;
             Tools.setDaily('cur', query.cur);
             Tools.setDaily('ZT', query.codes);   
@@ -98,7 +113,7 @@ function __Stock() {
         }
         if (!query.codes)
             Tools.getElem('btn-auto').innerHTML = Source.doneTexts[4];
-        this.creatCell();
+        this.creatBody();
     }
 
     this.autoNext = function(offset) {
@@ -170,6 +185,7 @@ function __Stock() {
             origin[i][VAL.HIGH]  = eval(origin[i][VAL.HIGH]);
             origin[i][VAL.DEEPTH]   = 0;
             if (idx == 1) {
+                this.setBoxer(origin,i);
                 this.dateDay = origin;
             }
             if (idx == 2) {
@@ -208,6 +224,12 @@ function __Stock() {
             preDay[VAL.CLOSE] < curWeek[VAL.PRESS]) {
             curWeek[VAL.CROSS] = true;
         }
+        console.log(curDay[VAL.HHIGH],curDay[VAL.CLOSE]);
+        if (curDay[VAL.EXIST] &&
+            curDay[VAL.HCLOSE] == curDay[VAL.CLOSE] &&
+            curDay[VAL.HHIGH] > curDay[VAL.CLOSE]) {
+            curDay[VAL.LUCKY] = true;
+        }
         this.curDay = curDay;
         this.curWeek = curWeek;
         this.nextCode();
@@ -219,10 +241,12 @@ function __Stock() {
             let day = this.dateDay[this.dayIdx+i];
             if (day)
                 this.future.push(day[VAL.DEGREE]);
+            else
+                this.future.push('null');
         }
     }
 
-    this.ZTcount = function() {
+    this.BANount = function() {
         let count = 0;
         for (let i = this.dayIdx; i>=0; i--) {
             let day = this.dateDay[i];
@@ -238,6 +262,7 @@ function __Stock() {
 
     this.nextCode = function() {
         if (this.curDay[VAL.OPEN]) {
+            this.futureDegree();
             let query = Tools.query;
             let curCode = query.codes[query.cur];
             curCode[TAL.OPEN]   = this.curDay[VAL.OPEN];
@@ -245,48 +270,88 @@ function __Stock() {
             curCode[TAL.DEGREE] = this.curDay[VAL.DEGREE];
             curCode[TAL.PRESS]  = this.curWeek[VAL.PRESS];
             curCode[TAL.PTYPE]  = this.curWeek[VAL.PTYPE];
-            curCode[TAL.CROSS]  = this.curWeek[VAL.CROSS];
-            curCode[TAL.ZTC]   = this.ZTcount();
+            curCode[TAL.CROSS] = this.curDay[VAL.LUCKY];
+            curCode[TAL.BAN]   = this.BANount();
+            curCode[TAL.FUT1] = this.future[0];
+            curCode[TAL.FUT2] = this.future[1];
+            curCode[TAL.FUT3] = this.future[2];
+            curCode[TAL.FUT4] = this.future[3];
+            curCode[TAL.FUT5] = this.future[4];
             query.codes[query.cur] = curCode;
             query.cur += 1;
+            console.log(query);
             Tools.setItem('query', query);
         }
         window.location.reload();
     }
 
 
-    this.creatCell = function() {
+    this.creatBody = function() {
         let codes = Tools.query.codes;
         for (let i in codes) {
-            codes[i].splice(11,5);
-            if (~~codes[i][TAL.INDEX] < 10)
-                codes[i][TAL.INDEX] = '0' + ~~codes[i][TAL.INDEX];
-            codes[i][TAL.GAP] = Tools.to2f(codes[i][TAL.CLOSE]/codes[i][TAL.PRESS]*100-100);
-        }
-        if (Tools.base.order)
-            codes = Tools.bubbleSort(Tools.query.codes, TAL.GAP, 1);
-        else
-            codes = Tools.bubbleSort(Tools.query.codes, TAL.INDEX);
-        this.thead.innerHTML = Tools.toDate(Tools.query.date) + ' · 涨停突破';
-        this.tbody.innerHTML += '<tr head=1><td>' + Source.head.join('</td><td>') + '</td></tr>';
-        for (let i in codes) {
             codes[i][TAL.GAP] = Tools.to2f(codes[i][TAL.CLOSE]/codes[i][TAL.PRESS]*100-100) + '%';
-            let tr = Tools.creatElem('tr', this.tbody, 'tr');
-            if (codes[i][TAL.CROSS] == true)
-                tr.setAttribute('head', 1)
-            let upper = codes[i][TAL.CLOSE] / codes[i][TAL.PRESS];
-            if (codes[i][TAL.PRESS] && upper >1.1) {
-                tr.setAttribute('head', 2)
-                codes[i][TAL.CROSS] = 'YES';
+        }
+        if (!this.inQuery)
+            codes = Tools.setOrder();
+        this.thead.innerHTML = Tools.toDate(Tools.query.date) + ' · 涨停突破';
+        this.tbody.innerHTML = '';
+        let tr = Tools.creatElem('tr', this.tbody);
+        for (let i in Source.head) {
+            if (!Tools.base.future && i >= TAL.FUT1 && i <= TAL.FUT5) 
+                continue;
+            let td = Tools.creatElem('td', tr, 'td', i);
+            let btn = Tools.creatElem('button', td, 'btn');
+            btn.innerHTML = Source.head[i];
+            btn.idx = i;
+            btn.onclick = function() {
+                let order = this.idx == Tools.base.orderIdx ? !Tools.base.order : true;
+                Tools.setBase('order', order);
+                Tools.setBase('orderIdx', this.idx);
+                Stock.creatBody();
             }
+        }
+        this.creatCell(codes);
+    }
+
+    this.creatCell = function(codes) {
+        for (let i in codes) {
+            codes[i][TAL.INDEX] = ~~i+1;
+            let tr = Tools.creatElem('tr', this.tbody, 'tr');
+            let upper = codes[i][TAL.CLOSE] / codes[i][TAL.PRESS];
             for (let j in codes[i]) {
+                if (!Tools.base.future && j >= TAL.FUT1 && j <= TAL.FUT5) 
+                    continue;
                 let td = Tools.creatElem('td', tr, 'td');
                 td.innerHTML = codes[i][j];
                 if (codes[i][TAL.OPEN] == codes[i][TAL.CLOSE] && (j == TAL.OPEN || j == TAL.CLOSE))
-                    td.setAttribute('back', 1);
+                    td.setAttribute('back', 'blue');
+                if (j == TAL.DEGREE || j == TAL.GAP || j >= TAL.FUT1 && j <= TAL.FUT5) {
+                    let deg = Tools.to2f(codes[i][j].replace('%',''));
+                    if (deg == 0)
+                        td.setAttribute('back', 'black');
+                    else if (deg > 9.7)
+                        td.setAttribute('back', 'red');
+                    else if (deg < -9.7)
+                        td.setAttribute('back', 'green');
+                    else if (deg > 0)
+                        td.setAttribute('back', 'red2');
+                    else if (deg < 0)
+                        td.setAttribute('back', 'green2');
+                } 
+                if (j >= TAL.PRESS && j <= TAL.GAP) {
+                    if (codes[i][TAL.PRESS] && upper >1.1)
+                        td.setAttribute('head', 'red')
+                    else if (codes[i][TAL.PRESS] && upper >1.0)
+                        td.setAttribute('head', 'orange')
+                }
+                if (j == TAL.CROSS || j == TAL.BAN) {
+                    td.setAttribute('head', 'blue')
+                }
             }
-        }
+        } 
     }
+
+
 
     this.toggleState = function(key, btn) {
         Tools.setBase(key, !Tools.base[key]);
@@ -307,11 +372,11 @@ function __Stock() {
         return 0;
     }
 
-
-    this.tDay = 30;
-    this.bDay = 30; 
-    this.lDay = 30; 
+    this.tDay = 30; //topDay
+    this.bDay = 30; //botDay
+    this.lDay = 30; //longDay
     this.setLadder = function(data, idx) {
+
         if (idx <= this.lDay)
             return [0,0,0,0];
         data[idx][VAL.MA3] = this.getAVG(data, idx, 3);
@@ -356,6 +421,52 @@ function __Stock() {
             }
         }
         return [top, mid, bot];
+    }
+
+
+    this.nDay = 5;    //nearDay
+    this.fDay = 15;   //farDay
+    this.cDay = 120;  //closeDay
+    this.hDay = 200;  //highDay
+    this.setBoxer = function(data, idx) {
+        if (idx <= this.hDay)
+            return [0,0,0,0];
+        let ma5  = this.getAVG(data, idx, 5);
+        let ma10 = this.getAVG(data, idx, 10);
+        let ma20 = this.getAVG(data, idx, 20);
+        let ma30 = this.getAVG(data, idx, 30);
+        let ma60 = this.getAVG(data, idx, 60);
+        let hhigh = 0;
+        let hclose = 0;
+        for (let i=idx-this.hDay; i<=idx; i++) {
+            if (hhigh < data[i][VAL.HIGH]) {
+                hhigh = data[i][VAL.HIGH];
+            }
+        }
+        for (let i=idx-this.cDay; i<=idx; i++) {
+            if (hclose < data[i][VAL.CLOSE]) {
+                hclose = data[i][VAL.CLOSE];
+            }
+        }
+        let nexist = ~~(ma5 > ma10 && ma10 > ma30 && ma30 > ma20);
+        let fexist = ~~(ma30 > ma20 && ma20 > ma10 && ma10 > ma5);
+        data[idx][VAL.MA5]  = ma5;
+        data[idx][VAL.MA10] = ma10;
+        data[idx][VAL.MA20] = ma20;
+        data[idx][VAL.MA30] = ma30;
+        data[idx][VAL.MA60] = ma60;
+        data[idx][VAL.HHIGH] = hhigh;
+        data[idx][VAL.HCLOSE] = hclose;
+        data[idx][VAL.NEXIST] = nexist;
+        data[idx][VAL.FEXIST] = fexist;
+
+        for (let i=idx-this.nDay; i<=idx; i++) {
+            nexist += data[i][VAL.NEXIST];
+        }
+        for (let i=idx-this.fDay; i<=idx; i++) {
+            fexist += data[i][VAL.FEXIST];
+        }
+        data[idx][VAL.EXIST] = nexist*fexist > 0;
     }
 }
 
