@@ -7,21 +7,6 @@ window.onload = function() {
 let Source = {
 	href: 'http://www.iwencai.com/unifiedwap/result?w=#word',
 	doneText: ['缺少数据', '未完成', '复盘完成'],
-	linkTexts: {
-		base: 'base',
-		YGJLR: '预告净利润',
-		QTDS: '蜻蜓点水',
-		WLFC: '卧龙凤雏',
-		JJJ: '尖尖角',
-		JJG: '节节高',
-		ZT: '涨停',
-		FZ: '反包',
-		EFF: '二分法',
-		XQJ: '辛弃疾',
-		HQB: '霍去病',
-		LSZ: '李时珍',
-		BB: '病变',
-	}
 }
 
 let Wencai = new __Wencai();
@@ -32,6 +17,7 @@ function __Wencai() {
 		this.creatYear();
 		this.setMonth();
 		this.creatMonth();
+		this.creatConfig();
 		console.log(this);
 	}
 
@@ -57,40 +43,35 @@ function __Wencai() {
 		for (let i in yearData) {
 			let data = yearData[i];
 			let tr = Tools.creatElem('tr', table1, 'tr', data[0]);
-			for (let j=0; j<4; j++) {
+			for (let j in data.month) {
+
 				let td = Tools.creatElem('td', tr, 'td', data[j]);
 				td.setAttribute('type', 'normal');
 				td.setAttribute('year', Tools.year);
-				if (j == 0) {
+
+				if (data.month[j] == 0) {
 					let date = Tools.creatElem('div', td, 'date');
-					date.innerHTML  = Tools.year + '年' + data[0];
-					this.link(td, data, this.advanceStr(data),'YGJLR');
+					date.innerHTML  = Tools.year + '年' + data.season;
+					this.link(td, data, Tools.config[0]);
 				} else {
 					let date = Tools.creatElem('div', td, 'date');
-					date.innerHTML  = Tools.year + '年' + data[j+1][0] + '月';
-					this.link(td, data[j+1], 1,'QTDS');
-					this.link(td, data[j+1], 2,'WLFC');
+					date.innerHTML  = Tools.year + '年' + data.month[j] + '月';
+					this.link(td, data, Tools.config[1]);
+					this.link(td, data, Tools.config[2]);
 					let btn = Tools.creatElem('button',td, 'btn');
 					btn.setAttribute('big', 1);
-					btn.innerHTML = data[j+1][0] + '月详情';
-					btn.month = data[j+1][0];
-					btn.onclick = function() {
-						Tools.month = this.month;
-						Tools.setBase('month', this.month);
-						Wencai.setMonth();
-						Wencai.creatMonth();
-					}
+					btn.innerHTML = data.month[j] + '月详情';
+				}
+				td.month = data.month[j];
+				td.onclick = function() {
+					Tools.month = this.month;
+					Tools.setBase('month', this.month);
+					Wencai.setMonth();
+					Wencai.creatMonth();
 				}
 			}
 		}
 	}
-
-
-
-	this.advanceStr = function(data) {
-		return Tools.year+ data[0] + '预告净利润/' + Tools.year + '年' + data[1] + '市值前20';
-	}
-
 
 
 	this.setMonth = function() {
@@ -174,7 +155,7 @@ function __Wencai() {
 			let date = Tools.creatElem('div', td, 'date');
 			date.innerHTML = data.date.split('年')[1];
 			if (data.holiday) {
-				this.link(td, data, data.holiday, data.holiday);
+				this.link(td, data);
 				continue;
 			}
 			let div = Tools.creatElem('div', td, 'button');
@@ -185,36 +166,38 @@ function __Wencai() {
 			btn.onclick = function() {
 				Tools.setQuery(this.idx);
 			}
-			this.link(td, data, this.zhangtingStr(data),'ZT');
-			this.link(td, data, this.huatuoDayStr(data),'FZ');
-			// this.link(td, data, this.erfenStr(data),'EFF');
-			this.link(td, data, this.xinqijiDayStr(data),'XQJ');
-			this.link(td, data, this.huoqubingDayStr(data),'HQB');
-			if (data.week == 1) {
-				this.link(td, data, this.lishizhenWeekStr(data), 'LSZ');
-			}
-			if (data.week == 5) {
-				this.link(td, data, this.sickWeekStr(data),'BB');
+			for (let j in Tools.config) {
+				let cfg = Tools.config[j];
+				for (let k in cfg.show) {
+					if (data.week == cfg.show[k]) 
+						this.link(td, data, cfg);
+				}
 			}
 		}
 	}
 
 
 
-	this.link = function(td, data, word, key) {
-		data[key] = word;
-		let a = Tools.creatElem('a', td, key, td.idx);
+	this.link = function(td, data, cfg) {
+		if (data.holiday) {
+			let a = Tools.creatElem('a', td);
+			a.innerHTML = data.holiday + '(-)<br/>';
+			return;
+		}
+		let word = this.replaceStr(data, cfg.text);
+		data[cfg.key] = word;
+		let a = Tools.creatElem('a', td, cfg.key, td.idx);
 
 		a.setAttribute('year', Tools.year);
 		a.href = Source.href.replace('#word', word);
-		a.text = Source.linkTexts[key] || key;
+		a.name = cfg.name || cfg.key;
 		a.word = word;
 		if (td.idx) {
 			a.idx = td.idx;
-			a.key = key;
-			a.innerHTML = a.text + '(' + Tools.getDaily(a.idx, a.key, 1) + ')<br/>';
+			a.key = cfg.key;
+			a.innerHTML = a.name + '(' + Tools.getDaily(a.idx, a.key, 1) + ')<br/>';
 		} else {
-			a.innerHTML = a.text + '(-)<br/>';
+			a.innerHTML = a.name + '(-)<br/>';
 			return;
 		}
 
@@ -225,7 +208,7 @@ function __Wencai() {
 		a.onmouseover = function() {
 			Wencai.isclear = 0;
 			msgbox.innerHTML = this.word;
-			Wencai.msgbox.innerHTML = Tools.getDaily(this.idx, 'date') + ' ' + this.text;
+			Wencai.msgbox.innerHTML = Tools.getDaily(this.idx, 'date') + ' ' + this.name;
 			let array = Tools.getDaily(this.idx, this.key);
 			for (let i in array) {
 				let tr = Tools.creatElem('tr', Wencai.table3, this.key);
@@ -266,113 +249,62 @@ function __Wencai() {
 			Tools.setDaily('cur', 0);
 		Tools.setDaily(lastKey, array);
 		let a = Tools.getElem(lastKey + '_' + lastIdx);
-		a.innerHTML = Source.linkTexts[a.key]+ '(' + Tools.getDaily(lastIdx, lastKey, 1) + ')<br/>';
+		a.innerHTML = a.innerHTML.replace(/\(-|\(\d*/, '(' + Tools.getDaily(lastIdx, lastKey, 1));
 
 		this.input.value = '';
 		this.save.parentNode.style.display = 'none';
 	}
 
 
-	this.zhangtingStr = function(data) {
-		return word.zhangting.
-		replace(/{\n|\r|\t}/g,'').
-		replace(/今天/g, data.date); 
-	}
-
-	this.sickDayStr = function(data) {
-		return word.sickDay.
-		replace(/{\n|\r|\t}/g,'').
-		replace(/今天/g, data.date); 
-	}
-
-	this.sickWeekStr = function(data) {
-		return word.sickWeek.
-		replace(/{\n|\r|\t}/g,'').
-		replace(/今天/g, data.date); 
-	}
-
-	this.lishizhenWeekStr = function(data) {
-		return word.lishizhen.
-		replace(/{\n|\r|\t}/g,'').
-		replace(/今天/g, data.date).
-		replace(/上上周/g, data.preWeek); 
-	}
-
-	this.xinqijiDayStr = function(data) {
-		return word.xinqiji.
-		replace(/{\n|\r|\t}/g,'').
-		replace(/今天/g, data.date).
-		replace(/昨天/g, data.preDate);  
-	}
-
-	this.huoqubingDayStr = function(data) {
-		return word.huoqubing.
-		replace(/{\n|\r|\t}/g,'').
-		replace(/今天/g, data.date).
-		replace(/昨天/g, data.preDate);  
-	}
-
-	this.huatuoDayStr = function(data) {
-		return word.huatuo.
-		replace(/{\n|\r|\t}/g,'').
-		replace(/今天/g, data.date).
-		replace(/昨天/g, data.preDate);  
-	}
-
-	this.erfenStr = function(data) {
-		return word.erfen.
-		replace(/{\n|\r|\t}/g,'').
+	this.replaceStr = function(data, text) {
+		return text.
 		replace(/今天/g, data.date).
 		replace(/昨天/g, data.preDate).
 		replace(/上周一/g, data.preMonday).
-		replace(/上周五/g, data.preFriday);
+		replace(/上周五/g, data.preFriday).
+		replace(/上上周/g, data.preWeek).
+		replace(/本月末/g, Tools.monthEnd).
+		replace(/本月/g, Tools.monthDay).
+		replace(/当前季度/g, Tools.year + '年' + data.season). 
+		replace(/季度末/g, Tools.year + '年' + data.lastDay); 
+	}
+
+	this.creatConfig = function() {
+		for (let i in Tools.config) {
+			let cfg = Tools.config[i];
+			if (!cfg) {
+				let btn = Tools.creatElem('br', Tools.getElem('topper3'));
+				continue;
+			}
+			cfg.text = cfg.text.replace(/\n|\r|\t|\s| /g,'');
+			let btn = Tools.creatElem('button', Tools.getElem('topper3'));
+			// btn.setAttribute('big', 1);
+			btn.innerHTML = cfg.name;
+			btn.cfg = JSON.stringify(cfg);
+			btn.idx = i;
+			btn.onclick = function() {
+				Tools.getElem('content3').style.display = 'inline';
+				Tools.getElem('textarea').value = this.cfg;
+				Tools.cfgIdx = this.idx;
+			}
+			Tools.getElem('done').onclick = function() {
+				Tools.config[Tools.cfgIdx] = JSON.parse(Tools.getElem('textarea').value);
+				Tools.getElem('content3').style.display = 'none';
+				Tools.setItem('config', Tools.config);
+        		window.location.reload();
+			}
+			Tools.setItem('config', Tools.config);
+		}
 	}
 }
 	
 
 let yearData = [
-	['一季度', '3月31日', [1],[2],[3]],
-	['二季度', '6月30日', [4],[5],[6]],
-	['三季度', '9月30日', [7],[8],[9]],
-	['四季度', '12月31日', [10],[11],[12]],
+	{season: '一季度', lastDay: '3月31日', month: [0,1,2,3]},
+	{season: '二季度', lastDay: '6月30日', month: [0,4,5,6]},
+	{season: '三季度', lastDay: '9月30日', month: [0,7,8,9]},
+	{season: '四季度', lastDay: '12月31日', month: [0,10,11,12]},
 ];
-
-let word = {
-	zhangting: `
-		今天涨停,涨跌幅小于11,主板非st,
-		今天的市值小于100亿`,
-	sickDay: `
-		今天的20日均线大于10日均线大于30日均线,
-		今天的30日均线大于5日均线大于60日均线,
-		今天至今涨跌幅,主板非st`,
-	sickWeek: `
-		今天的20周均线大于10周均线大于30周均线,
-		今天的30周均线大于5周均线大于60周均线,
-		今天至今涨跌幅,主板非st`,
-	lishizhen: `
-		上上周的20周均线大于10周均线大于30周均线,
-		上上周的30周均线大于5周均线大于60周均线,
-		上上周至今涨跌幅, 主板非st,今天开盘涨跌幅大于5,
-		今天收盘价/上上周收盘价大于1.2`,
-	xinqiji: `
-		今天的涨停,涨跌幅小于11,主板非st, 
-		昨天的20日均线大于10日均线大于5日均线, 
-		昨天的20日均线大于30日均线大于60日均线`,
-	huoqubing: `
-		今天涨停,涨跌幅小于11,主板非st, 
-		昨天的20日均线小于10日均线小于5日均线, 
-		昨天的20日均线小于30日均线小于60日均线`,
-	huatuo: `
-		今天涨停,涨跌幅小于11,主板非st, 
-		昨天的开盘价大于5日均线大于收盘价,
-		昨天的开盘价大于10日均线大于收盘价,
-		昨天的收盘价大于20日均线大于30日均线大于60日均线`,
-	erfen: `
-		今天最低价,(上周一开盘价＋上周五收盘价)/2,
-		上周一开盘涨跌幅大于2,
-		上周五周涨跌幅大于20,主板非st,`,
-}
-
 
 
 

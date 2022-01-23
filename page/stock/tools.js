@@ -1,4 +1,4 @@
-var daily, dailybase, dailyquery, dailydays;
+var daily, dailybase, dailyquery, dailydays, dailyconfig;
 var daily2019, daily2020, daily2021, daily2022;
 
 var Tools = new __Tools();
@@ -10,14 +10,17 @@ function __Tools() {
         this.zoom();
         this.year = this.base.year || 2021;
         this.month = this.base.month || 8;
-        daily = this.getItem(this.year);
+        this.monthDay = this.year + '年' + this.month + '月';
+        this.monthEnd = this.year + '年' + this.month + '月' + this.monthCount[this.month-1] + '日';
+        daily = this.getItem(this.year) || {};
         console.log(this);
     }
 
     this.load = function() {
-        this.base = this.getItem('base');
-        this.days = this.getItem('days');
-        this.query = this.getItem('query');
+        this.base = this.getItem('base') || {};
+        this.days = this.getItem('days') || {};
+        this.query = this.getItem('query') || {};
+        this.config = this.getItem('config') || wordCfg;
     }
 
     this.compare = function(a, b) {
@@ -47,7 +50,12 @@ function __Tools() {
         let copy = this.copy(arr);
         for (let i = 0; i < len-1; i++) {
             for (let j = 0; j < len-1-i; j++) {
-                if (parseFloat(arr[j][key]) > parseFloat(arr[j+1][key])) { 
+                let than;
+                if (typeof(arr[j][key]) === 'string')
+                    than = parseFloat(arr[j][key]) > parseFloat(arr[j+1][key]);
+                else
+                    than = eval(arr[j][key]) > eval(arr[j+1][key]);
+                if (than) { 
                     let temp = this.copy(arr[j+1]);       
                     arr[j+1] = this.copy(arr[j]);
                     arr[j] = temp;
@@ -158,7 +166,7 @@ function __Tools() {
 
     this.getItem = function(key) {
         key = 'daily' + key;
-        return JSON.parse(eval(key) || localStorage.getItem(key)) || {};
+        return JSON.parse(eval(key) || localStorage.getItem(key));
     }
 
     this.setItem = function(key, item) {
@@ -195,3 +203,90 @@ function __Tools() {
         }
     }
 }
+
+let wordCfg = [
+    {
+        key: 'YGJLR', 
+        name: '预告净利润', 
+        show: [0],
+        text:`
+        当前季度预告净利润/季度末总市值排名前20`},
+    {
+        key: 'QTDS', 
+        name: '蜻蜓点水', 
+        show: [0],
+        text:`
+        本月涨跌幅,主板非st,
+        本月的收盘价大于本月的开盘价大于本月末的60月均线,
+        本月末的60月均线大于本月末的5月均线大于本月最低价`},
+    {
+        key: 'WLFC', 
+        name: '卧龙凤雏', 
+        show: [0],
+        text:`
+        3`},
+        0,
+    {
+        key: 'ZT', 
+        name: '涨停', 
+        show: [1,2,3,4,5],
+        text:`
+        今天涨停,涨跌幅小于11,主板非st,
+        今天的市值小于100亿`},
+    {
+        key: 'SXHM',
+        name: '陕西黑猫',
+        date: 20210115,
+        show: [1,2,3,4,5],
+        text:`
+        今天的涨停,涨跌幅小于11,主板非st, 
+        今天的20日均线大于昨天的20日均线,
+        昨天的10日均线大于5日均线, 
+        昨天的20日均线大于30日均线大于60日均线`},
+    {
+        key: 'FJJS',
+        name: '福建金森',
+        date: 20210520,
+        show: [1,2,3,4,5],
+        text:`  
+        今天涨停,涨跌幅小于11,主板非st, 
+        昨天的20日均线小于10日均线小于5日均线, 
+        昨天的20日均线小于30日均线小于60日均线`},
+    {
+        key: 'SHDL',
+        name: '上海电力',
+        date: 20210917,
+        show: [1,2,3,4,5],
+        text:`  
+        今天涨停,涨跌幅小于11,主板非st, 
+        昨天的开盘价大于5日均线大于收盘价,
+        昨天的开盘价大于10日均线大于收盘价,
+        昨天的收盘价大于20日均线大于30日均线大于60日均线`},
+    {
+        key: 'ZZMD',
+        name: '郑州煤电',
+        date: 20201207,
+        show: [1,2,3,4,5],
+        text:`  
+        今天最低价,(上周一开盘价＋上周五收盘价)/2,
+        上周一开盘涨跌幅大于2,
+        上周五周涨跌幅大于20,主板非st,`},
+    {
+        key: 'JCGF',
+        name: '京城股份',
+        date: 20211122,
+        show: [1],
+        text:`
+        上上周的20周均线大于10周均线大于30周均线,
+        上上周的30周均线大于5周均线大于60周均线,
+        上上周至今涨跌幅, 主板非st,今天开盘涨跌幅大于5,
+        今天收盘价/上上周收盘价大于1.2`},
+    {
+        key: 'SKW',
+        name: '病发',
+        show: [5],
+        text:`
+        今天的20周均线大于10周均线大于30周均线,
+        今天的30周均线大于5周均线大于60周均线,
+        今天至今涨跌幅,主板非st`},
+];

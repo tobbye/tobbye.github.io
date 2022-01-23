@@ -5,7 +5,7 @@ window.onload = function() {
 
 
 let Source = {
-    head: ['序号', '代码', '名称', '开盘', '收盘', '涨跌幅','祝福', '压力位','类', '超越','板','未来1','未来2','未来3','未来4','未来5'],
+    head: ['序号','代码','名称','开盘','收盘','涨跌幅','病变','新高','压力位','类','超越','板','未来1','未来2','未来3','未来4','未来5'],
     doneTexts: ['自动复盘进行中...', '复盘进行中...', '自动复盘完成', '复盘完成', '缺少数据'],
     periodTexts: ['前一月','前一周','前一日'],
     period: ['hrefName', 'hrefDay', 'hrefWeek', 'hrefMonth', 'href30Min'],
@@ -40,12 +40,13 @@ let VAL = {
     MA20:12,
     MA30:13,
     MA60:14,
-    HCLOSE:15,
-    HIHIGH:16,
-    NEXIST:17,
-    FEXIST:18,
-    EXIST:19,
-    LUCKY:20,
+    HH20:15,
+    HH200:16,
+    HC120:17,
+    NSICK:18,
+    FSICK:19,
+    SICK:20,
+    LUCKY:21,
 }
 
 
@@ -56,16 +57,17 @@ let TAL = {
     OPEN:3,
     CLOSE:4,
     DEGREE:5,
-    CROSS:6,
-    PRESS:7,
-    PTYPE:8,
-    GAP:9,
-    BAN:10,
-    FUT1:11,
-    FUT2:12,
-    FUT3:13,
-    FUT4:14,
-    FUT5:15,
+    SICK:6,
+    LUCKY:7,
+    PRESS:8,
+    PTYPE:9,
+    GAP:10,
+    BAN:11,
+    FUT1:12,
+    FUT2:13,
+    FUT3:14,
+    FUT4:15,
+    FUT5:16,
 }
 
 let Stock = new __Stock();
@@ -224,11 +226,12 @@ function __Stock() {
             preDay[VAL.CLOSE] < curWeek[VAL.PRESS]) {
             curWeek[VAL.CROSS] = true;
         }
-        console.log(curDay[VAL.HHIGH],curDay[VAL.CLOSE]);
-        if (curDay[VAL.EXIST] &&
-            curDay[VAL.HCLOSE] == curDay[VAL.CLOSE] &&
-            curDay[VAL.HHIGH] > curDay[VAL.CLOSE]) {
+        console.log(curDay[VAL.hh200],curDay[VAL.CLOSE]);
+        if (curDay[VAL.HC120] == curDay[VAL.CLOSE] &&
+            curDay[VAL.HH200] > curDay[VAL.HH20]) {
             curDay[VAL.LUCKY] = true;
+        } else {
+            curDay[VAL.LUCKY] = false;
         }
         this.curDay = curDay;
         this.curWeek = curWeek;
@@ -270,7 +273,8 @@ function __Stock() {
             curCode[TAL.DEGREE] = this.curDay[VAL.DEGREE];
             curCode[TAL.PRESS]  = this.curWeek[VAL.PRESS];
             curCode[TAL.PTYPE]  = this.curWeek[VAL.PTYPE];
-            curCode[TAL.CROSS] = this.curDay[VAL.LUCKY];
+            curCode[TAL.SICK] = this.curDay[VAL.SICK];
+            curCode[TAL.LUCKY] = this.curDay[VAL.LUCKY];
             curCode[TAL.BAN]   = this.BANount();
             curCode[TAL.FUT1] = this.future[0];
             curCode[TAL.FUT2] = this.future[1];
@@ -338,6 +342,12 @@ function __Stock() {
                     else if (deg < 0)
                         td.setAttribute('back', 'green2');
                 } 
+                if (j == TAL.SICK || j == TAL.LUCKY) {
+                    if (codes[i][j] == true)
+                        td.setAttribute('back', 'red')
+                    else if (codes[i][j] == false)
+                        td.setAttribute('back', 'green')
+                }
                 if (j >= TAL.PRESS && j <= TAL.GAP) {
                     if (codes[i][TAL.PRESS] && upper >1.1)
                         td.setAttribute('head', 'red')
@@ -424,49 +434,58 @@ function __Stock() {
     }
 
 
-    this.nDay = 5;    //nearDay
-    this.fDay = 15;   //farDay
-    this.cDay = 120;  //closeDay
+    this.nDay = 5;   //nearDay
+    this.fDay = 15;  //farDay
     this.hDay = 200;  //highDay
+    this.cDay = 120; //closeDay
     this.setBoxer = function(data, idx) {
-        if (idx <= this.hDay)
+        if (idx <= this.hDay) {
+            data[idx][VAL.SICK] = false;
             return [0,0,0,0];
+        }
         let ma5  = this.getAVG(data, idx, 5);
         let ma10 = this.getAVG(data, idx, 10);
         let ma20 = this.getAVG(data, idx, 20);
         let ma30 = this.getAVG(data, idx, 30);
         let ma60 = this.getAVG(data, idx, 60);
-        let hhigh = 0;
-        let hclose = 0;
+        let hh20 = 0;
+        let hh200 = 0;
+        let hc120 = 0;
+        for (let i=idx-this.hDay/10; i<=idx; i++) {
+            if (hh20 < data[i][VAL.HIGH]) {
+                hh20 = data[i][VAL.HIGH];
+            }
+        }
         for (let i=idx-this.hDay; i<=idx; i++) {
-            if (hhigh < data[i][VAL.HIGH]) {
-                hhigh = data[i][VAL.HIGH];
+            if (hh200 < data[i][VAL.HIGH]) {
+                hh200 = data[i][VAL.HIGH];
             }
         }
         for (let i=idx-this.cDay; i<=idx; i++) {
-            if (hclose < data[i][VAL.CLOSE]) {
-                hclose = data[i][VAL.CLOSE];
+            if (hc120 < data[i][VAL.CLOSE]) {
+                hc120 = data[i][VAL.CLOSE];
             }
         }
-        let nexist = ~~(ma5 > ma10 && ma10 > ma30 && ma30 > ma20);
-        let fexist = ~~(ma30 > ma20 && ma20 > ma10 && ma10 > ma5);
+        let nSICK = ~~(ma5 > ma10 && ma10 > ma30 && ma30 > ma20);
+        let fSICK = ~~(ma30 > ma20 && ma20 > ma10 && ma10 > ma5);
         data[idx][VAL.MA5]  = ma5;
         data[idx][VAL.MA10] = ma10;
         data[idx][VAL.MA20] = ma20;
         data[idx][VAL.MA30] = ma30;
         data[idx][VAL.MA60] = ma60;
-        data[idx][VAL.HHIGH] = hhigh;
-        data[idx][VAL.HCLOSE] = hclose;
-        data[idx][VAL.NEXIST] = nexist;
-        data[idx][VAL.FEXIST] = fexist;
+        data[idx][VAL.HH20] = hh20;
+        data[idx][VAL.HH200] = hh200;
+        data[idx][VAL.HC120] = hc120;
+        data[idx][VAL.NSICK] = nSICK;
+        data[idx][VAL.FSICK] = fSICK;
 
         for (let i=idx-this.nDay; i<=idx; i++) {
-            nexist += data[i][VAL.NEXIST];
+            nSICK += data[i][VAL.NSICK];
         }
         for (let i=idx-this.fDay; i<=idx; i++) {
-            fexist += data[i][VAL.FEXIST];
+            fSICK += data[i][VAL.FSICK];
         }
-        data[idx][VAL.EXIST] = nexist*fexist > 0;
+        data[idx][VAL.SICK] = nSICK*fSICK > 0;
     }
 }
 
