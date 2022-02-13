@@ -56,8 +56,8 @@ function __Wencai() {
 				} else {
 					let date = Tools.creatElem('div', td, 'date');
 					date.innerHTML  = Tools.year + '年' + data.month[j] + '月';
-					this.link(td, data, Tools.config[1]);
-					this.link(td, data, Tools.config[2]);
+					this.link(td, data, Tools.config[1], data.month[j]);
+					this.link(td, data, Tools.config[2], data.month[j]);
 					let btn = Tools.creatElem('button',td, 'btn');
 					btn.setAttribute('big', 1);
 					btn.innerHTML = data.month[j] + '月详情';
@@ -104,13 +104,16 @@ function __Wencai() {
 		for (let i=1;i <=Tools.monthCount[Tools.month-1]; i++) {
 			preDays.push(Tools.toDate(Tools.year, Tools.month, i));
 		}
+		for (let i=1;i <=Tools.monthCount[nextMonth-1]; i++) {
+			preDays.push(Tools.toDate(nextYear, nextMonth, i));
+		}
 		for (let i in preDays) {
 			let week = i%7; 
 			if (week>0 && week<6) {
 				curDays.push([preDays[i], week]); 
 			}
 		}
-		for (let i in curDays) {
+		for (let i=0; i < curDays.length; i++) {
 			if (!curDays[i][0])
 				continue;
 			 if(curDays[i][0].indexOf(Tools.month+'月') > -1) {
@@ -121,6 +124,11 @@ function __Wencai() {
 					preWeek: curDays[i-5-curDays[i][1]][0],
 					preMonday: curDays[i-4-curDays[i][1]][0],
 					preFriday: curDays[i-0-curDays[i][1]][0],
+					nextDay1: curDays[i+1][0], 
+					nextDay2: curDays[i+2][0],
+					nextDay3: curDays[i+3][0],
+					nextDay4: curDays[i+4][0],
+					nextDay5: curDays[i+5][0],
 					nextMonth: Tools.toDate(nextYear, nextMonth, Tools.monthCount[nextMonth-1]),
 					holiday: '',
 				};
@@ -178,13 +186,13 @@ function __Wencai() {
 
 
 
-	this.link = function(td, data, cfg) {
+	this.link = function(td, data, cfg, month) {
 		if (data.holiday) {
 			let a = Tools.creatElem('a', td);
 			a.innerHTML = data.holiday + '(-)<br/>';
 			return;
 		}
-		let word = this.replaceStr(data, cfg.text);
+		let word = this.replaceStr(data, cfg.text, month);
 		data[cfg.key] = word;
 		let a = Tools.creatElem('a', td, cfg.key, td.idx);
 
@@ -195,42 +203,46 @@ function __Wencai() {
 		if (td.idx) {
 			a.idx = td.idx;
 			a.key = cfg.key;
-			a.innerHTML = a.name + '(' + Tools.getDaily(a.idx, a.key, 1) + ')<br/>';
+			a.innerHTML = a.name + '<h2>(' + Tools.getDaily(a.idx, a.key, 1) + ')<h2/>';
 		} else {
 			a.innerHTML = a.name + '(-)<br/>';
 			return;
 		}
-
+		let count = Tools.getDaily(a.idx, a.key, 1);
+		if ((a.key == 'TYKG' && count > 99) || (a.key == 'FJJS' && count < 20))
+			a.setAttribute('type', 'cold');
+		if ((a.key == 'TYKG' && count < 20) || (a.key == 'FJJS' && count > 99))
+			a.setAttribute('type', 'hot');
 		a.onclick = function() {
 			Tools.setBase('lastIdx', this.idx);
 			Tools.setBase('lastKey', this.key);
 		}
-		a.onmouseover = function() {
-			Wencai.isclear = 0;
-			msgbox.innerHTML = this.word;
-			Wencai.msgbox.innerHTML = Tools.getDaily(this.idx, 'date') + ' ' + this.name;
-			let array = Tools.getDaily(this.idx, this.key);
-			for (let i in array) {
-				let tr = Tools.creatElem('tr', Wencai.table3, this.key);
-				for (let j in array[i]) {
-					if (j > 2) continue;
-					let td = Tools.creatElem('td', tr, this.key);
-					td.setAttribute('type', 'mini');
-					td.innerHTML = array[i][j];
-				}
-			}
-		}
-		a.onmouseout = function() {
-			if (Tools.base.isMoblie) 
-				return;
-			Wencai.isclear = 1;
-			setTimeout(function() {
-				if (Wencai.isclear)
-					msgbox.innerHTML = '';
-			},3000);
-			Wencai.msgbox.innerHTML = '';
-			Wencai.table3.innerHTML = '';
-		}
+		// a.onmouseover = function() {
+		// 	Wencai.isclear = 0;
+		// 	msgbox.innerHTML = this.word;
+		// 	Wencai.msgbox.innerHTML = Tools.getDaily(this.idx, 'date') + ' ' + this.name;
+		// 	let array = Tools.getDaily(this.idx, this.key);
+		// 	for (let i in array) {
+		// 		let tr = Tools.creatElem('tr', Wencai.table3, this.key);
+		// 		for (let j in array[i]) {
+		// 			if (j > 2) continue;
+		// 			let td = Tools.creatElem('td', tr, this.key);
+		// 			td.setAttribute('type', 'mini');
+		// 			td.innerHTML = array[i][j];
+		// 		}
+		// 	}
+		// }
+		// a.onmouseout = function() {
+		// 	if (Tools.base.isMoblie) 
+		// 		return;
+		// 	Wencai.isclear = 1;
+		// 	setTimeout(function() {
+		// 		if (Wencai.isclear)
+		// 			msgbox.innerHTML = '';
+		// 	},3000);
+		// 	Wencai.msgbox.innerHTML = '';
+		// 	Wencai.table3.innerHTML = '';
+		// }
 		if (a.idx == Tools.base.lastIdx && a.key == Tools.base.lastKey) {
 			td.scrollIntoView(1);
 			td.appendChild(this.save.parentNode);
@@ -256,15 +268,22 @@ function __Wencai() {
 	}
 
 
-	this.replaceStr = function(data, text) {
+	this.replaceStr = function(data, text, month) {
+        let monthDay = Tools.year + '年' + month + '月';
+        let monthEnd = Tools.year + '年' + month + '月' + Tools.monthCount[month-1] + '日';
 		return text.
 		replace(/今天/g, data.date).
 		replace(/昨天/g, data.preDate).
+		replace(/后1天/g, data.nextDay1).
+		replace(/后2天/g, data.nextDay2).
+		replace(/后3天/g, data.nextDay3).
+		replace(/后4天/g, data.nextDay4).
+		replace(/后5天/g, data.nextDay5).
 		replace(/上周一/g, data.preMonday).
 		replace(/上周五/g, data.preFriday).
 		replace(/上上周/g, data.preWeek).
-		replace(/本月末/g, Tools.monthEnd).
-		replace(/本月/g, Tools.monthDay).
+		replace(/本月末/g, monthEnd).
+		replace(/本月/g, monthDay).
 		replace(/当前季度/g, Tools.year + '年' + data.season). 
 		replace(/季度末/g, Tools.year + '年' + data.lastDay); 
 	}
@@ -293,8 +312,8 @@ function __Wencai() {
 				Tools.setItem('config', Tools.config);
         		window.location.reload();
 			}
-			Tools.setItem('config', Tools.config);
 		}
+		Tools.setItem('config', Tools.config);
 	}
 }
 	

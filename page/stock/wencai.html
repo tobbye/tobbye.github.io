@@ -18,6 +18,11 @@
 	        background: #ddd;
 		}
 
+		h2 {
+			margin: 0px;
+			padding: 0px;
+		}
+
 		button {
 			margin: 5px 0px;
 			font-size: 1em;
@@ -44,6 +49,7 @@
 		td {
 			flex: 10;
 			margin: 2px;
+			padding: 10px;
         	vertical-align: top;
 			background-color: #eee;	
 		}
@@ -52,26 +58,26 @@
 			margin-top:5px;
 			font-size: 1.2em;
 			color: #f46;
-			text-decoration: normal;
+			text-decoration: none;
 		}
 		a:visited {
-			color: indigo;
+			color: #333;
 		}
 		a:hover {
 			color: magenta;
 		}
 
-		td[type=normal] {
-			padding: 10px;
+		a[type=cold] {
+			color: green;
 		}
-
-		td[type=mini]{
-			padding: 5px;
+		a[type=hot] {
+			color: #ff2222;
 		}
 
 		#textarea {
-			width: 400px;
-			height: 60px;
+			width: 600px;
+			height: 80px;
+			font-size: 0.9em;
 		}
 
 		[year='2019'] {color: dodgerblue; }
