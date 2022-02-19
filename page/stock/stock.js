@@ -5,7 +5,7 @@ window.onload = function() {
 
 
 let Source = {
-    head: ['序号','代码','名称','开盘','收盘','涨跌幅','病变','新高','压力位','类','超越','板','未来1','未来2','未来3','未来4','未来5'],
+    head: ['序号','代码','名称','开盘','收盘','涨跌幅','顶部','上影线','超越','高开','板','未来1','未来2','未来3','未来4','未来5'],
     doneTexts: ['自动复盘进行中...', '复盘进行中...', '自动复盘完成', '复盘完成', '缺少数据'],
     periodTexts: ['前一月','前一周','前一日'],
     period: ['hrefName', 'hrefDay', 'hrefWeek', 'hrefMonth', 'href30Min'],
@@ -27,26 +27,9 @@ let VAL = {
     VOL:7,
     AMOUNT:8,
     SWAPE:9,
-    MA3:10,
-    TOP:11,
-    MID:12,
-    BOT:13,
-    PRESS:14,
-    PTYPE:15,
-    CROSS:16,
-
-    MA5:10,
-    MA10:11,
-    MA20:12,
-    MA30:13,
-    MA60:14,
-    HH20:15,
-    HH200:16,
-    HC120:17,
-    NSICK:18,
-    FSICK:19,
-    SICK:20,
-    LUCKY:21,
+    TOP:10,
+    COUNT:11,
+    CROSS:12,
 }
 
 
@@ -57,17 +40,16 @@ let TAL = {
     OPEN:3,
     CLOSE:4,
     DEGREE:5,
-    SICK:6,
-    LUCKY:7,
-    PRESS:8,
-    PTYPE:9,
-    GAP:10,
-    BAN:11,
-    FUT1:12,
-    FUT2:13,
-    FUT3:14,
-    FUT4:15,
-    FUT5:16,
+    TOP:6,
+    COUNT:7,
+    GAP:8,
+    CROSS:9,
+    BAN:10,
+    FUT1:11,
+    FUT2:12,
+    FUT3:13,
+    FUT4:14,
+    FUT5:15,
 }
 
 let Stock = new __Stock();
@@ -187,7 +169,6 @@ function __Stock() {
             origin[i][VAL.HIGH]  = eval(origin[i][VAL.HIGH]);
             origin[i][VAL.DEEPTH]   = 0;
             if (idx == 1) {
-                this.setBoxer(origin,i);
                 this.dateDay = origin;
             }
             if (idx == 2) {
@@ -217,22 +198,15 @@ function __Stock() {
             let week = this.dateWeek[i];
             if (Tools.compare(week[VAL.DATE], Tools.query.date)) {
                 this.weekIdx = i;
-                curWeek = this.dateWeek[i] || curWeek;
+                console.log(Tools.query.week)
+                if (Tools.query.week == 5)
+                    this.weekIdx = i - 1;
+                curWeek = this.dateWeek[this.weekIdx] || curWeek;
                 break;
             }
         }
-        if (curWeek[VAL.PRESS] && 
-            curDay[VAL.CLOSE] > curWeek[VAL.PRESS] && 
-            preDay[VAL.CLOSE] < curWeek[VAL.PRESS]) {
-            curWeek[VAL.CROSS] = true;
-        }
-        console.log(curDay[VAL.hh200],curDay[VAL.CLOSE]);
-        if (curDay[VAL.HC120] == curDay[VAL.CLOSE] &&
-            curDay[VAL.HH200] > curDay[VAL.HH20]) {
-            curDay[VAL.LUCKY] = true;
-        } else {
-            curDay[VAL.LUCKY] = false;
-        }
+        curDay[VAL.CROSS] = Tools.to2f(preDay[VAL.OPEN]/curWeek[VAL.TOP]*100-100) + '%';
+        this.preDay = preDay;
         this.curDay = curDay;
         this.curWeek = curWeek;
         this.nextCode();
@@ -271,10 +245,9 @@ function __Stock() {
             curCode[TAL.OPEN]   = this.curDay[VAL.OPEN];
             curCode[TAL.CLOSE]  = this.curDay[VAL.CLOSE];
             curCode[TAL.DEGREE] = this.curDay[VAL.DEGREE];
-            curCode[TAL.PRESS]  = this.curWeek[VAL.PRESS];
-            curCode[TAL.PTYPE]  = this.curWeek[VAL.PTYPE];
-            curCode[TAL.SICK] = this.curDay[VAL.SICK];
-            curCode[TAL.LUCKY] = this.curDay[VAL.LUCKY];
+            curCode[TAL.TOP]  = this.curWeek[VAL.TOP];
+            curCode[TAL.COUNT]  = this.curWeek[VAL.COUNT];
+            curCode[TAL.CROSS]  = this.curDay[VAL.CROSS];
             curCode[TAL.BAN]   = this.BANount();
             curCode[TAL.FUT1] = this.future[0];
             curCode[TAL.FUT2] = this.future[1];
@@ -293,7 +266,10 @@ function __Stock() {
     this.creatBody = function() {
         let codes = Tools.query.codes;
         for (let i in codes) {
-            codes[i][TAL.GAP] = Tools.to2f(codes[i][TAL.CLOSE]/codes[i][TAL.PRESS]*100-100) + '%';
+            if (codes[i][TAL.COUNT]<4)
+                codes[i][TAL.GAP] = '0%';
+            else
+                codes[i][TAL.GAP] = Tools.to2f(codes[i][TAL.CLOSE]/codes[i][TAL.TOP]*100-100) + '%';
         }
         if (!this.inQuery)
             codes = Tools.setOrder();
@@ -321,7 +297,7 @@ function __Stock() {
         for (let i in codes) {
             codes[i][TAL.INDEX] = ~~i+1;
             let tr = Tools.creatElem('tr', this.tbody, 'tr');
-            let upper = codes[i][TAL.CLOSE] / codes[i][TAL.PRESS];
+            let upper = codes[i][TAL.CLOSE] / codes[i][TAL.TOP];
             for (let j in codes[i]) {
                 if (!Tools.base.future && j >= TAL.FUT1 && j <= TAL.FUT5) 
                     continue;
@@ -329,13 +305,13 @@ function __Stock() {
                 td.innerHTML = codes[i][j];
                 if (codes[i][TAL.OPEN] == codes[i][TAL.CLOSE] && (j == TAL.OPEN || j == TAL.CLOSE))
                     td.setAttribute('back', 'blue');
-                if (j == TAL.DEGREE || j == TAL.GAP || j >= TAL.FUT1 && j <= TAL.FUT5) {
+                if (j == TAL.DEGREE || j == TAL.GAP || j == TAL.CROSS || j >= TAL.FUT1 && j <= TAL.FUT5) {
                     let deg = Tools.to2f(codes[i][j].replace('%',''));
                     if (deg == 0)
                         td.setAttribute('back', 'black');
-                    else if (deg > 9.7)
+                    else if (deg > 18)
                         td.setAttribute('back', 'red');
-                    else if (deg < -9.7)
+                    else if (deg < -18)
                         td.setAttribute('back', 'green');
                     else if (deg > 0)
                         td.setAttribute('back', 'red2');
@@ -348,13 +324,10 @@ function __Stock() {
                     else if (codes[i][j] == false)
                         td.setAttribute('back', 'green')
                 }
-                if (j >= TAL.PRESS && j <= TAL.GAP) {
-                    if (codes[i][TAL.PRESS] && upper >1.1)
-                        td.setAttribute('head', 'red')
-                    else if (codes[i][TAL.PRESS] && upper >1.0)
-                        td.setAttribute('head', 'orange')
+                if (j == TAL.COUNT && codes[i][j]>3) {
+                    td.setAttribute('back', 'red')
                 }
-                if (j == TAL.CROSS || j == TAL.BAN) {
+                if (j == TAL.BAN) {
                     td.setAttribute('head', 'blue')
                 }
             }
@@ -382,111 +355,31 @@ function __Stock() {
         return 0;
     }
 
-    this.tDay = 30; //topDay
-    this.bDay = 30; //botDay
-    this.lDay = 30; //longDay
+    this.lDay = 50; //longDay
     this.setLadder = function(data, idx) {
 
         if (idx <= this.lDay)
-            return [0,0,0,0];
-        data[idx][VAL.MA3] = this.getAVG(data, idx, 3);
+            return [0,0];
         let top = 0;
-        for (let i=idx-this.tDay; i<=idx; i++) {
-            if (top < data[i][VAL.MA3]) {
-                top = data[i][VAL.MA3];
-            }
-        }
-        let bot = top;
-        for (let i=idx-this.bDay; i<=idx; i++) {
-            if (bot > data[i][VAL.MA3]) {
-                bot = data[i][VAL.MA3];
-            }
-        }
-        let high = 0;
         for (let i=idx-this.lDay; i<=idx; i++) {
-            if (high < data[i][VAL.CLOSE]) {
-                high = data[i][VAL.CLOSE];
+            if (top < data[i][VAL.CLOSE]) {
+                top = data[i][VAL.CLOSE];
+            }
+        }
+        let count = 0;
+        for (let i=idx-this.lDay; i<=idx; i++) {
+            if (top < data[i][VAL.HIGH]) {
+                count ++;
             }
         }
 
-        let mid = Tools.to2f(top/2 + bot/2);
         data[idx][VAL.TOP] = top;
-        data[idx][VAL.MID] = mid;
-        data[idx][VAL.BOT] = bot;
-        if (high < top*1.15 && data[idx][VAL.TOP] == data[idx-8][VAL.TOP]) {
-            data[idx][VAL.PRESS] = Tools.to2f(top*1.1);
-            data[idx][VAL.PTYPE] = 'A';
-        }
-        //压力位向后传递
-        if (!data[idx][VAL.PRESS] && data[idx-1][VAL.PRESS]) {
-            //收盘小于前压力位,压力位向后传递
-            if (data[idx][VAL.CLOSE] <= data[idx-1][VAL.PRESS]) {
-                data[idx][VAL.PRESS] = (data[idx-1][VAL.PRESS]);
-                data[idx][VAL.PTYPE] = 'B';
-            }
-            //顶部小于前顶部,压力位向后传递
-            if (data[idx][VAL.TOP] <= data[idx-1][VAL.TOP]) {
-                data[idx][VAL.PRESS] = (data[idx-1][VAL.PRESS]);
-                data[idx][VAL.PTYPE] = 'C';   
-            }
-        }
-        return [top, mid, bot];
+        data[idx][VAL.COUNT] = count;
+        return [top, count];
     }
 
 
-    this.nDay = 5;   //nearDay
-    this.fDay = 15;  //farDay
-    this.hDay = 200;  //highDay
-    this.cDay = 120; //closeDay
-    this.setBoxer = function(data, idx) {
-        if (idx <= this.hDay) {
-            data[idx][VAL.SICK] = false;
-            return [0,0,0,0];
-        }
-        let ma5  = this.getAVG(data, idx, 5);
-        let ma10 = this.getAVG(data, idx, 10);
-        let ma20 = this.getAVG(data, idx, 20);
-        let ma30 = this.getAVG(data, idx, 30);
-        let ma60 = this.getAVG(data, idx, 60);
-        let hh20 = 0;
-        let hh200 = 0;
-        let hc120 = 0;
-        for (let i=idx-this.hDay/10; i<=idx; i++) {
-            if (hh20 < data[i][VAL.HIGH]) {
-                hh20 = data[i][VAL.HIGH];
-            }
-        }
-        for (let i=idx-this.hDay; i<=idx; i++) {
-            if (hh200 < data[i][VAL.HIGH]) {
-                hh200 = data[i][VAL.HIGH];
-            }
-        }
-        for (let i=idx-this.cDay; i<=idx; i++) {
-            if (hc120 < data[i][VAL.CLOSE]) {
-                hc120 = data[i][VAL.CLOSE];
-            }
-        }
-        let nSICK = ~~(ma5 > ma10 && ma10 > ma30 && ma30 > ma20);
-        let fSICK = ~~(ma30 > ma20 && ma20 > ma10 && ma10 > ma5);
-        data[idx][VAL.MA5]  = ma5;
-        data[idx][VAL.MA10] = ma10;
-        data[idx][VAL.MA20] = ma20;
-        data[idx][VAL.MA30] = ma30;
-        data[idx][VAL.MA60] = ma60;
-        data[idx][VAL.HH20] = hh20;
-        data[idx][VAL.HH200] = hh200;
-        data[idx][VAL.HC120] = hc120;
-        data[idx][VAL.NSICK] = nSICK;
-        data[idx][VAL.FSICK] = fSICK;
 
-        for (let i=idx-this.nDay; i<=idx; i++) {
-            nSICK += data[i][VAL.NSICK];
-        }
-        for (let i=idx-this.fDay; i<=idx; i++) {
-            fSICK += data[i][VAL.FSICK];
-        }
-        data[idx][VAL.SICK] = nSICK*fSICK > 0;
-    }
 }
 
 

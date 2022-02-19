@@ -80,6 +80,7 @@ function __Tools() {
             idx: idx,
             end: end,
             date: date,
+            week: this.days[idx].week,
             cur: this.base.clear ? 0:~~this.getDaily(date, 'cur'),
             codes: this.getDaily(date, 'ZT'),
         }
