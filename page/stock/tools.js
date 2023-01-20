@@ -1,5 +1,5 @@
 var daily, dailybase, dailyquery, dailydays, dailyconfig;
-var daily2019, daily2020, daily2021, daily2022;
+var daily2020, daily2021, daily2022, daily2023, daily2024;
 
 var Tools = new __Tools();
 function __Tools() {
@@ -8,8 +8,8 @@ function __Tools() {
     this.init = function() {
         this.load();
         this.zoom();
-        this.year = this.base.year || 2021;
-        this.month = this.base.month || 8;
+        this.year = this.base.year || 2023;
+        this.month = this.base.month || 1;
         daily = this.getItem(this.year) || {};
         console.log(this);
     }
@@ -222,38 +222,38 @@ let wordCfg = [{
     "text": "本月涨跌幅>15,主板非st,本月末的10月均线大于5月均线大于20月均线,本月末的20月均线大于30月均线"
 },
 0, {
-    "key": "ZT",
-    "name": "涨停",
+    "key": "NTXX",
+    "name": "南天信息",
     "show": [1, 2, 3, 4, 5],
-    "text": "今天涨停,涨跌幅小于11,主板非st"
+    "text": "今天涨停,20日均线大于30日均线大于250日均线,250日均线大于60日均线大于120日均线,主板非st"
 },
 {
-    "key": "ZS",
-    "name": "指数",
+    "key": "ZJDC",
+    "name": "中交地产",
     "date": 20210115,
     "show": [0],
-    "text": "今天涨跌幅>4,今天涨跌幅前10,指数"
+    "text": "今天涨停，开盘价大于17小于18，收盘价大于17小于18，主板非st"
 },
 {
-    "key": "TYKG",
-    "name": "死亡",
+    "key": "ANGF",
+    "name": "安妮股份",
     "date": 20210115,
     "show": [1, 2, 3, 4, 5],
-    "text": "今天涨跌幅,后1天涨跌幅，后2天涨跌幅，后3天涨跌幅，后4天涨跌幅，后5天涨跌幅，今天的20日均线大于30日均线大于10日均线，今天的10日均线大于60日均线大于5日均线"
+    "text": "后1天涨停缩量，今天阳线缩量，昨天阴线，主板非st"
 },
 {
-    "key": "FJJS",
-    "name": "新生",
+    "key": "JAYL",
+    "name": "九安医疗",
     "date": 20210520,
     "show": [1, 2, 3, 4, 5],
-    "text": "今天涨跌幅，后1天涨跌幅，后2天涨跌幅，后3天涨跌幅，今天的20日均线小于30日均线小于10日均线，今天的10日均线小于60日均线小于5日均线"
+    "text": "今天涨停，上穿250日均线，20日均线小于30日均线小于10日均线，10日均线小于60日均线小于5日均线，主板非st"
 },
 {
-    "key": "SHDL",
-    "name": "上海电力",
+    "key": "ZJSB",
+    "name": "浙江世宝",
     "date": 20210917,
     "show": [0],
-    "text": "今天涨停,涨跌幅小于11,主板非st,昨天的开盘价大于5日均线大于收盘价,昨天的开盘价大于10日均线大于收盘价,昨天的收盘价大于20日均线大于30日均线大于60日均线"
+    "text": "今天涨停,5日均线大于10日均线大于60日均线，60日均线大于20日均线大于30日均线，主板非st"
 },
 {
     "key": "ZZMD",
